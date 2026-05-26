@@ -2,7 +2,7 @@
 
 Canonical documentation for ECP device handling — viewport dimensions, DPR (device pixel ratio), `--device` flag syntax, dual-device file naming conventions, session isolation for parallel acquisition, and the coordinator prompt template.
 
-**Why this file exists:** Prior to Round 11, device handling was duplicated across `skills/audit/SKILL.md`, `skills/build/SKILL.md` (for --device rejection), `skills/compare/SKILL.md`, and `skills/quick-scan/SKILL.md`. This file consolidates the rules so no skill drifts from the canonical device behavior.
+**Why this file exists:** Prior to Round 11, device handling was duplicated across multiple skills. This file consolidates the rules so no skill drifts from the canonical device behavior.
 
 ---
 
@@ -108,7 +108,7 @@ When a skill runs with a dual-device comma-pair (e.g., `--device mobile,desktop`
 - `baton-mobile.json` (your page, second device if different from first)
 - `baton-competitor-mobile.json` (competitor, second device)
 
-The compare-specific rules live in `skills/compare/SKILL.md` — this file covers the device half of the naming only.
+This file covers the device half of the naming only.
 
 ---
 
@@ -168,9 +168,6 @@ In `--auto` mode: show the warning but proceed without prompt (don't block deter
 Skills that use this file:
 
 - **`skills/audit/SKILL.md`** — `<device_selection>` defers here. Supports both single and dual-device modes.
-- **`skills/compare/SKILL.md`** — `<device_selection>` defers here. Adds cost warning for dual-device mode (2 pages × 2 devices = 4 acquisitions).
-- **`skills/quick-scan/SKILL.md`** — `<device_selection>` defers here. Adds screenshot mode inference rules.
-- **`skills/build/SKILL.md`** — does NOT accept `--device`. Inherits "mobile-first" signal for cluster routing only.
 - **`workflows/acquire.md`** — uses the session naming convention for parallel dual-device acquisition.
 
 When editing this file, grep all 4 skill files for any stale inline device documentation that may have been missed and convert to references.

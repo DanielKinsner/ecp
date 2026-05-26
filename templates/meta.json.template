@@ -34,7 +34,6 @@
     3 — v2-architecture engagements (specialist JSON emission, single-Opus synthesizer,
         baton element-index hotspots, audit state machine). Sticky once set:
         v2 cannot retro-touch a v1 engagement; v1 cannot resume a v2 engagement.
-        Resume routes via skills/resume/SKILL.md lines 26-29 schema_version switch.
 
   engagement_status values (v2 audit state machine; see contracts/audit-state-machine.md):
     "pending"               — engagement created, no work dispatched yet

@@ -46,4 +46,4 @@ Two reasons:
 
 - **v5.0 → future migrations**: this file is v4.x-specific. When v6 introduces new clusters, add a new table, don't modify this one.
 - **Non-cluster schema changes**: `contracts/meta-schema.md` owns the current schema. This file is only about the cluster name translation.
-- **Team lifecycle changes on resume**: v4.x engagements have no team state on disk. Team recreation is handled by `skills/resume/SKILL.md` and documented in `contracts/team-lifecycle.md`.
+- **Team lifecycle changes on resume**: v4.x engagements have no team state on disk. Team recreation is documented in `contracts/team-lifecycle.md`.

@@ -4,7 +4,7 @@ Canonical prompt template for the v2 Layer-3 synthesizer. The synthesizer is the
 
 Mirror to [`contracts/specialist-prompt-v2.md`](specialist-prompt-v2.md). The specialist template renders one prompt per (cluster, device); this template renders one prompt per engagement (single-shot dispatch) or one prompt per device (degraded-mode per-device fallback — Phase F.3).
 
-Authored 2026-04-27 as Phase F.2 deliverable. See [`docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md`](../docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md) Phase F.
+Authored 2026-04-27 as part of the v2 redesign (Phase F.2).
 
 ## How this template is used
 

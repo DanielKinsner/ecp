@@ -63,7 +63,7 @@ The standard set selects the 3-4 highest-impact clusters per page type. These pr
 
 **Note:** Cart, Checkout, Pricing/Plans, and Post-purchase already have 3 or fewer clusters in comprehensive mode, so their standard and comprehensive sets are identical.
 
-Quick-scan is the exception: it picks exactly 1 cluster and does not apply override rules (see quick-scan default cluster table in `skills/quick-scan/SKILL.md` `<cluster_selection>`).
+(Single-cluster scan modes that pick exactly one cluster and skip override rules are out of scope in this build — see `product.md`.)
 
 ---
 
@@ -160,8 +160,5 @@ This is informational only — the user doesn't answer it. If the user wants to 
 Skills that use this file:
 
 - **`skills/audit/SKILL.md`** — `<domain_cluster_routing>` defers here. `<cluster_selection>` references the resolution algorithm above.
-- **`skills/build/SKILL.md`** — `<domain_cluster_routing>` defers here. The planner loads reference files for the resolved cluster set.
-- **`skills/compare/SKILL.md`** — `<domain_cluster_routing>` defers here. The SAME resolved cluster set is used for BOTH pages in the comparison, so findings are directly comparable.
-- **`skills/quick-scan/SKILL.md`** — defers here for page-type defaults and the single-cluster restriction rules.
 
-When editing this file, grep all 4 skill files for any stale inline cluster documentation that may have been missed and convert to references.
+When editing this file, grep `skills/audit/` for any stale inline cluster documentation that may have been missed and convert to references.

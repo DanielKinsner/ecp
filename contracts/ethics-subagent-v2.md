@@ -4,7 +4,7 @@ Canonical prompt template for the v2 ethics subagent. Runs **once per audit** on
 
 The ethics subagent is the **only** agent that runs ethics rules in v2. Cluster specialists are explicitly forbidden from emitting ethics findings (`schema/finding-v1.json` enforces: `ethics_state` is rejected for non-ethics cluster). If a cluster specialist sees something ethically suspect, it describes the pattern neutrally within its cluster's frame and the ethics subagent surfaces the regulatory finding separately. The synthesizer in Layer 3 integrates.
 
-Authored 2026-04-27 as Phase D.1 deliverable. See [`docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md`](../docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md) Phase D.
+Authored 2026-04-27 as part of the v2 redesign (Phase D.1).
 
 ## How this template is used
 

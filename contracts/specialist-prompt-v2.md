@@ -6,7 +6,7 @@ The v2 architecture replaces v1's parallel-22-Sonnet markdown-emission audit wit
 
 This document is the contract that makes that work: the template the lead renders into a final dispatch prompt, the rules the specialist must obey, and the validation surface the test harness checks against.
 
-Authored 2026-04-27 as Phase B.1 deliverable. See [`docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md`](../docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md) Phase B.
+Authored 2026-04-27 as part of the v2 redesign (Phase B.1).
 
 ## How this template is used
 

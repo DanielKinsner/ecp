@@ -79,7 +79,7 @@ Similarly, **quietly doing the teammate's work as the lead** is a form of avoidi
 
 **The lead MUST spawn the acquirer teammate(s) first. There is no shortcut.**
 
-The "Manual acquisition fallback" path (documented in `skills/audit/SKILL.md` and `skills/compare/SKILL.md`) is **only** available when ALL of the following are true:
+The "Manual acquisition fallback" path (documented in `skills/audit/SKILL.md`) is **only** available when ALL of the following are true:
 
 1. The lead has actually called the Agent tool to spawn `acquirer` (or `acquirer-{device}` for dual-device mode) into the team.
 2. The teammate has either:
@@ -298,9 +298,6 @@ This rule combines with the filesystem-atomicity rule above to give ECP its conc
 ## Cross-references
 
 - **`skills/audit/SKILL.md`** — `<no_preflight_questions>` and `<acquisition_must_spawn_teammate>` defer to this file. Audit lead reads this at the top of the skill invocation.
-- **`skills/build/SKILL.md`** — SHOULD reference this file at the top of the skill (bonus fix from Round 12.5 — build previously had no explicit discipline enforcement). Build doesn't have acquirer teammates, but the no-preflight-questions rules apply to planner/reviewer/builder spawns and to the intake gathering phase.
-- **`skills/compare/SKILL.md`** — SHOULD reference this file at the top of the skill. Compare has the full acquirer path (dual acquirers, dual cluster auditors) so both rule sections apply.
-- **`skills/quick-scan/SKILL.md`** — SHOULD reference this file at the top of the skill. Quick-scan spawns exactly one cluster auditor teammate, so the `<acquisition_must_spawn_teammate>` rule applies (don't do the auditor's work as the lead).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`** — canonical flag documentation (referenced by the "Use the `--device` flag if set" rule).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md`** — canonical cluster routing (referenced by the "Page-type defaults are auto-selected" rule).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md`** — canonical device rules (referenced by the "One prompt for device choice" rule).

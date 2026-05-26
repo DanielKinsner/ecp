@@ -2,7 +2,7 @@
 
 Canonical reference for `meta.json.engagement_status` values, their semantics, and the legal transition graph. The state machine is **per-engagement**, not per-session — once an engagement is created, its `engagement_status` is the single source of truth for what's been done, what's safe to retry, and what's mid-flight. Agents (the lead, resume logic, canaries, future MCP tools) read and write this field.
 
-Authored 2026-04-27 as Phase A deliverable of the v2 redesign. See [`docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md`](../docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md) Phase A.3.
+Authored 2026-04-27 as part of the v2 redesign (Phase A).
 
 ## Why the granular catalogue
 
@@ -96,15 +96,7 @@ specialists_dispatched ──→ specialists_complete
 ## Read/write contract by phase
 
 - **`skills/audit/SKILL.md`** writes `pending` at engagement creation; transitions through every state above.
-- **`skills/resume/SKILL.md`** reads `engagement_status` to determine resume routing:
-  - `pending | acquiring` → restart from acquisition
-  - `acquired | partial_acquisition` → resume at ethics + specialists dispatch
-  - `ethics_dispatched | specialists_dispatched` → check disk for completed emissions; transition to `*_complete` if files exist, else re-dispatch missing ones
-  - `ethics_complete | specialists_complete` → resume at next sequential phase
-  - `structuring | synthesizing | rendering` → re-run that phase from inputs (deterministic; safe to retry)
-  - `complete` → no-op, audit is done
-  - `failed_<phase>` → cannot resume; surface to operator for diagnosis
-  - `cancelled_by_operator` → cannot resume; partial artifacts available for inspection
+- **Resume/replay** (out of scope in this build) would read `engagement_status` to route: `pending|acquiring` → restart acquisition; `acquired|partial_acquisition` → resume at ethics + specialists; `*_complete` → resume at next phase; `structuring|synthesizing|rendering` → re-run deterministically; `complete` → no-op; `failed_*` / `cancelled_by_operator` → not resumable.
 - **`scripts/assembly/pipeline.py`** (Layer 2) reads `engagement_status` to verify `ethics_complete + specialists_complete` invariant; writes `structuring → synthesizing` transitions.
 - **`generate-report.py`** (Layer 4) reads `engagement_status` to determine whether to render a "degraded" banner (when value is `partial_acquisition`) or a "cancelled" notice (when `cancelled_by_operator`).
 - **Substantive canaries** (Phase I) verify `engagement_status` consistency: e.g., `dispatched_specialists_emitted_count == expected_specialists_count` is checked at the `specialists_dispatched → specialists_complete` transition.
@@ -113,7 +105,7 @@ specialists_dispatched ──→ specialists_complete
 
 Per Phase L.3: an engagement's `meta.json.schema_version` (`1` legacy / `2` v1.5 / `3` v2) is sticky once set. v2 cannot retro-touch a v1 engagement — resume routes to the v1 path. v1 cannot resume a v2 engagement — schema_version mismatch fails with a clear error rather than silent data corruption.
 
-This contract applies only to schema_version 3 (v2) engagements. v1 and v2-pre engagements use a coarser enum (`pending | audit | plan | review | build | complete | blocked`) per the legacy `phase` field; resume routes legacy engagements to the v1 phase-inference logic in `skills/resume/SKILL.md` lines 26-29.
+This contract applies only to schema_version 3 (v2) engagements. v1 and v2-pre engagements use a coarser enum (`pending | audit | plan | review | build | complete | blocked`) per the legacy `phase` field.
 
 ## Cross-references
 
@@ -125,7 +117,6 @@ This contract applies only to schema_version 3 (v2) engagements. v1 and v2-pre e
 - [`contracts/meta-schema.md`](meta-schema.md) — full meta.json field reference; `engagement_status` enum values listed there mirror this document
 - [`contracts/lead-discipline.md`](lead-discipline.md) — `cancel.flag` semantics, write-atomicity contract, concurrent-audit isolation rule
 - [`contracts/trace-assertion-canary.md`](trace-assertion-canary.md) — substantive canaries that verify state-machine invariants (Phase I additions)
-- `skills/resume/SKILL.md` — schema_version switch lines 26-29; v2 phase inference
 
 ## Maintenance rule
 
@@ -133,8 +124,7 @@ When a new state is added to this document, update **all** of:
 1. `templates/meta.json.template` — `engagement_status` field (if defaulted)
 2. `contracts/meta-schema.md` — `engagement_status` enum value table
 3. `skills/audit/SKILL.md` — phase transition write sites
-4. `skills/resume/SKILL.md` — resume routing for the new state
-5. `scripts/assembly/pipeline.py` and `generate-report.py` — readers
-6. Substantive canaries in `contracts/trace-assertion-canary.md` if the state participates in invariant checks
+4. `scripts/assembly/pipeline.py` and `generate-report.py` — readers
+5. Substantive canaries in `contracts/trace-assertion-canary.md` if the state participates in invariant checks
 
 Same-commit discipline: a state addition without all six site updates is a partial change that future-Claude or future-Dan will hit as inconsistency. Reviewer should reject partial state-machine changes.

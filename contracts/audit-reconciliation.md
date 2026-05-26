@@ -372,7 +372,7 @@ Only run AFTER format validation AND voice check pass for all cluster files.
 ## Cross-references
 
 - **`skills/audit/SKILL.md`** — `<finding_reconciliation>` defers to this file. Audit lead reads this file after all cluster auditor tasks complete.
-- **`skills/compare/SKILL.md`** — compare lead runs the same reconciliation process on each of the two pages (your page + competitor page). The SendMessage correction loops apply to both page's cluster auditors independently. Compare does NOT dedup ACROSS pages — each page keeps its own finding set.
+- *(Compare mode — reconciling two pages — is out of scope in this build; see `product.md`.)*
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`** — the phase immediately after reconciliation. Consumes the deduplicated finding set + SYNTHESIS_HINT groupings.
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`** — after reconciliation completes, the lead increments `cluster_files_written` (one per file that passed both validation passes) and eventually runs the self-check at audit completion.
 - **`${CLAUDE_PLUGIN_ROOT}/workflows/audit.md`** Step 4 / 4a / 4b / 4c — the canonical format + voice guide the cluster auditors are supposed to follow. The validation passes in this file enforce conformance.
