@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "pricing",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6",
+    "context_window": 200000
+  },
+  "started_at": "2026-04-28T23:20:00.000Z",
+  "completed_at": "2026-04-28T23:28:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Price Block Lacks Any Anchor or Compare-At Reference",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "$59.95",
+        "role": "div"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The price block renders as a standalone '$59.95' with no MSRP strikethrough, no 'Compare At' figure, and no external reference price. The h2 element (e5) and price div (e8) both show only the bare selling price."
+        },
+        {
+          "type": "dom",
+          "reference": "e8"
+        },
+        {
+          "type": "dom",
+          "reference": "e5"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 1: Comparative Price Advertising — Acquisition Value vs. Transaction Value",
+          "tier": "Gold"
+        },
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 2: Advertised Reference Price Effects on Internal Reference Price Formation",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The selling price '$59.95' appears as an isolated figure on the product page — there is no MSRP strikethrough above it, no 'Compare At' price, and no bundle reference to give the number context. A shopper arriving cold has no signal indicating whether $59.95 is favorable relative to any baseline; without a reference price, the brain defaults to whatever anchor it last encountered (typically a competitor's listing or category average), which may be lower than this product's genuine value.",
+      "recommendation": "If this product carries a manufacturer's suggested retail price above $59.95, render the MSRP as a strikethrough immediately above the selling price — for example, 'MSRP $79.95' struck through, followed by 'Your Price $59.95 (Save $20)'. The savings amount should appear in explicit dollar and percentage form alongside the strikethrough. If no MSRP exists, an internal 'Regular Price' reflecting actual prior pricing is acceptable provided it meets FTC 16 CFR §233.1 bona-fide-price requirements (the reference price must reflect a price at which the item was genuinely offered for a substantial period). Do not create an inflated reference price — the psychological benefit of the anchor disappears once customers perceive it as artificial, and the legal exposure is material.",
+      "why_this_matters": "Reference prices simultaneously raise perceived quality and deal attractiveness before the customer calculates any savings. For a $50–$100 specialty accessory sold to a high-consideration buyer comparing multiple vendors, the absence of an anchor leaves conversion entirely dependent on the customer's pre-formed reference price — which is frequently lower than reality for niche aftermarket parts. Adding a credible anchor is a copy-only change with disproportionate conversion impact for this price tier.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "PARTIAL",
+      "title": "Free Shipping Threshold Displayed but No Gap-to-Threshold on PDP",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e12",
+        "text_content": "FREE SHIPPING ON MOST ORDERS OVER $75*",
+        "role": "navigation"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The site-wide navigation bar at the top of the page (e12, y=0) reads 'FREE SHIPPING ON MOST ORDERS OVER $75*'. The product price is $59.95, leaving a $15.05 gap to the threshold. No per-product callout ('Add $15.05 more for free shipping') appears near the price block or the Add to Cart area."
+        },
+        {
+          "type": "dom",
+          "reference": "e12"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 1: Goal-Gradient Effect — Scientific Foundation for Free Shipping Progress Bars",
+          "tier": "Gold"
+        },
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 5: Zero-Price Effect — Why 'Free' Shipping Is Worth More Than Its Monetary Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The site-wide banner correctly announces the $75 free shipping threshold, and the threshold is above-fold. However, a visitor viewing a $59.95 item has no contextual cue — near the price block or the Add to Cart button — telling them they are $15.05 short of free shipping. The goal-gradient effect that drives threshold behavior requires the customer to perceive an active, attainable goal; a site-wide banner alone does not create that salience at the moment of purchase decision.",
+      "recommendation": "Inject a per-product proximity message adjacent to the price or below the Add to Cart button. A short line such as 'Add $15.05 more to qualify for free shipping' creates a concrete, named goal. If the store supports cart-level upsell recommendations, pair this message with 2–3 relevant accessory suggestions to make goal completion easy. The zero-price effect means 'free shipping' carries disproportionate psychological weight — a $15 barrier to 'free' is a meaningful conversion lever for a $60 purchase.",
+      "why_this_matters": "Cart abandonment due to unexpected or unachieved shipping costs consistently ranks as the top controllable abandonment reason in checkout research. Surfacing the threshold gap at the product-page level — before the customer reaches the cart — moves the goal-gradient activation earlier in the decision process, where it can motivate an additional item addition rather than a checkout exit.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": ".95 Charm Ending Misses Left-Digit Crossover on $59.95",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e9",
+        "text_content": "59.95",
+        "role": "span"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.78,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The price span (e9) renders '59.95'. The left digit is '5' whether the price is $59.95 or $60.00 — moving from $59.95 to $59.99 does not change the left digit, and neither does rounding to $60. The left digit only crosses at $49.99, where '4' replaces '5'."
+        },
+        {
+          "type": "dom",
+          "reference": "e9"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "charm-pricing.md",
+          "section": "Finding 4: Direct Evidence of Ending-Digit Drop-Off in Price Information Processing",
+          "tier": "Gold"
+        },
+        {
+          "source": "pricing-psychology.md",
+          "section": "Finding 4: Left-Digit Effect Mechanism in Price Perception",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The price '$59.95' uses a .95 ending, which provides minimal left-digit benefit. The left-digit effect — the primary mechanism behind charm pricing — only activates when the leftmost digit changes: $59.99 vs $60.00 shows no left-digit crossover because both round to '5' in the tens column. The operative comparison would be $49.99 vs $50.00 (a genuine tens-digit cross). At $59.95, neither the .95 nor a .99 change would trigger meaningful cognitive underestimation; the value is already in the $50s regardless of the cent ending.",
+      "recommendation": "If a price reduction is commercially viable, evaluate whether $49.99 represents a feasible price point — that is the nearest genuine left-digit threshold for this product. If reducing to $49.99 is not margin-appropriate, the current $59.95 ending has no meaningful charm-pricing advantage over $59.99 or $60.00. In that scenario, prioritize the anchoring fix (Finding F-1) over price-ending optimization — a credible MSRP anchor will generate more perceived-value lift than cent-ending adjustments in the $59 range.",
+      "why_this_matters": "Price-ending optimization at a price point where the left digit does not change delivers near-zero conversion benefit. Misallocating development attention to cent endings at $59.95 delays higher-leverage changes like the MSRP anchor and free-shipping gap callout.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "PayPal Pay Later BNPL Widget Present Near Price",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e16",
+        "text_content": "PayPal Pay Later",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "A PayPal Pay Later message widget (e16) renders at y=442, immediately below the price block, showing 'Pay in 4 interest-free payments of $14.99 with PayPal. Learn more'. The installment price ($14.99) is displayed alongside the full price ($59.95) and is visible above the fold."
+        },
+        {
+          "type": "dom",
+          "reference": "e16"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 4: BNPL Display Optimization — Where and How to Show Installment Pricing",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "A PayPal Pay Later installment message appears directly beneath the price, above the fold, showing 4 payments of $14.99. This placement satisfies the product-page proximity requirement — the installment framing is visible at the moment of purchase decision, and the full price remains visible for transparency.",
+      "recommendation": "The current BNPL implementation meets placement best practices. Monitor whether adding a second BNPL option (Affirm, which already has a footer link at e18) near the price would increase BNPL adoption among customers who prefer Affirm's longer-term financing over PayPal's 4-payment structure. For a $59.95 item, the $14.99-per-payment framing is within the effective BNPL range.",
+      "why_this_matters": "BNPL presence near the price reduces the perceived immediate cost of the purchase, with peer-reviewed field evidence showing approximately 9% purchase-incidence lift and 10% basket-size lift when BNPL is available and visible. The current implementation captures this benefit.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PARTIAL",
+      "title": "Price Match Guarantee Buried in Footer, Not Near Price Block",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": ""
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 581,
+          "viewport": "desktop",
+          "context": "The footer (e18, y=1345) contains a 'Price Match Guarantee' link under the Extras column. The footer text confirms the policy exists. No price match badge, text, or inline link appears near the price block or CTA in the above-fold product hero area visible in section-1.jpg."
+        },
+        {
+          "type": "dom",
+          "reference": "e18"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-transparency.md",
+          "section": "Finding 4: Price Guarantee Psychology — Trust Signal Without Operational Cost",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Slingmods has a published Price Match Guarantee (confirmed via footer link in e18). However, no mention of this guarantee appears near the price block, the Add to Cart button, or anywhere above the fold. A customer comparison-shopping against another vendor sees the $59.95 price in isolation, with no reassurance that they will not find it cheaper elsewhere — a signal that could stop comparison shopping entirely if placed near the price.",
+      "recommendation": "Add a short price match statement or icon adjacent to the price block or below the Add to Cart button. A line such as 'Price Match Guarantee — found it cheaper? We'll match it.' with a link to the policy page reduces comparison-shopping urgency at the moment of price evaluation. The placement should be within the first viewport and within visual proximity of the price element (e8) — not relegated to the footer where it is below the point of purchase consideration.",
+      "why_this_matters": "Price match guarantees reduce price-search urgency even when customers almost never invoke them. The guarantee signals pricing confidence and stops a customer from opening a new tab to check a competitor. Placing it near the price converts a dormant policy into an active conversion asset at zero additional cost.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The footer (e18) contains an 'Affirm Monthly Payments' link, indicating Affirm is an available payment option, but no Affirm widget or messaging appears near the product price block. This is an observation for the BNPL specialist pass or synthesizer — not emitted as a separate finding here because the PayPal Pay Later widget (e16) already covers the BNPL surface for this cluster.",
+    "No quantity discount, tiered pricing, or loyalty member pricing surfaces were detected in the routed sections. The absence is not a defect for this product type (single SKU, no natural tiering) and has not been emitted as a finding.",
+    "The 'In Stock' label is present in e6 but no specific inventory quantity is shown. Genuine low-stock messaging tied to the price block (e.g., 'Only 4 left') would strengthen urgency framing, but was not emitted as a finding because current inventory levels are unknown and fabricated scarcity is a regulatory BLOCK."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "pricing-psychology.md",
+      "charm-pricing.md",
+      "price-anchoring.md",
+      "bundle-pricing.md",
+      "discount-framing.md",
+      "free-shipping.md",
+      "tiered-pricing.md",
+      "bnpl-payment.md",
+      "price-transparency.md",
+      "scarcity-urgency.md",
+      "competitive-positioning.md",
+      "evidence-tiers.md"
+    ]
+  }
+}

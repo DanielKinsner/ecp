@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "post-purchase",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:15:00.000Z",
+  "completed_at": "2026-04-28T23:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Loyalty Program Enrollment Buried in Footer",
+      "surface": "footer-trust-links",
+      "element": {
+        "baton_index": "e19",
+        "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditions Reward Points CARB Policy",
+        "role": "contentinfo"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5-mobile.jpg",
+          "scroll_y": 2417,
+          "viewport": "mobile",
+          "context": "The footer's Information column lists 'Reward Points' as a plain text link alongside Privacy Policy and Terms & Conditions — no enrollment value proposition, no points-per-dollar framing, no progress indicator. The link sits at roughly 2,417px of scroll depth on a 390px-wide mobile viewport."
+        },
+        {
+          "type": "dom",
+          "reference": "e19"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "loyalty-programs.md",
+          "section": "Finding 1: The Endowed Progress Effect — Artificial Head-Start Increases Completion by 79%",
+          "tier": "Gold"
+        },
+        {
+          "source": "loyalty-programs.md",
+          "section": "Finding 9: Loyalty Program Enrollment — The Moment of Maximum Receptivity",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The Slingmods Reward Points program is accessible only through a footer link labelled 'Reward Points' sitting at approximately 2,417px of scroll depth — below all product content, all payment methods, and the full footer navigation. On mobile at 390px width, this places the loyalty enrollment entry point so far down the page that the overwhelming majority of visitors never see it. There is no loyalty program mention near the price block, the add-to-cart area, or anywhere within the first 2,000px of the page. A visitor who just added $59.95 handlebar end caps to their cart has no awareness that they could be earning points on this purchase.",
+      "recommendation": "Add a loyalty enrollment callout within 200px below the price element — specifically in the product title/price section at approximately scroll_y 823. The callout should state the per-dollar earn rate ('Earn X points on this purchase — join free') with a single-tap enrollment link. For signed-in members, replace the callout with a live points preview ('You'll earn 60 points — 340 away from your first reward'). This framing applies the endowed progress effect at the moment of maximum purchase intent, when commitment to the brand is highest and the enrollment value proposition (track this order + earn rewards) is immediately concrete.",
+      "why_this_matters": "Loyalty program enrollment rates on order confirmation pages reach 12–25% when the value proposition is presented at the purchase moment. A footer-only link generates below 2% enrollment. At Slingmods' product price point ($59.95), every guest who completes a purchase without enrolling is a missed opportunity to convert a one-time buyer into a repeat customer — and repeat buyers in loyalty programs show 2–3x higher LTV than non-members.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Referral Program Entry Point on Product Page",
+      "surface": "footer-trust-links",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5-mobile.jpg",
+          "scroll_y": 2417,
+          "viewport": "mobile",
+          "context": "The full footer is visible in section-5-mobile.jpg. The four footer columns (Information, Year/Model Charts, Extras, My Account) contain no referral program link, no 'Give $X / Get $X' CTA, and no share mechanism. The Extras column includes Gift Cards and Price Match Guarantee but no referral or ambassador program."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "referral-programs.md",
+          "section": "Finding 3: The 72-Hour Post-Purchase Window",
+          "tier": "Bronze"
+        },
+        {
+          "source": "order-confirmation.md",
+          "section": "Finding 7: The 72-Hour Referral Window",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "There is no referral program visible anywhere on this product page — not in the footer, not in the header, not adjacent to the social sharing or product content areas. A customer who just decided to purchase EvolutionR handlebar end caps for their Can-Am Spyder F3 is at peak brand enthusiasm and social sharing intent, yet the page provides no framing, incentive, or mechanism for them to tell a fellow Spyder or Slingshot rider about Slingmods.",
+      "recommendation": "If Slingmods has or intends to launch a referral program, the highest-leverage placement on mobile is a brief double-sided framing block in the order confirmation flow — but a secondary placement on the PDP footer (above the payment icons row) can capture pre-purchase sharers. The copy should lead with the give framing: 'Know another Spyder or Slingshot rider? Give them $15 off — and get $15 when they buy.' A one-tap native share button (navigator.share API) eliminates copy-paste friction on mobile. If no referral program exists, the confirmation email is the minimum viable touchpoint for the 72-hour referral window.",
+      "why_this_matters": "Customers who share a product page immediately after deciding to purchase convert referred friends at measurably higher rates than cold traffic. Slingmods sells to a tight, enthusiast community — Polaris Slingshot and Can-Am owners who actively talk to each other at rallies and in online communities. A referral program tuned to this community would generate high-quality acquisitions at lower CAC than paid search, and referred customers in this category typically show 16–25% higher lifetime profit margin than non-referred buyers.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PASS",
+      "title": "Order Tracking Link Present in Footer Navigation",
+      "surface": "footer-trust-links",
+      "element": {
+        "baton_index": "e19",
+        "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditions Reward Points CARB Policy",
+        "role": "contentinfo"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5-mobile.jpg",
+          "scroll_y": 2417,
+          "viewport": "mobile",
+          "context": "The My Account column in the footer includes 'Track My Order' as a persistent navigation link, visible in section-5-mobile.jpg."
+        }
+      ],
+      "observation": "The My Account footer column includes a 'Track My Order' link, providing a persistent navigation path for post-purchase customers who return to the site seeking order status. Order History and Newsletter subscription links are also present, giving returning customers access to their account touchpoints.",
+      "recommendation": "The 'Track My Order' footer link satisfies baseline WISMO (where-is-my-order) navigation. To strengthen this further, consider surfacing a header-level order status shortcut for logged-in users — the current header shows Login/Sign Up for guests and a cart icon, but no order status access for authenticated sessions. This would reduce reliance on footer navigation for the most common post-purchase action.",
+      "why_this_matters": "Customers who can easily self-serve order status generate fewer support tickets, costing the business less per order. The footer link is functional but requires knowledge of its location — a header-level shortcut for signed-in users would reduce WISMO support volume.",
+      "evidence_tier": "Bronze",
+      "reference_citations": []
+    }
+  ],
+  "notes": [
+    "This is a product detail page (PDP), not an order confirmation page — the post-purchase cluster's primary surfaces (order confirmation, thank-you page upsell, post-purchase email) are not directly auditable from this page. Findings are scoped to PDP-level post-purchase entry points: loyalty enrollment, referral program, and persistent navigation for returning customers.",
+    "The footer contains payment method logos (Visa, Mastercard, Amex, Discover, Google Pay, Apple Pay, PayPal, Amazon Pay, Affirm) — these serve a trust function and are relevant to the trust-credibility cluster. Not emitted here as they are outside post-purchase scope.",
+    "No post-purchase upsell or cross-sell mechanism is visible on this PDP. Accessory cross-sells near the add-to-cart button would serve both pre-purchase AOV and post-purchase upsell functions — the checkout-flows and post-purchase clusters share interest in this gap.",
+    "The Reward Points program does exist (footer link confirmed) but enrollment mechanics, earn rates, and program terms were not observable from this page context."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "post-purchase-psychology.md",
+      "order-confirmation.md",
+      "buyers-remorse.md",
+      "loyalty-programs.md",
+      "referral-programs.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 1,
+    "sections_with_dom_slice": 1,
+    "baton_elements_total": 20,
+    "baton_elements_referenced_in_findings": 1
+  }
+}

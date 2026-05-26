@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "checkout-flows",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:20:00.000Z",
+  "completed_at": "2026-04-28T23:24:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "checkout-flows",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Apple Pay / Google Pay Express Buttons Near Add to Cart",
+      "surface": "add-to-cart-fitment-payments",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "The purchase zone shows a quantity selector, a black 'Add to Cart' button, 'Add to Wishlist', and a PayPal Pay Later message. No Apple Pay, Google Pay, or Amazon Pay express buttons appear anywhere in this zone. Payment logos (including Apple Pay, Google Pay, Amazon Pay) appear only in the site footer."
+        },
+        {
+          "type": "dom",
+          "reference": "e18"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "biometric-and-express-checkout.md",
+          "section": "Finding 6: Place Wallet Buttons Early — Top of Checkout, Not Bottom",
+          "tier": "Silver"
+        },
+        {
+          "source": "biometric-and-express-checkout.md",
+          "section": "Finding 1: Digital Wallets Lift Checkout Conversion 7-22%",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The product page purchase zone — the section containing the quantity field and 'Add to Cart' button — has no Apple Pay, Google Pay, or Amazon Pay express checkout buttons. PayPal's 'Pay in 4' instalment message is present below the price, but no one-tap wallet options are offered alongside the primary CTA. Apple Pay, Google Pay, and Amazon Pay logos do appear in the footer, confirming the store supports these methods, but mobile shoppers who reach the page never see them as purchase options until after checkout has begun.",
+      "recommendation": "If the payment gateway already processes Apple Pay, Google Pay, and Amazon Pay (confirmed by the footer logos), add express checkout buttons directly in the purchase zone above or immediately below the 'Add to Cart' button. On a 390px mobile viewport, a two-column button row (Apple Pay | Google Pay) followed by a full-width Amazon Pay button fits without crowding the quantity control. Stripe Express Checkout Element or the platform's native wallet button component will surface the device-appropriate option automatically — an iOS visitor sees Apple Pay; an Android visitor sees Google Pay.",
+      "why_this_matters": "Stripe's controlled A/B tests show express checkout buttons placed early in the purchase flow (near the CTA, not at payment-step) convert at roughly twice the rate of buttons placed late. For a $59.95 accessory on mobile — where thumb-typing a card number is the primary friction point — removing the form entirely for wallet users is the single highest-leverage checkout change available on this page.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Shipping Cost Hidden Until Checkout — No PDP Estimate",
+      "surface": "product-title-price",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "The price block shows '$59.95' and the PayPal instalment line. No shipping estimate, delivery timeframe, or free-shipping threshold message appears anywhere in the price or purchase zone."
+        },
+        {
+          "type": "dom",
+          "reference": "e10"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 4: Shipping Cost Timing -- Early vs. Late Disclosure",
+          "tier": "Gold"
+        },
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 1: Extra Costs Are the #1 Abandonment Driver",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The price block displays '$59.95' with no shipping estimate alongside it. The site's structured data (schema.org Offer) encodes a shipping rate of $7.99, but this figure is not rendered anywhere on the product page. The footer carries an asterisk note — '* Free Shipping Applies to Most Contiguous U.S. Orders - Some Items May Not Qualify' — but this disclaimer is more than 2,400px below the purchase zone and is not linked from the price block. A mobile shopper adding this item to cart has no shipping cost signal until checkout begins.",
+      "recommendation": "If this SKU qualifies for free shipping, add a short line directly below the price — for example, 'Free shipping on this item to the contiguous US' — and link the disclaimer to the shipping policy page. If the item carries a flat $7.99 shipping fee (as in the structured data), display that amount in the price zone so the total landed cost is visible before add-to-cart. Either disclosure eliminates the most common cause of late-funnel abandonment without requiring any backend changes — it is a template copy edit.",
+      "why_this_matters": "Baymard's 50-study aggregate identifies extra costs revealed late as the cause of 39% of all actionable cart abandonments. Showing the shipping cost or free-shipping status on the product page removes the largest single friction point before it can trigger abandonment at checkout.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PASS",
+      "title": "PayPal Pay Later BNPL Shown Inline at Point of Decision",
+      "surface": "product-title-price",
+      "element": {
+        "baton_index": "e18",
+        "text_content": "",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "Directly below the $59.95 price the page reads 'Pay in 4 interest-free payments of $14.99 with PayPal. Learn more.' The PayPal logo is inline with the text."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 13: Limited Payment Methods Cause 10% Abandonment",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "A PayPal Pay Later instalment line — 'Pay in 4 interest-free payments of $14.99 with PayPal' — appears immediately below the price, before the Add to Cart button. This positions the affordability message at the moment shoppers are evaluating whether $59.95 is within their budget.",
+      "recommendation": "The placement and framing of the PayPal Pay Later line are effective as-is. If the store adds Affirm (already in the footer logo strip) as an additional BNPL option at a higher cart value, a second instalment line could appear conditionally once the cart exceeds Affirm's minimum — this would not require changing the current PayPal messaging.",
+      "why_this_matters": "Baymard's research shows 10% of shoppers abandon because the store offers too few payment options. Surfacing a BNPL option at the price point directly addresses price-sensitivity abandonment before it reaches checkout.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The footer payment logo strip includes Apple Pay, Google Pay, Amazon Pay, PayPal, Affirm, Visa, Mastercard, Amex, and Discover — a comprehensive payment method set. The gap is not supported methods but their absence as express purchase options at the product-page CTA.",
+    "Affirm is present in the footer logo strip and has a dedicated landing page linked in the footer ('Affirm Monthly Payments'), but no Affirm instalment messaging appears in the product purchase zone alongside the PayPal Pay Later line. This may be a threshold-based display decision by the merchant.",
+    "The cookie consent element (e16) was dismissed before capture and is offscreen — no visible consent banner was present during the session. No finding emitted on this surface as the banner was already handled."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "checkout-optimization.md",
+      "biometric-and-express-checkout.md",
+      "abandoned-cart-psychology.md",
+      "cookie-consent-and-compliance.md",
+      "evidence-tiers.md"
+    ]
+  }
+}

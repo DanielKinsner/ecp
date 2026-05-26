@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "performance-ux",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:35:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Hero Car Image Implemented as CSS Background — Not LCP-Optimizable",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e19",
+        "text_content": "Shop All",
+        "role": "banner"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Full-width hero banner showing a silver Subaru WRX on a night street scene occupies the entire viewport above fold. The hero image is not rendered as an <img> element — zero <img> tags appear in the hero/header DOM slice for this region, and no <link rel=\"preload\" as=\"image\"> appears in the page <head>. The image is delivered as a CSS background, which cannot carry fetchpriority or benefit from <picture> AVIF/WebP format negotiation."
+        },
+        {
+          "type": "dom",
+          "reference": "e19"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 1: Product Hero Image Is the LCP Element — Requires fetchpriority=\"high\" and Preload",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 6: Never Lazy-Load the LCP Hero Image",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The hero section at the top of the AWDMods homepage displays a full-width car photograph spanning the entire 1920×1080 viewport. This image is implemented as a CSS background rather than an HTML <img> element — the header/hero DOM slice contains zero <img> tags for the large car photograph, and the page <head> contains no <link rel=\"preload\" as=\"image\"> for it. CSS background images cannot carry fetchpriority=\"high\", cannot be described in a <picture> element for AVIF/WebP format negotiation, and are invisible to the browser's preload scanner. The browser discovers and begins fetching this image only after parsing the CSS file and evaluating the computed style, adding a full CSS-parse round-trip to the critical path of the Largest Contentful Paint element.",
+      "recommendation": "Replace the CSS background implementation of the hero car image with an HTML <img> element (or <picture> element) carrying fetchpriority=\"high\", explicit width and height attributes, and a <source> offering AVIF and WebP before the JPEG fallback. Simultaneously add a <link rel=\"preload\" as=\"image\" fetchpriority=\"high\"> for the hero image URL in the <head> so the browser's preload scanner can fetch it before the CSS is even parsed. This is a Shopify theme change to the hero section template — replace the CSS background-image with a Liquid-rendered <img> tag using Shopify's image_url filter with the width parameter and fetchpriority attribute.",
+      "why_this_matters": "On most product and collection pages, the hero image is the Largest Contentful Paint element — the metric Google uses as a ranking signal and which the Vodafone A/B test showed directly controls sales volume (31% LCP improvement yielded 8% more online sales in a 100,000-click controlled test). A CSS background hero cannot be preloaded and cannot use modern AVIF format, leaving 30–50% potential file size reduction and an unknown but material LCP delay on the table. This is the single highest-leverage performance fix available on this page.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Logo Image Missing fetchpriority — No Image Preload in Page Head",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e9",
+        "text_content": "AWDMods",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "AWDMods logo renders in the top-left of the header bar at scroll_y=56. The img tag carries loading=\"eager\" (correct) but no fetchpriority attribute. The page <head> contains two font preloads but zero image preloads."
+        },
+        {
+          "type": "dom",
+          "reference": "e9"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 1: Product Hero Image Is the LCP Element — Requires fetchpriority=\"high\" and Preload",
+          "tier": "Gold"
+        },
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 12: fetchpriority Is Baseline-Supported",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The AWDMods logo (e9) at the top of the page carries loading=\"eager\" — which correctly prevents lazy-load deferral — but omits fetchpriority=\"high\". The page <head> contains two font preload hints (Roboto Condensed and Open Sans Condensed) but no <link rel=\"preload\" as=\"image\"> for any above-fold image. fetchpriority=\"high\" is now Baseline-supported across Chrome 102+, Edge 102+, Firefox 132+, and Safari 17.2+ — no JavaScript guard is needed. Without it, the browser treats this image at default network priority, meaning it competes with CSS and other resources rather than being elevated to the high-priority fetch queue.",
+      "recommendation": "Add fetchpriority=\"high\" to the AWDMods logo <img> element in the Shopify header template. If the hero car image is converted to an <img> element per Finding 1, that hero image should receive fetchpriority=\"high\" as well; the logo (being smaller, text-adjacent) may then drop to fetchpriority=\"auto\". Do not add fetchpriority=\"high\" to more than one or two images — competing high-priority hints negate the benefit.",
+      "why_this_matters": "fetchpriority=\"high\" on the above-fold logo ensures it loads in the same high-priority network tier as render-blocking CSS, rather than queueing behind it. For a 40–80 pixel logo, the file size is small, but the priority signal affects when the browser starts the fetch — meaning it influences the First Contentful Paint moment that sets the user's first perception of page speed.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No AVIF/WebP Format Negotiation — Zero <picture> Elements Sitewide",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Logo image in header is served via Shopify CDN as PNG (awd_big_3cb61c8f...png) with a srcset of PNG variants. No <picture> element wraps any image on the page. The Shopify CDN image URL pattern (?v=... &width=...) does not include format=webp or format=avif parameters in the captured DOM."
+        },
+        {
+          "type": "dom",
+          "reference": "e9"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 3: WebP Reduces File Size ~30%; AVIF Reduces ~50% vs. JPEG",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 7: Image Format Priority — AVIF → WebP → JPEG",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The AWDMods logo is served as a PNG with a srcset of multiple PNG-format variants (no WebP or AVIF alternatives). The DOM contains zero <picture> elements across all sections captured in this engagement. Shopify's CDN supports automatic WebP format negotiation when images are served using the image_url Liquid filter with the format parameter, but this capability is not being leveraged — the logo src URL ends in .png rather than using Shopify's automatic format negotiation. AVIF is now supported by ~94.9% of browsers and reduces file size 50% vs JPEG; WebP ~96.4% support at 25–34% reduction. Both are available at no additional cost on Shopify's CDN.",
+      "recommendation": "For the logo and all product images, switch to Shopify's Liquid image_url filter with format: 'webp' (or use the image_tag helper which handles format negotiation automatically). For maximum compression, configure Shopify CDN to serve AVIF via the format: 'avif' parameter where supported. The ideal implementation wraps product images in <picture> elements with <source type=\"image/avif\"> and <source type=\"image/webp\"> before the JPEG/PNG fallback. For a Shopify Dawn/Ignite theme, this is a template-level change to the image rendering partials.",
+      "why_this_matters": "Serving PNG instead of WebP or AVIF for all page images wastes 25–50% of image bandwidth on every page load. For a homepage with a large hero image and product card grid, the difference between JPEG and AVIF can exceed 500KB in total page image weight — directly contributing to slower LCP and lower conversion rates. The Deloitte/Google study found every 0.1s improvement in page load speed yields 8.4% higher retail conversion.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Font Preloads Correctly Implemented in Page Head",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e19",
+        "text_content": "Shop All",
+        "role": "banner"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e19"
+        }
+      ],
+      "reference_citations": [],
+      "observation": "The page <head> contains two correctly-formed font preloads for Roboto Condensed and Open Sans Condensed (both with fetchpriority=\"high\", crossorigin, and type=\"font/woff2\"). This prevents Flash of Unstyled Text (FOUT) and reduces font-induced CLS. Font preloads are the most CLS-impactful head resource for text-heavy pages.",
+      "recommendation": "No change needed on font preloads. When adding the hero image preload (Finding 1) and product image preloads, ensure the font preloads remain in place and are not accidentally removed during theme changes.",
+      "why_this_matters": "Font FOUT causes layout shifts when text reflows after the custom font loads — a CLS contributor that is fully preventable with correct font preloads. The current implementation avoids this class of CLS entirely.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Navigation Information Architecture — Well-Chunked Category Tiles",
+      "surface": "category-grid",
+      "element": {
+        "baton_index": "e18",
+        "text_content": "Shop All",
+        "role": "navigation"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.87,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The category tile grid below the hero presents exactly 5 categories (Performance, Handling & Brakes, Interior, Exterior, Electronics), each with 4–5 sub-items listed, a background photograph, and a distinct CTA button. This matches the progressive disclosure pattern with category-level chunking."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cognitive-load-management.md",
+          "section": "Finding 7: Progressive Disclosure Reduces Overwhelm",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The five-category tile grid (Performance, Handling & Brakes, Interior, Exterior, Electronics) presents a well-structured progressive disclosure architecture: top-level category labels, 4–5 supporting sub-items per tile, and a single 'Shop [Category]' CTA. Five options is within the cognitively comfortable scanning range, each tile is visually distinct with product photography, and the sub-item text lists (e.g., 'Intakes, Exhaust, Cooling, Drivetrain upgrades') provide information scent without overwhelming detail. The heading hierarchy (h3 category titles inside the multicolumn divs) also supports layer-cake scanning.",
+      "recommendation": "No change needed on the category grid layout. If the catalog expands, consider whether a sixth or seventh tile would warrant promoting the top 5 to a primary row with a collapsible secondary row rather than expanding the single row.",
+      "why_this_matters": "Progressive disclosure at the category navigation level reduces the number of active decisions a first-time visitor must make before reaching a product — a direct contributor to lower bounce rates from the homepage.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 6,
+      "verdict": "PARTIAL",
+      "title": "Speculation Rules API Absent — No Prerendering on Collection Navigation",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.75,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The homepage presents five prominent category CTAs (Shop Performance, Shop Handling, Shop Interior, Shop Exterior, Shop Electronics) and product card links in the Featured Collection. No <script type=\"speculationrules\"> is present in the captured page head or DOM slices."
+        },
+        {
+          "type": "dom",
+          "reference": "e18"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 11: Ray-Ban Speculation Rules API → +101% Mobile PDP Conversion",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The page head and all captured DOM slices contain no <script type=\"speculationrules\"> element. The AWDMods homepage presents five high-confidence next-navigation candidates (the five category CTAs) and a Featured Collection product grid with 9 product links visible. Prerendering these destinations would make category pages and product pages appear to load instantly for the significant portion of visitors who click through from the homepage. The Ray-Ban A/B test found the Speculation Rules API produced +156% desktop PDP conversion and +101% mobile PDP conversion on their collection-to-PDP navigation.",
+      "recommendation": "If Chrome's ~65%+ desktop market share is representative of AWDMods' audience, implement Speculation Rules on the homepage targeting the five category collection URLs and the Featured Collection product URLs. Use eagerness: 'moderate' to trigger prerendering on link hover rather than page load, limiting bandwidth cost. Chrome-only caveat applies — Firefox and Safari users see no change, positive or negative.",
+      "why_this_matters": "The Speculation Rules API is the highest single-change conversion upside available for collection-to-PDP navigation — it eliminates perceived navigation latency entirely for Chrome users by rendering the next page in the background before the click. For a homepage that functions primarily as a navigation layer to category and product pages, this is an exceptionally well-matched pattern.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "The hero car image (large full-width Subaru WRX photograph above the fold) appears to be implemented as a CSS background-image rather than an HTML <img> element. This was confirmed by inspecting the header/hero section DOM slice which contains only one <img> tag (the logo) and zero <picture> elements. If the Shopify Ignite theme uses a custom hero section with a background-image CSS property, the LCP element is unpreloadable and cannot benefit from fetchpriority or modern image formats.",
+    "Page uses Shopify Ignite theme v2.4.0. All images are served from Shopify's CDN (awdmods.com/cdn/shop) which inherently provides CDN edge delivery and geographic caching — no additional CDN configuration is needed. The main optimization gaps are fetchpriority, format negotiation (AVIF/WebP), and hero image delivery method.",
+    "No third-party analytics, marketing, or chat scripts were detectable in the captured page head beyond Shopify's own checkout-web prefetch links. This is a positive finding — third-party script pile-up is a common LCP killer. The Shopify checkout prefetch links use rel=prefetch with fetchpriority=low, which is correct.",
+    "No CrUX field data summary was present in the baton — CWV performance cannot be assessed from real-user data. All LCP/CLS/INP findings above are based on DOM attribute inspection and screenshot visual evidence rather than measured field metrics.",
+    "Product card images (e10, e11) in the Featured Collection appear at y~989 which is below the 1080px viewport height on initial load at 1x DPR. They do not require fetchpriority='high' but would benefit from lazy loading signals and explicit width/height attributes to prevent CLS. The baton attributes for these elements show no explicit width/height in the img tag (attrs: {}), confirming no dimension reservation."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "media-performance-optimization.md",
+      "core-web-vitals.md",
+      "page-performance-psychology.md",
+      "cognitive-load-management.md"
+    ],
+    "sections_routed": 1,
+    "sections_with_dom": 2,
+    "baton_elements_checked": 42
+  }
+}

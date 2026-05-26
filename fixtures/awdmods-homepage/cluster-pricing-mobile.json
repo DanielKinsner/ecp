@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "pricing",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Featured Card Price Has No MSRP or Comparison Anchor",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "e27",
+        "text_content": "From $135.99",
+        "role": "span"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 917,
+          "viewport": "mobile",
+          "context": "The VelourTex floor mat card displays 'FROM $135.99' in bold with no strikethrough MSRP, no 'compare at' price, and no savings amount or percentage. The partially visible second card (Revo Designs rocker stripes) shows '$49.00' with a star rating but also no anchor."
+        },
+        {
+          "type": "dom",
+          "reference": "e27"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 2: Advertised Reference Price Effects on Internal Reference Price Formation",
+          "tier": "Gold"
+        },
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 1: Comparative Price Advertising — Acquisition Value vs. Transaction Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Both visible featured-collection cards present bare selling prices with no reference anchor. The VelourTex floor mats show 'FROM $135.99' — no MSRP strikethrough, no 'was/now' framing, no savings percentage. The Revo Designs decal kit shows '$49.00' with identical absence of comparison context. Visitors land on these cards without a prior price signal; the advertised reference price mechanism (Grewal et al. 1998) that elevates perceived product value and deal quality is entirely bypassed.",
+      "recommendation": "If either product has a manufacturer-suggested retail price above the selling price, render the MSRP as a grey strikethrough above the selling price and add a 'Save $X (Y%)' line in the brand's accent color. Where a documented MSRP is unavailable, display a legitimate 'regular price' based on actual prior pricing (FTC 16 CFR §233.1 requires the reference to reflect a bona fide prior offer). Even a subtle compare-at line converts the price block from an isolated number into a value statement.",
+      "why_this_matters": "Reference prices independently raise perceived product quality and transaction value before customers calculate savings — omitting them means $135.99 reads as expensive against nothing, suppressing click-through on the highest-ticket featured card.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No BNPL Option on $135+ Featured Product",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": ""
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 917,
+          "viewport": "mobile",
+          "context": "The VelourTex floor mat card shows 'FROM $135.99' with a 'Made to Order' badge. No Klarna, Afterpay, Affirm, or Shop Pay Installments widget appears on the card or anywhere in the featured collection section."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "The footer payment icon row (e32) shows Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa. No Klarna, Afterpay, or Affirm logo is present, confirming BNPL is not configured site-wide."
+        },
+        {
+          "type": "dom",
+          "reference": "e32"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 1: BNPL Increases Basket Size 10% — Large-Scale Peer-Reviewed Evidence",
+          "tier": "Gold"
+        },
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 4: BNPL Display Optimization — Where and How to Show Installment Pricing",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "BNPL (Klarna, Afterpay, Affirm, or Shop Pay Installments) is absent throughout the site. The footer payment icons list eight payment methods and none of them is a BNPL provider. The featured $135.99 floor mat falls squarely within the $50–$500 range where BNPL generates its largest purchase-incidence and basket-size lift (Maesen & Ang 2025: ~9% purchase incidence increase, ~10% basket size increase). A 'Made to Order' product requiring upfront commitment is precisely the scenario where installment framing reduces perceived affordability barriers.",
+      "recommendation": "Add Shopify's native Shop Pay Installments (available at no extra merchant cost on eligible orders) or connect a third-party BNPL provider such as Afterpay. Once enabled, surface the installment price — e.g., '4 interest-free payments of $34.00' — directly beneath the selling price on product cards and PDPs. The installment amount, not the total, should be the psychologically salient figure while the full price remains visible for regulatory compliance.",
+      "why_this_matters": "Mid-ticket automotive accessories in the $100–$500 range are exactly where BNPL generates measurable conversion lift; leaving a $135 featured product without an installment option cedes that lift to competitors who display one.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Free Shipping Banner Uses Hedged Language That Dilutes Goal-Gradient Pull",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e14",
+        "text_content": "Shop All",
+        "role": "banner"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The top announcement bar reads 'FREE SHIPPING on most orders $75+' with a truck emoji. The phrase 'on most orders' qualifies the threshold, creating ambiguity about which orders actually qualify."
+        },
+        {
+          "type": "dom",
+          "reference": "e14"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 1: Goal-Gradient Effect — Scientific Foundation for Free Shipping Progress Bars",
+          "tier": "Gold"
+        },
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 2: Unexpected Costs as a Top Controllable Abandonment Cause",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The site-wide announcement bar states 'FREE SHIPPING on most orders $75+'. The $75 threshold is a concrete anchor — that part is strong. However, 'on most orders' hedges the promise without explanation: visitors don't know whether their item type, size, or location excludes them. The goal-gradient effect (Kivetz et al. 2006) requires a perceived achievable goal; ambiguous eligibility disrupts goal formation. A shopper building a $62 cart will only add $13 more if they believe their specific order qualifies.",
+      "recommendation": "Replace 'on most orders $75+' with a cleaner threshold statement. If all standard-size orders qualify, write 'FREE SHIPPING on orders $75+' with no qualifier. If exclusions exist (oversized parts, freight items), list them specifically in a tooltip or a linked page rather than burying them in the headline copy. A progress bar in the cart drawer showing exact distance to $75 would further operationalize the threshold into purchase-acceleration behavior.",
+      "why_this_matters": "Vague threshold copy undermines the $75 goal as a conversion lever; clarifying it costs a single copy edit and directly reduces the 39% of cart abandoners who cite unexpected shipping costs as a primary reason (Baymard Institute, current wave).",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Charm Pricing Applied Consistently Across Featured Cards",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "e27",
+        "text_content": "From $135.99",
+        "role": "span"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 917,
+          "viewport": "mobile",
+          "context": "The VelourTex card shows 'FROM $135.99' (ends in .99, left digit 135 vs rounded 136). The Revo Designs card shows '$49.00' — a round ending. Both products are utilitarian automotive accessories."
+        },
+        {
+          "type": "dom",
+          "reference": "e27"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "charm-pricing.md",
+          "section": "Finding 1: Meta-Analytic Evidence for Just-Below Pricing Effects",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "$135.99 uses a .99 ending on a utilitarian accessory (floor mats), which is appropriate for the product type and brand positioning. The Troll & Wieseke (2024) meta-analysis confirms that just-below pricing produces a statistically reliable positive effect on purchase intentions (d = 0.11) for non-luxury goods with no quality-perception penalty. $49.00 for the decal kit uses a round ending — also defensible, as round prices on smaller-ticket items reduce cognitive friction without the charm-pricing benefit being material at that price level.",
+      "recommendation": "No change required. The .99 ending on $135.99 is well-calibrated for a value-positioned automotive accessory. If future variants or bundles are priced above $199, maintain the .99 or .95 ending to preserve the left-digit effect.",
+      "why_this_matters": "Maintaining charm pricing on mid-ticket utilitarian products is a low-cost optimization that preserves a small but real purchase-intention advantage.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "Section 2 (featured-collection) DOM slice was empty in the cluster context (dom_slice length 0); pricing findings were grounded in baton elements e26, e27, e28 and visual evidence from section-3-mobile.jpg and section-2-mobile.jpg.",
+    "No scarcity or urgency framing tied to price (countdown timers, 'X left at this price') was observed on any section. This is notable for a 'Made to Order' product where lead-time messaging could serve a legitimate urgency function — not emitted as a finding because absence may reflect a deliberate brand stance on this homepage surface.",
+    "Payment icons in footer (e32) confirm site-wide BNPL absence: Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa — no Klarna, Afterpay, or Affirm.",
+    "No promotional overlays or discount banners detected (baton capture_state.overlays_detected: []).",
+    "'From $135.99' indicates variant-driven pricing on the floor mat product (set of 4, multiple trim fitments). The default-state price shown is $135.99; no configured-state capture present in baton."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "price-anchoring.md",
+      "charm-pricing.md",
+      "bnpl-payment.md",
+      "free-shipping.md",
+      "evidence-tiers.md"
+    ],
+    "baton_elements_checked": ["e14", "e26", "e27", "e28", "e32"],
+    "screenshots_reviewed": ["section-1-mobile.jpg", "section-2-mobile.jpg", "section-3-mobile.jpg", "section-4-mobile.jpg"]
+  }
+}

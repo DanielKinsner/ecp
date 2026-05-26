@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-05-04-6652c864",
+  "device": "mobile",
+  "url": "https://www.slingmods.com/polaris-slingshot-aluminum-coolant-surge-tank-ddmworks",
+  "captured_at": "2026-05-04T11:35:00.000Z",
+  "viewport": {
+    "width": 390,
+    "height": 844,
+    "dpr_requested": 3,
+    "dpr_actual": 3
+  },
+  "capture_state": {
+    "hydration": "post-hydration",
+    "overlays_detected": [
+      {
+        "type": "cookie-consent",
+        "dismissed": true,
+        "dismissal_method": "accept-button",
+        "class": "termly-styles-root-b0aebb termly-styles-termly-banner"
+      },
+      {
+        "type": "newsletter-popup",
+        "dismissed": true,
+        "dismissal_method": "close-button",
+        "class": "omnisend-form-684b52aaa86a2989e0214e20"
+      }
+    ],
+    "page_height_px": 3799
+  },
+  "elements": [
+    {
+      "selector": "button",
+      "tag": "button",
+      "text_content": "",
+      "class": "sm-mobile-btn",
+      "scroll_y_at_capture": 0,
+      "role": "button",
+      "accessible_name": "Menu",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e0",
+      "rect": {
+        "x": 36,
+        "y": 24,
+        "width": 132,
+        "height": 132
+      }
+    },
+    {
+      "selector": "button",
+      "tag": "button",
+      "text_content": "",
+      "class": "sm-mobile-btn",
+      "scroll_y_at_capture": 0,
+      "role": "button",
+      "accessible_name": "Search",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e1",
+      "rect": {
+        "x": 858,
+        "y": 24,
+        "width": 132,
+        "height": 132
+      }
+    },
+    {
+      "selector": "button",
+      "tag": "button",
+      "text_content": "0",
+      "class": "sm-mobile-btn",
+      "scroll_y_at_capture": 0,
+      "role": "button",
+      "accessible_name": "Cart",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e2",
+      "rect": {
+        "x": 1002,
+        "y": 24,
+        "width": 132,
+        "height": 132
+      }
+    },
+    {
+      "selector": "h1",
+      "tag": "h1",
+      "text_content": "DDMWorks Aluminum Coolant Surge Tank for the Polaris Slingshot (2015+) (Gen 2)",
+      "class": "product-name-h1",
+      "scroll_y_at_capture": 0,
+      "role": "heading",
+      "accessible_name": "DDMWorks Aluminum Coolant Surge Tank for the Polaris Slingshot (2015+) (Gen 2)",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e3",
+      "rect": {
+        "x": 45,
+        "y": 2028,
+        "width": 1080,
+        "height": 219
+      }
+    },
+    {
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "$179.00",
+      "class": "",
+      "scroll_y_at_capture": 0,
+      "role": "heading",
+      "accessible_name": "$179.00",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e4",
+      "rect": {
+        "x": 45,
+        "y": 2397,
+        "width": 1080,
+        "height": 90
+      }
+    },
+    {
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": "",
+      "class": "",
+      "scroll_y_at_capture": 0,
+      "role": "image",
+      "accessible_name": "Slingmods",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e5",
+      "rect": {
+        "x": 315,
+        "y": 27,
+        "width": 540,
+        "height": 129
+      }
+    },
+    {
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": "",
+      "class": "",
+      "scroll_y_at_capture": 0,
+      "role": "image",
+      "accessible_name": "Slingshot",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e6",
+      "rect": {
+        "x": -9,
+        "y": 204,
+        "width": 54,
+        "height": 54
+      }
+    },
+    {
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": "",
+      "class": "",
+      "scroll_y_at_capture": 0,
+      "role": "image",
+      "accessible_name": "Spyder",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e7",
+      "rect": {
+        "x": 255,
+        "y": 204,
+        "width": 66,
+        "height": 54
+      }
+    },
+    {
+      "selector": "[class*=\"rating\"]",
+      "tag": "div",
+      "text_content": "(83 reviews)\n\t\t\t  \t\t\t\tIn Stock",
+      "class": "rating",
+      "scroll_y_at_capture": 0,
+      "role": "div",
+      "accessible_name": "(83 reviews) In Stock",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e8",
+      "rect": {
+        "x": 45,
+        "y": 2247,
+        "width": 1080,
+        "height": 90
+      }
+    },
+    {
+      "selector": "[class*=\"star\"]",
+      "tag": "i",
+      "text_content": "",
+      "class": "fa fa-star fa-stack-1x",
+      "scroll_y_at_capture": 0,
+      "role": "i",
+      "accessible_name": "",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e9",
+      "rect": {
+        "x": 45,
+        "y": 2250,
+        "width": 48,
+        "height": 54
+      }
+    },
+    {
+      "selector": "[class*=\"price\"]",
+      "tag": "div",
+      "text_content": "$179.00",
+      "class": "product-price-row",
+      "scroll_y_at_capture": 0,
+      "role": "div",
+      "accessible_name": "$179.00",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e10",
+      "rect": {
+        "x": 45,
+        "y": 2397,
+        "width": 1080,
+        "height": 231
+      }
+    },
+    {
+      "selector": "[class*=\"price\"]",
+      "tag": "span",
+      "text_content": "179.00",
+      "class": "price-old-live",
+      "scroll_y_at_capture": 0,
+      "role": "span",
+      "accessible_name": "179.00",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e11",
+      "rect": {
+        "x": 90,
+        "y": 2394,
+        "width": 249,
+        "height": 90
+      }
+    },
+    {
+      "selector": "[class*=\"badge\"]",
+      "tag": "span",
+      "text_content": "0",
+      "class": "sm-mobile-cart-badge",
+      "scroll_y_at_capture": 0,
+      "role": "span",
+      "accessible_name": "0",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e12",
+      "rect": {
+        "x": 1080,
+        "y": 36,
+        "width": 48,
+        "height": 48
+      }
+    },
+    {
+      "selector": "[class*=\"badge\"]",
+      "tag": "div",
+      "text_content": "",
+      "class": "grecaptcha-badge",
+      "scroll_y_at_capture": 0,
+      "role": "div",
+      "accessible_name": "",
+      "is_above_fold": true,
+      "is_sticky": true,
+      "is_offscreen": false,
+      "e_index": "e13",
+      "rect": {
+        "x": 960,
+        "y": 2310,
+        "width": 768,
+        "height": 180
+      }
+    },
+    {
+      "selector": "[class*=\"cart\"]",
+      "tag": "div",
+      "text_content": "0",
+      "class": "sm-mobile-cart-wrap",
+      "scroll_y_at_capture": 0,
+      "role": "div",
+      "accessible_name": "0",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e14",
+      "rect": {
+        "x": 1002,
+        "y": 24,
+        "width": 132,
+        "height": 132
+      }
+    },
+    {
+      "selector": "[class*=\"pay\"]",
+      "tag": "div",
+      "text_content": "",
+      "class": "paypal-paylater-message",
+      "scroll_y_at_capture": 0,
+      "role": "div",
+      "accessible_name": "",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e15",
+      "rect": {
+        "x": 45,
+        "y": 2514,
+        "width": 1080,
+        "height": 111
+      }
+    },
+    {
+      "selector": "[class*=\"floating\"]",
+      "tag": "button",
+      "text_content": "",
+      "class": "termly-styles-root-b60a7d termly-floating-preferences",
+      "scroll_y_at_capture": 0,
+      "role": "button",
+      "accessible_name": "Cookie Preferences",
+      "is_above_fold": true,
+      "is_sticky": false,
+      "is_offscreen": true,
+      "e_index": "e16",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "selector": "[role=\"dialog\"]",
+      "tag": "div",
+      "text_content": "Upload your photos",
+      "class": "modal fade",
+      "scroll_y_at_capture": 0,
+      "role": "dialog",
+      "accessible_name": "Upload your photos",
+      "is_above_fold": true,
+      "is_sticky": true,
+      "is_offscreen": true,
+      "e_index": "e17",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Available Options",
+      "class": "",
+      "scroll_y_at_capture": 900,
+      "role": "heading",
+      "accessible_name": "Available Options",
+      "is_above_fold": false,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e18",
+      "rect": {
+        "x": 45,
+        "y": 3072,
+        "width": 1080,
+        "height": 54
+      }
+    },
+    {
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Related Products",
+      "class": "",
+      "scroll_y_at_capture": 2000,
+      "role": "heading",
+      "accessible_name": "Related Products",
+      "is_above_fold": false,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e19",
+      "rect": {
+        "x": 45,
+        "y": 6996,
+        "width": 1080,
+        "height": 69
+      }
+    },
+    {
+      "selector": "[class*=\"price\"]",
+      "tag": "p",
+      "text_content": "$45.00",
+      "class": "price",
+      "scroll_y_at_capture": 2000,
+      "role": "p",
+      "accessible_name": "$45.00",
+      "is_above_fold": false,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e20",
+      "rect": {
+        "x": 51,
+        "y": 7953,
+        "width": 483,
+        "height": 60
+      }
+    },
+    {
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information",
+      "class": "",
+      "scroll_y_at_capture": 2700,
+      "role": "contentinfo",
+      "accessible_name": "Information",
+      "is_above_fold": false,
+      "is_sticky": false,
+      "is_offscreen": false,
+      "e_index": "e21",
+      "rect": {
+        "x": 0,
+        "y": 8757,
+        "width": 1170,
+        "height": 2640
+      }
+    }
+  ],
+  "sections": [
+    {
+      "label": "Mobile header and navigation",
+      "slug": "header-nav",
+      "clusters": [
+        "visual-cta",
+        "category-navigation",
+        "performance-ux"
+      ],
+      "scroll_y_top": 0,
+      "scroll_y_bottom": 399,
+      "screenshot_ref": "section-1-mobile.jpg",
+      "scrollY": 0
+    },
+    {
+      "label": "Product image gallery",
+      "slug": "product-gallery",
+      "clusters": [
+        "product-media",
+        "visual-cta"
+      ],
+      "scroll_y_top": 400,
+      "scroll_y_bottom": 899,
+      "screenshot_ref": "section-2-mobile.jpg",
+      "scrollY": 0
+    },
+    {
+      "label": "Price, options, and add-to-cart",
+      "slug": "price-cta",
+      "clusters": [
+        "pricing",
+        "visual-cta",
+        "checkout-flows"
+      ],
+      "scroll_y_top": 900,
+      "scroll_y_bottom": 1399,
+      "screenshot_ref": "section-3-mobile.jpg",
+      "scrollY": 900
+    },
+    {
+      "label": "Fitment table and product tabs",
+      "slug": "fitment-tabs",
+      "clusters": [
+        "content-seo",
+        "product-media",
+        "category-navigation"
+      ],
+      "scroll_y_top": 1400,
+      "scroll_y_bottom": 1999,
+      "screenshot_ref": "section-4-mobile.jpg"
+    },
+    {
+      "label": "Related products and reviews",
+      "slug": "reviews-related",
+      "clusters": [
+        "trust-credibility",
+        "audience",
+        "pricing"
+      ],
+      "scroll_y_top": 2000,
+      "scroll_y_bottom": 2699,
+      "screenshot_ref": "section-5-mobile.jpg",
+      "scrollY": 2000
+    },
+    {
+      "label": "Footer and site links",
+      "slug": "footer",
+      "clusters": [
+        "trust-credibility",
+        "content-seo",
+        "checkout-flows"
+      ],
+      "scroll_y_top": 2700,
+      "scroll_y_bottom": 3799,
+      "screenshot_ref": "section-6-mobile.jpg",
+      "scrollY": 2700
+    }
+  ],
+  "page_head": {
+    "title": "Polaris Slingshot Aluminum Coolant Surge Tank by DDMWorks",
+    "canonical": "https://www.slingmods.com/polaris-slingshot-aluminum-coolant-surge-tank-ddmworks",
+    "meta_description": "The new aluminum coolant surge tank by DDMWorks is a direct replacement of the stock plastic coolant tank on your Polaris Slingshot.  The stock tanks have had a few issues with leaks and brakes, so DDMWorks solves the problem with a larger capacity, solid",
+    "viewport_meta": "width=device-width, initial-scale=1",
+    "og_image": null,
+    "schema_jsonld": [
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "name": "DDMWorks Aluminum Coolant Surge Tank for the Polaris Slingshot (2015+) (Gen 2)",
+        "image": "http://www.slingmods.com/image/catalog/ddm/surge-tank/polaris-slingshot-coolant-surge-tank-duo-glow-v3.jpg",
+        "description": "Polaris Slingshot Coolant Surge Tank by DDMWorks - aluminum direct replacement of stock plastic coolant tank.",
+        "url": "https://www.slingmods.com/polaris-slingshot-aluminum-coolant-surge-tank-ddmworks",
+        "mpn": "polaris-slingshot-aluminum-coolant-surge-tank-ddmworks",
+        "brand": {
+          "@type": "Brand",
+          "name": "DDMWorks"
+        },
+        "productId": "1225",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "reviewCount": "83"
+        },
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "USD",
+          "price": "179.00",
+          "itemCondition": "http://schema.org/NewCondition",
+          "availability": "http://schema.org/InStock",
+          "priceValidUntil": "2026-05-05",
+          "url": "https://www.slingmods.com/polaris-slingshot-aluminum-coolant-surge-tank-ddmworks",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "0",
+              "currency": "USD"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "US"
+            }
+          },
+          "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "applicableCountry": "US",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+            "merchantReturnDays": "90",
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "returnFees": "https://schema.org/ReturnShippingFees",
+            "merchantReturnLink": "https://www.slingmods.com/terms"
+          }
+        }
+      }
+    ],
+    "hreflang": []
+  },
+  "styles": {
+    "bg": "rgba(0,0,0,0)",
+    "container_bg": "rgba(0,0,0,0)",
+    "text": "rgb(102,102,102)",
+    "cta_bg": "rgba(0,0,0,0)",
+    "link": "rgb(80,80,80)"
+  },
+  "telemetry": {
+    "wall_clock_seconds": 95,
+    "playwright_version": "unknown",
+    "chromium_binary": "chromium-1217"
+  }
+}

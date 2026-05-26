@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "trust-credibility",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Featured Product Has 2 Reviews at Perfect 5.0 — Below Threshold and Suspect Rating",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "e26",
+        "text_content": "5.0 / 5.0 (2) 2 total reviews",
+        "role": "div"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 917,
+          "viewport": "mobile",
+          "context": "The second featured product card (Revo Designs Rocker Stripes Decal Kit) shows a 5-star rating widget with a perfect 5.0 score based on only 2 reviews. The first featured card (VelourTex Floor Mats, From $135.99) shows no star rating or review count at all."
+        },
+        {
+          "type": "dom",
+          "reference": "e26"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 3: Five Reviews Increase Conversion by 270%",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 5: Perfect 5-Star Ratings Reduce Trust; 4.0-4.7 Is Optimal",
+          "tier": "Gold"
+        },
+        {
+          "source": "social-proof-patterns.md",
+          "section": "Finding 3: Five Reviews = 270% Conversion Lift (With Diminishing Returns)",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Revo Designs Rocker Stripes Decal Kit card displays a rating of 5.0 / 5.0 derived from exactly 2 reviews. This is below the 5-review threshold where purchase likelihood jumps 270% (Spiegel Research Center, Northwestern), and a perfect 5.0 rating is the precise configuration that triggers skepticism — Spiegel's research confirms purchase likelihood peaks at 4.0–4.7 and decreases as ratings approach 5.0. Two reviews at perfect 5.0 combine both deficiencies simultaneously. The VelourTex Carpet Floor Mats card (From $135.99) displays no rating or review count whatsoever, leaving a $135.99+ product with zero social proof on the homepage.",
+      "recommendation": "For the Revo Designs card: the review count gap is the immediate priority. Implement a post-purchase email review request triggered by delivery confirmation, sent 7–14 days post-delivery, targeting all buyers of this SKU. The goal is reaching 5 verified reviews — at that threshold the conversion lift is documented at 270%. Do not artificially inflate the rating by soliciting only satisfied customers; the 4.0–4.7 range converts better than 5.0. For the VelourTex card (From $135.99): this higher-AOV product receives a 380% conversion lift (vs. 190% for lower-priced products) from reviews per Spiegel's price-segmented data — prioritize review collection for this SKU and display the count once available. If zero reviews exist for VelourTex, suppress the star widget entirely rather than showing an empty state that signals newness.",
+      "why_this_matters": "Products under 5 reviews lose the majority of the conversion lift that social proof provides. On a homepage featuring only a handful of products, a 2-review card with a suspicious perfect score actively undermines the credibility AWDMods needs as an independent specialist retailer competing without the brand equity of larger platforms.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Trust Badges Near Any CTA — Payment Icons Confined to Footer Only",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e32",
+        "text_content": "American Express Apple Pay Discover Google Pay Mastercard",
+        "role": "list"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "Payment method icons (Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) appear only in the footer at the very bottom of the page. No security seal, money-back guarantee badge, or return policy statement appears anywhere in the above-fold area, near any product card, or near any CTA button across all four sections."
+        },
+        {
+          "type": "dom",
+          "reference": "e32"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 8: Trust Badge Proximity to CTA Matters More Than Presence",
+          "tier": "Silver"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 10: PayPal Seal Attracts Most Visual Attention (67% Notice Rate)",
+          "tier": "Silver"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 23: E-E-A-T Trustworthiness Elements Are Conversion Trust Signals",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Across all four page sections, payment-method icons appear exclusively in the footer (e32, scroll_y 1629+). No security seal, money-back guarantee, or return policy indicator is present near any product card, above-fold CTA, or add-to-cart action. Baymard's research confirms that trust badges placed in headers or footers are perceived as generic and do not convey that the payment process specifically is secure — the proximity effect requires placement at the moment of purchasing anxiety, not at the page extremities. PayPal (67% eye-tracking notice rate, CXL Institute) is present in the footer icon row but receives no attention-driving placement where purchase decisions are made.",
+      "recommendation": "Add a compact trust bar — 2–3 badges maximum — directly beneath the product cards in the Featured Collection section, where a shopper's next action is clicking through to purchase. The bar should include PayPal (already accepted, highest recognition) and one additional signal: either a 'Free Shipping $75+' reassurance badge (the threshold is already promoted in the announcement bar) or a '30-Day Returns' badge if that policy exists. Do not replicate the full footer payment grid; 2–3 well-chosen marks at the conversion point outperform a grid of 8 icons confined to the footer.",
+      "why_this_matters": "AWDMods is an independent specialty retailer without the brand recognition of Amazon or AutoZone. For this audience segment, trust signals must appear where purchase decisions occur. Footer-only placement means shoppers who do not scroll to the bottom — the majority on mobile — never encounter a trust signal before bouncing.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Return Policy Absent From Homepage — No Visible Link or Snippet in Any Section",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e30",
+        "text_content": "Information About Us",
+        "role": "contentinfo"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "Footer shows two collapsed accordion sections — 'Information' and 'My Account' — with no visible return policy link or summary. No return policy snippet appears near any product card or CTA. The baton's footer element (e30) text content shows only 'Information About Us', with the return/shipping policy content hidden behind collapsed accordions on mobile."
+        },
+        {
+          "type": "dom",
+          "reference": "e30"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 20: 77% of European Consumers Base Purchase Decisions on Return Policy",
+          "tier": "Bronze"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 23: E-E-A-T Trustworthiness Elements Are Conversion Trust Signals",
+          "tier": "Gold"
+        },
+        {
+          "source": "eeat-product-pages.md",
+          "section": "Finding 5: Trust Signals Are Critical — Especially for Unknown Brands",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The footer's 'Information' accordion is collapsed on mobile (e30, scroll_y 1461+), meaning any return or shipping policy links inside are invisible without a tap interaction. No return policy text, summary badge, or 'Easy Returns' indicator appears in any of the four page sections. Google's Quality Rater Guidelines identify a clearly stated return policy linked from the product page as a required Trustworthiness element for high-Trust ratings — its absence is a gap in both conversion trust signals and E-E-A-T evaluation.",
+      "recommendation": "If AWDMods offers returns, surface a one-line policy summary — 'Free returns within 30 days' or equivalent — as a text line or small badge near the featured product cards. This can be added to the same trust bar recommended in Finding 2 (F-02). Additionally, expand the footer Information accordion by default on mobile, or ensure return/shipping links appear as visible text rather than behind a collapsed interaction. The goal is that a first-time visitor can confirm a return path exists without needing to hunt.",
+      "why_this_matters": "First-time visitors to an independent automotive parts retailer carry meaningful purchase risk anxiety — incorrect fitment or product dissatisfaction has no obvious resolution if no return policy is visible. Eliminating that anxiety before the click-through to a product page reduces friction at the highest-dropout stage of the funnel.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "No Expert Editorial Content — Homepage Carries Only Category Navigation and Product Cards",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": ""
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Above-fold content is a vehicle fitment finder (Select Make / Model / Year / Trim) and a category carousel. No 'Our Expert Take', 'Staff Picks', fitment notes, or specialist editorial copy appears anywhere on the page across all four sections."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 24: Expert Editorial Content as a Trust Signal — Beyond Manufacturer Specs",
+          "tier": "Gold"
+        },
+        {
+          "source": "eeat-product-pages.md",
+          "section": "Finding 4: Expert Editorial Content Demonstrates Expertise Beyond Manufacturer Data",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Across all four page sections, no expert editorial content is present: no staff picks with fitment rationale, no 'vehicles we know best' copy, no technical orientation for new visitors. The homepage communicates category breadth (Performance, Handling, Interior, Exterior, Electronics) and a vehicle finder, but nothing that demonstrates AWDMods' specialist knowledge of the Focus RS, Focus ST, WRX, or STI platforms it explicitly names in the newsletter copy. Google's Quality Rater Guidelines identify expert editorial content — fitment compatibility notes, installation difficulty ratings, known issues the manufacturer omits — as a key Expertise signal that differentiates a specialist from a generic reseller.",
+      "recommendation": "Add a short specialist-voice block beneath the Featured Collection section — 3–4 sentences establishing AWDMods' focus ('We specialize in Focus RS/ST and WRX/STI builds; every part we carry is one we've tested or installed ourselves') alongside 1–2 staff-pick callouts for currently featured products that name a specific fitment or installation note the product card omits. This is a copy change, not a UI redesign, and it serves both the first-time visitor who wants assurance they're on the right site and Google's quality raters who look for genuine product knowledge. For technically complex products (exhausts, intakes, suspension), brief fitment notes ('Fits Focus RS 2016–2018 with stock subframe') are the clearest Expertise signal possible.",
+      "why_this_matters": "Without editorial voice, AWDMods looks identical to a generic drop-shipper aggregating the same catalog. Automotive performance shoppers research extensively and trust specialists over generalists — demonstrating domain knowledge on the homepage is the differentiator that earns the product-page click from a comparison shopper.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Product Images Carry Descriptive Alt Text — Accessibility Baseline Met",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "e22",
+        "text_content": "",
+        "role": "image"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e22"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "accessibility.md",
+          "section": "Finding 1: 53% of Web Pages Have Inadequate Alt Text for Product Images",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "All four featured product card images (e22–e25) carry descriptive alt text that names the product, compatible vehicle, and variant detail — e.g., 'VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)' and 'Injen Technology SP Series Cold Air Intake for the Subaru WRX STI'. This matches the recommended formula ([Product Name] — [Variant/Context]) and passes the WebAIM Million benchmark that 53.1% of pages fail.",
+      "recommendation": "Maintain this standard across all catalog images. As inventory expands, enforce the alt text template at the product data level so new SKUs inherit descriptive text automatically rather than requiring post-upload edits.",
+      "why_this_matters": "Descriptive alt text serves screen reader users, improves image SEO indexability, and is among the lowest-effort accessibility wins available. AWDMods is ahead of the industry average on this dimension.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "PARTIAL",
+      "title": "OnlineStore Schema Incomplete — Missing AggregateRating and Physical Address",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e30",
+        "text_content": "Information About Us",
+        "role": "contentinfo"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e30"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "eeat-product-pages.md",
+          "section": "Finding 9: Structured Data and E-E-A-T Are Complementary — Not Substitutes",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 23: E-E-A-T Trustworthiness Elements Are Conversion Trust Signals",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The page head carries two JSON-LD blocks: an OnlineStore schema and a WebSite schema with SearchAction. The OnlineStore schema includes the site name, logo URL, and social sameAs links (Facebook, Instagram, YouTube), but omits a physical address, telephone, and email — three elements Google's Quality Rater Guidelines identify as required Trustworthiness signals for unknown brands. Several sameAs entries are empty strings ('', '', '', '', '', '', '', ''), suggesting incomplete setup. No AggregateRating schema is present at the store or product level.",
+      "recommendation": "Complete the OnlineStore schema: add a 'address' property with PostalAddress (streetAddress, addressLocality, addressRegion, postalCode, addressCountry), a 'telephone' property, and a 'contactPoint' or 'email'. Remove the empty-string sameAs entries — they add no value and may signal incomplete implementation to quality raters. On product pages, add AggregateRating schema once review counts meet the 5-review threshold. The SearchPilot controlled test cited in ugc-reviews-seo.md found ~20% organic traffic uplift from adding AggregateRating schema alone.",
+      "why_this_matters": "Schema markup makes existing trust signals machine-readable for Google. A physical address in structured data directly satisfies the Trustworthiness pillar that quality raters evaluate for unknown brands. Empty sameAs fields are a low-signal indicator that the schema was partially configured and abandoned — a detail quality raters notice.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "This is a homepage/category page, not a product detail page. Trust findings are evaluated at homepage context — product-level review gaps are surfaced via the featured collection cards that appear on-page. The absence of a sticky trust bar or return policy anywhere on the homepage is a pre-click trust failure; individual product pages may have stronger trust signals not visible in this audit.",
+    "The schema JSON-LD has multiple empty-string sameAs entries — appears to be a template-generated field that was not fully populated. Not emitted as a separate finding as it is subsumed in F-06.",
+    "No phone number or live chat widget is visible in any of the four sections. The footer 'Information' accordion likely contains contact links, but they are not visible in the collapsed mobile state captured. If customer service contact is absent from PDPs as well, that would warrant a separate HIGH finding there.",
+    "The featured collection shows only 4 products. One (VelourTex, $135.99) has no reviews shown; one (Revo Designs) has 2 reviews at 5.0. The other two (Injen WRX intake, Borla exhaust) are partially visible but their review counts are not captured in the baton for this engagement — findings are scoped to observed elements only."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "trust-and-credibility.md",
+      "social-proof-patterns.md",
+      "eeat-product-pages.md",
+      "accessibility.md",
+      "ugc-integration.md",
+      "ugc-reviews-seo.md"
+    ],
+    "sections_routed_to_cluster": [
+      "featured-collection",
+      "newsletter-footer"
+    ],
+    "baton_elements_total": 36,
+    "baton_elements_referenced": 7
+  }
+}

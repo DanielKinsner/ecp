@@ -1,0 +1,99 @@
+{
+  "schema_version": 3,
+  "id": "{{ENGAGEMENT_ID}}",
+  "created": "{{CREATED_ISO}}",
+  "updated": "{{UPDATED_ISO}}",
+  "type": "{{TYPE}}",
+  "phase": "pending",
+  "engagement_status": "pending",
+  "page": {
+    "url": null,
+    "url_normalized": null,
+    "file_path": null,
+    "type": null
+  },
+  "platform": "generic",
+  "source_mode": null,
+  "devices_requested": [],
+  "devices_scanned": [],
+  "clusters_used": [],
+  "scope": null,
+  "min_priority": null,
+  "compare_target": null,
+  "quick_scan": false,
+  "blocked": false,
+  "plans_queue": [],
+  "reconciled": false,
+  "screenshot_input": null
+}
+
+<!--
+  schema_version values:
+    1 — legacy v4.x engagements (pre-cluster-migration)
+    2 — v5.x engagements (10-cluster taxonomy, current as of v1.x maintenance line)
+    3 — v2-architecture engagements (specialist JSON emission, single-Opus synthesizer,
+        baton element-index hotspots, audit state machine). Sticky once set:
+        v2 cannot retro-touch a v1 engagement; v1 cannot resume a v2 engagement.
+        Resume routes via skills/resume/SKILL.md lines 26-29 schema_version switch.
+
+  engagement_status values (v2 audit state machine; see contracts/audit-state-machine.md):
+    "pending"               — engagement created, no work dispatched yet
+    "acquiring"             — Layer 0 (acquirer) in flight
+    "acquired"              — Layer 0 complete, both batons valid
+    "partial_acquisition"   — Layer 0 completed with degradation (overlay not dismissed,
+                              mobile DPR fallback to 1×, single device acquired)
+    "acquisition_failed"    — Layer 0 failed (404, Cloudflare, auth, 180s timeout)
+    "ethics_dispatched"     — Layer 1.5 ethics subagent dispatched (concurrent with specialists)
+    "specialists_dispatched" — Layer 1 specialists dispatched as parallel batch
+    "ethics_complete"       — Layer 1.5 produced valid ethics-findings.json
+    "specialists_complete"  — All Layer 1 specialists wrote valid cluster-{cluster}-{device}.json
+                              OR have status:partial / status:skipped after retry exhausted
+    "structuring"           — Layer 2 deterministic Python pipeline running
+    "synthesizing"          — Layer 3 single-Opus synthesizer dispatched
+    "rendering"             — Layer 4 generate-report.py running
+    "complete"              — terminal success; engagement is shippable
+    "cancelled_by_operator" — operator dropped <engagement-dir>/cancel.flag
+    "failed_acquisition"    — irrecoverable Layer 0 failure (synonym for acquisition_failed
+                              when used in failure context)
+    "failed_ethics"         — Layer 1.5 failed irrecoverably after retries exhausted
+    "failed_specialists"    — Layer 1 failed irrecoverably (typically dispatch infrastructure)
+    "failed_structuring"    — Layer 2 deterministic Python failed (e.g., schema-validation
+                              regression, jsonschema dependency missing)
+    "failed_synthesis"      — Layer 3 Opus call failed irrecoverably; Phase F.3 degraded
+                              mode also failed cross-device drift assertion
+    "failed_render"         — Layer 4 generate-report.py crashed
+
+    Legal transition graph: see contracts/audit-state-machine.md.
+
+  platform values: "shopify", "nextjs", "opencart", "generic"
+
+  source_mode values:
+    "url-dual"    — Page scanned via URL with agent-browser (dual capture: DOM + screenshots)
+    "manual"      — Acquisition agent failed; coordinator captured screenshots + DOM directly via agent-browser CLI. Real element coordinates available.
+    "webfetch"    — agent-browser unavailable; page content fetched via WebFetch. Real page content but no viewport rendering, no screenshots, no computed styles. Auditors use CODE source only.
+    "file"        — Local file path provided
+    "pasted-code" — Code pasted directly
+    "screenshot"  — User-provided screenshot image (no URL, no DOM)
+    "description" — Text description only (from-scratch mode)
+
+  clusters_used (10-cluster system, v5.0+):
+    Valid values: "visual-cta", "trust-credibility", "pricing", "checkout-flows",
+                  "performance-ux", "product-media", "category-navigation",
+                  "content-seo", "post-purchase", "audience"
+
+    Legacy v4.x cluster names are silently translated on resume. See
+    contracts/cluster-migration.md for the full v4.x → v5.0 translation table
+    and apply-at-load-time rules.
+
+    Example: "clusters_used": ["visual-cta", "trust-credibility", "pricing", "performance-ux"]
+
+  screenshot_input (only when source_mode is "screenshot"):
+    {
+      "filename": "original filename if available, or null",
+      "description": "user's description of what the screenshot shows",
+      "device_context": "desktop" | "mobile" | "unknown"
+    }
+
+  When source_mode is NOT "screenshot", screenshot_input is null.
+  Backward compatible: existing meta.json files without screenshot_input are valid.
+-->

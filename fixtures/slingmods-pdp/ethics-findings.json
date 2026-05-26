@@ -1,0 +1,355 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "ethics",
+  "device": "page",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:30:00.000Z",
+  "completed_at": "2026-04-28T23:45:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Email Subscribe Form Lacks Pre-Signup Marketing Disclosure",
+      "surface": "product-description-footer",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "SUBSCRIBE button (email-submit)",
+        "role": "button"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "ethics_state": "ADJACENT",
+      "source_url": "https://www.law.cornell.edu/uscode/text/15/chapter-103",
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 581,
+          "viewport": "desktop",
+          "context": "Footer email subscribe form renders a bare input field and SUBSCRIBE button with no adjacent disclosure text, no privacy policy link, and no statement of what communications will be sent or how to unsubscribe. Visible in section-2.jpg at the footer boundary."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1611,
+          "viewport": "mobile",
+          "context": "Mobile footer renders the same bare SUBSCRIBE form. Label reads SUBSCRIBE TO STAY UP TO DATE / NEW MODS / COUPONS / GIVEAWAYS with no consent language or privacy link."
+        },
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "DOM search for consent language within 500 characters of the email-submit button returns only the subscribe CTA and the immediately following footer HTML. No terms-of-service reference, no privacy policy link, and no unsubscribe notice is present adjacent to the form."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "PART 4: EMAIL / SMS ETHICS — 4.1 CAN-SPAM Act Requirements",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The footer email subscribe form (desktop and mobile) collects an email address with a single SUBSCRIBE button and no adjacent disclosure about what types of commercial messages will be sent, no link to the privacy policy, and no pre-submission statement about how to unsubscribe. CAN-SPAM (15 U.S.C. §§ 7701-7713) applies to the commercial emails themselves rather than the signup form, so this is not a per-se violation today. The adjacency risk is that the form's complete silence about marketing intent — combined with the 'New Mods / Coupons / Giveaways' label — creates an implied representation about email content that could mislead a subscriber who later receives off-topic or high-frequency promotional email. FTC Section 5 independently prohibits deceptive collection practices, and the FTC's guidance on email marketing recommends that signup forms clearly identify the commercial nature of communications.",
+      "recommendation": "Add one line of disclosure text directly below the SUBSCRIBE button: 'By subscribing you agree to receive marketing emails. Unsubscribe at any time.' Link the word 'Privacy Policy' to https://www.slingmods.com/privacy. This is a single HTML snippet — no backend change required. The disclosure eliminates the FTC Section 5 adjacency and increases subscriber trust, which reduces complaint rates and list churn.",
+      "why_this_matters": "A subscriber who did not expect commercial email and cannot easily identify how to opt out is one complaint away from a CAN-SPAM investigation. The Verkada $2.95M CAN-SPAM enforcement action (2024) included missing opt-out mechanisms as a named violation. Adding a one-line disclosure and privacy link costs nothing and removes this exposure.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 2,
+      "verdict": "PASS",
+      "title": "Cookie Consent Management Platform Present (Termly)",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e15",
+        "text_content": "Cookie Preferences",
+        "role": "button"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "ethics_state": "CLEAR",
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e15",
+          "context": "Desktop baton e15 records a cookie-consent overlay dismissed via accept-button. Termly CMP is present in the DOM as the termly-code-snippet-support block, rendering a floating Cookie Preferences button (aria-label='Cookie Preferences') that allows users to revisit consent settings at any time."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "PART 7: EXPANDED CLUSTER COVERAGE — 7.2 EU ePrivacy Art 5(3) Cookie Consent Timing",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "A Termly CMP is deployed and rendered on the page. The baton confirms a cookie-consent overlay was presented to the visitor and dismissed via accept-button. A floating Cookie Preferences button remains accessible after dismissal. The page targets US consumers: hreflang[] is empty and the footer states '* Free Shipping Applies to Most Contiguous U.S. Orders.' For US-only traffic, EU ePrivacy Art 5(3) and GDPR consent obligations do not apply, but the Termly deployment addresses them regardless.",
+      "recommendation": "Maintain the Termly CMP deployment. If the store begins shipping to EU customers or adds EU hreflang tags, verify that the consent banner includes a same-prominence Reject All option at the first layer (GDPR Art 7(3) requirement) and that analytics and advertising scripts are blocked pre-consent.",
+      "why_this_matters": "Cookie consent infrastructure is the foundational layer for GDPR and ePrivacy compliance. Having Termly already deployed means EU compliance can be extended via a Termly dashboard configuration rather than a code deployment if geographic targeting expands.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 3,
+      "verdict": "PASS",
+      "title": "Aggregate Rating Schema Matches Visible Review Count",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e6",
+        "text_content": "(15 reviews) In Stock",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "ethics_state": "CLEAR",
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "both",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Desktop section-1.jpg shows 5 filled gold stars with '(15 reviews)' label in the product panel. The schema_jsonld in the baton declares aggregateRating ratingValue: 5, reviewCount: 15. The microdata in the DOM also declares reviewCount: 15 and ratingValue: 5. Schema, microdata, and visual presentation are consistent."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "Mobile section-2-mobile.jpg confirms the same 5 filled gold stars and (15 reviews) label on mobile viewport."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "PART 1: CRO / PAGE-LEVEL DARK PATTERNS — 1.3 Reviews / Social Proof — Schema Markup and Social Proof",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product page displays 5 filled gold stars with an explicit '(15 reviews)' count. Schema aggregateRating markup (both JSON-LD in the baton and microdata in the DOM) declares ratingValue: 5 and reviewCount: 15, matching the visible presentation exactly. No phantom social proof is present. The FTC Fake Reviews Rule (16 CFR Part 465) targets fabricated, purchased, or AI-generated reviews; no such signals are present.",
+      "recommendation": "Maintain alignment between schema reviewCount and the actual number of verified on-page reviews as reviews are added or removed. Automated schema generation from the review database, which this page appears to use, is the correct approach.",
+      "why_this_matters": "Schema aggregateRating that overstates review counts or star ratings triggers both FTC Fake Reviews Rule enforcement (up to $53,088 per violation) and Google structured data spam penalties simultaneously. This page is clean on both counts.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "No Fabricated Urgency or Scarcity Claims",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e5",
+        "text_content": "$59.95",
+        "role": "heading"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "ethics_state": "CLEAR",
+      "confidence": 0.97,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Desktop section-1.jpg shows the pricing panel with $59.95, an IN STOCK badge, and a review count. No countdown timer, no 'Only X left' scarcity message, no 'Sale ends in' language, and no resetting urgency mechanism is visible. DOM search for 'countdown', 'timer', and 'only.*left' returned no results."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "PART 1: CRO / PAGE-LEVEL DARK PATTERNS — 1.1 Urgency / Scarcity",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "No countdown timers, resetting urgency clocks, fabricated 'Only X left' stock claims, or fake social-proof counters are present on either the desktop or mobile capture. The pricing panel shows a static $59.95 with an IN STOCK status badge and a truthful 15-review count. The DOM was searched for urgency and scarcity patterns — all returned empty.",
+      "recommendation": "If urgency messaging is added in future (e.g., a sale end date), tie it to a real fixed server-side timestamp so the display counts down toward the actual deadline and stops at zero rather than resetting on page reload.",
+      "why_this_matters": "Fabricated countdown timers and resetting scarcity claims are an active FTC Section 5 enforcement target. The 2024 FTC enforcement wave against e-commerce sellers specifically cited resetting countdown timers as deceptive urgency. This page is clean.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Privacy Policy and Terms URLs Are First-Party Canonical",
+      "surface": "product-description-footer",
+      "element": {
+        "baton_index": "e18",
+        "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditions",
+        "role": "contentinfo"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "ethics_state": "CLEAR",
+      "confidence": 0.98,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e18",
+          "context": "Footer links: Privacy Policy href is https://www.slingmods.com/privacy (canonical first-party domain). Terms & Conditions href is https://www.slingmods.com/terms (canonical first-party domain). No staging-domain redirect and no third-party policy host detected."
+        },
+        {
+          "type": "visual",
+          "reference": "section-5-mobile.jpg",
+          "scroll_y": 2417,
+          "viewport": "mobile",
+          "context": "Mobile section-5-mobile.jpg confirms Privacy Policy and Terms & Conditions links are present in the footer navigation alongside Affirm Monthly Payments, About Us, Reward Points, and CARB Policy."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "PART 6: CROSS-CUTTING REGULATORY LANDSCAPE — 6.2 GDPR",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Both the Privacy Policy (https://www.slingmods.com/privacy) and Terms & Conditions (https://www.slingmods.com/terms) links in the footer point to canonical first-party URLs on the storefront domain. The regulatory chain-of-disclosure is intact — visitors clicking through land on policies clearly hosted by the merchant they are transacting with. No staging-domain redirect and no third-party policy host detected.",
+      "recommendation": "Maintain canonical first-party policy URLs through any future platform migrations. Policy URLs must move with the storefront before launch, not after.",
+      "why_this_matters": "First-party canonical policy URLs underpin GDPR Art 13 disclosure obligations, CCPA notice requirements, and CAN-SPAM postal-address and opt-out chain requirements. A staging or third-party policy host weakens the enforceability of those disclosures.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Prop 65 Warning Present with Chemical Disclosure and Official Link",
+      "surface": "product-description-footer",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "Prop 65 Warning tab and Prop 65 Notice section",
+        "role": "text"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "ethics_state": "CLEAR",
+      "confidence": 0.93,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1044,
+          "viewport": "mobile",
+          "context": "Section-3-mobile.jpg shows a 'Prop 65 Warning' tab in the product tabs row. DOM confirms a Prop 65 Notice section: WARNING: Handling passenger or off-highway motor vehicle parts can expose you to chemicals such as phthalates and lead, known to the State of California to cause cancer and reproductive harm. Links to https://www.p65warnings.ca.gov/motor-vehicle-parts."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "PART 3: PRICING ETHICS — 3.1 Drip Pricing / Hidden Fees — CA SB-478 Honest Pricing",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "A dedicated Prop 65 Warning tab is present in the product tab bar, and the warning body includes the required chemical disclosure (phthalates and lead as cancer and reproductive harm agents per the California Prop 65 list) and links to the official registry at p65warnings.ca.gov/motor-vehicle-parts. This is the correct disclosure for a motor vehicle parts product sold to California consumers.",
+      "recommendation": "Maintain the Prop 65 tab and warning text. Verify that the chemicals listed (phthalates and lead) are accurate for this specific SKU — stainless steel handlebar end caps may use a generic motor-vehicle-parts template that lists phthalates even if not present. Using an inaccurate warning does not violate Prop 65 but can confuse customers and is worth confirming with the supplier.",
+      "why_this_matters": "California Prop 65 warnings are required before exposure to listed chemicals. Failure to warn exposes the operator to private plaintiff enforcement; accurate and complete warnings are a routine enforcement target in the powersports accessories category.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 7,
+      "verdict": "PASS",
+      "title": "No Drip Pricing — Mandatory Fees Not Hidden",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "$59.95",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "ethics_state": "CLEAR",
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Desktop section-1.jpg shows $59.95 as the complete product price. The 'FREE SHIPPING ON MOST ORDERS OVER $75*' announcement bar at the top confirms the shipping threshold. No mandatory processing fees, convenience fees, or service charges are displayed separately. Shipping is carrier-calculated at checkout, explicitly excluded from CA SB-478 and FTC Junk Fees Rule (16 CFR Part 464) scope."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "PART 3: PRICING ETHICS — 3.1 Drip Pricing / Hidden Fees",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product price of $59.95 is the complete mandatory price. The announcement bar discloses a free shipping threshold ('Free Shipping on Most Orders Over $75*'). No mandatory non-government fees are hidden from the product page. Shipping is destination-calculated and is explicitly carved out from CA SB-478 (Cal. Civ. Code § 1770(a)(29)(B)) and FTC Junk Fees Rule (16 CFR Part 464) scope.",
+      "recommendation": "The asterisk on 'FREE SHIPPING ON MOST ORDERS OVER $75*' implies exceptions. Ensure the linked terms or a tooltip clearly discloses which item categories or destinations do not qualify for free shipping, so the threshold claim does not create a separate misleading-advertising exposure under FTC Section 5.",
+      "why_this_matters": "Hidden fee disclosure at checkout is one of the highest-volume FTC enforcement targets and accounts for 39-48% of cart abandonment. This page is clean on mandatory fee disclosure.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "PayPal Pay Later widget: The product page renders a PayPal Pay Later / Pay in 4 messaging widget (desktop baton e16, mobile baton e18) showing installment payment options for $59.95. PayPal's own messaging iframe handles TILA/Reg Z installment disclosure via the Learn More link rendered within the widget iframe. As the BNPL product provider, PayPal (not the merchant) bears primary TILA disclosure responsibility for its own credit product. No BLOCK or ADJACENT finding emitted. If Affirm or other BNPL products are integrated directly outside a provider iframe in future, verify that installment terms, total repayment amount, and fee disclosures appear on the product page before checkout completion.",
+    "Meta/Facebook pixel noscript fallback present in DOM at facebook.com/tr?id=1646627588709635. The main pixel fires via JavaScript (implied by noscript fallback). The Termly CMP is present and the baton records cookie consent was accepted (accept-button dismissal). For US-only traffic (confirmed by empty hreflang[] and US-contiguous-orders shipping language), GDPR/ePrivacy pre-consent pixel constraints do not apply. No finding emitted. If EU targeting is added in future, the Termly CMP must be configured to block the Meta Pixel pre-consent.",
+    "Omnisend tracking pixel fires on page load from forms.soundestlink.com (form-view event). This appears to fire regardless of cookie consent state. For US-only traffic this is not a GDPR/ePrivacy concern. Monitor if EU targeting is added.",
+    "priceValidUntil in schema is set to 2026-04-29 (one day after the 2026-04-28 audit date). This reflects standard OpenCart schema generation practice — priceValidUntil is typically set to the next calendar day to indicate current pricing is valid. It is not a scarcity or urgency claim and does not trigger any ethics finding.",
+    "Page hreflang[] is empty and shipping copy confirms US contiguous orders only. No EU jurisdictional findings (GDPR, ePrivacy, EU DSA, EU AI Act, EU Omnibus Directive) were triggered. If the operator adds EU shipping destinations or hreflang tags, a re-audit against Parts 6-7 of ethics-gate.md is warranted."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "ethics-gate.md",
+      "evidence-tiers.md"
+    ],
+    "dom_files_read": [
+      "dom.html",
+      "dom-mobile.html"
+    ],
+    "batons_read": [
+      "baton.json",
+      "baton-mobile.json"
+    ],
+    "screenshots_read": [
+      "section-1.jpg",
+      "section-2.jpg",
+      "section-1-mobile.jpg",
+      "section-2-mobile.jpg",
+      "section-3-mobile.jpg",
+      "section-4-mobile.jpg",
+      "section-5-mobile.jpg"
+    ]
+  }
+}

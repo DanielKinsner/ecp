@@ -1,0 +1,882 @@
+{
+  "capture_state": {
+    "hydration": "post-hydration",
+    "overlays_detected": [],
+    "page_height_px": 2895
+  },
+  "captured_at": "2026-04-28T19:09:00.000Z",
+  "device": "desktop",
+  "elements": [
+    {
+      "accessible_name": "Close",
+      "e_index": "e0",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 44,
+        "width": 44,
+        "x": 313,
+        "y": 62
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "What are you looking for?",
+      "e_index": "e1",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44,
+        "width": 44,
+        "x": 1246,
+        "y": 56
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "What are you looking for?"
+    },
+    {
+      "accessible_name": "Cart",
+      "e_index": "e2",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 55,
+        "width": 55,
+        "x": 1616,
+        "y": 51
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "role_button",
+      "tag": "a",
+      "text_content": "Cart"
+    },
+    {
+      "accessible_name": "Shop by Category",
+      "e_index": "e3",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 41,
+        "width": 158,
+        "x": 795,
+        "y": 116
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "role_button",
+      "tag": "summary",
+      "text_content": "Shop by Category"
+    },
+    {
+      "accessible_name": "Featured Collection",
+      "e_index": "e4",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 50,
+        "width": 286,
+        "x": 239,
+        "y": 906
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Featured Collection"
+    },
+    {
+      "accessible_name": "Performance",
+      "e_index": "e5",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 191
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Performance"
+    },
+    {
+      "accessible_name": "Exterior",
+      "e_index": "e6",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 326
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Exterior"
+    },
+    {
+      "accessible_name": "Interior",
+      "e_index": "e7",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 413
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Interior"
+    },
+    {
+      "accessible_name": "Handling and Brakes",
+      "e_index": "e8",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 549
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Handling and Brakes"
+    },
+    {
+      "accessible_name": "AWDMods",
+      "e_index": "e9",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 45,
+        "width": 80,
+        "x": 239,
+        "y": 56
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)",
+      "e_index": "e10",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 271,
+        "width": 271,
+        "x": 240,
+        "y": 989
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Revo Designs Rocker Stripes Decal Kit for the Ford Focus RS / ST (Set of 2)",
+      "e_index": "e11",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 271,
+        "width": 271,
+        "x": 528,
+        "y": 989
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Performance",
+      "e_index": "e12",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 239,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Performance Intakes Exhaust Cooling Drivetrain upgrades Shop Performance"
+    },
+    {
+      "accessible_name": "Handling and Brakes",
+      "e_index": "e13",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 527,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Handling and Brakes Suspension Wheels Brake kits Chassis control Shop Handling"
+    },
+    {
+      "accessible_name": "Interior",
+      "e_index": "e14",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 816,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Interior Shifters Trim Seating Cabin upgrades Shop Interior"
+    },
+    {
+      "accessible_name": "Exterior",
+      "e_index": "e15",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 1105,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Exterior Aero Styling Body components Accents Shop Exterior"
+    },
+    {
+      "accessible_name": "Electronics",
+      "e_index": "e16",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 1394,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Electronics Lighting Wiring Infotainment Vehicle tech Shop Electronics"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e17",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 55,
+        "width": 929,
+        "x": 367,
+        "y": 51
+      },
+      "role": "combobox",
+      "scroll_y_at_capture": 0,
+      "selector": "input",
+      "tag": "input",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Shop All",
+      "e_index": "e18",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 47,
+        "width": 1905,
+        "x": 0,
+        "y": 115
+      },
+      "role": "navigation",
+      "scroll_y_at_capture": 0,
+      "selector": "nav",
+      "tag": "nav",
+      "text_content": "Shop All"
+    },
+    {
+      "accessible_name": "Shop All",
+      "e_index": "e19",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 74,
+        "width": 1533,
+        "x": 186,
+        "y": 41
+      },
+      "role": "banner",
+      "scroll_y_at_capture": 0,
+      "selector": "header",
+      "tag": "header",
+      "text_content": "Shop All"
+    },
+    {
+      "accessible_name": "Menu",
+      "e_index": "e20",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 55,
+        "width": 55,
+        "x": 228,
+        "y": 476
+      },
+      "role": "button",
+      "scroll_y_at_capture": 466,
+      "selector": "role_button",
+      "tag": "summary",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "5.0 / 5.0",
+      "e_index": "e21",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 229,
+        "x": 549,
+        "y": 1362
+      },
+      "role": "div",
+      "scroll_y_at_capture": 466,
+      "selector": "rating",
+      "tag": "div",
+      "text_content": "5.0 / 5.0 (2) 2 total reviews"
+    },
+    {
+      "accessible_name": "5.0 out of 5.0 stars",
+      "e_index": "e22",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18,
+        "width": 67,
+        "x": 549,
+        "y": 1364
+      },
+      "role": "img",
+      "scroll_y_at_capture": 466,
+      "selector": "rating",
+      "tag": "div",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "(2) 2 total reviews",
+      "e_index": "e23",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 16,
+        "x": 622,
+        "y": 1362
+      },
+      "role": "p",
+      "scroll_y_at_capture": 466,
+      "selector": "rating",
+      "tag": "p",
+      "text_content": "(2) 2 total reviews"
+    },
+    {
+      "accessible_name": "Regular price From $135.99",
+      "e_index": "e24",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 26,
+        "width": 229,
+        "x": 261,
+        "y": 1346
+      },
+      "role": "div",
+      "scroll_y_at_capture": 466,
+      "selector": "price",
+      "tag": "div",
+      "text_content": "Regular price From $135.99"
+    },
+    {
+      "accessible_name": "From $135.99",
+      "e_index": "e25",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 26,
+        "width": 104,
+        "x": 261,
+        "y": 1346
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "price",
+      "tag": "span",
+      "text_content": "From $135.99"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e26",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 375,
+        "y": 1351
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e27",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 609,
+        "y": 1396
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e28",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 1475,
+        "y": 1420
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e29",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 366,
+        "y": 1941
+      },
+      "role": "span",
+      "scroll_y_at_capture": 876,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e30",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 630,
+        "y": 1921
+      },
+      "role": "span",
+      "scroll_y_at_capture": 876,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order"
+    },
+    {
+      "accessible_name": "Join Our Newsletter!",
+      "e_index": "e31",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 50,
+        "width": 483,
+        "x": 281,
+        "y": 2158
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1580,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Join Our Newsletter!"
+    },
+    {
+      "accessible_name": "Information",
+      "e_index": "e32",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 690,
+        "x": 239,
+        "y": 2612
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1580,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Information"
+    },
+    {
+      "accessible_name": "My Account",
+      "e_index": "e33",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 690,
+        "x": 977,
+        "y": 2612
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1580,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "My Account"
+    },
+    {
+      "accessible_name": "Information",
+      "e_index": "e34",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 310,
+        "width": 1905,
+        "x": 0,
+        "y": 2585
+      },
+      "role": "contentinfo",
+      "scroll_y_at_capture": 1580,
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information"
+    },
+    {
+      "accessible_name": "Join Our Newsletter!",
+      "e_index": "e35",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 512,
+        "width": 1905,
+        "x": 0,
+        "y": 2073
+      },
+      "role": "section",
+      "scroll_y_at_capture": 1815,
+      "selector": "newsletter",
+      "tag": "section",
+      "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI."
+    },
+    {
+      "accessible_name": "Subscribe",
+      "e_index": "e36",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 49,
+        "width": 46,
+        "x": 716,
+        "y": 2302
+      },
+      "role": "button",
+      "scroll_y_at_capture": 1815,
+      "selector": "newsletter",
+      "tag": "button",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "American Express",
+      "e_index": "e37",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 388,
+        "x": 338,
+        "y": 2841
+      },
+      "role": "list",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "ul",
+      "text_content": "American Express Apple Pay Discover Google Pay Mastercard"
+    },
+    {
+      "accessible_name": "American Express",
+      "e_index": "e38",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 338,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "American Express"
+    },
+    {
+      "accessible_name": "Apple Pay",
+      "e_index": "e39",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 386,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "Apple Pay"
+    },
+    {
+      "accessible_name": "Discover",
+      "e_index": "e40",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 435,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "Discover"
+    },
+    {
+      "accessible_name": "Google Pay",
+      "e_index": "e41",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 483,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "Google Pay"
+    }
+  ],
+  "engagement_id": "2026-04-28-1909a7d0",
+  "page_head": {
+    "canonical": "https://www.awdmods.com/",
+    "hreflang": [],
+    "meta_description": null,
+    "og_image": null,
+    "schema_jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "OnlineStore",
+        "logo": "https://www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&width=500",
+        "name": "AWDMods",
+        "sameAs": [
+          "",
+          "https://www.facebook.com/awdmods",
+          "",
+          "https://www.instagram.com/awdmods",
+          "",
+          "",
+          "",
+          "https://www.youtube.com/@AWDMods",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "url": "https://www.awdmods.com"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AWDMods",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "query-input": "required name=search_term_string",
+          "target": "https://www.awdmods.com/search?q={search_term_string}"
+        },
+        "url": "https://www.awdmods.com"
+      }
+    ],
+    "title": "AWDMods - AWDMods",
+    "viewport_meta": "width=device-width,initial-scale=1"
+  },
+  "schema_version": 1,
+  "sections": [
+    {
+      "clusters": [
+        "visual-cta",
+        "category-navigation",
+        "performance-ux"
+      ],
+      "label": "Header, navigation bar, and hero banner",
+      "screenshot_ref": "section-1.jpg",
+      "scroll_y_bottom": 513,
+      "scroll_y_top": 0,
+      "slug": "hero-nav"
+    },
+    {
+      "clusters": [
+        "category-navigation",
+        "visual-cta"
+      ],
+      "label": "Category feature grid shop by category tiles",
+      "screenshot_ref": "section-2.jpg",
+      "scroll_y_bottom": 876,
+      "scroll_y_top": 513,
+      "slug": "category-grid"
+    },
+    {
+      "clusters": [
+        "product-media",
+        "pricing",
+        "trust-credibility"
+      ],
+      "label": "Featured collection product cards first row",
+      "screenshot_ref": "section-3.jpg",
+      "scroll_y_bottom": 1580,
+      "scroll_y_top": 876,
+      "slug": "featured-collection-top"
+    },
+    {
+      "clusters": [
+        "product-media",
+        "pricing",
+        "trust-credibility"
+      ],
+      "label": "Featured collection product cards second row",
+      "screenshot_ref": "section-4.jpg",
+      "scroll_y_bottom": 2073,
+      "scroll_y_top": 1580,
+      "slug": "featured-collection-bottom"
+    },
+    {
+      "clusters": [
+        "checkout-flows",
+        "trust-credibility",
+        "content-seo"
+      ],
+      "label": "Newsletter signup and footer with payment icons",
+      "screenshot_ref": "section-5.jpg",
+      "scroll_y_bottom": 2895,
+      "scroll_y_top": 2073,
+      "slug": "newsletter-footer"
+    }
+  ],
+  "telemetry": {
+    "chromium_binary": "chromium-1208"
+  },
+  "url": "https://awdmods.com/",
+  "viewport": {
+    "dpr_actual": 1,
+    "dpr_requested": 1,
+    "height": 1080,
+    "width": 1920
+  }
+}

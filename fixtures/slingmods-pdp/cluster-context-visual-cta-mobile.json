@@ -1,0 +1,458 @@
+{
+  "cluster": "visual-cta",
+  "device": "mobile",
+  "sections": [
+    {
+      "label": "Mobile header and product image gallery",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "visual-cta",
+        "product-media",
+        "content-seo",
+        "performance-ux"
+      ],
+      "is_global": true,
+      "dom_slice": "<header>\\n      <div class=\\\"container p8\\\">\\n        <div class=\\\"row\\\">\\n          <div class=\\\"col-sm-4\\\">\\n            <div id=\\\"logo\\\">\\n                            <a href=\\\"https://www.slingmods.com/index.php?route=common/home\\\"><img src=\\\"/image/catalog/slingmods-logo-main.png\\\" title=\\\"Slingmods\\\" alt=\\\"Slingmods\\\" class=\\\"img-responsive ma-center\\\"></a>\\n                          </div>\\n          </div>\\n          <div class=\\\"col-sm-5 sp-space\\\">\\n          \\t<div id=\\\"cs_top\\\">Call Us<span>:</span> \\n            \\t<img src=\\\"//www.slingmods.com/images/phone.png\\\" height=\\\"10px\\\" alt=\\\"Phone\\\">\\n            \\t<a href=\\\"https://www.slingmods.com/index.php?route=information/contact\\\">(800)211-1396</a>\\n                <span> | <img src=\\\"//www.slingmods.com/images/message.png\\\" height=\\\"12px\\\" alt=\\\"Message Us\\\"> </span>\\n                <a href=\\\"https://www.slingmods.com/index.php?route=information/contact\\\">Message Us</a>\\n            </div>\\n\\t\\t\\t<div id=\\\"search\\\" class=\\\"input-group\\\">\\n  <input type=\\\"text\\\" name=\\\"search-canam\\\" value=\\\"\\\" placeholder=\\\"Search\\\" class=\\\"form-control input-lg\\\"><div class=\\\"smartsearch\\\"></div>\\n  <input type=\\\"hidden\\\" name=\\\"vehicle\\\" value=\\\"1\\\"><div class=\\\"smartsearch\\\"></div>\\n  <span class=\\\"input-group-btn\\\">\\n    <button type=\\\"button\\\" class=\\\"btn btn-default btn-lg\\\"><i class=\\\"fa fa-search\\\"></i></button>\\n  </span>\\n</div>\\n          </div>\\n          <div class=\\\"col-sm-3 sp-space\\\">\\n\\t\\t  \\t<div id=\\\"cs_top\\\"> \\n            \\t                    <a href=\\\"https://www.slingmods.com/index.php?route=account/account\\\">Login</a>\\n                    <span> | </span>\\n                    <a href=\\\"https://www.slingmods.com/index.php?route=account/register\\\">Sign Up</a>\\n                            </div>\\n\\t\\t  \\n<div id=\\\"cart\\\" class=\\\"btn-group btn-block\\\">\\n  <button type=\\\"button\\\" class=\\\"btn btn-inverse btn-block btn-lg dropdown-toggle\\\"><span class=\\\"cart-items-count\\\">0</span><i class=\\\"fa fa-shopping-cart\\\" role=\\\"none\\\"></i> <span id=\\\"cart-total\\\" style=\\\"margin-left: 10px;\\\"> - $0.00</span></button>\\n  <ul class=\\\"dropdown-menu pull-right\\\">\\n        <li>\\n      <p class=\\\"text-center\\\">Your shopping cart is empty!</p>\\n    </li>\\n      </ul>\\n</div>\\n\\n</div>\\n\\n        </div>\\n      </div>\\n    </header>"
+    },
+    {
+      "label": "Product title, price, rating and PayPal Pay Later",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "pricing",
+        "product-media"
+      ],
+      "is_global": true,
+      "dom_slice": ""
+    },
+    {
+      "label": "Add to cart, options, fitment guide and payment methods",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "checkout-flows",
+        "product-media"
+      ],
+      "is_global": true,
+      "dom_slice": ""
+    },
+    {
+      "label": "Product description and reviews tabs",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "trust-credibility",
+        "product-media"
+      ],
+      "is_global": true,
+      "dom_slice": ""
+    },
+    {
+      "label": "Footer navigation and trust links",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "trust-credibility",
+        "category-navigation",
+        "post-purchase"
+      ],
+      "is_global": true,
+      "dom_slice": "<footer>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"row\\\">\\n            <div class=\\\"col-sm-3\\\">\\n        <h5>Information</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n                    <li><a href=\\\"https://www.slingmods.com/monthly-payments-by-affirm\\\">Affirm Monthly Payments</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/about-us\\\">About Us</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/privacy\\\">Privacy Policy</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/terms\\\">Terms  Conditions</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/rewards\\\">Reward Points</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/carb-policy\\\">CARB Policy</a></li>\\n                  </ul>\\n      </div>\\n            <div class=\\\"col-sm-3\\\">\\n        <h5>Year / Model Charts</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/can-am-canyon-evolution-model-chart\\\">Can-Am Canyon Model Chart</a></li>\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/can-am-ryker-evolution-model-chart\\\">Can-Am Ryker Model Chart</a></li>\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/can-am-spyder-evolution-model-chart\\\">Can-Am Spyder Model Chart</a></li>\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/polaris-slingshot-evolution-model-chart\\\">Polaris Slingshot Model Chart</a></li>\\n        </ul>\\n      </div>\\n      <div class=\\\"col-sm-3\\\">\\n        <h5>Extras</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=product/manufacturer\\\">Brands</a></li>\\n          <li><a href=\\\"//www.slingmods.com/slingmods-gift-card\\\">Gift Cards</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/dealer\\\">Dealers</a></li>\\n          <li><a href=\\\"//www.slingmods.com/price-match-guarantee\\\">Price Match Guarantee</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=information/listyourproducts\\\">Sell Your Products on SlingMods</a></li>\\n        </ul>\\n      </div>\\n      <div class=\\\"col-sm-3\\\">\\n        <h5>My Account</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/account\\\">My Account</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/order\\\">Order History</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/wishlist\\\">Wish List</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/newsletter\\\">Newsletter</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/orderstatus\\\">Track My Order</a></li>\\n        </ul>\\n      </div>\\n    </div>\\n\\t<div class=\\\"row\\\">\\n\\t\\t<div class=\\\"col-sm-6\\\">\\n\\t\\t\\t<span>* Free Shipping Applies to Most Contiguous U.S. Orders - Some Items May Not Qualify</span>\\n\\t\\t</div>\\n\\t\\t<div class=\\\"col-sm-6\\\">\\n\\t\\t\\t<span>Slingmods and the products offered for sale by it are not affiliated with or endorsed by Polaris / BRP</span>\\n\\t\\t</div>\\n\\t</div>\\n    <hr>\\n    <div class=\\\"row\\\">\\n\\t\\t<div class=\\\"col-sm-12\\\"><div id=\\\"payment_options\\\"><img src=\\\"image/payments/visa.png\\\"> <img src=\\\"image/payments/mastercard.png\\\"> <img src=\\\"image/payments/amex.png\\\"> <img src=\\\"image/payments/discover.png\\\"> <img src=\\\"image/payments/google-pay.png\\\"> <img src=\\\"image/payments/apple-pay.png\\\"> <img src=\\\"image/payments/paypal.png\\\"> <img src=\\\"image/payments/amazon-pay.png\\\"> <img src=\\\"image/payments/affirm.png\\\"></div></div>\\n\\t\\t<div class=\\\"col-sm-12\\\" style=\\\"text-align:center;\\\">© SlingMods.com - 882 Patriot Dr. Suite G, Moorpark, CA 93021 - (800)211-1396</div>\\n\\t</div>\\n  </div>\\n</footer>"
+    }
+  ],
+  "page_head": "<head>\\n<meta charset=\\\"UTF-8\\\">\\n<meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\">\\n\\n<title>Can-Am Spyder F3  RT Handlebar End Weights (2024+)</title>\\n<base href=\\\"https://www.slingmods.com/\\\">\\n<meta name=\\\"description\\\" content=\\\"Reduce your Can-Am Spyder F3 &amp; RT handlebar vibration with our EvolutionR Series weighted bar ends, end weights\\\">\\n<meta name=\\\"keywords\\\" content=\\\"Can-Am Spyder handlebar end weights, weighted bar ends, black handlebar end weights, stainless steel, spyder f3, spyder rt\\\">\\n<meta http-equiv=\\\"X-UA-Compatible\\\" content=\\\"IE=edge\\\">\\n<link rel=\\\"icon\\\" type=\\\"image/png\\\" sizes=\\\"192x192\\\" href=\\\"/images/favicon/favicon-192x192.png\\\">\\n<link rel=\\\"apple-touch-icon\\\" sizes=\\\"180x180\\\" href=\\\"/images/favicon/favicon-180x180.png\\\">\\n<link href=\\\"/images/favicon/favicon.ico\\\" rel=\\\"shortcut icon\\\" sizes=\\\"48x48\\\" type=\\\"image/x-icon\\\">\\n<link rel=\\\"manifest\\\" href=\\\"/manifest.json\\\">\\n<meta name=\\\"theme-color\\\" content=\\\"#ffffff\\\">\\n<meta name=\\\"msapplication-TileColor\\\" content=\\\"#353535\\\">\\n<meta name=\\\"msapplication-TileImage\\\" content=\\\"/images/favicon/favicon-144x144.png\\\"><link href=\\\"https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights\\\" rel=\\\"canonical\\\">\\n\\n\\n<link href=\\\"catalog/view/javascript/bootstrap/css/bootstrap.min.css?v=1.5\\\" rel=\\\"stylesheet\\\" media=\\\"screen\\\">\\n\\n<link href=\\\"catalog/view/javascript/font-awesome/css/font-awesome.min.css\\\" rel=\\\"stylesheet\\\" type=\\\"text/css\\\">\\n<link rel=\\\"preconnect\\\" href=\\\"https://fonts.googleapis.com\\\">\\n<link rel=\\\"preconnect\\\" href=\\\"https://fonts.gstatic.com\\\" crossorigin=\\\"\\\">\\n<link rel=\\\"preload\\\" as=\\\"font\\\" type=\\\"font/woff2\\\" href=\\\"https://fonts.gstatic.com/s/teko/v23/LYjYdG7kmE0gV69VVPPdFl06VN9JG4S11zOmu1CET6g.woff2\\\" crossorigin=\\\"\\\">\\n<link rel=\\\"preload\\\" as=\\\"font\\\" type=\\\"font/woff\\\" href=\\\"catalog/view/javascript/font-awesome/fonts/fontawesome-webfont.woff?v=4.1.0\\\" crossorigin=\\\"\\\">\\n<link href=\\\"//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700&amp;display=swap\\\" rel=\\\"stylesheet\\\" type=\\\"text/css\\\">\\n<link rel=\\\"stylesheet\\\" href=\\\"https://use.typekit.net/iji1kin.css\\\">\\n<link href=\\\"catalog/view/theme/default/stylesheet/stylesheet.css?v=3.8\\\" rel=\\\"stylesheet\\\">\\n<link href=\\\"catalog/view/theme/default/stylesheet/product-cards.css?v=10.5\\\" rel=\\\"stylesheet\\\">\\n\\n\\n\\n\\n<link href=\\\"catalog/view/theme/default/stylesheet/brainyfilter.css?v=1.4\\\" rel=\\\"stylesheet\\\">\\n<link href=\\\"catalog/view/theme/default/stylesheet/brainyfilter.css?v=1.4\\\" rel=\\\"stylesheet\\\">\\n<link href=\\\"catalog/view/theme/default/stylesheet/jquery-ui.slider.min.css\\\" rel=\\\"stylesheet\\\">\\n<link href=\\\"catalog/view/theme/default/stylesheet/dropzone.css\\\" type=\\\"text/css\\\" rel=\\\"stylesheet\\\" media=\\\"screen\\\">\\n<link href=\\\"catalog/view/theme/default/stylesheet/qa.css\\\" type=\\\"text/css\\\" rel=\\\"stylesheet\\\" media=\\\"screen\\\">\\n<link href=\\\"catalog/view/javascript/jquery/magnific/magnific-popup.css\\\" type=\\\"text/css\\\" rel=\\\"stylesheet\\\" media=\\\"screen\\\">\\n<link href=\\\"catalog/view/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css\\\" type=\\\"text/css\\\" rel=\\\"stylesheet\\\" media=\\\"screen\\\">\\n\\n<link rel=\\\"stylesheet\\\" type=\\\"text/css\\\" href=\\\"catalog/view/supermenu/supermenu.css?v=27\\\">\\n\\n\\n\\n\\n\\n\\n\\n\\t\\t\\t\\t\\n\\t\\t\\t\\t\\n\\n\\t\\n\\t\\n\\n\\n</head>",
+  "header_html": "<header>\\n      <div class=\\\"container p8\\\">\\n        <div class=\\\"row\\\">\\n          <div class=\\\"col-sm-4\\\">\\n            <div id=\\\"logo\\\">\\n                            <a href=\\\"https://www.slingmods.com/index.php?route=common/home\\\"><img src=\\\"/image/catalog/slingmods-logo-main.png\\\" title=\\\"Slingmods\\\" alt=\\\"Slingmods\\\" class=\\\"img-responsive ma-center\\\"></a>\\n                          </div>\\n          </div>\\n          <div class=\\\"col-sm-5 sp-space\\\">\\n          \\t<div id=\\\"cs_top\\\">Call Us<span>:</span> \\n            \\t<img src=\\\"//www.slingmods.com/images/phone.png\\\" height=\\\"10px\\\" alt=\\\"Phone\\\">\\n            \\t<a href=\\\"https://www.slingmods.com/index.php?route=information/contact\\\">(800)211-1396</a>\\n                <span> | <img src=\\\"//www.slingmods.com/images/message.png\\\" height=\\\"12px\\\" alt=\\\"Message Us\\\"> </span>\\n                <a href=\\\"https://www.slingmods.com/index.php?route=information/contact\\\">Message Us</a>\\n            </div>\\n\\t\\t\\t<div id=\\\"search\\\" class=\\\"input-group\\\">\\n  <input type=\\\"text\\\" name=\\\"search-canam\\\" value=\\\"\\\" placeholder=\\\"Search\\\" class=\\\"form-control input-lg\\\"><div class=\\\"smartsearch\\\"></div>\\n  <input type=\\\"hidden\\\" name=\\\"vehicle\\\" value=\\\"1\\\"><div class=\\\"smartsearch\\\"></div>\\n  <span class=\\\"input-group-btn\\\">\\n    <button type=\\\"button\\\" class=\\\"btn btn-default btn-lg\\\"><i class=\\\"fa fa-search\\\"></i></button>\\n  </span>\\n</div>\\n          </div>\\n          <div class=\\\"col-sm-3 sp-space\\\">\\n\\t\\t  \\t<div id=\\\"cs_top\\\"> \\n            \\t                    <a href=\\\"https://www.slingmods.com/index.php?route=account/account\\\">Login</a>\\n                    <span> | </span>\\n                    <a href=\\\"https://www.slingmods.com/index.php?route=account/register\\\">Sign Up</a>\\n                            </div>\\n\\t\\t  \\n<div id=\\\"cart\\\" class=\\\"btn-group btn-block\\\">\\n  <button type=\\\"button\\\" class=\\\"btn btn-inverse btn-block btn-lg dropdown-toggle\\\"><span class=\\\"cart-items-count\\\">0</span><i class=\\\"fa fa-shopping-cart\\\" role=\\\"none\\\"></i> <span id=\\\"cart-total\\\" style=\\\"margin-left: 10px;\\\"> - $0.00</span></button>\\n  <ul class=\\\"dropdown-menu pull-right\\\">\\n        <li>\\n      <p class=\\\"text-center\\\">Your shopping cart is empty!</p>\\n    </li>\\n      </ul>\\n</div>\\n\\n</div>\\n\\n        </div>\\n      </div>\\n    </header>",
+  "footer_html": "<footer>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"row\\\">\\n            <div class=\\\"col-sm-3\\\">\\n        <h5>Information</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n                    <li><a href=\\\"https://www.slingmods.com/monthly-payments-by-affirm\\\">Affirm Monthly Payments</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/about-us\\\">About Us</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/privacy\\\">Privacy Policy</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/terms\\\">Terms  Conditions</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/rewards\\\">Reward Points</a></li>\\n                    <li><a href=\\\"https://www.slingmods.com/carb-policy\\\">CARB Policy</a></li>\\n                  </ul>\\n      </div>\\n            <div class=\\\"col-sm-3\\\">\\n        <h5>Year / Model Charts</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/can-am-canyon-evolution-model-chart\\\">Can-Am Canyon Model Chart</a></li>\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/can-am-ryker-evolution-model-chart\\\">Can-Am Ryker Model Chart</a></li>\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/can-am-spyder-evolution-model-chart\\\">Can-Am Spyder Model Chart</a></li>\\n\\t\\t\\t<li><a href=\\\"//www.slingmods.com/polaris-slingshot-evolution-model-chart\\\">Polaris Slingshot Model Chart</a></li>\\n        </ul>\\n      </div>\\n      <div class=\\\"col-sm-3\\\">\\n        <h5>Extras</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=product/manufacturer\\\">Brands</a></li>\\n          <li><a href=\\\"//www.slingmods.com/slingmods-gift-card\\\">Gift Cards</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/dealer\\\">Dealers</a></li>\\n          <li><a href=\\\"//www.slingmods.com/price-match-guarantee\\\">Price Match Guarantee</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=information/listyourproducts\\\">Sell Your Products on SlingMods</a></li>\\n        </ul>\\n      </div>\\n      <div class=\\\"col-sm-3\\\">\\n        <h5>My Account</h5>\\n        <ul class=\\\"list-unstyled\\\">\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/account\\\">My Account</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/order\\\">Order History</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/wishlist\\\">Wish List</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/newsletter\\\">Newsletter</a></li>\\n          <li><a href=\\\"https://www.slingmods.com/index.php?route=account/orderstatus\\\">Track My Order</a></li>\\n        </ul>\\n      </div>\\n    </div>\\n\\t<div class=\\\"row\\\">\\n\\t\\t<div class=\\\"col-sm-6\\\">\\n\\t\\t\\t<span>* Free Shipping Applies to Most Contiguous U.S. Orders - Some Items May Not Qualify</span>\\n\\t\\t</div>\\n\\t\\t<div class=\\\"col-sm-6\\\">\\n\\t\\t\\t<span>Slingmods and the products offered for sale by it are not affiliated with or endorsed by Polaris / BRP</span>\\n\\t\\t</div>\\n\\t</div>\\n    <hr>\\n    <div class=\\\"row\\\">\\n\\t\\t<div class=\\\"col-sm-12\\\"><div id=\\\"payment_options\\\"><img src=\\\"image/payments/visa.png\\\"> <img src=\\\"image/payments/mastercard.png\\\"> <img src=\\\"image/payments/amex.png\\\"> <img src=\\\"image/payments/discover.png\\\"> <img src=\\\"image/payments/google-pay.png\\\"> <img src=\\\"image/payments/apple-pay.png\\\"> <img src=\\\"image/payments/paypal.png\\\"> <img src=\\\"image/payments/amazon-pay.png\\\"> <img src=\\\"image/payments/affirm.png\\\"></div></div>\\n\\t\\t<div class=\\\"col-sm-12\\\" style=\\\"text-align:center;\\\">© SlingMods.com - 882 Patriot Dr. Suite G, Moorpark, CA 93021 - (800)211-1396</div>\\n\\t</div>\\n  </div>\\n</footer>",
+  "elements": [
+    {
+      "accessible_name": "Menu",
+      "e_index": "e0",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 12.0,
+        "y": 8.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Search",
+      "e_index": "e1",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 286.0,
+        "y": 8.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Cart",
+      "e_index": "e2",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 334.0,
+        "y": 8.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "0",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3",
+      "e_index": "e3",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 97.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 676.0
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h1",
+      "tag": "h1",
+      "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "$59.95",
+      "e_index": "e4",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 823.0
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "$59.95",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Slingmods",
+      "e_index": "e5",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 50.0,
+        "width": 209.0,
+        "x": 90.0,
+        "y": 5.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Slingshot",
+      "e_index": "e6",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 18.0,
+        "x": 0.0,
+        "y": 68.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Spyder",
+      "e_index": "e7",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 22.0,
+        "x": 85.0,
+        "y": 68.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "(15 reviews) In Stock",
+      "e_index": "e8",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 773.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"rating\"]",
+      "tag": "div",
+      "text_content": "(15 reviews) In Stock",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e9",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 16.0,
+        "x": 15.0,
+        "y": 775.0
+      },
+      "role": "i",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "i",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "$59.95",
+      "e_index": "e10",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 77.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 823.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"price\"]",
+      "tag": "div",
+      "text_content": "$59.95",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "59.95",
+      "e_index": "e11",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 68.0,
+        "x": 30.0,
+        "y": 822.0
+      },
+      "role": "span",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"price\"]",
+      "tag": "span",
+      "text_content": "59.95",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "0",
+      "e_index": "e12",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 16.0,
+        "width": 16.0,
+        "x": 360.0,
+        "y": 12.0
+      },
+      "role": "span",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"badge\"]",
+      "tag": "span",
+      "text_content": "0",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e13",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": true,
+      "rect": {
+        "height": 60.0,
+        "width": 256.0,
+        "x": 320.0,
+        "y": 770.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"badge\"]",
+      "tag": "div",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "0",
+      "e_index": "e14",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 334.0,
+        "y": 8.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"cart\"]",
+      "tag": "div",
+      "text_content": "0",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e15",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 17.0,
+        "x": 300.0,
+        "y": 21.0
+      },
+      "role": "i",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"search\"]",
+      "tag": "i",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Cookie Preferences",
+      "e_index": "e16",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"floating\"]",
+      "tag": "button",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Upload your photos",
+      "e_index": "e17",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": true,
+      "rect": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "role": "dialog",
+      "scroll_y_at_capture": 0,
+      "selector": "[role=\"dialog\"]",
+      "tag": "div",
+      "text_content": "Upload your photos",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e18",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 37.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 862.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 700,
+      "selector": "[class*=\"pay\"]",
+      "tag": "div",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Information Affirm Monthly Payments",
+      "e_index": "e19",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 880.0,
+        "width": 390.0,
+        "x": 0.0,
+        "y": 2417.0
+      },
+      "role": "contentinfo",
+      "scroll_y_at_capture": 1611,
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditions Reward Points CARB Policy",
+      "coords": "css"
+    }
+  ],
+  "coords": "css",
+  "styles": {},
+  "structured_data": [],
+  "viewport": {
+    "dpr_actual": 3,
+    "dpr_requested": 3,
+    "height": 844,
+    "width": 390
+  }
+}

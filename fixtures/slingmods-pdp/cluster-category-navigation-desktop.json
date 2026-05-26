@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "category-navigation",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6",
+    "context_window": 200000
+  },
+  "started_at": "2026-04-28T23:30:00.000Z",
+  "completed_at": "2026-04-28T23:38:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No History Breadcrumb — Filter State Lost on PDP Arrival",
+      "surface": "breadcrumb-nav",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "navigation"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The breadcrumb row beneath the main navigation shows only a hierarchy trail: home icon > product title. No 'Back to [Category]' or 'Back to results' link is present anywhere on the page."
+        },
+        {
+          "type": "dom",
+          "reference": "e14"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 1: Ecommerce Requires Two Types of Breadcrumbs — 68% of Sites Fail to Implement Both",
+          "tier": "Gold"
+        },
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 2: History Breadcrumb Must Preserve Filters, Sort Order, and Scroll Position",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product page displays a single hierarchy breadcrumb — a home icon linking to the root, followed by the full product title as plain text. There is no 'Back to [Category]' or 'Back to results' link. A customer who arrived at this page by browsing 'Comfort / Touring' accessories, applying vehicle-year filters, and clicking through from a category listing has no navigational shortcut back to their filtered results. Clicking the home icon returns them to the homepage; the hierarchy breadcrumb's category tier is absent entirely — there is no 'Comfort / Touring' or 'Handlebar Accessories' intermediate link. Baymard Institute benchmarking finds 68% of ecommerce sites fail to implement both hierarchy and history breadcrumbs; this page omits both the subcategory hierarchy level and the history type.",
+      "recommendation": "Add two breadcrumb elements above the product title. First, complete the hierarchy trail to at minimum three levels: Home > [Parent Category] > [Product Name] — use the canonical category path (e.g., 'Comfort / Touring' or the subcategory this product belongs to in the site taxonomy). Second, when a customer navigates to this page from a category listing or search results page, render a session-state-preserved 'Back to [Category Name]' link directly above or below the hierarchy trail — serialize filter and scroll state into a returnTo URL parameter at the moment of click-through from the listing page, then reconstruct it on this link. Both can coexist in the same breadcrumb row.",
+      "why_this_matters": "Shoppers who apply vehicle-year or category filters and then click through to a product page expect to return to their filtered list in one action. Without a history breadcrumb they must use the browser back button — which on this site's pagination may reset scroll position and loaded products — or navigate the entire category hierarchy from scratch. Abandonment at the PDP-to-category-return moment is a measurable conversion cost: Baymard usability testing identifies this as among the most frustrating ecommerce navigation failures.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Breadcrumb Missing BreadcrumbList Schema — No SERP Rich Result",
+      "surface": "breadcrumb-nav",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "navigation"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.97,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e4"
+        },
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "A hierarchy breadcrumb is rendered in HTML beneath the navigation bar, but the baton's schema_jsonld array contains only a Product schema object — no BreadcrumbList type is present."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 6: Schema.org BreadcrumbList Markup Required for Search Engine Rich Results",
+          "tier": "Gold"
+        },
+        {
+          "source": "collection-page-architecture.md",
+          "section": "Finding 3: Breadcrumbs Are Mandatory — Removal Causes -5.5% to -7% Organic Traffic",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The page's structured data (verified in the captured JSON-LD payload) contains one schema object of type Product. No BreadcrumbList object is present. Google requires BreadcrumbList JSON-LD with at least two ListItems to display the breadcrumb path in search result snippets. Without it, Google's SERP snippet for this page will display a raw URL rather than a readable category path — reducing the click-signal that a category-contextual breadcrumb trail provides to prospective buyers scanning results for 'Can-Am Spyder handlebar end weights'. Separately, SearchPilot controlled tests found that removing breadcrumbs caused a statistically significant 5.5% organic traffic loss and that breadcrumb schema removal cost 7% organic traffic on category-level pages; the same risk applies to PDPs without schema.",
+      "recommendation": "Add a BreadcrumbList JSON-LD block to this page template alongside the existing Product schema. The list must include at minimum two ListItems: the homepage (position 1) and at least one intermediate category (position 2), with the product page as the final item (position 3). Match the breadcrumb levels to the visible HTML breadcrumb trail so Google does not flag a mismatch between markup and rendered content. Validate with Google's Rich Results Test before publishing.",
+      "why_this_matters": "BreadcrumbList schema enables Google to replace the raw URL in search snippets with a human-readable category path. For a niche accessory product in a specific vehicle compatibility, showing 'slingmods.com > Comfort / Touring > Handlebar Accessories' in SERPs signals relevance to searchers faster than a URL string and improves click-through rate. The absence of this markup leaves an organic traffic lever unpulled on every product page in the catalog.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Primary Navigation Not Sticky — Lost After Scroll",
+      "surface": "header-nav",
+      "element": {
+        "baton_index": "e14",
+        "text_content": "Categories",
+        "role": "navigation"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The category megamenu (nav.default.superbig, y=171) and vehicle model selector (nav#modelmenu, y=137) are both visible at scroll_y=0, occupying the top of the viewport. Both elements carry is_sticky: false in the baton data."
+        },
+        {
+          "type": "dom",
+          "reference": "e13"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 7: Breadcrumbs Reduce Disorientation for Users Arriving from Search (Qualitative)",
+          "tier": "Silver"
+        },
+        {
+          "source": "collection-page-architecture.md",
+          "section": "Finding 1: Click Depth — Every Product Reachable Within 3–4 Clicks from Homepage",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "Both navigation bars — the vehicle model selector (SLINGSHOT, SPYDER, RYKER, CANYON) at y=137 and the category megamenu (Engine/Drivetrain, Suspension/Brakes, Comfort/Touring, Frame/Body, Electronics, Tires/Wheels) at y=171 — have `is_sticky: false` per the captured element index. On a 1920×1080 viewport the full page height is 1,661px, meaning a visitor scrolling through the product description and fitment guide section (which begins at approximately scroll_y=581) loses access to both navigation bars. The only persistent navigation element is the sticky badge widget at e10/e17 (x=1835, y=1006 — far right edge), which does not provide category navigation.",
+      "recommendation": "If the site design already uses a condensed sticky header on scroll, confirm that the sticky header includes both the vehicle model tabs and the category dropdown. If no sticky behavior exists, implement a CSS `position: sticky; top: 0` rule on the combined header element that collapses the logo and utility links but preserves the two navigation bars. The combined sticky height should not exceed 60–70px to avoid consuming too much viewport on the product content area.",
+      "why_this_matters": "A customer reading the product description and deciding whether to purchase a different model year variant — or exploring whether an alternative product category better fits their need — must scroll back to the top of the page to access navigation. This adds friction to mid-page cross-navigation and is particularly costly for customers evaluating fitment across multiple products in the same session. Persistent navigation reduces this friction and supports the browse-to-purchase loop.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Hierarchy Breadcrumb Missing Intermediate Category Level",
+      "surface": "breadcrumb-nav",
+      "element": {
+        "baton_index": "e4",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3",
+        "role": "heading"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The breadcrumb row shows: [home icon] > 'EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)'. There is no intermediate category or subcategory link between home and the product title."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 4: Hierarchy Breadcrumbs — Structure and Interaction Requirements",
+          "tier": "Gold"
+        },
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 1: Ecommerce Requires Two Types of Breadcrumbs — 68% of Sites Fail to Implement Both",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The visible hierarchy breadcrumb jumps directly from a home icon to the full product title — a two-level trail with no intermediate category link. Nielsen Norman Group's breadcrumb guidelines require all intermediate hierarchy levels to be clickable links. A customer who wants to browse other handlebar accessories for the Can-Am Spyder has no breadcrumb link to navigate to that category; the breadcrumb provides no 'you are here' context within the site's category taxonomy. The category megamenu (e14) shows the site organizes products into Engine/Drivetrain, Suspension/Brakes, Comfort/Touring, and similar categories — this product almost certainly belongs under at least one of these, but that affiliation is invisible from the breadcrumb.",
+      "recommendation": "Extend the breadcrumb to at least three levels: Home > [Parent Category] > [Product Name]. If the product belongs to a subcategory (e.g., Home > Comfort / Touring > Handlebar Accessories > [Product]), include that intermediate level as a clickable link. Each intermediate level must be a link to the corresponding category page; only the final product-name element should be non-linked plain text. This also creates the internal link structure that supports the BreadcrumbList schema fix described in finding F-2.",
+      "why_this_matters": "A two-level home-to-product breadcrumb gives customers no navigational path into the category hierarchy. Shoppers who arrived via a Google search and landed directly on this product page cannot discover what other handlebar accessories or Spyder parts the site carries without manually exploring the megamenu. Each missing intermediate breadcrumb link is also a missing internal link, which reduces the crawl and ranking signals for those category pages.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The search bar in the header (e2, accessible_name='Search', input name='search-canam') has a smartsearch div suggesting autocomplete is implemented. No audit finding emitted because the autocomplete behavior was not observable from captured state alone — this is noted for the search-and-filter specialist if one runs.",
+    "The vehicle model selector tabs (SLINGSHOT e0, SPYDER e1) at y=138 appear to be a top-level navigation filter by vehicle brand/type. This is a useful fitment-first navigation pattern; no negative finding emitted as the pattern itself functions correctly on desktop at scroll_y=0.",
+    "The page has only one section routed to category-navigation (section-1 / slug hero-pricing-paypal). Section-2 (product-description-footer) was not routed to this cluster. Findings are based solely on section-1 evidence."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "breadcrumbs.md",
+      "collection-page-architecture.md",
+      "merchandising-psychology.md",
+      "evidence-tiers.md",
+      "search-and-filter-ux.md"
+    ],
+    "baton_elements_referenced": [
+      "e0",
+      "e1",
+      "e2",
+      "e4",
+      "e13",
+      "e14"
+    ],
+    "screenshots_reviewed": [
+      "section-1.jpg",
+      "section-2.jpg"
+    ]
+  }
+}

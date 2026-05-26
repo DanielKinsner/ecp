@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "content-seo",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:20:00.000Z",
+  "completed_at": "2026-04-28T23:28:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "H1 and Page Title Use Different Product Terms",
+      "surface": "page-title",
+      "element": {
+        "baton_index": "e4",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can",
+        "role": "heading"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "H1 reads 'EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)'; page <title> reads 'Can-Am Spyder F3 & RT Handlebar End Weights (2024+)'. H1 uses 'End Caps'; title uses 'End Weights'. H1 leads with brand name 'EvolutionR'; title leads with product category and fitment."
+        },
+        {
+          "type": "dom",
+          "reference": "e4"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "title-formulas-serp-psychology.md",
+          "section": "Finding 12: H1–Title Alignment Reduces Google Rewrites to ~20%",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The page title tag reads 'Can-Am Spyder F3 & RT Handlebar End Weights (2024+)' while the H1 reads 'EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)'. Two key divergences: the title uses 'End Weights' — the customer-facing search term — while the H1 uses 'End Caps'. The title leads with the fitment/product category signal; the H1 leads with the brand 'EvolutionR'. Google rewrites 76% of title tags on average, and the H1/title mismatch is the single highest-probability rewrite trigger: Zyppy Q1 2025 data shows rewrite rate falls from 76% to approximately 20% only when H1 and title share the same primary noun phrase.",
+      "recommendation": "Align the H1 with the title's primary noun phrase. If 'End Weights' is the searched term (as the title correctly reflects), update the H1 to use 'End Weights' rather than 'End Caps' so Google sees consistent terminology across both signals. A workable H1: 'EvolutionR Stainless Steel Handlebar End Weights for Can-Am Spyder F3 & RT (Pair) (2024+)'. Verify which term — End Weights or End Caps — has higher search volume before committing, and use the higher-volume term in both.",
+      "why_this_matters": "With a misaligned H1 and title, Google is statistically likely to rewrite the displayed title in search results, often stripping the brand name or substituting its own phrase. A rewritten title reduces CTR predictability and removes the carefully structured keyword signal from the most visible SERP element.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Product Schema Missing GTIN and MPN Identifiers",
+      "surface": "product-schema",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "Page JSON-LD contains @type Product with name, image, brand, aggregateRating, and offers, but no gtin, mpn, or sku field. Part number SM-22409 is visible in the product page copy (visible in section-1.jpg) but is absent from structured data."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 8: Product Identifiers (GTIN/MPN/SKU) Are the Universal Commerce Key",
+          "tier": "Silver"
+        },
+        {
+          "source": "ai-search-agentic-discovery.md",
+          "section": "Finding 5: GTIN/Product Identifiers Are Required for Cross-Platform AI Product Matching",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The page's JSON-LD Product schema includes name, image, brand, aggregateRating, and offers, but contains no gtin, mpn, or sku field. The product page displays a part number SM-22409 in the description copy (visible in section-1.jpg), yet this identifier is not surfaced in structured data. Without an mpn or sku in schema, Google cannot cross-reference this product against its Shopping Graph knowledge base, and the OpenAI ChatGPT Shopping feed cannot reliably match this product across data sources.",
+      "recommendation": "Add the manufacturer part number as mpn in the JSON-LD: add '\"mpn\": \"SM-22409\"' to the Product object. If a manufacturer-assigned GTIN (UPC/EAN barcode) exists for this EvolutionR product, populate the gtin field instead or in addition. For aftermarket automotive accessories without a manufacturer GTIN, mpn plus brand (already present) is the documented Google Merchant Center fallback and satisfies the OpenAI Product Feed specification.",
+      "why_this_matters": "Products without identifiers cannot appear in Google Shopping's product graph matching features, are ineligible for ChatGPT Shopping Research cross-platform matching, and may be excluded from enriched Shopping programs. For a niche fitment-specific accessory like this one, appearing in AI-assisted shopping comparisons is a growing discovery channel that competitors with populated identifiers will capture first.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Product Schema Missing MerchantReturnPolicy",
+      "surface": "product-schema",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "Page JSON-LD Product schema has no MerchantReturnPolicy nested object. The Offer object contains priceCurrency, price, availability, and priceValidUntil but no return policy data."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 6: MerchantReturnPolicy Schema Is Critical for Agentic Commerce",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The JSON-LD Product schema on this page includes an Offer block with price ($59.95), availability (InStock), and priceValidUntil, but contains no MerchantReturnPolicy object. The footer links to a Terms & Conditions page, suggesting a return policy exists on-site, but it is not surfaced in machine-readable structured data. Google's return policy rich result display and AI commerce agents (ChatGPT Shopping Research, Google's AI shopping) use MerchantReturnPolicy data to compare merchants when products are otherwise equivalent.",
+      "recommendation": "Add a MerchantReturnPolicy object to the Product schema. If the return policy is stated on a linked page, Option B (minimal implementation) is sufficient: add '\"hasMerchantReturnPolicy\": {\"@type\": \"MerchantReturnPolicy\", \"merchantReturnLink\": \"https://www.slingmods.com/terms\"}' to the Product object. For richer eligibility, use Option A inline: add applicableCountry ('US'), returnPolicyCategory, and merchantReturnDays. Confirm the correct return policy URL is the terms page or a dedicated returns page.",
+      "why_this_matters": "AI shopping assistants actively compare return policies when recommending products to buyers researching accessory purchases. A competitor with return policy in schema has a measurable advantage in AI-mediated comparison shopping for a product at this price point, where return confidence directly influences purchase decisions.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PARTIAL",
+      "title": "priceValidUntil Expires Tomorrow — Stale Within 24 Hours",
+      "surface": "product-schema",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.97,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "JSON-LD Offer object contains priceValidUntil: '2026-04-29'. Audit captured 2026-04-28. The date expires one day after capture, meaning schema will show a stale priceValidUntil as of 2026-04-29 unless updated."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 3: Google Merchant Center Feed Takes Precedence Over On-Page Schema",
+          "tier": "Gold"
+        },
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 15: Rich Result Eligibility Is Revocable — Monitor Actively",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The JSON-LD Offer block carries 'priceValidUntil': '2026-04-29'. This audit was captured on 2026-04-28, meaning the price validity expiration is tomorrow. Once 2026-04-29 passes, Google's structured data validator will see an expired priceValidUntil date, which can cause the rich result to be flagged as stale and trigger re-evaluation or suppression of the Shopping rich result. This pattern suggests priceValidUntil is either set to a hard-coded near-term date or generated with a one-day rolling window without adequate buffer.",
+      "recommendation": "Set priceValidUntil to a date at least 30–90 days in the future, updated by your platform's price management system whenever the price is modified. If this is a static product with a stable price, set priceValidUntil to one year from the current date and automate renewal. Never hardcode a near-term date — the consequence of expiration is rich result loss, not just a cosmetic data issue.",
+      "why_this_matters": "An expired priceValidUntil is a known trigger for Google to suppress Shopping rich results on the affected product URL. For a $59.95 product competing in niche fitment searches, losing the price-and-stars rich result reduces SERP visibility at exactly the moment a buyer is comparing products.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Canonical URL Structure Follows Best Practices",
+      "surface": "product-description-footer",
+      "element": {
+        "baton_index": "e18"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [],
+      "reference_citations": [],
+      "observation": "The canonical tag points to 'https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights' — a flat, hyphenated, lowercase slug at one path segment below the domain root, matching the Google-recommended ecommerce URL pattern. No underscores, no query parameters, no session IDs. The slug is descriptive and query-aligned.",
+      "recommendation": "No action required. Continue generating product slugs in this format and verify canonical tag output after any theme updates, particularly if a collection-prefixed duplicate URL exists on a PrestaShop or similar platform.",
+      "why_this_matters": "A clean canonical structure ensures all inbound link equity consolidates to one URL and reduces crawl budget waste on duplicate paths.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The AggregateRating schema shows ratingValue: '5' with reviewCount: '15'. A perfect 5.0 from 15 reviews is unusual and warrants verification that the rating pool is not filtered or selectively counted — this is an ethics-cluster surface under FTC 16 CFR Part 465, not a content-seo finding, and is noted here only for the synthesizer's cross-cluster awareness.",
+    "The meta description ('Reduce your Can-Am Spyder F3 & RT handlebar vibration with our EvolutionR Series weighted bar ends, end weights') is 85 characters — below the optimal 150-160 character range. This leaves SERP snippet real estate unused. Not emitted as a FAIL because the meta description is factually accurate and keyword-present; the opportunity is additive rather than corrective.",
+    "The page uses 'Can-Am Spyder Fitment Guide' table listing 2024/2025/2026 Spyder F3-L / F3-S / F3-T / RT / RTL fitments (visible in section-1.jpg and section-2.jpg). This fitment specificity is excellent for long-tail transactional queries and directly supports AI shopping agent parsing of compatibility data."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "canonical-duplicate-content.md",
+      "schema-product-markup.md",
+      "image-seo-alt-text.md",
+      "url-structure-information-architecture.md",
+      "title-formulas-serp-psychology.md",
+      "content-freshness-signals.md",
+      "ai-search-agentic-discovery.md",
+      "benefit-first-descriptions.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 2,
+    "findings_by_verdict": {
+      "FAIL": 3,
+      "PARTIAL": 1,
+      "PASS": 1
+    },
+    "baton_elements_referenced": 3
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "performance-ux",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:30:00.000Z",
+  "completed_at": "2026-04-28T23:45:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Hero Product Image Missing fetchpriority and Preload",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "img"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The product hero image for the EvolutionR Stainless Steel Weighted Handlebar End Caps renders prominently above the fold in the left column at scroll_y=0. No fetchpriority attribute or <link rel=preload> tag appears in the page head for this image."
+        },
+        {
+          "type": "dom",
+          "reference": "e4",
+          "context": "The h1 product title at scroll_y=0 confirms the hero image is the LCP candidate in this above-fold viewport. Page head contains no preload hint for the product image URL visible in schema jsonld."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 1: Product Hero Image Is the LCP Element — Requires fetchpriority=high and Preload",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 6: Never Lazy-Load the LCP Hero Image",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product hero image — the primary visual element for the EvolutionR Stainless Steel Weighted Handlebar End Caps — loads above the fold with no fetchpriority=\"high\" attribute and no corresponding <link rel=\"preload\"> in the page head. On product detail pages, the hero image is the LCP element in the majority of cases. Without these attributes, the browser deprioritizes this image in its network queue, treating it as equal priority to below-fold images, and begins fetching it only after the HTML parser encounters the img tag rather than during head parsing. The product image URL is captured in the structured data (schema.org Product markup) but not referenced in a preload hint.",
+      "recommendation": "If the primary product image renders in the first viewport on page load, add fetchpriority=\"high\" to its <img> element and add <link rel=\"preload\" as=\"image\" href=\"[hero-image-url]\" fetchpriority=\"high\"> in the <head> before other non-critical resources. This is a two-attribute change to a single template file. Do not add loading=\"lazy\" to this image. All gallery images below position two in the carousel can use loading=\"lazy\" safely.",
+      "why_this_matters": "LCP directly predicts conversion rate — a controlled A/B test at Vodafone showed a 31% LCP improvement produced 8% more online sales. Deprioritizing the hero image adds hundreds of milliseconds to LCP on mid-speed connections, compounding the revenue drag identified in Deloitte's Milliseconds Make Millions study (8.4% retail conversion lift per 0.1s improvement).",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Product Images Served as JPEG With No AVIF or WebP Format Negotiation",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "img"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The hero product image and gallery thumbnails in section-1 are served as JPEG files (visible in the schema jsonld image URL ending in .jpg). No <picture> element or <source type=image/avif> or <source type=image/webp> tags appear in the page markup."
+        },
+        {
+          "type": "dom",
+          "reference": "e4",
+          "context": "Schema jsonld image field shows: canam-spyder-handlebar-end-weights-2024-up-gradient-main.jpg — a JPEG path with no CDN format-negotiation parameters visible in any markup."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 3: WebP Reduces File Size ~30%; AVIF Reduces ~50% vs. JPEG — With 97%+ and 85%+ Browser Support",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 7: Image Format Priority — AVIF to WebP to JPEG",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Product images — including the hero shot visible above the fold in section-1 — are delivered as JPEG files with no modern format negotiation. AVIF is supported by approximately 94.9% of global browsers and reduces file size by 45-55% compared to JPEG at equivalent visual quality; WebP (96.4% support) reduces size by 25-34%. The page uses no <picture> element with <source type=\"image/avif\"> or <source type=\"image/webp\">, and the image CDN path pattern (slingmods.com/image/catalog/...) shows no automatic format-switching parameters. A typical product hero image as JPEG at 1500×1500px runs approximately 500KB; the same image as AVIF would be approximately 100KB.",
+      "recommendation": "If images are served from a CDN that supports automatic format negotiation (Cloudflare Images, Cloudinary, or Imgix), enable Accept-header-based format selection — the CDN will serve AVIF or WebP automatically without changing the HTML. If images are served directly, wrap each product image in a <picture> element offering <source srcset=\"image.avif\" type=\"image/avif\">, <source srcset=\"image.webp\" type=\"image/webp\">, and <img src=\"image.jpg\"> as fallback. Apply this to the hero image first since it is the LCP candidate.",
+      "why_this_matters": "Serving oversized JPEG files to browsers that support AVIF wastes bandwidth on every product page load. For a store with significant traffic, the aggregate LCP delay from unoptimized image formats compounds directly into conversion loss — the Deloitte/Google study found each 0.1s improvement in mobile load time yields 8.4% more retail conversions.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Above-Fold Images Missing Width and Height Attributes (CLS Risk)",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e15",
+        "text_content": "Call Us: (800)211-1396 | Message Us",
+        "role": "banner"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The header at scroll_y=0 contains the Slingmods logo image (slingmods-logo-main.png) with no width or height attributes in the markup. The phone icon (images/phone.png height=10px inline) and message icon (images/message.png height=12px) use only a height attribute with no corresponding width. The product hero image in the main column also lacks explicit dimensions."
+        },
+        {
+          "type": "dom",
+          "reference": "e15",
+          "context": "Header element (e15) at rect x:358 y:35 w:1190 h:102, is_above_fold=true. The header HTML confirms: <img src=/image/catalog/slingmods-logo-main.png class=img-responsive ma-center> with no width or height attributes."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 5: Explicit Width and Height Attributes Prevent Cumulative Layout Shift (CLS)",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 12: CLS — Reserve Space for All Dynamic Elements",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The Slingmods logo image in the header renders above the fold (scroll_y=0, captured at e15) without explicit width and height attributes — the markup reads <img src=\"/image/catalog/slingmods-logo-main.png\" class=\"img-responsive ma-center\"> with no dimensions declared. The phone and message icons use only a height attribute in isolation (height=\"10px\" and height=\"12px\") with no width. When these images load asynchronously, the browser has no reserved space for them and must reflow the page layout as each image resolves — producing Cumulative Layout Shift that pushes the navigation bar and product content downward during the first seconds of the page loading.",
+      "recommendation": "Add explicit width and height HTML attributes to every <img> element on the page that currently lacks them, starting with the logo and header icons. Use the image's intrinsic pixel dimensions (or the intended CSS render dimensions) as the attribute values. Pair this with CSS img { max-width: 100%; height: auto; } to allow responsive scaling while preserving the declared aspect ratio for space reservation. For the logo specifically, inspect its actual pixel dimensions and add width=\"[W]\" height=\"[H]\" to the tag.",
+      "why_this_matters": "CLS from above-fold images is the most impactful form of layout shift because it occurs during the critical first seconds when users are forming their impression of the page. Swappie achieved a 42% mobile revenue increase after reducing CLS by 91%, suggesting that visible page jumps during loading are a significant conversion driver. CLS is also a confirmed Google ranking signal — a failing CLS score (>0.1) removes the Page Experience ranking benefit.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PARTIAL",
+      "title": "brainyfilter.css Loaded Twice in Page Head — Redundant Render-Blocking Request",
+      "surface": "product-description-footer",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "link"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e12",
+          "context": "The page head (captured in page_head field) contains two consecutive identical entries: <link href=catalog/view/theme/default/stylesheet/brainyfilter.css?v=1.4 rel=stylesheet> appearing twice. This is a render-blocking stylesheet loaded twice before the browser can paint above-fold content."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 8: Third-Party Scripts Are the Primary CWV Killer",
+          "tier": "Silver"
+        },
+        {
+          "source": "page-performance-psychology.md",
+          "section": "Finding 9: Above-the-Fold Content Loading Priority",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The page head contains brainyfilter.css (v=1.4) loaded twice in identical consecutive <link> tags. Each render-blocking stylesheet request delays the browser's First Contentful Paint — the browser must download and parse all render-blocking CSS before painting any pixels. A duplicate stylesheet means the browser issues two network requests for the same file and parses the same CSS rules twice, adding latency even when the second request is served from cache (the browser still processes the duplicate rule application). This appears to be a template merge or copy-paste error in the PrestaShop theme.",
+      "recommendation": "Remove the duplicate <link> tag for brainyfilter.css from the page head template. One instance of the stylesheet is sufficient. After removing the duplicate, audit the remaining render-blocking stylesheet order: move critical above-fold styles inline or into a critical CSS block, and defer non-critical stylesheets (dropzone.css, qa.css, magnific-popup.css, datetimepicker.css) to load after initial paint using rel=\"preload\" with onload swap or media=\"print\" technique.",
+      "why_this_matters": "Every render-blocking resource in the head delays First Contentful Paint and LCP. A duplicate stylesheet is pure overhead with no benefit — removing it eliminates one redundant network round-trip and one redundant CSS parse pass at zero cost to functionality.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "PayPal Pay Later Widget Renders Without Blocking Layout Shift",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e16",
+        "text_content": "PayPal Pay Later",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.75,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The PayPal Pay Later message widget (e16) renders at scroll_y=0, rect y:442, height:24. It appears as a compact inline element beneath the price, not injecting above existing content or causing visible layout shift in the captured state."
+        }
+      ],
+      "reference_citations": [],
+      "observation": "The PayPal Pay Later messaging widget (e16, scroll_y=0, height 24px) is positioned beneath the price block at y:442 and occupies a consistent 24px height. In the captured above-fold state, it renders in a fixed-height slot that does not visibly displace the Add to Cart button or other conversion elements.",
+      "recommendation": "Maintain the current placement and explicit height reservation for the PayPal widget container. If the PayPal script loads asynchronously and the container height is not pre-reserved, monitor CLS score in Search Console to confirm the widget does not contribute layout shift on slower connections.",
+      "why_this_matters": "Third-party payment widgets that inject content above the fold after initial render are a common CLS source. The current configuration avoids this pattern.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "The sticky badge elements (e10 at scroll_y=0 and e17 at scroll_y=581) both have empty text_content and render at x:1835 — far right edge of the 1920px viewport, likely a chat or support widget. These were observed but not emitted as a finding because their exact identity (third-party chat vs. first-party sticky CTA) cannot be confirmed from the available DOM slice, and the performance impact depends on the specific third-party script they represent.",
+    "The og_image field in baton page_head is null — the product page has no Open Graph image tag. This affects social sharing performance and visual fidelity when the page is shared or prerendered. Emitting as a note rather than a finding because OG image optimization is primarily a social/SEO concern handled by the content-seo cluster.",
+    "The priceValidUntil field in schema.org structured data is set to 2026-04-29 — one day after the engagement date. If this field is not updated dynamically, it will become stale tomorrow, which may affect Google Merchant Center and rich result eligibility. Observed but not emitted — this is a pricing/SEO concern outside this cluster's frame.",
+    "No Speculation Rules API implementation was observed on this PDP. Adding prerender hints on collection pages linking to this PDP would be a high-upside recommendation (Ray-Ban A/B test showed +101% mobile PDP conversion), but that change belongs on the collection page template, not this PDP — noted here for synthesizer cross-reference."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "media-performance-optimization.md",
+      "core-web-vitals.md",
+      "page-performance-psychology.md",
+      "cognitive-load-management.md",
+      "evidence-tiers.md"
+    ],
+    "baton_elements_count": 19,
+    "findings_emitted": 5,
+    "findings_fail": 3,
+    "findings_partial": 1,
+    "findings_pass": 1
+  }
+}

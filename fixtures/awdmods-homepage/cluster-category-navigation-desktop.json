@@ -1,0 +1,358 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "category-navigation",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Search Input Is Icon-Toggle Only — No Visible Text Box",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e1",
+        "text_content": "What are you looking for?",
+        "role": "button"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The header shows a wide dark input box labeled 'Search' that visually appears as a text input, but baton element e1 is role=button (44x44px at x:1246, y:56) — a search icon toggle, not the expanded input field. The expanded input (e17, role=combobox, 929px wide) sits at the same y-position but is only present when the icon is activated."
+        },
+        {
+          "type": "dom",
+          "reference": "e1"
+        },
+        {
+          "type": "dom",
+          "reference": "e17"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 17",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The search entry point in the AWDMods header is a 44×44px icon button (accessible name: 'What are you looking for?') rather than a persistently visible text input. NNGroup's guidance is explicit that on sites with more than 50 products, hiding search behind an icon-only toggle reduces findability — users who don't recognize the icon as a search trigger skip it entirely. The full-width combobox input (929px, e17) only appears after the icon is activated, meaning the search surface is invisible on page load.",
+      "recommendation": "If the search bar input can be rendered as a persistently visible text field in the header rather than requiring an icon click to reveal it, do so. The existing 929px input (e17) is already the right width for typical automotive parts queries — expose it by default so users see the 'What are you looking for?' placeholder text on every page load without an additional tap.",
+      "why_this_matters": "Automotive parts shoppers have highly specific queries (part numbers, vehicle fitment, brand+model combinations). Hiding the search entry point behind an icon adds friction at the exact moment users are most ready to search, and 40% of users fail to locate filtering/search options when they are not immediately visible.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Compatibility Filter in Primary Navigation or Category Tiles",
+      "surface": "category-grid",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The hero contains a vehicle selector widget (Select Make / Select Model / Select Year / Select your Trim) but it is visually embedded in the hero banner background image and not connected to the category navigation tiles below it. The category tiles (Performance, Handling & Brakes, Interior, Exterior, Electronics) link to broad subcategory collections with no indication that results will be filtered to the visitor's specific vehicle."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 513,
+          "viewport": "desktop",
+          "context": "Category tiles at section-2 show subcategory text (e.g., 'Intakes Exhaust Cooling Drivetrain upgrades') but carry no fitment-filter context. No 'filtered to your vehicle' indicator appears on or beneath any tile."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 5",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "AWDMods sells compatibility-dependent products — a cold-air intake for a Ford Focus RS will not fit a Subaru WRX STI. The homepage hero includes a vehicle selector (Select Make / Model / Year / Trim), but it is visually buried in the hero image and disconnected from the five category tiles below. Once a visitor selects their vehicle and clicks 'Shop Performance,' there is no visible confirmation that search results will be filtered to their fitment. Baymard's compatibility filter research shows that 65% of users fail to find the correct product when compatibility filtering is absent or unclear, and 32% of sites selling fitment-dependent products lack this filter entirely.",
+      "recommendation": "Connect the homepage vehicle selector to the category tile CTAs so that clicking 'Shop Performance' (or any tile) passes the selected vehicle as a URL parameter and renders the target collection page pre-filtered to that fitment. Display a persistent 'Showing parts for: [Year] [Make] [Model]' banner at the top of every collection page when a vehicle has been selected. If the selector is not yet wired to filtering, add a prominent 'Select your vehicle' prompt above the category tiles with a clear affordance that it will refine results.",
+      "why_this_matters": "When compatibility filtering is absent or invisible, customers click through to collection pages, scroll past incompatible parts, and abandon — often buying from a competitor whose site surfaces fitment-specific results immediately. For a performance parts store serving Ford Focus RS, WRX, and STI owners, fitment confidence is the single highest-leverage conversion lever at the category navigation level.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Category Navigation Tiles Missing Product Counts",
+      "surface": "category-grid",
+      "element": {
+        "baton_index": "e12",
+        "text_content": "Performance Intakes Exhaust Cooling Drivetrain upgrades Shop Performance",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 275,
+          "viewport": "desktop",
+          "context": "The five category tiles (Performance, Handling & Brakes, Interior, Exterior, Electronics) each display a subcategory list and a 'Shop [Category]' CTA button. None display a product count — e.g., 'Performance (127 parts)'. The tile text lists subcategory names only."
+        },
+        {
+          "type": "dom",
+          "reference": "e12"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 25",
+          "tier": "Gold"
+        },
+        {
+          "source": "merchandising-psychology.md",
+          "section": "Finding 8",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The five 'Shop by Category' tiles on the AWDMods homepage (Performance, Handling & Brakes, Interior, Exterior, Electronics) list subcategory names beneath each tile heading but show no product counts. Visitors cannot gauge whether a given category has enough relevant parts to justify clicking through — a visitor modding a Subaru WRX STI sees 'Performance' with no indication of how many performance parts exist for their vehicle or in total. Baymard's filter-value-count research shows that displaying counts alongside category options lets users make better routing decisions and avoids dead-end navigations.",
+      "recommendation": "Add a product count beneath each category tile heading — e.g., 'Performance (143 parts)' or, if the vehicle selector is connected, 'Performance (38 parts for your WRX STI)'. The count can be rendered server-side at page build time if the catalog is small enough, or fetched dynamically when a vehicle is selected. Even a static total-catalog count adds navigational value versus no count.",
+      "why_this_matters": "Without product counts, category tiles function as blind links — visitors have no signal for which categories are well-stocked for their build. Low-inventory categories that look equally prominent as deep ones will disappoint after click-through, eroding trust in the breadth of the catalog.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Breadcrumbs Absent on Homepage — No Hierarchy or History Type Present",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The header contains logo, search, 'Select Your Vehicle', account, and cart elements. No breadcrumb trail is visible beneath the main navigation bar. The nav bar (e18) contains 'Shop All' and 'Shop by Category' but no breadcrumb component."
+        },
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 876,
+          "viewport": "desktop",
+          "context": "Featured Collection product cards render with brand name, product title, price, and badge but no breadcrumb or back-to-collection link on the homepage product display. The page_head.schema_jsonld contains no BreadcrumbList schema type."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 1",
+          "tier": "Gold"
+        },
+        {
+          "source": "collection-page-architecture.md",
+          "section": "Finding 3",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "No breadcrumb navigation is present on the AWDMods homepage in any form — neither a hierarchy type ('Home > Performance') nor a history type ('← Back to results'). The page's schema JSON-LD (baton page_head.schema_jsonld) contains OnlineStore and WebSite types but no BreadcrumbList markup. While breadcrumbs are typically most critical on PDPs and collection pages, their absence from the Shopify theme architecture means they are likely missing across the site — confirmed absent in the schema data. Two independent SearchPilot controlled tests found that removing breadcrumbs caused -5.5% and -7% organic traffic loss respectively.",
+      "recommendation": "Implement BreadcrumbList JSON-LD schema across all collection and product pages. For collection pages, the hierarchy breadcrumb should render as 'Home > [Category]' with crawlable anchor links. For PDPs, add both a hierarchy breadcrumb ('Home > Performance > Intakes > [Product Name]') and a history-type 'Back to [Collection] ([N] items)' link that preserves the visitor's filter and sort state from their previous collection page.",
+      "why_this_matters": "Breadcrumb absence costs organic traffic directly (two controlled tests, -5.5% to -7%) and degrades navigation confidence for users who want to step back up the category hierarchy after landing on a product page. For an SEO-dependent store competing on automotive parts keywords, this is a structurally avoidable traffic loss.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PARTIAL",
+      "title": "Featured Collection Grid Uses 5-Column Layout — Exceeds Recommended Maximum",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e10",
+        "text_content": "",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 513,
+          "viewport": "desktop",
+          "context": "The Featured Collection row in section-2 shows 5 product cards per row at 1920px viewport width. Baton confirms the first two cards (e10 at x:240, e11 at x:528) have 271px widths with ~17px gutters — consistent with a 5-column grid across the 1905px page width. Jenkins (2020) measured a 35.7% increase in per-row scanning time at 5 columns vs. 4 columns."
+        },
+        {
+          "type": "dom",
+          "reference": "e10"
+        },
+        {
+          "type": "dom",
+          "reference": "e11"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "grid-layout.md",
+          "section": "Finding 1",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The Featured Collection on the homepage renders 5 product cards per row at 1920×1080 desktop. Baton measurements confirm card widths of 271px with approximately 17px gutters across a 1905px container, accounting for 5 columns. Hugo Jenkins' UsabilityHub study found scanning time per row increases 35.7% going from 4 to 5 columns (4.61s → 6.26s). This is above the 3–4 column desktop recommendation. Note that this is marked PARTIAL rather than FAIL because the 5-column limit is the guidance boundary (3–4 is recommended; up to 5 is the stated ceiling for full-width browse contexts), and the Featured Collection is not a filter-sidebar layout.",
+      "recommendation": "If the Featured Collection section uses a fixed-width container at 1920px, cap the grid at 4 columns by setting a maximum card width or using a CSS grid with `grid-template-columns: repeat(4, 1fr)` with a defined max container width. A 4-column layout at this viewport would yield roughly 450px card widths — larger images that reduce per-card evaluation time by ~19% (Jenkins 2020) and compensate for showing one fewer product per row.",
+      "why_this_matters": "Automotive parts shoppers evaluate products through images (checking part fitment, finish quality, install complexity). Narrower cards at 5 columns compress the visual evaluation signal, increasing time-on-page without increasing click confidence. A 4-column layout with larger images will produce faster product evaluation and higher click-through on the Featured Collection.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Vehicle Selector Widget Present Above the Fold on Homepage",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e3",
+        "text_content": "Shop by Category",
+        "role": "button"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The hero banner contains a vehicle selector with four dropdowns (Select Make, Select Model, Select Year, Select your Trim) and a search submit button. The selector renders within the above-fold viewport at scroll_y=0 on a 1080px display. This is a meaningful fitment-navigation entry point appropriate for an automotive parts store."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 5",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "AWDMods correctly surfaces a four-field vehicle selector (Make / Model / Year / Trim) in the hero banner, visible above the fold at page load. This addresses the core compatibility navigation need for automotive parts shoppers and positions fitment-first navigation prominently. The 'SELECT YOUR VEHICLE — Car parts, simplified.' header element (e19) reinforces the value proposition.",
+      "recommendation": "The vehicle selector placement is correct. Ensure the selector's submit button is wired to pass vehicle parameters to collection page URLs so filter state persists across navigation. See finding F-2 for the gap in how selector results connect to category tile CTAs.",
+      "why_this_matters": "Automotive parts stores that surface vehicle compatibility filtering above the fold see higher engagement from returning customers who bookmark their vehicle configuration. The prominent above-fold placement correctly anticipates the primary user intent.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 7,
+      "verdict": "PASS",
+      "title": "Category Tiles Provide Clear Subcategory Hierarchy for Five Major Segments",
+      "surface": "category-grid",
+      "element": {
+        "baton_index": "e13",
+        "text_content": "Handling and Brakes Suspension Wheels Brake kits Chassis control Shop Handling",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 275,
+          "viewport": "desktop",
+          "context": "Five category tiles render in a single row: Performance, Handling & Brakes, Interior, Exterior, Electronics. Each tile shows a lifestyle image, category heading, 4–5 subcategory text links, and a 'Shop [Category]' CTA. The tiles cover the breadth of the AWDMods catalog's five functional segments."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "merchandising-psychology.md",
+          "section": "Finding 8",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The 'Shop by Category' tile grid correctly surfaces all five major product segments (Performance, Handling & Brakes, Interior, Exterior, Electronics) with subcategory context text beneath each heading. This matches Baymard's subcategory navigation tile guidance for large-catalog parent categories — each tile acts as a self-routing entry point for visitors with specific modification intent. The tile imagery is contextually appropriate (engine bay for Performance, suspension for Handling, etc.).",
+      "recommendation": "The tile structure is sound. Priority improvements are connecting the vehicle selector to tile CTAs (F-2) and adding product counts to tile labels (F-3) to complete the fitment-routing experience.",
+      "why_this_matters": "Category tiles that clearly segment a broad catalog reduce the number of unnecessary page views visitors must take before reaching relevant products. The five-tile structure maps cleanly to the mental model of performance-oriented drivers who self-identify with modification categories.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "The 'Shop by Category' nav item (e3, role=button, tag=summary) appears to control a details/summary disclosure element for the dropdown mega-menu. This is a standard Shopify Dawn pattern — the element is keyboard-accessible by default, though the icon-only close button (e0, offscreen) should be verified for screen reader usability.",
+    "The Featured Collection heading (e4) renders at scroll_y=0 (baton) but the product grid appears to begin around y=989 per product card positions — the h2 'Featured Collection' title is above fold but product cards are visible only after a short scroll at 1080px viewport height. This is within acceptable above-fold thresholds for a homepage (not a collection page) so no finding was emitted.",
+    "The 'Show me' card at position 5 in the second Featured Collection row (visible in section-3.jpg) functions as a 'There's plenty more...' / 'Show me →' prompt. This is a Shopify-native featured-collection widget behavior and is noted rather than flagged as a navigation failure since it links to the full collection.",
+    "No filter panel, sort controls, applied-filter chips, or pagination controls are present on the homepage — these are collection-page surfaces not present on this page type. No skipped-filter findings were emitted as the homepage is not a collection page.",
+    "The baton page_head.schema_jsonld contains OnlineStore and WebSite schema with SearchAction, but no BreadcrumbList — confirmed absence cited in F-4."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "search-and-filter-ux.md",
+      "filtering-ux.md",
+      "grid-layout.md",
+      "merchandising-psychology.md",
+      "pagination-patterns.md",
+      "product-cards.md",
+      "sorting-psychology.md",
+      "zero-results.md",
+      "breadcrumbs.md",
+      "collection-page-architecture.md"
+    ],
+    "sections_routed": ["hero-nav", "category-grid"],
+    "baton_elements_confirmed": ["e1", "e3", "e10", "e11", "e12", "e13", "e17", "e18", "e19"]
+  }
+}

@@ -1,0 +1,517 @@
+{
+  "capture_state": {
+    "hydration": "post-hydration",
+    "overlays_detected": [
+      {
+        "dismissal_method": "accept-button",
+        "dismissed": true,
+        "e_index": "e16",
+        "type": "cookie-consent"
+      },
+      {
+        "dismissal_method": "close-button",
+        "dismissed": true,
+        "e_index": "e17",
+        "type": "newsletter-modal"
+      }
+    ],
+    "page_height_px": 3297
+  },
+  "captured_at": "2026-04-28T23:11:22.000Z",
+  "device": "mobile",
+  "elements": [
+    {
+      "accessible_name": "Menu",
+      "e_index": "e0",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 12.0,
+        "y": 8.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Search",
+      "e_index": "e1",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 286.0,
+        "y": 8.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Cart",
+      "e_index": "e2",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 334.0,
+        "y": 8.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "0"
+    },
+    {
+      "accessible_name": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3",
+      "e_index": "e3",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 97.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 676.0
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h1",
+      "tag": "h1",
+      "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)"
+    },
+    {
+      "accessible_name": "$59.95",
+      "e_index": "e4",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 823.0
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "$59.95"
+    },
+    {
+      "accessible_name": "Slingmods",
+      "e_index": "e5",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 50.0,
+        "width": 209.0,
+        "x": 90.0,
+        "y": 5.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Slingshot",
+      "e_index": "e6",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 18.0,
+        "x": 0.0,
+        "y": 68.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Spyder",
+      "e_index": "e7",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 22.0,
+        "x": 85.0,
+        "y": 68.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "(15 reviews) In Stock",
+      "e_index": "e8",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 773.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"rating\"]",
+      "tag": "div",
+      "text_content": "(15 reviews) In Stock"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e9",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 16.0,
+        "x": 15.0,
+        "y": 775.0
+      },
+      "role": "i",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "i",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "$59.95",
+      "e_index": "e10",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 77.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 823.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"price\"]",
+      "tag": "div",
+      "text_content": "$59.95"
+    },
+    {
+      "accessible_name": "59.95",
+      "e_index": "e11",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 68.0,
+        "x": 30.0,
+        "y": 822.0
+      },
+      "role": "span",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"price\"]",
+      "tag": "span",
+      "text_content": "59.95"
+    },
+    {
+      "accessible_name": "0",
+      "e_index": "e12",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 16.0,
+        "width": 16.0,
+        "x": 360.0,
+        "y": 12.0
+      },
+      "role": "span",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"badge\"]",
+      "tag": "span",
+      "text_content": "0"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e13",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": true,
+      "rect": {
+        "height": 60.0,
+        "width": 256.0,
+        "x": 320.0,
+        "y": 770.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"badge\"]",
+      "tag": "div",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "0",
+      "e_index": "e14",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44.0,
+        "width": 44.0,
+        "x": 334.0,
+        "y": 8.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"cart\"]",
+      "tag": "div",
+      "text_content": "0"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e15",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 17.0,
+        "x": 300.0,
+        "y": 21.0
+      },
+      "role": "i",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"search\"]",
+      "tag": "i",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Cookie Preferences",
+      "e_index": "e16",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"floating\"]",
+      "tag": "button",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Upload your photos",
+      "e_index": "e17",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": true,
+      "rect": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "role": "dialog",
+      "scroll_y_at_capture": 0,
+      "selector": "[role=\"dialog\"]",
+      "tag": "div",
+      "text_content": "Upload your photos"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e18",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 37.0,
+        "width": 360.0,
+        "x": 15.0,
+        "y": 862.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 700,
+      "selector": "[class*=\"pay\"]",
+      "tag": "div",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Information Affirm Monthly Payments",
+      "e_index": "e19",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 880.0,
+        "width": 390.0,
+        "x": 0.0,
+        "y": 2417.0
+      },
+      "role": "contentinfo",
+      "scroll_y_at_capture": 1611,
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditions Reward Points CARB Policy"
+    }
+  ],
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "page_head": {
+    "canonical": "https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights",
+    "hreflang": [],
+    "meta_description": "Reduce your Can-Am Spyder F3 & RT handlebar vibration with our EvolutionR Series weighted bar ends, end weights",
+    "og_image": null,
+    "schema_jsonld": [
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "reviewCount": "15"
+        },
+        "brand": {
+          "@type": "Brand",
+          "name": "EvolutionR"
+        },
+        "image": "http://www.slingmods.com/image/catalog/evolutionr/canam-spyder-rt-f3-handlebar-end-weights-2024-up/canam-spyder-handlebar-end-weights-2024-up-gradient-main.jpg",
+        "mpn": "canam-spyder-handlebar-end-weights-evolutionr",
+        "name": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)",
+        "offers": {
+          "@type": "Offer",
+          "availability": "http://schema.org/InStock",
+          "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "applicableCountry": "US",
+            "merchantReturnDays": "90",
+            "merchantReturnLink": "https://www.slingmods.com/terms",
+            "returnFees": "https://schema.org/ReturnShippingFees",
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow"
+          },
+          "itemCondition": "http://schema.org/NewCondition",
+          "price": "59.95",
+          "priceCurrency": "USD",
+          "priceValidUntil": "2026-04-29",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "US"
+            },
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "currency": "USD",
+              "value": "7.99"
+            }
+          },
+          "url": "https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights"
+        },
+        "productId": "22409",
+        "url": "https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights"
+      }
+    ],
+    "title": "Can-Am Spyder F3 & RT Handlebar End Weights (2024+)",
+    "viewport_meta": "width=device-width, initial-scale=1"
+  },
+  "schema_version": 1,
+  "sections": [
+    {
+      "clusters": [
+        "visual-cta",
+        "product-media",
+        "performance-ux"
+      ],
+      "label": "Mobile header and product image gallery",
+      "screenshot_ref": "section-1-mobile.jpg",
+      "scroll_y_bottom": 700,
+      "scroll_y_top": 0,
+      "slug": "header-product-gallery"
+    },
+    {
+      "clusters": [
+        "pricing",
+        "trust-credibility",
+        "checkout-flows"
+      ],
+      "label": "Product title, price, rating and PayPal Pay Later",
+      "screenshot_ref": "section-2-mobile.jpg",
+      "scroll_y_bottom": 1044,
+      "scroll_y_top": 700,
+      "slug": "product-title-price"
+    },
+    {
+      "clusters": [
+        "visual-cta",
+        "checkout-flows",
+        "pricing",
+        "trust-credibility"
+      ],
+      "label": "Add to cart, options, fitment guide and payment methods",
+      "screenshot_ref": "section-3-mobile.jpg",
+      "scroll_y_bottom": 1611,
+      "scroll_y_top": 1044,
+      "slug": "add-to-cart-fitment-payments"
+    },
+    {
+      "clusters": [
+        "content-seo",
+        "trust-credibility"
+      ],
+      "label": "Product description and reviews tabs",
+      "screenshot_ref": "section-4-mobile.jpg",
+      "scroll_y_bottom": 2417,
+      "scroll_y_top": 1611,
+      "slug": "description-reviews-tabs"
+    },
+    {
+      "clusters": [
+        "trust-credibility",
+        "content-seo"
+      ],
+      "label": "Footer navigation and trust links",
+      "screenshot_ref": "section-5-mobile.jpg",
+      "scroll_y_bottom": 3297,
+      "scroll_y_top": 2417,
+      "slug": "footer-trust-links"
+    }
+  ],
+  "telemetry": {
+    "chromium_binary": "chromium-1208",
+    "playwright_version": "agent-browser-0.21.4",
+    "wall_clock_seconds": 344.0
+  },
+  "url": "https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights",
+  "viewport": {
+    "dpr_actual": 3,
+    "dpr_requested": 3,
+    "height": 844,
+    "width": 390
+  }
+}

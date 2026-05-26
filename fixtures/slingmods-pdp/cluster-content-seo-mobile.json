@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "content-seo",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:20:00.000Z",
+  "completed_at": "2026-04-28T23:35:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "H1 and Page Title Use Different Product Name",
+      "surface": "product-title-price",
+      "element": {
+        "baton_index": "e3",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models",
+        "role": "heading"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e3",
+          "context": "H1 reads 'EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)'. The HTML <title> in page_head reads 'Can-Am Spyder F3 & RT Handlebar End Weights (2024+)'. H1 uses 'End Caps'; title uses 'End Weights' — two different product nouns for the same item."
+        },
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 676,
+          "viewport": "mobile",
+          "context": "H1 text 'EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)' is visible at the bottom of section 1."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "title-formulas-serp-psychology.md",
+          "section": "Finding 12: H1–Title Alignment Reduces Google Rewrites to ~20%",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The page's H1 heading uses the phrase 'End Caps' while the HTML title tag reads 'End Weights' — these are different product nouns describing the same item. Google's title rewrite rate is currently 76% across all pages; when H1 and title are misaligned like this, that rate stays near the population average. When they match semantically, Google's rewrite rate drops to approximately 20%. The current mismatch means Google will likely substitute its own title in search results, potentially omitting key terms like 'EvolutionR' or 'Stainless Steel' that distinguish this product.",
+      "recommendation": "Pick one consistent noun — 'End Weights' or 'End Caps' — and use it in both the HTML title and the H1. The current title 'Can-Am Spyder F3 & RT Handlebar End Weights (2024+)' at 51 characters sits in the optimal 51–60 character range; keep that length. Update the H1 to lead with the same primary noun. If 'End Weights' is the more searched term, use it in both fields; if 'End Caps' is preferred, update the title accordingly.",
+      "why_this_matters": "Google rewrote 76% of all title tags in Q1 2025. H1/title alignment is the single highest-leverage action to prevent Google from rewriting your title with a version that may drop your brand name or key product descriptor — directly reducing organic click-through rate on your highest-traffic product type.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "priceValidUntil Expires Tomorrow — Rich Result Eligibility at Risk",
+      "surface": "description-reviews-tabs",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.98,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "Baton page_head.schema_jsonld[0].offers.priceValidUntil = '2026-04-29'. Today's date is 2026-04-28. The price validity window expires in approximately 24 hours, at which point Google's structured data validator will flag the Offer as invalid and the product page will lose eligibility for Shopping rich results, price display in SERPs, and ChatGPT Instant Checkout inclusion."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 1: Two Markup Paths — Product Snippets vs. Merchant Listings",
+          "tier": "Gold"
+        },
+        {
+          "source": "ai-search-agentic-discovery.md",
+          "section": "Finding 10: Schema.org Product Markup Is the Single Highest-ROI AI Commerce Action",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Product schema's Offer block contains 'priceValidUntil': '2026-04-29'. This date is tomorrow. Once this date passes, Google's Merchant Center crawler and rich result validator will treat the price as expired, removing the page from Shopping rich result eligibility and degrading its appearance in Google Shopping panels. The same data powers ChatGPT Instant Checkout product matching — an expired price validity field can cause the product to be flagged as unavailable or stale in AI shopping agents.",
+      "recommendation": "Set priceValidUntil to a rolling date at least 30 days ahead and automate its update — most platforms support this through a CMS field or template variable. A common pattern is to set the date 365 days forward and refresh it on each catalog sync. Never let this field lapse to yesterday: once it expires, re-crawl latency means the product may be suppressed from Shopping results for days before Google re-validates it.",
+      "why_this_matters": "An expired priceValidUntil causes immediate loss of Google Shopping rich results and Merchant Center eligibility, removing the product from price-comparison panels and AI shopping agent consideration — directly reducing discoverable impressions for this product listing.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No GTIN — AI Shopping Agents Cannot Cross-Match This Product",
+      "surface": "description-reviews-tabs",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "Baton page_head.schema_jsonld[0] contains mpn: 'canam-spyder-handlebar-end-weights-evolutionr' and productId: '22409' but no 'gtin', 'gtin8', 'gtin12', 'gtin13', or 'gtin14' field. The Offer block also lacks a gtin property."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ai-search-agentic-discovery.md",
+          "section": "Finding 5: GTIN/Product Identifiers Are Required for Cross-Platform AI Product Matching",
+          "tier": "Gold"
+        },
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 8: Product Identifiers (GTIN/MPN/SKU) Are the Universal Commerce Key",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The product's JSON-LD schema contains an MPN ('canam-spyder-handlebar-end-weights-evolutionr') and an internal product ID ('22409') but no GTIN field. GTIN is required by both Google Merchant Center (for full Shopping eligibility) and the OpenAI Agentic Commerce Product Feed for ChatGPT Instant Checkout. Without a GTIN, AI shopping agents that cross-reference product databases from multiple sources — comparing prices, checking availability, confirming it's the same physical item — cannot confidently match this product. The MPN is a useful supplementary identifier but does not substitute for GTIN in cross-platform shopping contexts.",
+      "recommendation": "If EvolutionR's handlebar end weights have a manufacturer-assigned UPC or EAN (as a brand selling into retail channels, they likely do), add the GTIN to the JSON-LD schema using the 'gtin' property and to the Google Merchant Center product feed. If no manufacturer GTIN exists for this private-label product, document that explicitly and ensure the MPN is fully populated — the combination of brand + MPN is the documented fallback for Google Merchant Center exemptions. For ChatGPT Instant Checkout eligibility, verify current OpenAI Product Feed requirements at developers.openai.com/commerce/specs/feed.",
+      "why_this_matters": "GTIN is the single point of convergence for product identity across Google Shopping, ChatGPT Instant Checkout, and Perplexity shopping. Without it, the product is invisible to AI agents performing cross-platform price comparison — a channel that converts at 31–33% lower bounce rates than standard organic traffic.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Schema Image URL Uses HTTP Not HTTPS",
+      "surface": "description-reviews-tabs",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "Baton page_head.schema_jsonld[0].image = 'http://www.slingmods.com/image/catalog/evolutionr/canam-spyder-rt-f3-handlebar-end-weights-2024-up/canam-spyder-handlebar-end-weights-2024-up-gradient-main.jpg' — uses http:// not https://. The canonical URL on the same page uses https://."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "canonical-duplicate-content.md",
+          "section": "Finding 11: Signal Strength Hierarchy for Canonicalization",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product's JSON-LD schema declares the primary product image URL using an insecure http:// protocol ('http://www.slingmods.com/image/catalog/...'). The page's canonical URL correctly uses https://. This creates a mixed-protocol inconsistency in structured data: Google's documentation explicitly lists HTTPS URLs as preferred for canonicalization when other signals tie. An http:// image URL in schema may trigger a Content Security Policy warning on the live page, reduce the image's Google Merchant Center eligibility for Shopping image display, and signal protocol inconsistency to crawlers that compare schema URLs against page canonical.",
+      "recommendation": "Update the schema image URL from http:// to https:// in the JSON-LD template that generates this product's structured data. Audit all other schema URL fields (offers.url, offers.hasMerchantReturnPolicy.merchantReturnLink) to confirm they also use https://. Verify with Google's Rich Results Test after the fix to confirm no remaining protocol warnings.",
+      "why_this_matters": "HTTPS is a confirmed canonicalization signal; http:// images in schema undermine trust signals used by Google Merchant Center image validation and can cause product image disapproval, removing the product image from Shopping panels.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Canonical Tag, URL Slug, and Meta Description Are Well-Formed",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "Canonical: https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights — absolute HTTPS, hyphenated slug, no trailing slash, no parameters. Meta description: 112 characters, within the 120–160 character practical range for mobile display. Title length: 51 characters, within the optimal 51–60 character range per Zyppy Q1 2025 data."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "canonical-duplicate-content.md",
+          "section": "Finding 12: Self-Referencing Canonicals Are Best Practice for All Pages",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The canonical tag is correctly formed: absolute HTTPS URL, hyphenated slug with no underscores, no trailing slash, no session parameters. The page title at 51 characters sits at the start of the optimal 51–60 character range. The meta description at 112 characters is within mobile display limits.",
+      "recommendation": "No action required for these elements. Maintain this pattern across variant pages if additional color or model variants are added in future.",
+      "why_this_matters": "Well-formed canonicals and correct URL hygiene prevent link equity dilution across duplicate URL variants and maintain consistent crawl behavior.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Product Description Uses Benefit-First Structure with Feature Bullets",
+      "surface": "description-reviews-tabs",
+      "element": {
+        "baton_index": "e19"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1611,
+          "viewport": "mobile",
+          "context": "Section 4 screenshot shows a benefit-first opening paragraph explaining the vibration problem and the product solution, followed by a 'Benefits and Features' header with 7 bullet points. Bullets lead with benefit language: 'Significantly reduces engine, road, and downshift-related handlebar vibration', 'Helps minimize hand fatigue, numbness, and tingling'. Each bullet follows FAB structure implicitly."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "benefit-first-descriptions.md",
+          "section": "Finding 4: 78% of Sites Fail to Structure Descriptions with Feature Highlights",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product description opens with a problem-framing paragraph addressing why riders experience handlebar vibration, then introduces the EvolutionR solution. A 'Benefits and Features' section follows with seven structured bullet points. This places the page in the minority of ecommerce sites that implement highlight-structured descriptions. Sensory language ('smoother, more refined ride') appears in the body copy. The description is specific enough to answer the primary pre-purchase question: why are these end caps better than standard ones.",
+      "recommendation": "No structural changes needed. To strengthen AI shopping agent extractability, consider adding a short FAQ section (3–5 questions) answering fitment and installation questions such as 'Will these fit 2024 and 2025 Can-Am Spyder RT models?' and 'Do these require tools to install?'",
+      "why_this_matters": "Benefit-structured descriptions with feature highlights are implemented by only 22% of major ecommerce sites per Baymard research; this page's existing structure is a competitive content-quality advantage.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 7,
+      "verdict": "PARTIAL",
+      "title": "MerchantReturnPolicy Present But returnFees Uses Wrong Schema Value",
+      "surface": "description-reviews-tabs",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "absent",
+          "context": "Baton page_head.schema_jsonld[0].offers.hasMerchantReturnPolicy contains: applicableCountry='US', returnPolicyCategory='https://schema.org/MerchantReturnFiniteReturnWindow', merchantReturnDays='90', merchantReturnLink='https://www.slingmods.com/terms', returnFees='https://schema.org/ReturnShippingFees', returnMethod='https://schema.org/ReturnByMail'. The returnFees value 'https://schema.org/ReturnShippingFees' is a valid Schema.org enumeration value — this is a PASS on the returnFees field itself. The key observation is that all required Option A fields are present (applicableCountry + returnPolicyCategory + merchantReturnDays given the FiniteReturnWindow category)."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 6: MerchantReturnPolicy Schema Is Critical for Agentic Commerce",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The MerchantReturnPolicy block includes applicableCountry, returnPolicyCategory (MerchantReturnFiniteReturnWindow), merchantReturnDays (90), merchantReturnLink, returnFees, and returnMethod — all Option A required fields are present and correctly structured. This is a meaningful competitive advantage: the majority of ecommerce product pages omit this block entirely. The returnFees value 'https://schema.org/ReturnShippingFees' is a valid Schema.org enumeration. One gap: the returnMethod value 'https://schema.org/ReturnByMail' is correct but there is no explicit applicableCountry scope for the return window — the implementation is valid per current spec and should validate cleanly in Google's Rich Results Test. Verify the 90-day window in schema matches your actual published return policy at slingmods.com/terms.",
+      "recommendation": "Run the page through Google's Rich Results Test to confirm the MerchantReturnPolicy block validates without warnings. Verify the 90-day return window declared in schema matches the terms page at slingmods.com/terms — discrepancies between schema and published policy can trigger manual review flags in Merchant Center. No structural changes required if validation passes.",
+      "why_this_matters": "AI shopping agents (ChatGPT Shopping Research, Google AI shopping) use return policy schema data when comparing merchants on equivalent products. An accurate, validated MerchantReturnPolicy makes this product's 90-day window machine-readable for AI-driven merchant comparison, a competitive data advantage for higher-consideration purchases.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The AggregateRating in JSON-LD shows ratingValue '5' (perfect) across all 15 reviews. A 5.0/5.0 average from 15 reviews is statistically unusual and may attract scrutiny from FTC 16 CFR Part 465 compliance standpoint — the ethics subagent is the appropriate cluster to evaluate whether the reviews reflect unsuppressed customer data. Not emitted as a content-seo finding.",
+    "The footer contains payment icons (Visa, Mastercard, Amex, Discover, Google Pay, Apple Pay, PayPal, Amazon Pay, Affirm) rendered as <img> elements in the footer DOM slice. These images have no alt text in the footer HTML ('image/payments/visa.png' etc.) — a potential WCAG 2.1 SC 1.1.1 violation. Image alt text remediation falls within content-seo scope but these are footer-level trust icons rather than product images. If the Slingmods footer template is shared across all pages, fixing alt text on these payment icons would address WCAG compliance across the entire site at minimal effort.",
+    "The cluster-context file routed section 1 (header/product gallery) to content-seo in the cluster-context JSON, but the baton section routing does not include content-seo for section 1. The baton sections array shows section 1 slug 'header-product-gallery' routed to visual-cta, product-media, performance-ux only. Section 2 ('product-title-price') routed to pricing, trust-credibility, checkout-flows. Content-seo owns sections 4 and 5 per baton routing. H1 finding (F-1) uses baton element e3 which appears in section 1 visually but the H1 element is present in the baton elements array and references scroll_y_at_capture=0, placing it within the cluster's page-scope audit authority."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "canonical-duplicate-content.md",
+      "schema-product-markup.md",
+      "image-seo-alt-text.md",
+      "url-structure-information-architecture.md",
+      "title-formulas-serp-psychology.md",
+      "content-freshness-signals.md",
+      "ai-search-agentic-discovery.md",
+      "benefit-first-descriptions.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 2,
+    "baton_elements_referenced": 3,
+    "findings_by_verdict": {
+      "FAIL": 4,
+      "PARTIAL": 1,
+      "PASS": 2
+    }
+  }
+}

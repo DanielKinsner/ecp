@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "pricing",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Most Featured Products Lack Price Anchoring",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e25",
+        "text_content": "From $135.99",
+        "role": "span"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 1000,
+          "viewport": "desktop",
+          "context": "Four of the five visible product cards in the first featured row display bare prices with no MSRP strikethrough and no compare-at reference: VelourTex Mats 'From $135.99', Revo Designs Decal '$49.00', Injen Cold Air Intake '$405.48', TufSkinz Gauge Kit '$19.99'. Only the Borla Cat-Back exhaust shows a strikethrough anchor ($1,847.99 struck through, $1,649.99 current)."
+        },
+        {
+          "type": "dom",
+          "reference": "e25"
+        },
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 1700,
+          "viewport": "desktop",
+          "context": "Second featured row continues the pattern: TufSkinz Mirror Flag 'From $59.99', Magnaflow Exhaust '$1,766.00', VelourTex Trunk Mat 'From $135.99', FoamSkinz Cup Holders '$64.99' — all bare prices with no MSRP or compare-at anchor."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 2: Advertised Reference Price Effects on Internal Reference Price Formation",
+          "tier": "Gold"
+        },
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 1: Comparative Price Advertising — Acquisition Value vs. Transaction Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Eight of the nine product cards in the Featured Collection display prices as bare numbers with no MSRP strikethrough, no compare-at framing, and no 'was/now' treatment. The lone exception is the Borla Cat-Back exhaust, which correctly shows '$1,847.99' struck through above '$1,649.99'. For the remaining cards — including the $405.48 Injen cold air intake and the $1,766.00 Magnaflow exhaust — visitors see a single price with no reference point. Grewal, Monroe & Krishnan (1998) established that an advertised reference price simultaneously elevates the buyer's internal reference price, perceived product quality, and transaction value; without one, the selling price defaults to being evaluated against the shopper's last-seen price, which on this category homepage may be a cheaper aftermarket part from a competitor site.",
+      "recommendation": "For each product whose manufacturer publishes an MSRP, render that MSRP as a struck-through price above the selling price on the product card. For made-to-order or branded exclusives without a published MSRP, introduce a 'Regular price' / 'Compare at' value documented from the prior selling price, ensuring it meets the FTC 16 CFR §233.1 bona-fide-price requirement. The Borla card's current execution — red current price with grey strikethrough MSRP — is the correct template; apply it across the full Featured Collection.",
+      "why_this_matters": "Without a reference anchor, high-ticket items like the $405 intake and $1,766 exhaust are evaluated in isolation against the shopper's worst-case mental reference. Grewal et al. (1998) show that MSRP-anchored pages produce measurably higher purchase intent; real-world A/B tests on reference-price addition report 5–15% conversion lifts on pages that previously displayed no anchor.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No BNPL Markers on High-Ticket Products",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 1000,
+          "viewport": "desktop",
+          "context": "The Injen cold air intake at $405.48 and the Borla Cat-Back exhaust at $1,649.99 both appear in this viewport section. Neither product card carries any Buy Now Pay Later messaging (no Klarna, Afterpay, Shop Pay Installments, or Affirm badge or installment callout)."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 1700,
+          "viewport": "desktop",
+          "context": "The Magnaflow Competition Series exhaust at $1,766.00 is visible with no BNPL indicator of any kind."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 1: BNPL Increases Basket Size 10% — Large-Scale Peer-Reviewed Evidence",
+          "tier": "Gold"
+        },
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 4: BNPL Display Optimization — Where and How to Show Installment Pricing",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The Featured Collection includes three products priced above $400: an Injen cold air intake at $405.48, a Borla exhaust at $1,649.99, and a Magnaflow exhaust at $1,766.00. None of the product cards display a BNPL installment callout. AWDMods appears to accept multiple payment methods (American Express, Apple Pay, Discover, Google Pay, Mastercard are listed in the footer payment list at e37/e38), but no installment-payment option is surfaced at the product card level where purchase decisions form. Maesen & Ang (2025) — the first peer-reviewed large-scale field study on BNPL in retail — found that BNPL availability produces a ~9% increase in purchase incidence and a ~10% increase in basket size; the effect is concentrated in the $50–$500 range and above, precisely the price tier occupied by these performance parts.",
+      "recommendation": "If AWDMods or any of its brand partners offer Shop Pay Installments, Klarna, or Afterpay on orders through Shopify (the platform powering this store), enable the installment widget on product cards for items priced $100 and above. The Shopify-native format — 'or 4 interest-free payments of $X with Klarna/Afterpay' displayed below the price — is the proven placement. For the $1,649 Borla and $1,766 Magnaflow exhausts, the installment reframe ('4 payments of $412.50') meaningfully reduces the perceived immediate cost and is expected to lift purchase incidence on these high-consideration SKUs.",
+      "why_this_matters": "Performance automotive modifications in the $400–$2,000 range sit squarely in the zone where payment-decoupling has the largest measurable effect on conversion; Maesen & Ang (2025, Journal of Marketing) put the expected basket-size lift at approximately 10%. A customer evaluating a $1,766 exhaust as a lump sum faces a much higher psychological barrier than one seeing '4 payments of $441.50', even though the total cost is identical.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No Free-Shipping Signal at Product Card Level",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 1000,
+          "viewport": "desktop",
+          "context": "Product cards across both featured rows show price, review stars, 'Made to Order' badges, and brand names — but no shipping cost indication, no free-shipping threshold callout, and no 'Free shipping' label on any card."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 1700,
+          "viewport": "desktop",
+          "context": "Second featured row continues with no shipping indication at the card level. Footer at the bottom of section-4.jpg shows payment icons but no shipping promise."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 2: Unexpected Costs as a Top Controllable Abandonment Cause",
+          "tier": "Gold"
+        },
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 5 (NEW — 2026-04-22): Zero-Price Effect — Why 'Free' Shipping Is Worth More Than Its Monetary Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "None of the product cards in the Featured Collection carry any shipping signal — no 'Free shipping', no 'Shipping from $X', and no threshold callout such as 'Free shipping over $Y'. The homepage header at scroll_y 0 (e19) carries only navigation text 'Shop All'; there is no persistent free-shipping bar visible in any of the five captured sections. Baymard Institute (2024) data shows 39% of motivated US shoppers cite unexpected extra costs as the #1 reason for cart abandonment. The first point of disclosure — the product card — is where the shipping expectation forms; if that expectation is left unset, a revealed shipping cost at checkout will be processed as a loss (Kahneman & Tversky prospect theory, ~2× loss weight).",
+      "recommendation": "Add a site-wide free-shipping announcement bar above the navigation (or incorporate it into the existing header at e19) that states the threshold explicitly: 'Free shipping on orders over $[threshold]' or 'Free shipping on all orders' if that is the policy. Separately, annotate product cards for items that qualify for free shipping with a 'Free shipping' sub-label below the price — Shopify themes support this as a metafield or tag. The Shampanier, Mazar & Ariely (2007) zero-price effect confirms that 'Free shipping' is psychologically more compelling than a shipping discount of equivalent dollar value.",
+      "why_this_matters": "Shipping cost ambiguity at the product stage is a top-ranked abandonment driver; resolving it early by surfacing a free-shipping threshold or guarantee at the product card converts a potential cart-stage surprise into a conversion advantage.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Borla Exhaust Uses Correct MSRP Strikethrough Anchoring",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e24",
+        "text_content": "Regular price From $135.99",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 1000,
+          "viewport": "desktop",
+          "context": "The Borla Cat-Back ATAK Exhaust card shows 'FROM $1,649.99' in red text with '$1,847.99' struck through in grey above it — the correct two-value acquisition/transaction-value anchor format described in Grewal et al. (1998)."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 1: Comparative Price Advertising — Acquisition Value vs. Transaction Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Borla Cat-Back ATAK Exhaust for the Ford Focus RS correctly displays a strikethrough MSRP of $1,847.99 alongside the selling price of $1,649.99, using the visual treatment recommended by Grewal et al. (1998): higher reference price establishes transaction value, lower selling price establishes acquisition value. The savings of $198 are implicit from the two-price display.",
+      "recommendation": "This card's price anchoring execution is the model for the rest of the Featured Collection. Extend the same format — grey strikethrough MSRP above, styled selling price below — to all other products whose brands publish a manufacturer's suggested retail price.",
+      "why_this_matters": "Consistent MSRP anchoring across the collection signals price legitimacy and deal quality on every card, not just the promoted exhaust.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PARTIAL",
+      "title": "Charm Pricing Applied Inconsistently Across Product Cards",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e25",
+        "text_content": "From $135.99",
+        "role": "span"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.80,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 1000,
+          "viewport": "desktop",
+          "context": "Price endings visible in section-3.jpg: $135.99 (.99, charm), $49.00 (round), $405.48 (non-standard mid-digit ending — neither .99 nor round), $1,649.99 (.99, charm), $19.99 (.99, charm). The $405.48 is anomalous."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 1700,
+          "viewport": "desktop",
+          "context": "Section-4.jpg prices: $59.99 (.99, charm), $1,766.00 (round), $135.99 (.99, charm), $64.99 (.99, charm). The $1,766.00 round price for the Magnaflow exhaust is consistent but contrasts with the Borla's charm pricing."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "charm-pricing.md",
+          "section": "Finding 1: Meta-Analytic Evidence for Just-Below Pricing Effects",
+          "tier": "Gold"
+        },
+        {
+          "source": "charm-pricing.md",
+          "section": "Finding 2: Round Number Fluency for Hedonic and Emotional Purchases",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Price endings across the Featured Collection are inconsistent: $135.99, $19.99, $59.99, $64.99, and $1,649.99 use .99 charm pricing; $49.00 and $1,766.00 use round pricing; $405.48 uses an irregular non-round ending that is neither a standard .99/.95 nor a clean round number. Troll & Wieseke's 2024 pre-registered meta-analysis (Journal of Consumer Psychology, 144 effect sizes) confirms .99 endings lift purchase intentions (d = 0.11) without harming quality perception for non-luxury goods — this supports the .99 convention for utilitarian automotive accessories. The $405.48 is the outlier: a mid-digit ending produces no charm benefit (the left digit does not change vs. $405.00) and does not read as a round, premium-positioning price either.",
+      "recommendation": "Standardize price endings across the collection. For utilitarian performance parts (intakes, exhausts, floor mats), .99 endings are appropriate and supported by the meta-analytic evidence. Resolve the anomalous $405.48 to either $405.99 (charm, left-digit unchanged — minimal benefit; consider $399.99 instead if pricing flexibility exists) or $405.00 (round). The Wadhwa & Zhang (2015) hedonic-rounding finding is less applicable here — automotive mods are primarily utilitarian purchases — so .99 is the more defensible choice.",
+      "why_this_matters": "The $405.48 irregular ending creates a suboptimal price perception with no upside: it neither benefits from the .99 charm effect (left digit stays at 4) nor from round-number fluency. Standardizing to .99 or a clean round number removes a minor friction point.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The 'Made to Order' badge appears on 6 of the 9 featured product cards. This badge communicates production lead time but carries no pricing-cluster implications — it is not a scarcity/urgency signal in the sense of real inventory depletion.",
+    "No tiered pricing or quantity-discount structure is present at the homepage product card level. Findings about bundle pricing and tiered structure were not emitted because the homepage does not surface that architecture; a PDP-level audit would be required to evaluate it.",
+    "No promotional overlays were detected in the baton's capture_state.overlays_detected array — no discount banners, popups, or sale headers active at capture time.",
+    "No competitive-positioning price comparisons were observed on any product card. The cluster-guidance note about competitive-positioning framing is not applicable to this homepage format."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "pricing-psychology.md",
+      "price-anchoring.md",
+      "charm-pricing.md",
+      "bnpl-payment.md",
+      "free-shipping.md",
+      "bundle-pricing.md",
+      "discount-framing.md",
+      "tiered-pricing.md",
+      "price-transparency.md",
+      "scarcity-urgency.md",
+      "competitive-positioning.md"
+    ],
+    "sections_routed": [
+      "featured-collection-top",
+      "featured-collection-bottom"
+    ],
+    "baton_elements_cited": ["e24", "e25", "e37"]
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "product-media",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:15:00.000Z",
+  "completed_at": "2026-04-28T23:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Product Video Placed Outside Gallery — Below Add to Cart",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "video"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "The 'Can-Am Spyder Handlebar End Weights' YouTube video appears below the Add to Cart button and the price block, entirely separate from the 7-image gallery shown in section-1-mobile.jpg. No video thumbnail appears within the gallery strip itself."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 8: Video Integration in Gallery — Position 2 or 3 is Optimal",
+          "tier": "Gold"
+        },
+        {
+          "source": "video-integration.md",
+          "section": "Finding 8: Video Placement — Gallery Position 2-3 Outperforms Separate Tab",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product demonstration video ('Can-Am Spyder Handlebar End Weights') is embedded below the price, PayPal Pay Later message, and Add to Cart button — roughly 700px below the gallery on mobile. The 7-image gallery in the upper portion of the page contains no video thumbnail. Baymard usability testing finds that 35% of major e-commerce sites place video outside the gallery, making those videos effectively invisible: only visitors who scroll past the purchase zone discover the video exists.",
+      "recommendation": "If the platform supports adding a video item to the gallery carousel, insert the YouTube video as gallery position 2 or 3 (after the hero packshot). The thumbnail should display the play icon overlaid on a representative still frame showing the product installed on the handlebar. Visitors who swipe through the gallery will encounter the video naturally within their existing evaluation flow rather than requiring a separate scroll past the purchase zone.",
+      "why_this_matters": "A product video placed outside the gallery is seen by only the fraction of visitors who scroll past the Add to Cart button before deciding — typically lower-intent browsers. Moving the video into the gallery exposes it to the high-intent visitors who are actively evaluating the product in the gallery, where it is most likely to influence the purchase decision.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Scale Reference Image in 7-Image Gallery",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "img"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "All 7 gallery thumbnails show the end weights either isolated on a surface or mounted on a handlebar in close-up. No image includes a hand, ruler, coin, or recognizable reference object that establishes the physical size of the 'pair' of end weights."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "image-quantity-types.md",
+          "section": "Finding 4: 28% of Major Sites Lack In-Scale Images, Directly Driving Size-Mismatch Returns",
+          "tier": "Gold"
+        },
+        {
+          "source": "image-quantity-types.md",
+          "section": "Finding 3: Four Universal Image Types Are Required Across All Categories",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The 7-image gallery shows the EvolutionR end weights from multiple installed angles and as an isolated product shot, but no image provides a scale reference. The product listing states it weighs '0.85 lbs. (8x heavier than stock)' and the title says 'Pair', yet no image shows the component held in a gloved or bare hand, placed next to a ruler, or compared against a familiar object. Baymard benchmark research finds 42% of buyers attempt to judge product size from images, and 28% of major ecommerce sites fail to provide any in-scale image.",
+      "recommendation": "Add one image to the gallery showing the pair of end weights held in a rider's hand or positioned alongside a recognizable reference (e.g., a gloved hand gripping the handlebar with the end weight installed). Caption or alt text should note the actual dimension — the product data shows 0.85 lbs each, so including the installed diameter or length in millimeters/inches in the image alt text or as a text overlay reinforces scale perception without requiring a separate image shoot.",
+      "why_this_matters": "Buyers purchasing small hardware accessories for powersports vehicles frequently return items because the physical size differs from what they expected based on close-up product photography. Adding a single in-scale image is low production cost with measurable return-rate reduction for a $59.95 two-piece accessory where size fit matters.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No VideoObject Schema for YouTube Video",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "script"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e19",
+          "context": "The page's structured data (baton schema_jsonld) contains a single Product schema. No VideoObject schema is present. A YouTube video labelled 'Can-Am Spyder Handlebar End Weights' is visually confirmed in section-2-mobile.jpg."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "video-schema.md",
+          "section": "Finding 8: VideoObject Schema Implementation for Product Pages",
+          "tier": "Gold"
+        },
+        {
+          "source": "video-optimization.md",
+          "section": "Finding 10: Video Schema Markup Enables Google Rich Results and Increases Click-Through Rate",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product page embeds a YouTube video ('Can-Am Spyder Handlebar End Weights') but the page's structured data includes only a Product schema with no VideoObject markup. Google requires VideoObject JSON-LD with at minimum name, thumbnailUrl, and uploadDate to make the video eligible for Video tab visibility in search and Google Discover cards. The current structured data omits this entirely.",
+      "recommendation": "Add a VideoObject JSON-LD block to the page head alongside the existing Product schema. At minimum, include name ('Can-Am Spyder Handlebar End Weights'), thumbnailUrl (the YouTube video thumbnail URL), uploadDate, and embedUrl (the YouTube embed URL). Including duration in ISO 8601 format (e.g., PT1M30S) and a description increases rich-result eligibility. Validate the schema with Google's Rich Results Test before deploying. Because this is a YouTube-hosted video, use embedUrl rather than contentUrl.",
+      "why_this_matters": "Without VideoObject markup, the demonstration video is invisible to Google's structured data indexing. Properly marked-up product videos appear in Google's Video tab and can receive enriched SERP listings, capturing high-intent buyers specifically searching for product demonstrations — a traffic channel this page currently misses entirely.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PARTIAL",
+      "title": "Gallery Thumbnail Strip Renders as Static Grid, Not Swipeable Row",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "img"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.80,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The 7 gallery thumbnails appear as a 4+3 static grid below the main image (4 thumbnails in row 1, 3 in row 2). No image count indicator ('1 of 7' or similar) is visible. The layout does not show a horizontal scrollable strip with a partial-peek thumbnail suggesting more images exist."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 1: Dot Navigation Causes 50% of Desktop Users to Miss Additional Images",
+          "tier": "Gold"
+        },
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 10: Partial Thumbnail Peek Signals Gallery Depth on Mobile",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "On the 390px mobile viewport, the 7 product thumbnails render as a two-row static grid (4 across top row, 3 across bottom row) beneath the hero image. This grid layout is functional — all thumbnails are visible — but the pattern differs from the recommended horizontal scrollable strip with a partial-peek design that signals scrollability. The main product image does not display an image counter ('1 of 7') and there is no swipe affordance visible on the hero image itself. Tapping a thumbnail likely updates the hero image, but the swipe-to-navigate behavior on the hero image is unconfirmed from the static screenshots.",
+      "recommendation": "If the gallery hero image does not currently support swipe-to-advance on mobile, implement CSS scroll-snap on a horizontal image strip. Reconfigure the thumbnail area as a single scrollable horizontal row (showing approximately 3.5 thumbnails at a time to create the partial-peek effect) and add an 'N of 7' counter overlay on the hero image. This signals gallery depth at a glance and matches the native mobile swipe interaction pattern visitors expect from any image gallery.",
+      "why_this_matters": "Visitors who do not realize there are 7 images may base their purchase decision on the first hero packshot alone, missing the installed-on-handlebar lifestyle angles that confirm fit and appearance. The installed images are the most persuasive visual evidence for a fitment accessory — hiding them behind a non-obvious interaction reduces their conversion contribution.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "7-Image Gallery Meets Quantity Standard for Accessory Category",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "e3",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3",
+        "role": "heading"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "7 product images visible: an isolated hero packshot on gradient background, 2 close-up installed-on-handlebar shots, 2 side/profile installed angles, and 2 additional lifestyle context views showing the end weights on the bike. The image set covers the hero, detail, and in-use types for a small hardware accessory."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "image-quantity-types.md",
+          "section": "Finding 2: Apparel Requires 5–15 Images; Electronics 5–8; Commodity 3–5",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The gallery provides 7 images for a small stainless steel accessory — above the 3–5 range adequate for commodity products and within the 5–8 range appropriate for electronics/hardware. The set covers: hero packshot on neutral background, close-up detail of the weight profile and threaded insert, multiple angles of the part installed on a Can-Am Spyder handlebar, and lifestyle shots showing the product on the motorcycle. All four universal image types (hero, context/lifestyle, detail, and partially in-use) are represented.",
+      "recommendation": "Image quantity and type coverage are adequate for this product category. The outstanding gap is a scale reference image (addressed in F-02) — adding that one image would complete the required set without requiring a full photography reshoot.",
+      "why_this_matters": "Sufficient image coverage reduces pre-purchase uncertainty for a fitment accessory where visual confirmation of style and installation quality is a key purchase driver.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The YouTube video embed ('Can-Am Spyder Handlebar End Weights') appears to be a product demonstration video showing the end weights installed and in use — this is the higher-converting 'usage' video type per peer-reviewed research (Cheng et al. 2022, Frontiers in Psychology). The video type is well-chosen; placement and schema are the addressable gaps.",
+    "No AR or 360-spin viewer is present. For a small metal accessory at $59.95 with clear angular geometry in the static photos, the absence of AR/3D is not a significant conversion gap — the product category and price point do not justify the AR investment threshold.",
+    "The page has a 'Photos (1)' tab in the review section (visible in section-3-mobile.jpg), suggesting at least one user-submitted photo exists. The tab label suggests only 1 UGC photo — surfacing customer photos more prominently (especially installed photos) could supplement the professional gallery."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "gallery-ux.md",
+      "image-quantity-types.md",
+      "thumbnail-design.md",
+      "video-integration.md",
+      "video-optimization.md",
+      "video-schema.md",
+      "ar-3d-visualization.md",
+      "color-accuracy.md",
+      "evidence-tiers.md"
+    ],
+    "screenshots_reviewed": [
+      "section-1-mobile.jpg",
+      "section-2-mobile.jpg",
+      "section-3-mobile.jpg",
+      "section-4-mobile.jpg",
+      "section-5-mobile.jpg"
+    ]
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "post-purchase",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-29T02:30:00.000Z",
+  "completed_at": "2026-04-29T02:35:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Loyalty Program Teaser on Homepage",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "The newsletter section and footer contain no loyalty program teaser, no points-earned indicator, no 'join rewards' prompt, and no loyalty nav item. The footer 'My Account' accordion links to Order History and Track My Order but contains no loyalty or rewards entry point."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "loyalty-programs.md",
+          "section": "Finding 9: Loyalty Program Enrollment — The Moment of Maximum Receptivity",
+          "tier": "Bronze"
+        },
+        {
+          "source": "order-confirmation.md",
+          "section": "Finding 11: Loyalty Program Display on Confirmation",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The AWDMods homepage carries no loyalty program signal anywhere — no points-teaser in the product area, no 'Earn points on this purchase' copy in the newsletter section, no 'Join Rewards' link in the footer 'My Account' accordion, and no loyalty-related nav item. If AWDMods operates a loyalty program (Smile.io, LoyaltyLion, or similar), the homepage is missing the enrollment and awareness touchpoints that generate the bulk of program membership. The footer 'My Account' accordion (collapsed by default on mobile) contains four links — My Account, Order History, Wish List, Track My Order — but no Rewards or Points entry.",
+      "recommendation": "If AWDMods has an active loyalty program, add a 'Earn points on every order — join free' teaser to the newsletter section above the email input, and add a 'Rewards' link to the footer 'My Account' accordion. If no loyalty program exists yet, the newsletter section is the natural anchor for a 'Join Rewards' enrollment CTA, since it already captures email at the end of the browse session.",
+      "why_this_matters": "The confirmation page generates the highest loyalty enrollment rate (12-25% of new customers) per loyalty platform benchmarks, but homepage awareness is what surfaces the program to returning visitors who missed the confirmation-page prompt. Without a loyalty signal on the homepage, repeat customers have no reminder that the program exists between orders — and the opportunity to activate the goal gradient effect (purchase acceleration toward a reward) is lost on every visit.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Referral CTA in Footer or Newsletter Section",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.80,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "Footer section shows Information and My Account collapsed accordions, social icons (Facebook, Instagram, YouTube), and payment method icons. No referral CTA, no 'Give a friend $X off' prompt, and no referral code share mechanism is present anywhere in the visible section."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "referral-programs.md",
+          "section": "Finding 4: Referral Copy Framing — Give Before Get",
+          "tier": "Silver"
+        },
+        {
+          "source": "referral-programs.md",
+          "section": "Finding 3: The 72-Hour Post-Purchase Window",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "Neither the newsletter section nor the footer contains a referral program CTA. The footer 'My Account' accordion links to My Account, Order History, Wish List, and Track My Order — but no referral or 'Share with a friend' entry point. AWDMods has Facebook, Instagram, and YouTube social links in the footer, which confirms social sharing infrastructure exists, but no mechanism connects that social presence to a structured referral incentive. On a homepage serving returning customers (who are already past the 72-hour post-purchase peak), the footer is the highest-reach location for a persistent referral CTA.",
+      "recommendation": "Add a referral link to the footer 'My Account' accordion — 'Refer a Friend, Earn $X' — pointing to a referral landing page. Frame the CTA in give-first language: 'Give your friend $15 off. You get $15 too.' If a referral program does not exist, this is the time to build one: the performance-mod community is highly word-of-mouth driven, and the 72-hour post-purchase window (order confirmation + shipping notification emails) is where referral participation peaks.",
+      "why_this_matters": "Word-of-mouth referrals from existing customers in niche automotive enthusiast communities (Focus RS/ST, WRX/STI owners) carry outsized credibility compared to paid acquisition — referred customers arrive pre-validated by a trusted peer. Without a referral mechanism, AWDMods forfeits the compounding acquisition benefit of enthusiast social networks at zero incremental media spend.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Newsletter Copy Misses Loyalty and Retention Framing",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e29",
+        "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.",
+        "role": "section"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "Newsletter section renders with hero image of Focus RS and WRX, headline 'Join Our Newsletter!', subtext 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.', and an email input with submit arrow. No value framing around community, post-purchase content, or ongoing build support is present."
+        },
+        {
+          "type": "dom",
+          "reference": "e29"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "buyers-remorse.md",
+          "section": "Finding 6: The Post-Purchase Hug Framework — Content Before Delivery",
+          "tier": "Silver"
+        },
+        {
+          "source": "post-purchase-psychology.md",
+          "section": "Finding 1: Two-Thirds of Shoppers Experience Post-Purchase Anxiety",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The newsletter section reads 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' This is acquisition-framed copy — it speaks to prospective buyers who want deals and new product alerts. It does not address the post-purchase customer who just ordered and needs reassurance, build guidance, or community connection during the shipping window. For a brand that sells performance modification parts (high-consideration, installed-by-owner products), the newsletter is a natural vehicle for 'how-to' content and anticipatory build content — but the current framing gives no signal that subscribers receive anything beyond promotional emails.",
+      "recommendation": "Add a secondary line to the newsletter copy that signals post-purchase content value: for example, 'Plus: install guides, build spotlights, and owner tips delivered to your inbox.' This repositions the newsletter from a promotional list to a resource for buyers who are actively building their vehicles — which is the accurate description of AWDMods' core customer and increases opt-in relevance for recent buyers.",
+      "why_this_matters": "The post-purchase email sequence is the highest-engagement email type in e-commerce, and content-as-reassurance during the shipping window (how-to guides, setup tips, community photos) directly reduces buyer's remorse for high-consideration purchases like performance parts. Framing the newsletter as a resource rather than a promotions list increases signup quality and positions AWDMods as an authority in the buyer's build journey — reducing the risk of post-purchase anxiety that could lead to order cancellations.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Order Tracking and Account Access Present in Footer",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e35",
+        "text_content": "My Account",
+        "role": "heading"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1750,
+          "viewport": "mobile",
+          "context": "Footer 'My Account' accordion is present and collapsed. DOM confirms links to My Account, Order History, Wish List, and Track My Order — providing a persistent order-tracking and account access entry point across the full site."
+        },
+        {
+          "type": "dom",
+          "reference": "e35"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "order-confirmation.md",
+          "section": "Finding 6: Tracking Information Prominence",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The footer 'My Account' accordion includes 'Track My Order' and 'Order History' links, giving customers a persistent site-wide entry point to order status. This reduces WISMO ('Where Is My Order?') friction for customers who return to the homepage after purchase looking for their order.",
+      "recommendation": "The 'Track My Order' link is a useful baseline. Consider expanding its discoverability by surfacing it outside the collapsed accordion on mobile — a persistent 'Track your order' text link above the footer on mobile would be immediately visible without requiring an accordion tap.",
+      "why_this_matters": "96% of customers check order tracking at least once; providing a clear homepage-accessible path to tracking reduces support ticket volume and post-purchase anxiety for customers in the shipping window.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "This page is a homepage (awdmods.com), not an order confirmation page. The post-purchase cluster audit is limited to post-purchase-adjacent surfaces: the newsletter section and footer. No order confirmation page was in scope.",
+    "No loyalty program signals were found anywhere in the baton or DOM — no Smile.io, LoyaltyLion, Yotpo, or equivalent widgets detected. Absence treated as no active loyalty program or a non-integrated one; findings reflect the gap, not a misconfiguration.",
+    "No referral program signals were found anywhere on the page — no ReferralCandy, Talkable, Friendbuy, or equivalent widgets detected.",
+    "The footer 'My Account' accordion is collapsed by default on mobile. Users must tap to reveal the Track My Order and Order History links — this one extra tap is acceptable friction for a footer discovery pattern but could be improved for returning post-purchase visitors.",
+    "The newsletter section copy is vehicle-specific ('Focus RS, Focus ST, WRX, or STI') which is strong personalization signal and appropriate targeting for this specialty retailer. The gap is not in specificity but in value framing for existing customers."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "post-purchase-psychology.md",
+      "order-confirmation.md",
+      "buyers-remorse.md",
+      "loyalty-programs.md",
+      "referral-programs.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed": 1,
+    "section_label": "Newsletter signup and footer with payment icons",
+    "page_type": "homepage",
+    "baton_elements_referenced": ["e29", "e30", "e31", "e32", "e33", "e34", "e35"]
+  }
+}

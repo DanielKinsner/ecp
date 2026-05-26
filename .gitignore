@@ -1,0 +1,64 @@
+# ECP clean repo .gitignore
+# Engagement artifacts under docs/ecp/ are RUNTIME OUTPUT (generated audits),
+# not source — they are not tracked here. The active repo holds the engine.
+
+# Credentials and secrets — NEVER commit
+.env
+.env.*
+!.env.example
+credentials.json
+credentials.yaml
+secrets.yaml
+secrets.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Runtime engagement output (audits are generated, not source)
+docs/ecp/
+engagements/
+
+# Claude Code / Codex local state
+.claude/settings.local.json
+.claude/worktrees/
+.superpowers/
+.last_ecp_engagement
+
+# Scratch / orchestration helpers
+.tmp_*
+.tmp_synth/
+.phase-b-tmp/
+
+# Python build + cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vite/
+*.tmp
+*.bak

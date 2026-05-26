@@ -1,0 +1,90 @@
+{
+  "schema_version": 2,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "created": "2026-04-28T23:00:00Z",
+  "updated": "2026-04-29T07:13:45.099566Z",
+  "skill": "audit",
+  "phase": "complete",
+  "url": "https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights",
+  "url_normalized": "slingmods.com/canam-spyder-f3-rt-handlebar-end-weights",
+  "domain": "slingmods.com",
+  "source_mode": "url-dual",
+  "devices_requested": [
+    "desktop",
+    "mobile"
+  ],
+  "devices_scanned": [
+    "desktop",
+    "mobile"
+  ],
+  "page": {
+    "type": "product",
+    "type_source": "url-pattern"
+  },
+  "platform": "unknown-pending-detection",
+  "scope": "everything",
+  "scope_source": "phase-j-fixture-explicit-all-10",
+  "clusters_used": [
+    "visual-cta",
+    "trust-credibility",
+    "pricing",
+    "checkout-flows",
+    "performance-ux",
+    "product-media",
+    "category-navigation",
+    "content-seo",
+    "post-purchase",
+    "audience"
+  ],
+  "audit_only": true,
+  "plan_skipped": true,
+  "review_skipped": true,
+  "build_skipped": true,
+  "skip_reason": "Phase J D2 fixture capture; only audit deliverables required for the slingmods PDP golden",
+  "auto_mode": true,
+  "force_mode": false,
+  "deep_mode": false,
+  "checkpoints_suppressed": true,
+  "checkpoints_suppressed_reason": "Phase J D2 fixture capture; lead orchestrates end-to-end overnight per operator authorization 2026-04-28T23:00Z",
+  "phase_j_fixture": true,
+  "phase_j_fixture_destination": "fixtures/slingmods-pdp/",
+  "engagement_status": "ready_for_operator_checkpoint_5",
+  "display_label": "2300-slingmods-pdp-refresh",
+  "display_label_note": "Human-readable label preserving Dan HHMM-{site} convention; engagement_id uses hex hash for schema/baton-v1.json compliance",
+  "phase_j_d2_refresh": true,
+  "phase_j_d2_predecessor": "2026-04-27-a231b248",
+  "phase_j_d2_baseline_canary": "element_index_match_rate=0.630 (predecessor); goal>=0.80",
+  "phase_j_d2_acquisition_notes": "Extended JS settle (6+s) + explicit verification of PayPal Pay Later widget visibility + fitment guide visibility before screenshot capture, per known-issues list in 2026-04-27-phase-j-handoff.md",
+  "findings_count": {
+    "raw_total": 93,
+    "canonical_post_dedup": 82,
+    "scope_page": 70,
+    "scope_device": 16,
+    "ethics_actionable": 1,
+    "ethics_clear": 6
+  },
+  "priority_path_synthesized": true,
+  "priority_path_stories": 5,
+  "priority_path_modes": [
+    "bundle",
+    "severity",
+    "severity",
+    "bundle",
+    "quick-wins"
+  ],
+  "scope_page_synchronized_refs_count": 1,
+  "humanized_findings_count": 76,
+  "visual_reports": {
+    "desktop": "visual-report-desktop-v2.html",
+    "mobile": "visual-report-mobile-v2.html"
+  },
+  "hotspot_match_methods": {
+    "desktop": "e_index=20 section_centroid=7 banner=14",
+    "mobile": "e_index=23 section_centroid=13 banner=31"
+  },
+  "substantive_canaries": {
+    "ethics_findings_have_source_urls": "PASS",
+    "element_index_match_rate": "PASS (1.029 vs 0.80 threshold)",
+    "cross_device_ethics_diff": "PASS"
+  }
+}

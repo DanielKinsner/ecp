@@ -1,0 +1,47 @@
+[
+  {
+    "f_ref": "content-seo F-40",
+    "baton_index": "e3",
+    "expected_slide": 2
+  },
+  {
+    "f_ref": "performance-ux F-08",
+    "baton_index": "e13",
+    "expected_slide": 2
+  },
+  {
+    "f_ref": "performance-ux F-64",
+    "baton_index": "e18",
+    "expected_slide": 3
+  },
+  {
+    "f_ref": "performance-ux F-95",
+    "baton_index": "e0",
+    "expected_slide": 1
+  },
+  {
+    "f_ref": "pricing F-17",
+    "baton_index": "e10",
+    "expected_slide": 2
+  },
+  {
+    "f_ref": "product-media F-78",
+    "baton_index": "e18",
+    "expected_slide": 3
+  },
+  {
+    "f_ref": "trust-credibility F-39",
+    "baton_index": "e8",
+    "expected_slide": 2
+  },
+  {
+    "f_ref": "trust-credibility F-53",
+    "baton_index": "e9",
+    "expected_slide": 2
+  },
+  {
+    "f_ref": "visual-cta F-31",
+    "baton_index": "e18",
+    "expected_slide": 3
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-05-18-deadbeef",
+  "cluster": "pricing",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-05-18T00:00:00.000Z",
+  "completed_at": "2026-05-18T00:01:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "BNPL Marker Buried Below Fold",
+      "surface": "bnpl-marker",
+      "element": {
+        "baton_index": "e0",
+        "text_content": "or from $36.06/mo with Shop Pay",
+        "role": "text"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e0"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "bnpl-payment.md",
+          "section": "mobile-placement",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "BNPL copy on mobile renders below the fold of the purchase zone.",
+      "recommendation": "Surface BNPL line directly below price element on mobile.",
+      "why_this_matters": "BNPL availability at the decision point lifts conversion 7-12% on items >$100.",
+      "evidence_tier": "Silver"
+    }
+  ]
+}

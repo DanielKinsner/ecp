@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "visual-cta",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6",
+    "context_window": 200000
+  },
+  "started_at": "2026-04-28T23:15:00.000Z",
+  "completed_at": "2026-04-28T23:28:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Sticky Add to Cart Bar on Mobile Scroll",
+      "surface": "add-to-cart-fitment-payments",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1044,
+          "viewport": "mobile",
+          "context": "After scrolling into the product description section (section-3-mobile.jpg), the Add to Cart button is entirely off-screen. No sticky CTA bar, floating button, or persistent purchase affordance is visible. The bottom of the screen shows the description tab navigation, not a purchase action."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1611,
+          "viewport": "mobile",
+          "context": "At scroll depth 1611px (product description / benefits section), there is still no sticky Add to Cart element present. The only visible interactive element is an email subscribe form for 'New Mods / Coupons / Giveaways', not a purchase path."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 11: Sticky Add to Cart on Mobile — 5-37% Conversion Lift",
+          "tier": "Bronze"
+        },
+        {
+          "source": "page-length-strategy.md",
+          "section": "Finding 8: Sticky CTAs on Long Pages — Mobile Conversion Mechanism",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "Once a shopper scrolls past the Add to Cart button into the product description, fitment guide, and reviews sections — which collectively span approximately 1,300px of vertical content — there is no persistent purchase button anywhere on screen. The page currently has a bottom tab bar (Overview, Q&A, Reviews, Photos, Prop 65), but this bar contains no purchase action. A shopper who finishes reading the vibration-reduction copy and the fitment table must scroll back up to the product page header to purchase, adding unnecessary friction at the moment when persuasion is highest.",
+      "recommendation": "If the page layout is managed through a theme template, add a sticky bottom CTA bar that appears after the shopper scrolls 200px below the main Add to Cart button. The bar should display the product name truncated to one line, the price ($59.95), and a full-width 'Add to Cart' button at minimum 48px height. Keep the bar below the existing tab navigation so it does not obscure product content.",
+      "why_this_matters": "Multiple independent A/B tests on mobile product pages show sticky CTAs lift completed orders by 7-37%. On a page where the product description runs over 1,000px and the fitment guide adds another 400px, buyers who finish reading have already made the decision — but the purchase button is not within reach. That gap is where mobile conversions quietly disappear.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Add to Cart Lacks Risk-Reversal Microcopy",
+      "surface": "add-to-cart-fitment-payments",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "The Add to Cart button (large black button, approximately full-width, directly below the quantity selector) has no supporting microcopy beneath it. The PayPal Pay Later message appears above the button near the price, but there is no return policy, free shipping notice, or satisfaction guarantee visible at the button level. Below the button is only 'Add to Wishlist' text and a YouTube video embed."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 23: Microcopy Proximity to CTA — Risk Reversal at Button Reduces Friction",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The 'Add to Cart' button has no supporting microcopy directly beneath or beside it. The schema.org markup shows a 90-day return window (merchantReturnDays: 90), and the footer contains a free shipping notice for most U.S. orders — but neither of these trust signals appears adjacent to the purchase button where a shopper is making the commitment decision. At $59.95, the purchase requires minor but real consideration; the absence of a visible return policy or shipping promise at the CTA zone leaves buyers without a final friction-reducer at the exact moment they need it.",
+      "recommendation": "Add a single line of microcopy directly below the Add to Cart button — for example: 'Free shipping on most U.S. orders · 90-day returns'. Keep it under 60 characters, 12px, muted gray, so it does not compete visually with the button itself. The copy should confirm the shipping and returns policies that already exist in the schema data — this is a copy addition, not a policy change.",
+      "why_this_matters": "Usability testing consistently shows that short risk-reversal copy placed immediately adjacent to the primary CTA reduces hesitation at the commitment point. Burying return policy information in the footer means the majority of mobile buyers who never scroll to the bottom make their decision without seeing it.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Hero Gallery Height Pushes Add to Cart Below the Fold",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "e3",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)",
+        "role": "heading"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "At scroll position 0 on a 390x844 viewport, the product gallery (main image + 7 thumbnails arranged in two rows) occupies approximately 650px of vertical space. The H1 product title begins at approximately y=676 and is partially visible. The price ($59.95) and Add to Cart button are not visible at all in this initial viewport — the CTA is confirmed below the fold by baton data showing the price element (e4) at y=823 and no Add to Cart button element above y=844."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 8: Mobile Hero Optimization — Above-Fold CTA Is the Primary Failure Mode",
+          "tier": "Gold"
+        },
+        {
+          "source": "eye-tracking-and-scan-patterns.md",
+          "section": "Finding 27: Above-Fold Attention on Mobile Is 44% vs. 57% on Desktop",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "On first load at 390x844 (standard iPhone viewport), the main product image and two rows of thumbnails fill virtually the entire visible screen. The H1 title is at y=676 — partially visible at the bottom of the viewport — and the price element begins at y=823, placing it at or below the fold. The Add to Cart button, which sits below the price, is fully off-screen without scrolling. This means the primary purchase action is invisible to shoppers who arrive and see the page but do not immediately scroll.",
+      "recommendation": "If the gallery structure is controlled via CSS, constrain the main product image height to a maximum of 360-380px on mobile viewports (width < 480px), while keeping the full-resolution image accessible for zoom. This keeps the H1 title, rating, price, and Add to Cart button all visible or near-visible on initial load without requiring the shopper to scroll before they can act. Keep the thumbnail row but reduce thumbnail height proportionally. This is a CSS `max-height` change on the main gallery image container for mobile breakpoints.",
+      "why_this_matters": "Above-fold content on mobile receives 44% of total page viewing time, and below-fold content drops sharply from there. A purchase button that requires scrolling to find — on a product page where the shopper has already arrived with intent — adds an unnecessary barrier to the conversion action.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Add to Cart Button Uses Clear Action-Specific Copy",
+      "surface": "add-to-cart-fitment-payments",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "Add to Cart",
+        "role": "absent"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "The Add to Cart button displays a shopping cart icon followed by the label 'Add to Cart' in white text on a solid black background. The button is full-width, approximately 48-50px tall, and renders with clearly readable text. The black button against the white product page background provides strong visual contrast."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 6: Add to Cart Outperforms Buy Now for Most E-Commerce",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The purchase CTA uses 'Add to Cart' with a cart icon — the low-commitment label that reduces purchase anxiety by framing the action as reversible. The button is full-width, visually distinct from surrounding elements, and uses white-on-black coloring that provides strong contrast against the white page background.",
+      "recommendation": "No change required on CTA copy or button styling. The current implementation follows established best practices for label choice, icon usage, and visual differentiation from secondary actions.",
+      "why_this_matters": "Correct CTA label and visual treatment are the foundation of the purchase flow. Maintaining 'Add to Cart' over alternatives like 'Buy Now' appropriately frames the action as low-commitment for a $59.95 specialty accessory purchase.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "The baton does not include an e_index for the Add to Cart button itself — it was not captured as an accessible interactive element. Findings 1 and 2 use baton_index 'absent' accordingly.",
+    "Section-2-mobile.jpg shows a PayPal Pay Later message ('Pay in 4 interest-free payments of $14.99 with PayPal') placed between the price and the Add to Cart button. This is a trust and pricing signal that the pricing cluster will evaluate; it is noted here because its placement may reduce visual focus on the CTA.",
+    "The page includes a product video embed ('Can-Am Spyder Handlebar End Weights') visible in section-2-mobile.jpg, placed below the Add to Cart button with a visible play button. Video placement below the CTA (rather than in the gallery) is suboptimal per video placement research, but this is a product-media cluster concern."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "cta-design-and-placement.md",
+      "color-psychology.md",
+      "eye-tracking-and-scan-patterns.md",
+      "hero-section-psychology.md",
+      "headline-copywriting.md",
+      "page-length-strategy.md",
+      "evidence-tiers.md"
+    ],
+    "screenshots_reviewed": [
+      "section-1-mobile.jpg",
+      "section-2-mobile.jpg",
+      "section-3-mobile.jpg",
+      "section-4-mobile.jpg",
+      "section-5-mobile.jpg"
+    ],
+    "baton_elements_referenced": ["e3", "e4", "e8", "e13"]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "ecommerce-conversion-psychology",
+  "version": "1.0.0",
+  "description": "![v1.4.1](https://img.shields.io/badge/version-1.4.1-blue) ![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-7c3aed) ![Codex](https://img.shields.io/badge/Codex-skill-10b981) ![Platforms](https://img.shields.io/badge/platforms-Shopify_%7C_Next.js_%7C_OpenCart_%7C_WooCommerce_%7C_any-green)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "check:editor": "node --check tools/editor/editor.js",
+    "check:python": "python -m py_compile scripts/report/templates/js.py scripts/report/templates/html_structure.py scripts/report/templates/components.py scripts/report/templates/css.py scripts/report/html_builder.py scripts/report/v2_html_builder.py",
+    "serve:editor": "node scripts/serve-editor.cjs",
+    "smoke:editor-server": "node tests/editor-server-render-smoke.mjs",
+    "smoke:editor": "node tests/editor-smoke.mjs",
+    "test": "npm run check:editor && npm run check:python && npm run smoke:editor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dannytownkins/ecommerce-conversion-psychology.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Dannytownkins/ecommerce-conversion-psychology/issues"
+  },
+  "homepage": "https://github.com/Dannytownkins/ecommerce-conversion-psychology#readme",
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "audience",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:10:00.000Z",
+  "completed_at": "2026-04-28T19:11:30.000Z",
+  "status": "skipped",
+  "skip_reason": "No audience-cluster surfaces on this homepage. Five baton sections route to visual-cta, category-navigation, product-media, pricing, trust-credibility, post-purchase, content-seo — none to audience.",
+  "findings": [],
+  "notes": [
+    "Page is a confirmed US domestic market homepage (hreflang: [], USD pricing, 'Contiguous US only' free shipping banner, English-only content). Cross-cultural reference file contributes nothing. Single-market domestic edge case per audience cluster guidance — absent localization signals are not a defect.",
+    "Capture state is anonymous / logged-out (no auth_state in baton capture_state). The absence of personalization on a logged-out homepage is a deliberate stance, not a defect, per audience cluster guidance: 90-98% of e-commerce traffic is anonymous (personalization-psychology.md Finding 9). Only the vehicle selector ('SELECT YOUR VEHICLE') offers a first-party personalization entry point — a positive signal that the lead has appropriately routed elsewhere (category-navigation / performance-ux).",
+    "Social commerce surface is absent: no TikTok Shop, Instagram Shopping, UGC gallery, or creator embeds. The product category (automotive performance and styling mods, $20-$1,800+ AOV) does not call for social-native in-app checkout; absent social commerce integration is not a defect for this product/demographic fit. Social presence exists (Facebook, Instagram, YouTube links in footer schema and DOM), but no shoppable or community-proof embeds appear on the homepage.",
+    "Newsletter section (e35) uses vehicle-community-segmented copy ('Focus RS, Focus ST, WRX, or STI') — a light audience-recognition signal that acknowledges specific community membership. This is a positive audience alignment touch; not a finding, but worth noting for synthesizer context.",
+    "No personalized pricing, algorithmic transparency labels, or surveillance-adjacent signals detected. Page is clean on personalization-psychology.md risk factors."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "personalization-psychology.md",
+      "cross-cultural-considerations.md",
+      "social-commerce-psychology.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 0,
+    "sections_total": 5
+  }
+}

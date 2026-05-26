@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "product-media",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Five Category Card Images All Carry fetchpriority=high",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance — Intakes Exhaust Cooling Drivetrain upgrades",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e8",
+          "context": "All five multicolumn category card images (Performance, Handling & Brakes, Interior, Exterior, Electronics) carry fetchpriority=\"high\" — confirmed in DOM slice for section-1 (category-carousel). Google's LCP guidance reserves this attribute for exactly one hero image per page."
+        },
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "Category carousel is visible from scroll_y ~543 down. Five category cards are rendered as background images for the swipe carousel. All five share fetchpriority=\"high\" in the HTML."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 7: Gallery Carousel Performance — First Image Requires Special Treatment",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "All five category card background images in the horizontal swipe carousel share the attribute fetchpriority=\"high\". Only one image per page should carry this signal — it is how the browser knows which image to fetch first for Largest Contentful Paint. When five images compete for the same priority, the browser receives no useful ordering signal and the fetch priority is effectively diluted to nothing. The LCP image may load later than it otherwise would.",
+      "recommendation": "If the first visible category card (Performance) is likely to be the LCP element on this page, apply fetchpriority=\"high\" to that image alone and remove it from the four off-screen cards (Handling & Brakes, Interior, Exterior, Electronics). Cards 2–5 are outside the initial viewport on mobile (x positions 1074, 2088, 3099, 4113 in a 1170px wide canvas) and should use the default fetch priority so the browser can defer their load.",
+      "why_this_matters": "LCP is a Core Web Vitals signal that directly affects Google search ranking and real-user perceived load speed. Diluting fetchpriority across five images means none of them load with true high-priority treatment — the first visible category card loads no faster than the fourth off-screen card, unnecessarily extending Time-to-Interactive for returning visitors on 4G and below.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Category Carousel Swipe Counter is Hidden from Users",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance — Intakes Exhaust Cooling Drivetrain upgrades",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e8",
+          "context": "The slider-counter element in the category carousel DOM reads: <div class=\"slider-counter caption visually-hidden\"><span class=\"slider-counter--current\">1</span> / <span>of</span> <span class=\"slider-counter--total\">10</span></div>. The visually-hidden class hides this indicator from sighted users entirely."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "Category carousel is visible. No count signal appears on screen — no dots, no thumbnail strip, no \"1 of 5\" counter. The user sees one and a half category cards with no indication that 5 categories are browseable."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 3: Without Image Count Indication, Users Swipe Repeatedly Past the Last Image",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The category swipe carousel has a \"1 of 10\" counter in the HTML that the CSS class visually-hidden suppresses from view. On mobile, a visitor looking at the Performance category card has no visible signal that four more category tiles (Handling & Brakes, Interior, Exterior, Electronics) exist to the right. The section-2-mobile.jpg screenshot confirms: the partial right-edge bleed of an adjacent card provides a weak affordance but no explicit count.",
+      "recommendation": "Remove the visually-hidden class from the slider-counter element, or replace it with a visible \"1 of 5\" counter positioned below the card strip. If a scrollbar track indicator is preferred (the slider-scrollbar__indicator element is already present), ensure it renders with sufficient height (4px minimum) and contrast against the dark background so users can perceive the scroll progress at a glance.",
+      "why_this_matters": "Without a count signal, 50–80% of mobile visitors overlook additional slides — meaning the Handling, Interior, Exterior, and Electronics categories go effectively undiscovered for the majority of first-time visitors. Category discovery is the primary conversion funnel entry point on this homepage.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Category Carousel Uses JS Scroll Component — No CSS Scroll-Snap",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e9",
+        "text_content": "Handling & Brakes — Suspension Wheels Brake kits Chassis control",
+        "role": "div"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e9",
+          "context": "The category carousel is implemented as a <slider-component> custom element with class slider--scroll-active. No scroll-snap-type or scroll-snap-align properties are present in the inline styles or in the component-slider.css link. The Shopify Dawn-derived slider component uses JavaScript scroll interception rather than native CSS scroll-snap. The class slider--scroll-active confirms JS-controlled scroll is active."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 650,
+          "viewport": "mobile",
+          "context": "Category carousel on mobile. The partial visibility of a second card at the right edge suggests horizontal scrollability, but the implementation relies on a custom JS slider component rather than CSS scroll-snap."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 2: Mobile Gallery Requires Native Swipe Support as Baseline Expectation",
+          "tier": "Gold"
+        },
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 5: Mobile Product Card Swipe Requires Native CSS Scroll-Snap, Not JS",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The category swipe carousel is powered by a custom <slider-component> JavaScript element (Shopify Dawn-derived). The DOM contains no scroll-snap-type or scroll-snap-align declarations. The class slider--scroll-active confirms JavaScript intercepts scroll events to manage swipe. JS scroll interception on mobile creates friction when users attempt natural swipe gestures — conflicting with the page's native vertical scroll — and produces less-smooth animation than hardware-accelerated CSS scroll-snap.",
+      "recommendation": "Replace the JS scroll-interception approach with CSS scroll-snap on the carousel list: add scroll-snap-type: x mandatory to the <ul> container and scroll-snap-align: start to each <li> slide. This hands swipe behavior to the browser compositor thread, eliminating JS scroll-conflict jank on iOS Safari and Android Chrome. The existing slider-button prev/next controls can remain as progressive enhancement for users who prefer arrow navigation.",
+      "why_this_matters": "Mobile users expect swipe gestures to work like native app behavior. JavaScript scroll interception is the most common cause of broken swipe patterns on mobile — it causes scroll-direction conflicts that result in accidental page scroll instead of card swipe. A broken swipe experience on the homepage category carousel creates an immediate negative first impression that degrades trust before users have browsed a single product.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "All Category Card Background Images Have Empty Alt Text",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance — Intakes Exhaust Cooling Drivetrain upgrades",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e8",
+          "context": "All five category card images in the multicolumn carousel have alt=\"\" (empty string): verified across all five <img> tags in the section-1 DOM slice. The images show performance parts, brakes, interior components, exterior styling, and electronics — descriptive alt text would benefit both screen readers and image-search indexing."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 9: Keyboard Accessibility — Gallery Navigation Fails WCAG 2.1 AA at Most Sites",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Every background image in the five category tiles (Performance, Handling & Brakes, Interior, Exterior, Electronics) carries alt=\"\". While empty alt is technically valid for decorative images, these images depict the product category content and serve as the primary visual anchor for each tile. Screen reader users navigating the carousel receive no image description — the card is announced solely by the heading text and subcategory list.",
+      "recommendation": "Add descriptive alt text to each category card image that describes the visual content shown, not just repeats the heading. For example: the Performance card image showing a turbocharger and intake manifold should read alt=\"Turbocharger and cold air intake performance parts\" rather than alt=\"Performance\" (which duplicates the heading). This passes WCAG 1.1.1 Non-text Content and provides useful context to users on slow connections where the image may not load.",
+      "why_this_matters": "WCAG 2.1 Level A requires informative images to have descriptive alt text. The EU European Accessibility Act (effective June 28, 2025) now makes accessibility non-compliance a legal exposure for EU-facing merchants. Beyond compliance, image alt text on category cards is indexed by Google Image Search — accurate descriptions contribute to organic search visibility for category-level queries.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "FAIL",
+      "title": "Featured Collection Cards Show One Image Per Product — No Swipe or Thumbnail Count",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "e22",
+        "text_content": "",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 917,
+          "viewport": "mobile",
+          "context": "Featured Collection shows VelourTex floor mats card and partial Revo Designs decal card. Each card displays a single product image. No thumbnail strip, no swipe dot indicators, and no image count signal are visible on either card. The orange quick-add button overlays the bottom of the VelourTex card image."
+        },
+        {
+          "type": "dom",
+          "reference": "e22",
+          "context": "Product image e22 (VelourTex) at baton coords x=66, y=3000, 798×798px. e23 (Revo Designs) at x=921, y=3000 — both at identical y position indicating a horizontal scroll layout. No CSS scroll-snap found in section DOM; the featured collection uses the same slider-component pattern."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 1: Product Listings Need Minimum 3 Accessible Thumbnails; 5–15 for Apparel",
+          "tier": "Gold"
+        },
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 5: Mobile Product Card Swipe Requires Native CSS Scroll-Snap, Not JS",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Each product card in the Featured Collection shows a single packshot image with no mechanism to browse additional angles on mobile. The VelourTex Fitted Carpet Floor Mats card (e22) and Revo Designs Rocker Stripes card (e23) each display one image. For automotive accessories — products where fit, finish, and installation context matter to the purchase decision — a single image forces the visitor to click into the full product detail page before they can evaluate whether the product is relevant to their vehicle.",
+      "recommendation": "If each product in the Featured Collection has multiple images available, implement a swipe carousel within the product card using CSS scroll-snap (scroll-snap-type: x mandatory on the image container, scroll-snap-align: start on each image). Add a minimal dot indicator or image counter so visitors know additional images exist without having to attempt a swipe. For the VelourTex floor mats, an installation-context image or on-vehicle photo as the second card image would materially reduce the cognitive gap between the listing view and the PDP.",
+      "why_this_matters": "Forcing a click-through to the product detail page for every product evaluation inflates bounce rate on the homepage and reduces the number of products visitors can compare in a single session. Baymard's research shows a minimum of 3 accessible images per listing is needed for confident product filtering; single-image cards perform comparably to product listings with no photography at all for evaluation tasks.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "PARTIAL",
+      "title": "Category Card Background Images Are AI-Generated (ChatGPT / Gemini Filenames)",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance — Intakes Exhaust Cooling Drivetrain upgrades",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e8",
+          "context": "Image filenames in the category carousel DOM slice: ChatGPT_Image_Dec_26_2025_12_33_24_PM_6ed8a302-3972-4776-a70c-e78b440eef47.png (Performance card); Gemini_Generated_Image_3jhovt3jhovt3jho.png (Handling & Brakes); Gemini_Generated_Image_b245t6b245t6b245.png (Interior); Gemini_Generated_Image_zdbeunzdbeunzdbe.png (Exterior); Gemini_Generated_Image_na2h0fna2h0fna2h.png (Electronics). All five filenames confirm AI image generation tools were used."
+        },
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "The Performance category card background shows a high-contrast, heavily post-processed image of turbocharger/intake components under dramatic studio lighting — visual characteristics consistent with AI-generated product photography."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 650,
+          "viewport": "mobile",
+          "context": "Category cards visible in the swipe carousel. The Performance card image shows overly dramatic lighting and hyper-saturated color grading typical of AI-generated automotive imagery."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "color-accuracy.md",
+          "section": "Finding 13",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "All five category card background images were created using AI image generation tools — one via ChatGPT Image and four via Google Gemini, as confirmed by the CDN filenames. For category cards (not product PDPs), AI-generated images are not a product photography accuracy issue per se, since these are illustrative backgrounds rather than representations of specific SKUs. However, for an automotive accessories store, visitors typically expect to see actual products, actual vehicles, or real workshop photography — AI-generated imagery with synthetic lighting and idealized compositions may create a mismatch between the site's aesthetic and the realer visual register of the product PDPs, reducing trust coherence across the funnel.",
+      "recommendation": "For category card backgrounds, authentic photography of the actual parts, installed on vehicles from the store's core models (Focus RS, Focus ST, WRX, STI), would create stronger brand coherence and trust continuity with the product detail pages. If production photography is not feasible for all five categories, prioritize authentic images for the two highest-traffic categories. If AI-generated images are retained, ensure they are clearly illustrative in style (not photorealistic product representations) and that the visual treatment does not imply warranty, fitment, or specific product claims.",
+      "why_this_matters": "Visual trust coherence between the homepage and product pages is a conversion factor — a disconnect between polished AI-generated category imagery and real product photography on PDPs can create a perception gap that increases hesitation at the point of purchase. For automotive accessories specifically, buyers are highly attuned to whether images show their actual vehicle model.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "Section 2 (Featured Collection) DOM slice was empty in the cluster-context file — findings for featured collection product cards are based on baton element data (e22–e25) and visual evidence from section-3-mobile.jpg, supplemented by the featured collection slider controls found in the section-1 DOM tail.",
+    "The featured collection slider controls in the DOM show --num-slides: 9, suggesting up to 9 products in the carousel; only 4 product images (e22–e25) were captured by the acquirer at the time of screenshot.",
+    "No product image gallery (PDP-style) was present on this homepage — the page type is a homepage with a featured collection row. Gallery-UX findings (zoom, lightbox, PDP thumbnail strips) are not applicable to this page and were not emitted.",
+    "Video content: no product videos detected on this page. Video-integration, video-optimization, and video-schema findings do not apply.",
+    "AR/3D visualization: no AR buttons or 3D viewer elements detected. The automotive accessories category is a moderate fit for AR (fitment context); absence noted but not emitted as a finding given more impactful media gaps are present.",
+    "Color swatch elements: none detected on this page. Color-accuracy swatch findings do not apply to this page view."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "gallery-ux.md",
+      "thumbnail-design.md",
+      "image-quantity-types.md",
+      "color-accuracy.md",
+      "evidence-tiers.md"
+    ],
+    "sections_with_product_media_routing": 2,
+    "sections_with_empty_dom_slice": 1
+  }
+}

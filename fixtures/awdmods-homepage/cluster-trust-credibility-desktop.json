@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "trust-credibility",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:21:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "5.0 Stars on 2 Reviews — Skepticism Trigger",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e21",
+        "text_content": "5.0 / 5.0 (2) 2 total reviews",
+        "role": "div"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 466,
+          "viewport": "desktop",
+          "context": "Revo Designs Rocker Stripes Decal Kit card displays 5 filled yellow stars with '(2)' review count. Perfect 5.0 rating on only 2 reviews is visible on this featured-collection card."
+        },
+        {
+          "type": "dom",
+          "reference": "e21"
+        },
+        {
+          "type": "dom",
+          "reference": "e23"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "social-proof-patterns.md",
+          "section": "Finding 1: The 4.0-4.7 Star Rating Sweet Spot",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 5: Perfect 5-Star Ratings Reduce Trust; 4.0-4.7 Is Optimal",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 3: Five Reviews Increase Conversion by 270%",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Revo Designs Rocker Stripes Decal Kit card on the featured collection shows a perfect 5.0 out of 5.0 average based on only 2 reviews. This combination is doubly damaging to conversion: the 4.0–4.7 range is the documented conversion sweet spot (Spiegel Research Center, 2017), and perfect 5.0 ratings trigger consumer skepticism about authenticity; at 2 reviews, the page is also below the 5-review threshold where 270% purchase-likelihood lift is realised. Visitors who see a perfect score on 2 reviews are likely to distrust both the rating and the product quality assessment.",
+      "recommendation": "Prioritise post-purchase review collection for this product to move from 2 to at least 5 reviews. Once more reviews are collected, the displayed average will reflect authentic sentiment and is likely to settle in the 4.0–4.7 range that maximises purchase likelihood. Until the 5-review threshold is reached, consider adding a 'Be the first to share your experience' prompt on the product page to signal transparency rather than hiding a thin review set.",
+      "why_this_matters": "The 0-to-5 review threshold delivers the single highest-leverage trust lift in e-commerce — a 270% purchase likelihood increase. A perfect 5.0 on 2 reviews simultaneously signals inauthenticity, reducing the trust benefit of any rating at all. At an AOV above $49, buyers apply higher scrutiny, making this gap material to revenue on every product card impression.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Trust Badges Near Featured Product CTAs",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 876,
+          "viewport": "desktop",
+          "context": "Featured collection product cards show product image, brand name, product title, price, and 'Made to Order' badge. No security seal, money-back guarantee, or return policy indicator is present anywhere near the product card CTA zones."
+        },
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2585,
+          "viewport": "desktop",
+          "context": "Payment icons (American Express, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) appear only in the footer bottom bar at approximately scroll_y 2841, well below every product interaction point on the page."
+        },
+        {
+          "type": "dom",
+          "reference": "e37"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 8: Trust Badge Proximity to CTA Matters More Than Presence",
+          "tier": "Silver"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 20: 77% of European Consumers Base Purchase Decisions on Return Policy",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The homepage featured collection carries no trust signals at the product-card level: no return policy snippet, no money-back guarantee badge, no security seal. Payment method icons (AmEx, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) are present on the page but only in the footer at scroll_y ~2841 — roughly 2,000 pixels below the first featured product cards. Baymard Institute usability research establishes that trust badges function only when placed at the moment of purchase anxiety; footer placement is perceived as generic branding, not as a security assurance for the specific product a visitor is considering.",
+      "recommendation": "Add a compact trust strip below the featured-collection section or integrate 2–3 trust signals into the product card template: (1) a return policy indicator such as 'Free returns within 30 days' or a link to the returns page; (2) a single recognized payment badge (PayPal achieves the highest notice rate at 67% in CXL eye-tracking research). If a money-back guarantee exists, positive framing ('Love it or return it') near the Add to Cart area converts better than policy-linked text in the footer.",
+      "why_this_matters": "Payment icons visible only in the footer provide no trust lift at the point of intent. For an automotive-parts audience evaluating 'Made to Order' products at $49–$1,766, the absence of a visible return path and payment reassurance at the product level forces visitors to evaluate risk without the information needed to commit — increasing exit rates and reducing click-through to product pages.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Most Featured Products Have Zero Reviews",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 876,
+          "viewport": "desktop",
+          "context": "Section-3 shows 10 featured product cards. Only 2 cards display star ratings and review counts (Revo Designs Rocker Stripes with 2 reviews, Tufskinz Carbon Fiber Gauge Cluster with 3 reviews, Tufskinz Mirror Flag Accent with 3 reviews visible in the second row). The majority of cards — including the Lloyd Mats floor mat card, the Injen cold air intake card at $405.48, the Borla cat-back exhaust at $1,649.99, the Magnaflow exhaust at $1,766, the Lloyd Mats trunk mat, and the Foamskinz cup holder inserts — show no star rating widget at all."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 1580,
+          "viewport": "desktop",
+          "context": "Section-4 continuation of featured collection confirms products with no reviews visible: Magnaflow Competition cat-back at $1,766, Velourtex trunk mat, Foamskinz cup holder inserts all lack any rating display."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 3: Five Reviews Increase Conversion by 270%",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 4: Reviews Matter More for Expensive Products (380% vs 190% Lift)",
+          "tier": "Gold"
+        },
+        {
+          "source": "social-proof-patterns.md",
+          "section": "Finding 3: Five Reviews = 270% Conversion Lift (With Diminishing Returns)",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Of the 9 distinct product cards visible across the featured collection, the majority display no reviews at all. The highest-AOV products on the page — Borla cat-back exhaust at $1,649.99, Magnaflow Competition cat-back at $1,766, and Injen cold air intake at $405.48 — show no star rating widget. The Spiegel Research Center study established that products with zero reviews have 270% lower purchase likelihood than products with 5 reviews, with the lift increasing to 380% for higher-priced items where purchase risk is greatest. An automotive-parts homepage featuring multiple $400–$1,800 performance exhaust systems without a single review on those products faces the full force of this conversion gap.",
+      "recommendation": "Treat the featured collection as a curated trust showcase: only feature products that have reached the 5-review threshold, or implement a post-purchase email campaign targeting buyers of the zero-review products to seed initial reviews. For the Borla and Magnaflow exhaust systems in particular, even 5 genuine reviews would yield a documented 380% purchase-likelihood uplift — making review collection the highest-ROI trust investment on the page. If products must be featured before review thresholds are met, add a 'New arrival' or 'Be the first to review' callout rather than displaying an empty star field, which implicitly signals zero social proof.",
+      "why_this_matters": "The majority of the featured collection's highest-AOV products have no social proof. For buyers making $400–$1,800 discretionary performance upgrade decisions, the absence of any peer validation is the single most significant trust barrier on the page. Fixing the review gap on just two or three of these products could meaningfully change conversion rates on the featured collection as a whole.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "No Verified Buyer Badges on Displayed Reviews",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e21",
+        "text_content": "5.0 / 5.0 (2) 2 total reviews",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 466,
+          "viewport": "desktop",
+          "context": "The Revo Designs Rocker Stripes card shows star rating and '(2)' count with no 'Verified Buyer' or 'Verified Purchase' label visible on the product card. The rating display element e21 contains only the numeric rating and count."
+        },
+        {
+          "type": "dom",
+          "reference": "e21"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 12: Verified Buyer Reviews Increase Purchase Likelihood by 15%",
+          "tier": "Gold"
+        },
+        {
+          "source": "social-proof-patterns.md",
+          "section": "Finding 22: Verified Buyer Badge Increases Purchase Likelihood 15%",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The star rating widgets on the featured collection product cards display the aggregate rating and count but carry no 'Verified Buyer' or 'Verified Purchase' indicator. For a site where multiple featured products have a perfect 5.0 average on a very small number of reviews, the absence of verified-buyer authentication removes the primary mechanism that would cause shoppers to trust the displayed scores. The Spiegel Research Center study documents a 15% purchase-likelihood lift specifically from the verified-buyer badge — independent of the rating value itself.",
+      "recommendation": "If the review platform (Judge.me, Yotpo, or whichever is in use) collects reviews from confirmed purchasers, enable the verified-buyer badge display on product cards and in the full review section on PDPs. Ensure the badge is surfaced as a visible label ('Verified Purchase') rather than a hidden data attribute. Extend this badge to any customer photos associated with reviews.",
+      "why_this_matters": "On a page where the most prominent reviewed product shows a perfect 5.0 on 2 reviews, the lack of verified-buyer authentication allows shoppers to suspect the reviews are not from real customers. The 15% lift from verified badges is particularly valuable when review counts are low and the credibility of individual reviews matters most.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Product Images Have Descriptive Alt Text",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e10",
+        "text_content": "",
+        "role": "image"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e10"
+        },
+        {
+          "type": "dom",
+          "reference": "e11"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "accessibility.md",
+          "section": "Finding 1: 53% of Web Pages Have Inadequate Alt Text for Product Images",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The featured collection product images carry full descriptive alt text: e10 ('VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)') and e11 ('Revo Designs Rocker Stripes Decal Kit for the Ford Focus RS / ST (Set of 2)') both match the product name and describe the item adequately for screen reader users. This meets WCAG 2.2 SC 1.1.1 requirements and the alt-text formula recommended in accessibility guidance.",
+      "recommendation": "Maintain this standard across all product images in the catalog. For images added via new products or bulk imports, confirm that Shopify's product title is automatically populating alt text for gallery images, as the current implementation appears to follow this pattern correctly.",
+      "why_this_matters": "Descriptive alt text on product images is required for WCAG 2.2 AA compliance (ADA Title III / EU EAA effective 2025-06-28), improves screen reader accessibility for the ~7.5M US adults with vision disabilities, and supports Google Image indexing. Maintaining this standard as the catalog grows avoids future remediation cost.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 6,
+      "verdict": "PARTIAL",
+      "title": "Payment Icons in Footer Only — No Return Policy on Product Cards",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e34",
+        "text_content": "Information",
+        "role": "contentinfo"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2585,
+          "viewport": "desktop",
+          "context": "Footer section shows 'Information' column with About Us, Privacy Choices, Privacy Policy, Terms and Conditions, CARB Policy links. A return policy or shipping policy link is not visible in the footer link list. Payment icons (AmEx, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) appear in the footer bottom bar."
+        },
+        {
+          "type": "dom",
+          "reference": "e34"
+        },
+        {
+          "type": "dom",
+          "reference": "e37"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 23: E-E-A-T Trustworthiness Elements Are Conversion Trust Signals",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 20: 77% of European Consumers Base Purchase Decisions on Return Policy",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The footer 'Information' column lists About Us, Privacy Choices, Privacy Policy, Terms and Conditions, and CARB Policy — but no Return Policy, Shipping Policy, or equivalent customer-assurance link is visible in the footer DOM slice. A return policy link is one of the explicit Trustworthiness elements in Google's Quality Rater Guidelines for product pages, and Signifyd's 2024 European consumer survey found 77% of shoppers base purchase decisions on return policy visibility. The page also carries no return policy or shipping timeline summary anywhere above the fold or at the featured-collection level.",
+      "recommendation": "Add a 'Returns & Shipping' or 'Return Policy' link to the footer Information column as an immediate fix. For a higher-impact improvement, surface a brief return policy statement — for example, 'Free returns within 30 days on most orders' — on the featured collection section or in a global trust bar below the navigation. This addresses the most common E-E-A-T Trustworthiness gap for automotive-parts e-commerce where 'Made to Order' items carry return uncertainty.",
+      "why_this_matters": "Visitors evaluating 'Made to Order' performance parts at $49–$1,766 face genuine return uncertainty — custom-made or special-order items often have different return rules. Without a visible return policy, that uncertainty resolves to 'probably non-refundable,' which suppresses purchase intent for first-time visitors to the site.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The homepage features a 'SELECT YOUR VEHICLE — Car parts, simplified.' garage selector in the header (e19). This is a strong E-E-A-T Expertise signal for automotive fitment confidence, but it belongs to the category-navigation cluster. Noted here because it partially compensates for the lack of product-level trust signals by helping visitors filter to compatible parts, reducing the 'wrong part' purchase-risk anxiety.",
+    "No third-party review platform widget (Yotpo, Judge.me, Trustpilot) was identifiable in the DOM slices available to this cluster. Review widgets rendered via client-side JavaScript may not appear in the initial HTML — if AWDMods uses a third-party review app, its indexability by Google should be verified (ugc-reviews-seo.md Finding 11).",
+    "The logo image (e9, accessible_name='AWDMods') has adequate alt text for its role as a brand identifier. The site schema.org markup uses @type OnlineStore with sameAs links to Facebook, Instagram, and YouTube — these social presence signals contribute to E-E-A-T Authoritativeness but were not emitted as a standalone finding because they are present and correct.",
+    "No UGC customer photos were observed in the featured collection or anywhere on the homepage. This is expected for a homepage context — the primary UGC surface is individual PDPs. Noted for the synthesizer's cross-cluster integration with product-media."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "trust-and-credibility.md",
+      "social-proof-patterns.md",
+      "eeat-product-pages.md",
+      "review-collection.md",
+      "ugc-integration.md",
+      "ugc-reviews-seo.md",
+      "accessibility.md"
+    ],
+    "sections_routed_to_cluster": 3,
+    "baton_elements_referenced": 8,
+    "findings_by_verdict": {
+      "FAIL": 4,
+      "PARTIAL": 1,
+      "PASS": 1
+    }
+  }
+}

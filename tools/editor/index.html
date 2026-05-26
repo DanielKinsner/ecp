@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ECP Review Editor</title>
+  <style>/*__EDITOR_CSS__*/</style>
+</head>
+<body>
+  <script id="ecp-review-payload" type="application/json">__REVIEW_STATE_JSON__</script>
+  <main class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <p class="eyebrow">ECP Review Mode</p>
+        <h1>Visual Audit Studio</h1>
+        <p class="subtle">AI draft in. Human-approved report out.</p>
+      </div>
+      <div id="deviceTabs" class="tabs"></div>
+      <div id="reviewStats" class="review-stats"></div>
+      <div class="toolbar simple-tools">
+        <button data-tool="rect" class="tool is-active" title="Draw or replace the active finding highlight box"><span>Highlight Box</span><kbd>2</kbd></button>
+        <button data-tool="blur" class="tool" title="Drag a rectangle over any area to blur it only for the active finding"><span>Blur Region</span><kbd>6</kbd></button>
+        <button data-tool="dim" class="tool" title="Drag a rectangle over any area to dim it only for the active finding"><span>Dim Region</span><kbd>7</kbd></button>
+        <button id="undoAction" title="Undo"><span>Undo</span></button>
+        <button id="redoAction" title="Redo"><span>Redo</span></button>
+      </div>
+      <details class="advanced-tools">
+        <summary>Advanced tools</summary>
+        <div class="toolbar">
+          <button data-tool="point" class="tool" title="Point marker"><span>Point</span><kbd>1</kbd></button>
+          <button data-tool="ellipse" class="tool" title="Ellipse marker"><span>Ellipse</span><kbd>3</kbd></button>
+          <button data-tool="pan" class="tool" title="Pan slide"><span>Pan</span><kbd>4</kbd></button>
+          <button data-tool="crop" class="tool" title="Crop slide"><span>Crop</span><kbd>5</kbd></button>
+          <button id="snapMarker" title="Restore active marker to AI placement"><span>Snap AI</span></button>
+          <button id="dimToggle" title="Toggle dim only for the active finding"><span>Dim</span></button>
+        </div>
+      </details>
+      <div class="actions">
+        <button id="saveState">Save Review State</button>
+        <button id="exportFinal">Render Final Report</button>
+        <button id="doneFinding" title="Approve this finding, remove it from the edit set, and advance.">Done Finding</button>
+        <button id="previewToggle" title="Toggle between the current corrected view and the original AI draft placement.">AI Draft View</button>
+        <button id="previewFinding" title="Open a focused preview for this one finding.">Preview Finding</button>
+        <button id="exportFindingBundle" title="Download frame, hotspot, connector, callout, and manifest layers for this finding.">Export Bundle</button>
+        <button id="exportFrameLayer" title="Download the active screenshot frame as its own image.">Export Frame</button>
+        <button id="exportCalloutLayer" title="Download the active callout as a transparent layer.">Export Callout Layer</button>
+      </div>
+      <div id="statusMessage" class="status-message" aria-live="polite"></div>
+      <div id="errorMessage" class="error-message" aria-live="assertive"></div>
+      <div id="findingList" class="finding-list"></div>
+    </aside>
+    <section class="workspace">
+      <div class="topbar">
+        <button id="prevSlide">Prev</button>
+        <span id="slideLabel"></span>
+        <button id="nextSlide">Next</button>
+        <button id="fitStage" title="Reset pan/zoom and fit the screenshot inside the workspace">Fit</button>
+        <label>Scale <input id="zoomInput" type="range" min="60" max="220" value="100"></label>
+        <label class="import-button">Import Screenshot <input id="importImage" type="file" accept="image/*"></label>
+      </div>
+      <div id="slideStrip" class="slide-strip"></div>
+      <div class="stage-wrap">
+        <div id="stage" class="stage"></div>
+      </div>
+      <section id="inspector" class="inspector"></section>
+    </section>
+    <div id="previewModal" class="preview-modal" hidden>
+      <section class="preview-dialog" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+        <header class="preview-head">
+          <strong id="previewTitle">Finding preview</strong>
+          <button id="closePreview" type="button">Close</button>
+        </header>
+        <iframe id="previewFrame" title="Finding preview"></iframe>
+      </section>
+    </div>
+  </main>
+  <script>//__EDITOR_JS__</script>
+</body>
+</html>

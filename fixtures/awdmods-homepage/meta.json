@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "created": "2026-04-28T19:09:00Z",
+  "updated": "2026-04-29T04:00:00Z",
+  "skill": "audit",
+  "phase": "complete",
+  "url": "https://awdmods.com/",
+  "url_normalized": "awdmods.com",
+  "domain": "awdmods.com",
+  "source_mode": "url-dual",
+  "devices_requested": [
+    "desktop",
+    "mobile"
+  ],
+  "devices_scanned": [
+    "desktop",
+    "mobile"
+  ],
+  "findings_count": {
+    "raw_total": 109,
+    "canonical_post_dedup": 95,
+    "scope_page": 78,
+    "scope_device": 17,
+    "ethics_actionable": 1,
+    "ethics_clear": 6
+  },
+  "priority_path_synthesized": true,
+  "priority_path_stories": 5,
+  "priority_path_modes": ["bundle", "bundle", "severity", "bundle", "quick-wins"],
+  "scope_page_synchronized_refs_count": 1,
+  "humanized_findings_count": 90,
+  "visual_reports": {
+    "desktop": "visual-report-desktop-v2.html",
+    "mobile": "visual-report-mobile-v2.html"
+  },
+  "hotspot_match_methods": {
+    "desktop": "e_index=21 section_centroid=17 banner=7",
+    "mobile": "e_index=30 section_centroid=14 banner=25"
+  },
+  "substantive_canaries": {
+    "ethics_findings_have_source_urls": "PASS",
+    "element_index_match_rate": "FAIL (0.580 vs 0.80 threshold; soft canary)",
+    "cross_device_ethics_diff": "PASS"
+  },
+  "page": {
+    "type": "homepage",
+    "type_source": "url-pattern"
+  },
+  "platform": "unknown-pending-detection",
+  "scope": "everything",
+  "scope_source": "phase-j-fixture-explicit-all-10",
+  "clusters_used": [
+    "visual-cta",
+    "trust-credibility",
+    "pricing",
+    "checkout-flows",
+    "performance-ux",
+    "product-media",
+    "category-navigation",
+    "content-seo",
+    "post-purchase",
+    "audience"
+  ],
+  "audit_only": true,
+  "plan_skipped": true,
+  "review_skipped": true,
+  "build_skipped": true,
+  "skip_reason": "Phase J fixture capture; only audit deliverables (audit-{device}.md, synthesizer-emission-v1.json, ethics-findings.json, cluster emissions, baton, screenshots, visual reports) are required for the golden",
+  "auto_mode": true,
+  "force_mode": false,
+  "deep_mode": false,
+  "checkpoints_suppressed": true,
+  "checkpoints_suppressed_reason": "Phase J fixture capture; lead orchestrates end-to-end without mid-run checkpoints. Operator Checkpoint #5 happens at fixture freeze.",
+  "phase_j_fixture": true,
+  "phase_j_fixture_destination": "fixtures/awdmods-homepage/",
+  "engagement_status": "ready_for_operator_checkpoint_5",
+  "display_label": "1909-awdmods-homepage",
+  "display_label_note": "Human-readable label preserving Dan HHMM-{site} convention; engagement_id uses hex hash for schema compliance per schema/baton-v1.json"
+}

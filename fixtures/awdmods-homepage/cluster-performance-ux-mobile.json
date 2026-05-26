@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "performance-ux",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:27:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Hamburger-Only Navigation Hides Primary Destinations",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e3",
+        "text_content": "",
+        "role": "button"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Header shows hamburger icon (top-left) and cart icon (top-right) as the only navigation affordances. No bottom navigation bar is present anywhere across the full page. The hamburger drawer contains Shop All, Shop by Category (sub-items: Performance, Exterior, Interior, Handling, Drivetrain, Brakes, Cooling, Wheels, Accessories), Shop by Vehicle (sub-items: Subaru WRX/STI, Ford Focus RS/ST), Contact, and My Account — all hidden behind a tap."
+        },
+        {
+          "type": "dom",
+          "reference": "e3"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 13: Mobile Navigation -- Hamburger Menu vs. Bottom Navigation",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The entire site navigation — Shop by Category, Shop by Vehicle, Contact, and My Account — lives behind a hamburger menu icon in the top-left corner. No persistent bottom navigation bar is present. On a 390px mobile viewport, the primary discovery paths (category browsing, vehicle-specific shopping) are invisible until the user taps a small icon. Nielsen Norman Group research confirms hidden navigation consistently underperforms on discoverability; switching to visible bottom navigation increases engagement by 25–50% and reduces task completion time by 22%.",
+      "recommendation": "If the site's primary conversion paths are category browsing and vehicle-specific filtering (which the navigation tree confirms), implement a persistent bottom navigation bar with 4–5 destinations: Home, Search, Shop by Category (or Browse), Cart, and Account. Reserve the hamburger for the full secondary category tree. The bottom bar should remain visible during scroll and display a badge count on Cart. The current hamburger-only pattern makes both 'Shop by Category' and 'Shop by Vehicle' — AWDMods' two primary discovery modes — invisible at the zero-scroll state.",
+      "why_this_matters": "70% of users prefer bottom navigation over hamburger menus for essential functions. For a specialty parts store where vehicle compatibility is the primary filter, hiding 'Shop by Vehicle' behind a hamburger creates an extra tap on every mobile session before a visitor can start shopping. The 25–50% engagement increase measured when switching to visible navigation translates directly to more category and vehicle page entries — the top of the purchase funnel.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Category Carousel Images Served Without AVIF/WebP Format Negotiation",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "Category carousel shows Performance card as the first visible slide at the bottom of section 1, with the card image occupying roughly 60% of the card area. The image loads as a PNG from awdmods.com/cdn/shop/files/ with no <picture> element wrapping it."
+        },
+        {
+          "type": "dom",
+          "reference": "e8"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 3: WebP Reduces File Size ~30%; AVIF Reduces ~50% vs. JPEG",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 7: Image Format Priority -- AVIF -> WebP -> JPEG",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "All five category carousel card images (Performance, Handling & Brakes, Interior, Exterior, Electronics) are served as PNG files from the Shopify CDN without a `<picture>` element offering AVIF or WebP source candidates. The DOM shows the image markup as a bare `<img>` with srcset variants up to 1000w — all PNG. The first carousel card image is referenced at 3200×3200px source, scaled to roughly 220px rendered width on mobile. AVIF reduces file size ~50% vs. PNG/JPEG at equivalent visual quality; WebP reduces ~30%. Without format negotiation, every mobile visitor downloads the larger PNG variant regardless of browser capability. AVIF is now at ~94.9% global browser support and WebP at ~96.4%.",
+      "recommendation": "Wrap each carousel card `<img>` in a `<picture>` element with AVIF and WebP `<source>` entries before the PNG fallback `<img>`. For Shopify-hosted images, append the `&format=webp` and `&format=avif` URL parameters (Shopify CDN supports these) to the srcset entries in the respective `<source>` elements. The five carousel images are the largest above-fold visual assets on the homepage; switching to AVIF-first format negotiation reduces per-image payload by approximately 40–50% for the ~95% of mobile visitors on supporting browsers, directly improving LCP for these above-fold elements.",
+      "why_this_matters": "The category carousel images are the largest visual content in the mobile first viewport and are among the LCP candidates on this homepage. A 0.1-second improvement in mobile load time yields 8.4% higher retail conversion (Deloitte/Google, 37 brands, 30M+ sessions). Reducing five PNG carousel images to AVIF can save several hundred kilobytes of above-fold payload — a meaningful LCP improvement that compounds with other optimizations.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Multiple Carousel Images Tagged fetchpriority=\"high\" — LCP Priority Diluted",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "The category carousel renders with only the Performance card fully visible on mobile (remaining cards are off-screen to the right). The DOM shows all five carousel card images carry fetchpriority=\"high\" — the first (Performance) and at minimum the partially-visible second card are above-fold; slides 3–5 are off-screen at x-positions 2088, 3099, and 4113 respectively."
+        },
+        {
+          "type": "dom",
+          "reference": "e9"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 1: Product Hero Image Is the LCP Element -- Requires fetchpriority=\"high\" and Preload",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 6: Never Lazy-Load the LCP Hero Image",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "All five category carousel card images carry `fetchpriority=\"high\"` in the DOM. On a 390px mobile viewport, baton element positions show slides 3–5 are at x-coordinates of 2088, 3099, and 4113 pixels respectively — fully off-screen. Google's guidance is that `fetchpriority=\"high\"` should be applied only to the first above-fold image (the LCP candidate); applying it to multiple images forces the browser to fetch all five images at high priority simultaneously, competing for the same network bandwidth budget and negating the priority signal entirely. In carousels, only the first visible image needs high priority.",
+      "recommendation": "Remove `fetchpriority=\"high\"` from carousel slides 2–5 (Handling & Brakes, Interior, Exterior, Electronics cards). Apply it only to the first slide (Performance). For slides 3–5 which are fully off-screen on mobile, add `loading=\"lazy\"` to defer their fetch until the user swipes to them. Slide 2 (partially visible as a 'peek') can retain eager loading without `fetchpriority=\"high\"`. This returns the priority signal to a single meaningful LCP candidate, allowing the browser to allocate full high-priority bandwidth to the one image that actually determines LCP.",
+      "why_this_matters": "When multiple images compete for high-priority fetch slots, no single image benefits from true prioritization — the browser must split available bandwidth across all five requests simultaneously. The LCP image loads no faster than if all five had default priority. The correct implementation (single fetchpriority on the true LCP element) is documented by Google as the configuration that produces the largest measurable LCP improvement from this attribute.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Hero Vehicle Selector Dropdowns — Four Sequential Decisions Before Finding Parts",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e14",
+        "text_content": "Shop All",
+        "role": "banner"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The hero section shows four stacked dropdown selectors: Select Make, Select Model, Select Year, Select your Trim — each requiring a sequential decision before the blue FIND PARTS button activates. All four dropdowns are visible on the first mobile viewport at scroll_y=0."
+        },
+        {
+          "type": "dom",
+          "reference": "e14"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cognitive-load-management.md",
+          "section": "Finding 1: Hick-Hyman Law -- Decision Time Scales Logarithmically with Choices",
+          "tier": "Gold"
+        },
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 13: Mobile Navigation -- Hamburger Menu vs. Bottom Navigation",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The mobile hero presents four sequential dropdown selectors — Select Make, Select Model, Select Year, and Select your Trim — as the primary above-fold CTA on the homepage. On mobile, dropdowns are the highest-friction input pattern: each tap opens an OS-native picker, the user makes a selection, and the picker closes before the next dropdown can be used. Four sequential decisions must be completed in order before the FIND PARTS button activates. Hick's Law confirms that each additional required decision adds logarithmically to response time and cognitive cost. The markup in the header DOM slice also shows the vehicle selector CTA ('SELECT YOUR VEHICLE / Car parts, simplified.') is hidden on mobile with class `hidden-xs`, confirming this is a mobile-specific UX issue where the four-dropdown flow is the intended primary mobile path.",
+      "recommendation": "If vehicle compatibility is the primary shopping path (which the information architecture confirms), consider replacing the four sequential dropdowns with a single predictive search input (type your vehicle — e.g., '2018 Subaru WRX') that resolves Make/Model/Year/Trim in one gesture. A single text input with autocomplete triggers one keyboard interaction versus four dropdown interactions, reducing the sequential decision chain from 4 steps to 1. Alternatively, if the dropdown flow is retained, default the Make selector to the most-purchased vehicle (Subaru WRX/STI or Ford Focus RS based on the store's catalog focus) to reduce the number of active selections from 4 to 3 for the majority of visitors.",
+      "why_this_matters": "The vehicle selector is the first conversion step for new visitors — an unsuccessful or frustrating vehicle selection experience drops users before they see a single product. Four dropdowns on a mobile screen represent the highest-friction variant of this flow. Every additional mandatory decision in the funnel corresponds to measurable drop-off; reducing sequential steps directly improves the rate at which visitors reach vehicle-filtered product listings.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Carousel Swipe Handler and Scroll Indicator Present",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "Section 2 screenshot shows the category carousel with a partial next-card peek (Handling & Brakes card edge visible at right), confirming swipe affordance is present. A scrollbar/indicator strip is visible below the carousel cards."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 9: Mobile Swipe and Gesture Expectations",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The category carousel implements a `<slider-component>` with the `slider--scroll-active` and `grid--peek` CSS classes, producing a partial-card peek of the next slide at the right edge. The screenshot confirms the Handling & Brakes card is partially visible, correctly signaling to users that the carousel is swipeable. A scrollbar indicator strip appears below the cards. This matches Baymard's recommended swipe affordance pattern for mobile carousels.",
+      "recommendation": "The swipe affordance implementation is sound. If conversion tracking shows low carousel engagement, the scrollbar indicator could be supplemented with higher-contrast dot indicators or numbered pagination ('1 of 5') for users who miss the peek affordance.",
+      "why_this_matters": "Mobile users default to swiping for image and content carousels. When the swipe gesture expectation is confirmed by a visible peek affordance, users engage more with carousel content without confusion or accidental navigation.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Sticky Header Preserves Navigation Access on Scroll",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e18",
+        "text_content": "sticky header section",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "At scroll position 543px (section 2), the header remains visible at the top of the viewport — hamburger menu, AWDMods logo, account icon, and cart icon are all present. The baton confirms e18 has is_sticky=true."
+        },
+        {
+          "type": "dom",
+          "reference": "e18"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 1: Thumb Zone Mapping for Modern Phones",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The header element (e18) has `is_sticky: true` in the baton, confirmed by screenshots across sections 2, 3, and 4 — the header with logo, hamburger, account, and cart icons persists at the top of the viewport across all scroll positions. The cart icon (e6) is persistently accessible for review and checkout initiation. The sticky header successfully keeps site navigation and cart access within reach throughout the scroll journey.",
+      "recommendation": "The sticky header is correctly implemented. The remaining gap — that the hamburger navigation is the only access point for category browsing — is addressed in F-01.",
+      "why_this_matters": "Cart abandonment on mobile is 78–80%; maintaining persistent cart access reduces friction at the transition to checkout by keeping the cart icon visible at all times.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "Hero section background image: The large hero background (city-at-night with Subaru WRX) appears to be a CSS background-image rather than an <img> element — it does not appear in the baton's img elements and is not auditable for fetchpriority or lazy-load attributes via DOM inspection. If confirmed as a CSS background-image, it cannot benefit from fetchpriority and will be fetched at default priority. Recommend converting to an <img> with fetchpriority='high' if this is the LCP element.",
+    "Carousel image alt attributes: All five category carousel card images have alt='' (empty string). This is technically valid for decorative images, but these images carry category identity (Performance engine photo, Handling suspension photo, etc.) and the empty alt removes any text-based fallback for screen reader users. The accessibility dimension is out of scope for this cluster but flagged for the ethics/accessibility subagent.",
+    "Search input autocomplete='off': The predictive search input has autocomplete='off' — appropriate for a live-search field that should not offer browser autocomplete suggestions. No finding warranted.",
+    "Newsletter email input: The email input in the newsletter form (e29/e33 section) does not appear in the performance-ux routed sections. Not evaluated.",
+    "Speculation Rules API: This is a homepage/collection-style page with category navigation links to /collections/*. Implementing Speculation Rules API to prerender likely next pages (e.g., /collections/performance on hover/tap of the Performance card) could yield significant navigation speed improvements — the Ray-Ban case study showed +101% mobile PDP conversion after implementing prerendering on collection pages. Noted here rather than emitted as FAIL finding since this is an advanced enhancement beyond baseline defects.",
+    "CLS risk: The category carousel images have explicit width and height attributes (e.g., width='3200' height='3200' for the first card), which is correct for preventing CLS during load. No CLS finding warranted for the carousel images on this basis.",
+    "Shopify CDN format negotiation: Shopify's CDN (Fastly-backed) serves WebP automatically to browsers that send Accept: image/webp. However, AVIF is not automatically negotiated by Shopify CDN without explicit <picture> elements or CDN configuration. The PNG-only <img> markup means AVIF delivery requires template changes (Finding F-02)."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "mobile-conversion.md",
+      "cognitive-load-management.md",
+      "page-performance-psychology.md",
+      "core-web-vitals.md",
+      "media-performance-optimization.md"
+    ],
+    "sections_audited": ["header-quick-filter", "category-carousel"],
+    "baton_elements_cited": ["e3", "e6", "e8", "e9", "e14", "e18"],
+    "screenshots_reviewed": ["section-1-mobile.jpg", "section-2-mobile.jpg", "section-3-mobile.jpg", "section-4-mobile.jpg"]
+  }
+}

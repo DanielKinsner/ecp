@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecp.local/schema/review-state-v1.json",
+  "title": "ECP Review State v1",
+  "description": "Human-owned presentation layer for ECP visual audit review. Raw AI artifacts remain evidence; this file stores operator edits, marker overrides, callouts, and non-destructive slide presentation edits.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_state_schema_version",
+    "engagement_id",
+    "ai_draft_artifact",
+    "created_at",
+    "updated_at",
+    "device",
+    "findings",
+    "markers",
+    "slides",
+    "slide_edits",
+    "imported_assets",
+    "audit_metadata"
+  ],
+  "properties": {
+    "review_state_schema_version": { "const": 1 },
+    "engagement_id": { "type": "string", "minLength": 1 },
+    "ai_draft_artifact": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "device": { "type": "string", "enum": ["desktop", "mobile", "laptop"] },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "markers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/marker" }
+    },
+    "slides": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slide" }
+    },
+    "slide_edits": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slide_edit" }
+    },
+    "imported_assets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/imported_asset" }
+    },
+    "audit_metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["engagement_id"],
+      "properties": {
+        "engagement_id": { "type": "string" },
+        "url": { "type": "string" },
+        "page_type": { "type": "string" },
+        "executive_summary": { "type": "string" },
+        "ethics_summary": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "f_ref",
+        "status",
+        "finding_title",
+        "callout_title",
+        "marker_id",
+        "ai_suggested_marker_id",
+        "lint_violations",
+        "hotspot_confidence",
+        "tagged_for_ai_pass"
+      ],
+      "properties": {
+        "f_ref": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["needs_review", "approved", "edited", "hidden", "tagged_for_ai_pass"]
+        },
+        "cluster": { "type": "string" },
+        "severity": { "type": "string" },
+        "finding_title": { "type": "string" },
+        "finding_title_override": { "type": ["string", "null"] },
+        "finding_body": { "type": "string" },
+        "finding_body_override": { "type": ["string", "null"] },
+        "observation": { "type": "string" },
+        "observation_override": { "type": ["string", "null"] },
+        "recommendation": { "type": "string" },
+        "recommendation_override": { "type": ["string", "null"] },
+        "why_this_matters": { "type": "string" },
+        "why_this_matters_override": { "type": ["string", "null"] },
+        "callout_title": { "type": "string" },
+        "callout_title_override": { "type": ["string", "null"] },
+        "callout_body": { "type": "string" },
+        "callout_color": {
+          "type": ["string", "null"],
+          "pattern": "^#?[0-9A-Fa-f]{3,8}$"
+        },
+        "callout_position": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "x_pct": { "type": "number" },
+            "y_pct": { "type": "number" },
+            "w_pct": { "type": "number" },
+            "h_pct": { "type": "number" },
+            "scale_pct": { "type": "number" },
+            "anchor": {
+              "type": "string",
+              "enum": ["auto", "top", "right", "bottom", "left"]
+            }
+          }
+        },
+        "callout_visible": { "type": "boolean" },
+        "marker_id": { "type": "string" },
+        "ai_suggested_marker_id": { "type": "string" },
+        "lint_violations": { "type": "array", "items": { "type": "string" } },
+        "hotspot_confidence": {
+          "type": "string",
+          "enum": ["exact-selector", "section-match", "fallback-absence", "needs-manual-marker"]
+        },
+        "review_notes": { "type": "string" },
+        "tagged_for_ai_pass": { "type": "boolean" },
+        "ai_pass_instruction": { "type": ["string", "null"] },
+        "reviewed_at": { "type": ["string", "null"], "format": "date-time" },
+        "reviewed_by": { "type": ["string", "null"] },
+        "raw": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "index": { "type": ["integer", "null"] },
+            "baton_index": { "type": ["string", "null"] },
+            "match_method": { "type": ["string", "null"] },
+            "element": { "type": "string" },
+            "section": { "type": "string" }
+          }
+        }
+      }
+    },
+    "marker": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["marker_id", "f_ref", "slide_id", "shape", "source"],
+      "properties": {
+        "marker_id": { "type": "string" },
+        "f_ref": { "type": "string" },
+        "slide_id": { "type": "string" },
+        "shape": {
+          "type": "string",
+          "enum": ["point", "rect", "ellipse", "polygon", "freeform", "snap-to-element"]
+        },
+        "cx_pct": { "type": "number" },
+        "cy_pct": { "type": "number" },
+        "x_pct": { "type": "number" },
+        "y_pct": { "type": "number" },
+        "w_pct": { "type": "number" },
+        "h_pct": { "type": "number" },
+        "rx_pct": { "type": "number" },
+        "ry_pct": { "type": "number" },
+        "points": { "type": "array" },
+        "stroke": { "type": "string" },
+        "stroke_width": { "type": "number" },
+        "source": {
+          "type": "string",
+          "enum": [
+            "e_index_lookup",
+            "proposed_anchor_element",
+            "proposed_anchor_section",
+            "proposed_anchor_viewport",
+            "manual",
+            "imported"
+          ]
+        },
+        "snapped_baton_index": { "type": ["integer", "string", "null"] }
+      }
+    },
+    "slide": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["slide_id", "source", "device", "section_index", "user_imported"],
+      "properties": {
+        "slide_id": { "type": "string" },
+        "source": { "type": "string" },
+        "asset_id": { "type": "string" },
+        "viewport": { "type": "string" },
+        "device": { "type": "string" },
+        "section_index": { "type": "integer" },
+        "section_label": { "type": "string" },
+        "scroll_y_top": { "type": ["number", "null"] },
+        "scroll_y_bottom": { "type": ["number", "null"] },
+        "natural_width": { "type": ["number", "null"] },
+        "natural_height": { "type": ["number", "null"] },
+        "user_imported": { "type": "boolean" }
+      }
+    },
+    "slide_edit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slide_id", "crop", "transform", "effects"],
+      "properties": {
+        "slide_id": { "type": "string" },
+        "crop": { "$ref": "#/$defs/rect_pct" },
+        "transform": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scale", "rotate_deg", "translate_x_pct", "translate_y_pct"],
+          "properties": {
+            "scale": { "type": "number" },
+            "rotate_deg": { "type": "number" },
+            "translate_x_pct": { "type": "number" },
+            "translate_y_pct": { "type": "number" }
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/effect" }
+        }
+      }
+    },
+    "effect": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["blur", "dim", "redact", "brightness", "contrast", "gradient_overlay", "before_after_overlay"]
+        },
+        "rect": { "$ref": "#/$defs/rect_pct" },
+        "f_ref": { "type": "string" },
+        "radius_px": { "type": "number" },
+        "strength": { "type": "number" }
+      }
+    },
+    "rect_pct": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x_pct", "y_pct", "w_pct", "h_pct"],
+      "properties": {
+        "x_pct": { "type": "number" },
+        "y_pct": { "type": "number" },
+        "w_pct": { "type": "number" },
+        "h_pct": { "type": "number" }
+      }
+    },
+    "imported_asset": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["asset_id", "name"],
+      "properties": {
+        "asset_id": { "type": "string" },
+        "name": { "type": "string" },
+        "source": { "type": "string" },
+        "data_url": { "type": "string" },
+        "mime_type": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "persistence": { "type": "string" }
+      }
+    }
+  }
+}

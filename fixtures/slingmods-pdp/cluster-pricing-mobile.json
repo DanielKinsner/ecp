@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "pricing",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6",
+    "context_window": 200000
+  },
+  "started_at": "2026-04-28T23:15:00.000Z",
+  "completed_at": "2026-04-28T23:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Price Anchor on $59.95 Price Block",
+      "surface": "product-title-price",
+      "element": {
+        "baton_index": "e10",
+        "text_content": "$59.95",
+        "role": "div"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 823,
+          "viewport": "mobile",
+          "context": "Price renders as bare $59.95 with no strikethrough MSRP, no compare-at reference, and no savings callout. The price block (e10, y=823) shows only the sale price in isolation."
+        },
+        {
+          "type": "dom",
+          "reference": "e10"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 2: Advertised Reference Price Effects on Internal Reference Price Formation",
+          "tier": "Gold"
+        },
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 1: Comparative Price Advertising — Acquisition Value vs. Transaction Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The price element at y=823 displays '$59.95' with no accompanying reference price — no MSRP strikethrough, no 'compare at' figure, and no savings line. A visitor evaluating this product sees only the selling price in isolation, with nothing to tell them whether $59.95 represents strong value or a premium. The structured data on this page records a selling price of $59.95 with no 'highPrice' or list-price counterpart, confirming the absence of any anchor at the data layer as well.",
+      "recommendation": "If EvolutionR publishes an MSRP for these handlebar end caps, add it as a strikethrough above the selling price — for example, 'MSRP $79.95' crossed out with 'Your Price $59.95' beneath. Show the savings amount explicitly ('Save $20 / 25% off') as a separate line below the price pair. If no manufacturer MSRP is available, frame the price against a comparable kit or a higher-trim finish variant so $59.95 reads as an entry point into a tiered offering rather than a standalone figure.",
+      "why_this_matters": "Without an anchor, visitors default to their own last-seen price as a reference — which on a comparison-shopping session may be a cheaper generic alternative. Grewal et al. (1998) demonstrate that a credible advertised reference price elevates perceived quality and transaction value independently of the savings calculation; skipping this step leaves conversion reliant on the visitor's unaided value judgment on a $59.95 specialty accessory.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Shipping Cost Hidden Near Price — $7.99 Charge Not Disclosed",
+      "surface": "product-title-price",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 823,
+          "viewport": "mobile",
+          "context": "No shipping cost or free-shipping threshold messaging appears anywhere in the price block or CTA area visible in this section. The price shows only $59.95."
+        },
+        {
+          "type": "dom",
+          "reference": "e19"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 2: Unexpected Costs as a Top Controllable Abandonment Cause",
+          "tier": "Gold"
+        },
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 5: Zero-Price Effect — Why 'Free' Shipping Is Worth More Than Its Monetary Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The page's structured data (schema.org Offer) records a $7.99 shipping charge for this product — meaning this item does not qualify for the blanket free-shipping program referenced in the footer. Yet the price block at y=823 shows only '$59.95' with no shipping cost, no threshold callout, and no 'add $X for free shipping' prompt. The only shipping-related copy visible to a mobile shopper is a footer disclaimer at scroll_y 2417 — more than 1,600px below the price — reading 'Free Shipping Applies to Most Contiguous U.S. Orders - Some Items May Not Qualify.' For a shopper on this product, shipping is not free and there is no notification of that fact anywhere near the purchase decision point.",
+      "recommendation": "Add a single line beneath the price block disclosing the shipping cost for this product — for example, '+ $7.99 shipping' or 'Ships for $7.99 (free on orders over $[threshold])'. If there is a cart-level free-shipping threshold that this product helps qualify for, replace the static line with a goal-gradient prompt: 'Add $[X] more to your cart for FREE shipping.' The zero-price transition from a fee to free shipping generates psychological value disproportionate to the dollar amount saved.",
+      "why_this_matters": "Baymard Institute data shows 39% of US shoppers who abandon carts cite unexpectedly high extra costs as the primary controllable reason. A $7.99 shipping surprise at checkout on a $59.95 product represents a 13% price increase the shopper did not anticipate at the point of intent — a disproportionate shock relative to the product price that elevates abandonment risk significantly.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PASS",
+      "title": "PayPal Pay Later BNPL Displayed Near Price With Provider Logo",
+      "surface": "product-title-price",
+      "element": {
+        "baton_index": "e18",
+        "text_content": "",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.87,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 862,
+          "viewport": "mobile",
+          "context": "Section-2 screenshot shows 'Pay in 4 interest-free payments of $14.99 with PayPal. Learn more' immediately below the $59.95 price, with the PayPal logo rendering inline and a 'Learn more' link for first-time BNPL users."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 4: BNPL Display Optimization — Where and How to Show Installment Pricing",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The page correctly surfaces PayPal Pay Later messaging immediately below the main price with the installment amount ($14.99 × 4), the provider logo, and a 'Learn more' link — matching the product-page display best practice for BNPL. The $59.95 price point falls within the $50–$500 range where BNPL basket-size lifts are largest.",
+      "recommendation": "If Affirm (already present in the site footer payment icons and linked in the 'Information' nav as 'Affirm Monthly Payments') offers longer-term installments for this product, consider showing a second BNPL line for Affirm alongside PayPal Pay Later — shoppers comparison-shop payment options and a second provider increases BNPL adoption.",
+      "why_this_matters": "BNPL display on the product page — rather than deferring it to cart or checkout — is the highest-leverage placement for the mechanism to work. This page is executing the placement correctly; removing or relocating this element would lose the approximately 9% purchase-incidence lift documented in peer-reviewed field research.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PARTIAL",
+      "title": "Charm Pricing at $59.95 Preserves Left-Digit Benefit but Savings Not Shown",
+      "surface": "product-title-price",
+      "element": {
+        "baton_index": "e11",
+        "text_content": "59.95",
+        "role": "span"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.80,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 822,
+          "viewport": "mobile",
+          "context": "Price span (e11) renders '59.95' — the .95 ending preserves the left digit at 5 rather than crossing to 6, consistent with the left-digit mechanism. No separate savings line accompanies the price."
+        },
+        {
+          "type": "dom",
+          "reference": "e11"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "charm-pricing.md",
+          "section": "Finding 1: Meta-Analytic Evidence for Just-Below Pricing Effects",
+          "tier": "Gold"
+        },
+        {
+          "source": "charm-pricing.md",
+          "section": "Finding 4: Direct Evidence of Ending-Digit Drop-Off in Price Processing",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The price '59.95' correctly uses a just-below ending that keeps the left digit at 5 (not 6), activating the left-digit underestimation effect. This is appropriate for a utilitarian stainless-steel accessory product where .99 or .95 endings carry no brand-quality penalty. The partial verdict reflects that while the price ending is well-chosen, the page misses the savings-explicit companion step: a discount line showing 'Save $X' or '% off' alongside the price would compound the charm-pricing effect by making the deal legible rather than implicit.",
+      "recommendation": "If this product was ever priced higher (or has a manufacturer list price), add an explicit savings line below the price — 'Save $20' in the case of a $79.95 MSRP anchor. The meta-analytic effect size for .95 endings alone is small (d = 0.11); pairing it with a visible savings callout activates the transaction-value channel and produces a materially larger behavioral shift than either tactic alone.",
+      "why_this_matters": "Charm pricing without a visible reference or savings line delivers only the left-digit encoding benefit — roughly a 2–5% conversion micro-lift. Adding an explicit savings amount activates a second, independent psychological channel (transaction value) that the price ending alone cannot trigger, multiplying the practical effect on conversion.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The schema.org structured data records priceValidUntil: '2026-04-29' — one day from capture date. This short validity window may be a template artifact, but if it causes Google to de-list or demote the rich result, the price anchor data feeding search snippets would be affected. Flagged for the content-seo specialist.",
+    "Reward points messaging ('Login & Earn 60 Points when purchasing this item') appears in the price block area in the section-2 screenshot. This functions as a mild price-reduction signal for logged-in users and as a registration incentive for anonymous visitors. Not emitted as a pricing finding because the points-to-currency conversion rate is not visible on the page, making it impossible to assess whether the signal is meaningfully purchase-motivating.",
+    "Affirm is referenced in the footer nav ('Affirm Monthly Payments') and the footer payment icon row includes an Affirm logo, but no Affirm installment messaging appears near the price block on the product page. If Affirm is available for this SKU, a second BNPL line near the PayPal Pay Later prompt would increase BNPL adoption."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "price-anchoring.md",
+      "charm-pricing.md",
+      "bnpl-payment.md",
+      "free-shipping.md",
+      "discount-framing.md",
+      "evidence-tiers.md"
+    ],
+    "screenshots_reviewed": [
+      "section-1-mobile.jpg",
+      "section-2-mobile.jpg",
+      "section-3-mobile.jpg"
+    ],
+    "baton_elements_verified": [
+      "e10",
+      "e11",
+      "e18",
+      "e19"
+    ]
+  }
+}

@@ -1,0 +1,912 @@
+{
+  "valid_refs": [
+    "audience F-01",
+    "audience F-02",
+    "audience F-03",
+    "category-navigation F-01",
+    "category-navigation F-02",
+    "category-navigation F-03",
+    "category-navigation F-04",
+    "category-navigation F-05",
+    "category-navigation F-06",
+    "category-navigation F-07",
+    "category-navigation F-08",
+    "checkout-flows F-01",
+    "checkout-flows F-02",
+    "checkout-flows F-03",
+    "checkout-flows F-04",
+    "checkout-flows F-05",
+    "checkout-flows F-06",
+    "content-seo F-01",
+    "content-seo F-02",
+    "content-seo F-03",
+    "content-seo F-05",
+    "content-seo F-06",
+    "content-seo F-07",
+    "content-seo F-08",
+    "content-seo F-09",
+    "content-seo F-10",
+    "content-seo F-11",
+    "ethics F-01",
+    "ethics F-02",
+    "ethics F-03",
+    "ethics F-04",
+    "ethics F-05",
+    "ethics F-06",
+    "performance-ux F-01",
+    "performance-ux F-02",
+    "performance-ux F-03",
+    "performance-ux F-04",
+    "performance-ux F-05",
+    "performance-ux F-06",
+    "performance-ux F-07",
+    "performance-ux F-08",
+    "performance-ux F-09",
+    "post-purchase F-01",
+    "post-purchase F-02",
+    "post-purchase F-03",
+    "post-purchase F-04",
+    "post-purchase F-05",
+    "pricing F-01",
+    "pricing F-02",
+    "pricing F-03",
+    "pricing F-04",
+    "pricing F-05",
+    "pricing F-06",
+    "pricing F-07",
+    "pricing F-08",
+    "product-media F-01",
+    "product-media F-02",
+    "product-media F-03",
+    "product-media F-04",
+    "product-media F-05",
+    "product-media F-06",
+    "product-media F-07",
+    "product-media F-08",
+    "product-media F-09",
+    "trust-credibility F-01",
+    "trust-credibility F-02",
+    "trust-credibility F-03",
+    "trust-credibility F-04",
+    "trust-credibility F-05",
+    "trust-credibility F-06",
+    "trust-credibility F-07",
+    "trust-credibility F-08",
+    "trust-credibility F-09",
+    "trust-credibility F-10",
+    "trust-credibility F-11",
+    "visual-cta F-01",
+    "visual-cta F-02",
+    "visual-cta F-03",
+    "visual-cta F-04",
+    "visual-cta F-05",
+    "visual-cta F-06",
+    "visual-cta F-07"
+  ],
+  "by_canonical_ref": {
+    "audience F-01": {
+      "title": "No Cross-Sell Framed with Social Proof Language",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "audience F-02": {
+      "title": "Star Ratings and Review Count Above Fold",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "audience F-03": {
+      "title": "Fitment Navigation Confirms Audience but Lacks Acknowledgment Copy",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-01": {
+      "title": "No History Breadcrumb — Filter State Lost on PDP Arrival",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-02": {
+      "title": "No BreadcrumbList Schema — Breadcrumb Absent from Structured Data",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-03": {
+      "title": "Breadcrumb Missing BreadcrumbList Schema — No SERP Rich Result",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-04": {
+      "title": "Breadcrumb Jumps Home to Product — No Category Level",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-05": {
+      "title": "Primary Navigation Not Sticky — Lost After Scroll",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-06": {
+      "title": "Hierarchy Breadcrumb Missing Intermediate Category Level",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-07": {
+      "title": "Mobile Breadcrumb Product Name Truncated at Viewport Edge",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-08": {
+      "title": "Footer Year/Model Chart Navigation Supports Vehicle-First Browsing",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-01": {
+      "title": "No Express Checkout Buttons on PDP",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "checkout-flows F-02": {
+      "title": "No Apple Pay / Google Pay Express Buttons Near Add to Cart",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-03": {
+      "title": "Shipping Cost Hidden Until Checkout — No PDP Estimate",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-04": {
+      "title": "PayPal Pay Later Present but Affirm Not Surfaced on PDP",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "checkout-flows F-05": {
+      "title": "PayPal Pay Later BNPL Shown Inline at Point of Decision",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-06": {
+      "title": "Cart Widget and Navigation Support Session Continuity",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-01": {
+      "title": "H1 and Page Title Use Different Product Name",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-02": {
+      "title": "Product Schema Missing GTIN and MPN Identifiers",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-03": {
+      "title": "priceValidUntil Expires Tomorrow — Rich Result Eligibility at Risk",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop",
+        "mobile"
+      ]
+    },
+    "content-seo F-05": {
+      "title": "H1 and Page Title Use Different Product Terms",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-06": {
+      "title": "Product Schema Missing MerchantReturnPolicy",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-07": {
+      "title": "No GTIN — AI Shopping Agents Cannot Cross-Match This Product",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-08": {
+      "title": "Schema Image URL Uses HTTP Not HTTPS",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-09": {
+      "title": "MerchantReturnPolicy Present But returnFees Uses Wrong Schema Value",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-10": {
+      "title": "Canonical Tag, URL Slug, and Meta Description Are Well-Formed",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-11": {
+      "title": "Canonical URL Structure Follows Best Practices",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-01": {
+      "title": "Hero Product Image Missing fetchpriority and Preload",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-02": {
+      "title": "Hero Product Image Lacks fetchpriority and Preload",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-03": {
+      "title": "Above-Fold Images Missing Width and Height Attributes (CLS Risk)",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-04": {
+      "title": "Product Images Served as JPEG With No AVIF or WebP Format Negotiation",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-05": {
+      "title": "Logo Image Missing Width and Height Attributes (CLS Risk)",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-06": {
+      "title": "No Sticky Bottom Add to Cart Bar on Mobile",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-07": {
+      "title": "brainyfilter.css Loaded Twice in Page Head — Redundant Render-Blocking Request",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-08": {
+      "title": "Hamburger-Only Navigation Hides All Category Access",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-09": {
+      "title": "Touch Target Sizing Meets Minimum Standards for Core Header Actions",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "post-purchase F-01": {
+      "title": "Loyalty Program Enrollment Buried in Footer",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "post-purchase F-02": {
+      "title": "Loyalty Points Earning Invisible at Point of Purchase",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "post-purchase F-03": {
+      "title": "No Referral Program Entry Point on Product Page",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "post-purchase F-04": {
+      "title": "No Referral CTA Captures 72-Hour Post-Purchase Window",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "post-purchase F-05": {
+      "title": "Track My Order Accessible Only via Footer — No Proactive Tracking Prompt",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-01": {
+      "title": "No Price Anchor on $59.95 Price Block",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-02": {
+      "title": "Price Block Lacks Any Anchor or Compare-At Reference",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-03": {
+      "title": "Shipping Cost Hidden Near Price — $7.99 Charge Not Disclosed",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-04": {
+      "title": "Free Shipping Threshold Displayed but No Gap-to-Threshold on PDP",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-05": {
+      "title": "Price Match Guarantee Buried in Footer, Not Near Price Block",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-06": {
+      "title": ".95 Charm Ending Misses Left-Digit Crossover on $59.95",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-07": {
+      "title": "Charm Pricing at $59.95 Preserves Left-Digit Benefit but Savings Not Shown",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-08": {
+      "title": "PayPal Pay Later BNPL Widget Present Near Price",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-01": {
+      "title": "Product Video Has No VideoObject Schema Markup",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-02": {
+      "title": "Product Video Placed Outside Gallery — Below Add to Cart",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "product-media F-03": {
+      "title": "Product Video Placed Outside Gallery, Not at Position 2–3",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-04": {
+      "title": "No Scale Reference Image in 7-Image Gallery",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "product-media F-05": {
+      "title": "No In-Scale Image for Small Physical Accessory",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-06": {
+      "title": "No VideoObject Schema for YouTube Video",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "product-media F-07": {
+      "title": "Gallery Thumbnail Strip Renders as Static Grid, Not Swipeable Row",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "product-media F-08": {
+      "title": "Thumbnail Strip Navigation Present on Desktop Gallery",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-09": {
+      "title": "7-Image Gallery Meets Quantity Standard for Accessory Category",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-01": {
+      "title": "No Security or Trust Badge Near Add to Cart CTA",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-02": {
+      "title": "Star Icons Have No Accessible Rating Value",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-03": {
+      "title": "Perfect 5.0 Rating Triggers Skepticism",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-04": {
+      "title": "Reviews Hidden in Tab — Indexing and Visibility Risk",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-05": {
+      "title": "Perfect 5.0 Rating Signals Inauthenticity to Skeptical Buyers",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-06": {
+      "title": "Only 1 Customer Photo — UGC Gallery Effectively Empty",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-07": {
+      "title": "Return Policy Not Visible on Product Page",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-08": {
+      "title": "Review Count at 15 — Below Optimal Social Proof Threshold",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-09": {
+      "title": "Physical Address and Phone Prominent in Header and Footer",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-10": {
+      "title": "Expert Editorial Content and Fitment Guide Demonstrate Genuine Expertise",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-11": {
+      "title": "AggregateRating Schema Present But Reflects Suspicious Perfect Score",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-01": {
+      "title": "No Sticky Add to Cart Bar on Mobile Scroll",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-02": {
+      "title": "H1 Leads with Material/Form Factor, Not Rider Benefit",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "visual-cta F-03": {
+      "title": "No Risk-Reversal Microcopy Adjacent to Add to Cart Button",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "visual-cta F-04": {
+      "title": "Add to Cart Lacks Risk-Reversal Microcopy",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-05": {
+      "title": "Hero Gallery Height Pushes Add to Cart Below the Fold",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-06": {
+      "title": "Above-Fold Layout Follows Optimal Image-Left, CTA-Right Visual Flow",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "visual-cta F-07": {
+      "title": "Add to Cart Button Uses Clear Action-Specific Copy",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "ethics F-01": {
+      "title": "Cookie Consent Management Platform Present (Termly)",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-02": {
+      "title": "Aggregate Rating Schema Matches Visible Review Count",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-03": {
+      "title": "No Fabricated Urgency or Scarcity Claims",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-04": {
+      "title": "Privacy Policy and Terms URLs Are First-Party Canonical",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-05": {
+      "title": "Prop 65 Warning Present with Chemical Disclosure and Official Link",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-06": {
+      "title": "No Drip Pricing — Mandatory Fees Not Hidden",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    }
+  },
+  "merge_aliases": {
+    "content-seo F-04": "content-seo F-03"
+  }
+}

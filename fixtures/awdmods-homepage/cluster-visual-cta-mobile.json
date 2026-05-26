@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "visual-cta",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Above-Fold Headline or Value Proposition",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "heading"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The above-fold viewport at scroll_y=0 shows a dark hero image of a Subaru WRX with vehicle selector dropdowns (Select Make, Select Model, Select Year, Select Trim) and a blue FIND PARTS button. No headline or value proposition text is present anywhere in this viewport — only the AWDMods logo and a free-shipping banner at the top."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 4",
+          "tier": "Gold"
+        },
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 1",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The entire above-fold viewport on mobile (390×844px) contains no headline and no value proposition. A visitor arriving cold sees a dark car photograph, four unlabeled dropdown selectors, and a blue 'FIND PARTS' button — but nothing that answers 'What does this store sell?' or 'Why should I choose AWDMods over a competitor?' The page title 'AWDMods - AWDMods' appears only in the browser tab, not on the page itself. Baymard and NNGroup research identifies a visible above-fold headline as a required element for landing pages receiving cold or paid traffic; its absence fails the 5-second clarity test at the most basic level.",
+      "recommendation": "Add a single concise headline directly above or beside the vehicle-selector widget — for example, 'Performance parts for Focus RS, Focus ST, WRX, and STI' — that identifies the store's product scope. If the brand positioning warrants differentiation, append a short differentiator: 'Expert-curated. Ships fast.' This can be a one-line `<h1>` or `<p>` element that sits above the selector dropdowns within the existing hero layout, costing zero additional viewport height at mobile sizes if line-height is constrained to 1 line.",
+      "why_this_matters": "Without a visible headline, every cold-traffic visitor must decode the page's purpose from visual cues alone. At mobile scroll speeds, many will bounce before the vehicle selector registers as a tool rather than a form to ignore. A single descriptive headline has been shown to meaningfully improve visitor-to-engagement rates precisely because it resolves the 'Is this the right place?' question in under 2 seconds.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Trust Signal in Above-Fold Hero",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Above-fold viewport at scroll_y=0 contains: free-shipping announcement bar ('FREE SHIPPING on most orders $75+'), AWDMods logo, hamburger menu, search bar, vehicle selector dropdowns, and FIND PARTS button. No aggregate review rating, no customer count, no media mention, and no satisfaction guarantee is visible in this viewport."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 4",
+          "tier": "Gold"
+        },
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 10",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Of the five minimum above-fold elements documented by Baymard and NNGroup research — headline, subheadline, primary CTA, supporting image, and trust signal — the AWDMods homepage above-fold is missing both the headline (Finding 1 in this emission) and any trust signal. The free-shipping bar at the top communicates a shipping policy but is not a credibility signal; it does not answer 'Can I trust this merchant?' for a first-time visitor who has never purchased from AWDMods. No star rating, no review count, no customer count, and no third-party endorsement is visible without scrolling.",
+      "recommendation": "Add a compact trust signal directly within the hero section, beneath the vehicle selector and above the FIND PARTS button — for example, a one-line element showing '★★★★★ 4.8 · 3,200+ orders shipped' or 'Trusted by WRX and Focus RS owners since [year]'. If aggregate review data is available from the Shopify store, a star rating aggregate with order count is the highest-credibility option and takes approximately 30px of vertical space on mobile.",
+      "why_this_matters": "For automotive parts — a considered purchase where fitment errors are costly and returns inconvenient — trust signals at the initial impression point are more important than in impulse categories. A first-time visitor encountering a dark, unfamiliar site with no credibility markers and a vehicle-configuration form as the primary UX has no signal that the merchant is reliable. Trust signals in the hero have been correlated with reduced immediate bounce on cold-traffic landing pages.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Product Cards Lack Visible Add-to-Cart CTA",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "e22",
+        "text_content": "",
+        "role": "image"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 917,
+          "viewport": "mobile",
+          "context": "Featured Collection cards at scroll_y~917-1400 show VelourTex Floor Mats card with product image, brand name, full product title, price 'FROM $135.99', and a 'Made to Order' badge. The only interactive element on the card is a small orange circular '+' quick-add overlay button (approximately 40x40px) that appears at the bottom-right corner of the product image. There is no labeled 'Add to Cart' or 'Choose Options' button visible in the card body at rest state."
+        },
+        {
+          "type": "dom",
+          "reference": "e22"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 14",
+          "tier": "Gold"
+        },
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 5",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The VelourTex Floor Mats product card in the Featured Collection section presents a product image, title, price ('FROM $135.99'), and a 'Made to Order' badge — but the only purchasable action is a small (~40×40px) orange circular '+' icon at the bottom corner of the product image. This icon is below the WCAG 2.2 AA 44×44px touch target recommendation and is not labeled — a visitor cannot tell by looking whether it adds to cart, opens a configurator, or navigates to the PDP. NNGroup research on CTA label clarity shows that unlabeled or ambiguously-labeled primary actions produce lower engagement than clearly labeled buttons, because users scanning cannot identify the action without tapping first.",
+      "recommendation": "Add a clearly labeled, full-width or near-full-width CTA button beneath the price line on each product card — for example 'Add to Cart' for in-stock products or 'Choose Options' for products requiring configuration such as the 'Made to Order' floor mats. The button should use the same blue fill currently used on category CTAs, should be at minimum 48px tall, and should carry a text label visible at rest state without any hover or tap interaction. The small orange '+' can remain as a supplementary quick-add shortcut but should not be the only purchase affordance.",
+      "why_this_matters": "Product cards on a homepage Featured Collection are a direct revenue path — a visitor who is already browsing with purchase intent should be able to initiate the cart action without navigating to a PDP first. An unlabeled icon button as the sole card-level CTA forces every interested visitor through an extra tap, adding friction at the highest-intent moment in the browse flow.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Hero Section Headline Generic — Fails Differentiation Test",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e14",
+        "text_content": "Shop All",
+        "role": "banner"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The above-fold hero section at scroll_y=0 shows only: AWDMods logo in header, a Subaru WRX/STI-style sports car on a night-city background, and a vehicle selector widget. The only navigational label visible anywhere in the hero area is 'Shop All' — a generic categorical label that could apply to any parts retailer. No differentiated claim, no brand positioning, and no indication of specialization (AWD vehicles, specific makes/models) is communicated in the hero."
+        },
+        {
+          "type": "dom",
+          "reference": "e14"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 2",
+          "tier": "Bronze"
+        },
+        {
+          "source": "headline-copywriting.md",
+          "section": "Finding 3",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The AWDMods homepage hero communicates no differentiating value proposition. The only branded content is the AWDMods logo and a vehicle-selector widget that any parts competitor could replicate. Applying the 'could a competitor copy this verbatim?' test: yes — any performance parts retailer could use the same car image, same dropdown selectors, and same dark background without changing the core message, because there is no message. The page schema JSON-LD identifies the site as a generic 'OnlineStore' with no description. The meta_description field is null. A visitor arriving from a paid search ad for 'Focus RS performance parts' has no above-fold confirmation that AWDMods specifically stocks Focus RS parts or is the right merchant for that query.",
+      "recommendation": "If the hero cannot accommodate a full headline per Finding 1, at minimum add a tagline to the header adjacent to the logo — for example 'AWD Performance Parts · Focus RS · WRX · STI' — that communicates the brand's vehicle specialization in one scan. This costs zero additional layout space and can be added as a subtitle element beneath the logo in the sticky header.",
+      "why_this_matters": "In the automotive aftermarket, buyers shop by vehicle fit and brand trust. A homepage that does not surface vehicle specialization above the fold gives no reason for a Focus RS owner to choose AWDMods over a generic parts site, even when AWDMods may stock better-curated inventory.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "FAIL",
+      "title": "Category CTAs Lack Visual Hierarchy — All Equal Weight",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDrivetrain upgrades\n                    Shop Performance",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "The category carousel visible at the bottom of section-1 and into section-2 shows the Performance category card with a 'SHOP PERFORMANCE' button (blue fill, white uppercase text) and partially shows a Handling & Brakes card with a similarly styled blue button. All category CTA buttons in this horizontal scroll carousel use the same blue fill (#4A90D9 approx), same size, same uppercase label style. There is no visual differentiation between the Performance CTA and any other category CTA to indicate priority or hierarchy."
+        },
+        {
+          "type": "dom",
+          "reference": "e8"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 3",
+          "tier": "Bronze"
+        },
+        {
+          "source": "eye-tracking-and-scan-patterns.md",
+          "section": "Finding 2",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The category carousel presents five category cards (Performance, Handling & Brakes, Interior, Exterior, Electronics per baton elements e8-e12), each with a blue CTA button of identical fill, size, and label styling. There is no visual signal to indicate which category represents the store's primary or highest-value offering. For a mobile visitor performing an F-pattern scan across the carousel, all five options read as equal priority. This is appropriate for a true parity-category navigation, but combined with the absence of any page-level hero headline (Finding 1), the visitor has no context for which category to explore first.",
+      "recommendation": "If AWDMods has a primary revenue-driving category — for example, Performance — consider applying a subtly stronger visual treatment to that card's CTA: a slightly larger button, a bolder outline, or a secondary label ('Most Popular'). Alternatively, if all categories are genuinely equal, maintain parity but ensure the hero section above establishes the store's overall value proposition so the category selection has context. Do not change this layout in isolation — address Finding 1 first, which will provide the framing that makes category parity intelligible.",
+      "why_this_matters": "When every action looks identical, visitors with low purchase intent disengage rather than choose. Providing even a subtle visual emphasis on the highest-value path gives undecided visitors a default direction, reducing bounce from the category selection stage.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "FIND PARTS CTA Button Visually Distinct on Dark Hero",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e14",
+        "text_content": "Shop All",
+        "role": "banner"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The FIND PARTS button in the hero section uses a solid blue fill (approximately #4A8FD4) with white uppercase text on a predominantly dark background. The button is the only filled, clearly bounded, light-colored interactive element within the hero widget area, giving it reasonable contrast against the dark car image and dark-translucent selector panels."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "color-psychology.md",
+          "section": "Finding 2",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The FIND PARTS primary action button in the hero widget uses a blue solid fill that contrasts adequately against the dark hero background and the semi-transparent selector dropdown backgrounds. The button is the visually dominant interactive element within the vehicle selector widget, satisfying the contrast-over-color principle — it stands out not because of any specific blue, but because it is the only filled, bounded element in the lower half of the hero.",
+      "recommendation": "No change required for CTA button contrast in this element. If the overall hero receives a redesign per Findings 1 and 2, ensure the FIND PARTS button retains its current contrast advantage and is not overridden by added headline or trust signal elements that might compete visually.",
+      "why_this_matters": "Maintaining CTA visual dominance within the vehicle selector widget ensures that visitors who engage with the selector can identify and tap the conversion action without hunting for it.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 7,
+      "verdict": "PASS",
+      "title": "Newsletter CTA Copy Is Audience-Specific",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e29",
+        "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.",
+        "role": "section"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.80,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "The newsletter section shows heading 'Join Our Newsletter!' with body copy: 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' This copy names specific vehicle models rather than using a generic 'subscribe for updates' framing."
+        },
+        {
+          "type": "dom",
+          "reference": "e29"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "headline-copywriting.md",
+          "section": "Finding 1",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The newsletter section body copy names the store's core vehicle fitments by model ('Focus RS, Focus ST, WRX, or STI') rather than using generic 'new arrivals' language. This vehicle-specificity mirrors the store's audience segmentation and creates a relevance signal — a Focus RS owner reading 'when something drops for your Focus RS' receives a targeted prompt, not a generic subscription ask. This is the most specific and audience-anchored copy visible anywhere on the page.",
+      "recommendation": "No change required. This specificity pattern should be extended up-page: the vehicle model names that make the newsletter copy effective belong in the hero headline as well (Finding 1), where they would provide immediate relevance framing for cold-traffic arrivals.",
+      "why_this_matters": "Audience-specific copy in the newsletter section sets a positive pattern. Consistent application of vehicle-specific language throughout the page — especially above the fold — would reinforce relevance at the highest-attention viewport positions.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "This is a homepage, not a PDP. The five-element above-fold rule is applied with that context in mind per hero-section-psychology.md Finding 4 boundary conditions — however, AWDMods receives cold and paid traffic to its homepage (implied by the vehicle-selector-as-primary-conversion-tool design), making the headline and trust signal requirements apply with full force.",
+    "No sticky 'Add to Cart' bar was observed or expected — this is a homepage not a product page. Sticky CTA absence is not flagged as a finding.",
+    "The baton shows e19 (dialog for VelourTex choose-options) has zero width/height at capture time, confirming the product card CTA does not surface a standard 'Add to Cart' button at rest state on mobile.",
+    "Category carousel items e8-e12 all have is_above_fold: true in the baton but rect y values of 1713 — these elements are part of a horizontal scroll carousel that the baton captured at full expanded width. The visual evidence in section-1-mobile.jpg and section-2-mobile.jpg confirms the carousel is visible on scroll but partially offscreen horizontally.",
+    "The meta_description is null and page title is 'AWDMods - AWDMods' — these are content-SEO cluster signals, noted here but not emitted as findings under this cluster."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "cta-design-and-placement.md",
+      "color-psychology.md",
+      "eye-tracking-and-scan-patterns.md",
+      "hero-section-psychology.md",
+      "headline-copywriting.md",
+      "page-length-strategy.md"
+    ],
+    "sections_routed_to_cluster": 3,
+    "baton_elements_total": 36,
+    "findings_by_verdict": {
+      "FAIL": 5,
+      "PARTIAL": 0,
+      "PASS": 2
+    }
+  }
+}

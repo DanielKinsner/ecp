@@ -1,0 +1,507 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecp.local/schema/synthesizer-emission-v1.json",
+  "title": "ECP Synthesizer Emission v1",
+  "description": "Canonical structured emission of the v2 Layer-3 synthesizer. Pairs with audit-desktop.md and audit-mobile.md (the human-facing prose) and is the structured surface Phase G renderer, Phase I canaries, and Phase K parity test consume. The synthesizer reads all cluster emissions + ethics findings + screenshots + page-type context and emits one Priority Path (3-5 curated stories) plus deterministic Quick Wins and Severity manifests. The JSON-derived allowlist (every priority_path[].f_refs entry must resolve to a real (cluster, display_index) pair from the cluster emissions) prevents hallucinated finding references. Authored 2026-04-27 as Phase F.1 deliverable. See docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase F and contracts/synthesizer-v2.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "engagement_id",
+    "synthesizer_model",
+    "started_at",
+    "completed_at",
+    "status",
+    "dispatch_shape",
+    "degraded_mode",
+    "audit_documents",
+    "priority_path",
+    "quick_wins_manifest",
+    "severity_manifest",
+    "scope_page_synchronized_refs"
+  ],
+  "properties": {
+    "schema_version": {
+      "description": "Version of the synthesizer-emission schema. v1 is current. Bump on backward-incompatible changes to the emission shape.",
+      "type": "integer",
+      "const": 1
+    },
+    "engagement_id": {
+      "description": "The audit engagement this emission belongs to. Format: YYYY-MM-DD-<8 hex>. Must match the parent meta.json.id and the cluster-emission engagement_ids the synthesizer consumed.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}-[0-9a-f]{8}$"
+    },
+    "synthesizer_model": {
+      "description": "Which model produced the synthesis. v2 default is Opus 4.6 per contracts/dispatch-contract.md (Opus is reserved for the synthesizer and the lead). Mirrors specialist_model in cluster-emission-v1.json.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "version"],
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": ["sonnet", "opus", "haiku"]
+        },
+        "version": {
+          "description": "Model version string (e.g., '4.6', '4.7'). Free-form to accommodate future versions.",
+          "type": "string",
+          "maxLength": 16
+        },
+        "context_window": {
+          "description": "Optional. The context window the synthesizer ran in. Accepts string form ('1M', '200K') or integer form (200000, 1000000). Useful for diagnosing 1M-context overflow that triggered degraded mode.",
+          "oneOf": [
+            {"type": "string", "maxLength": 16},
+            {"type": "integer", "minimum": 1000}
+          ]
+        },
+        "temperature": {
+          "description": "Optional. Sampling temperature. v2 default is platform-default (Claude Code's Agent primitive does not currently expose temperature on dispatch). When exposure lands, target 0.0-0.2 for determinism.",
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 2.0
+        }
+      }
+    },
+    "started_at": {
+      "description": "ISO 8601 timestamp when the synthesizer began. Used for runtime telemetry and parity-test comparisons.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "description": "ISO 8601 timestamp when the synthesizer finished writing this file. completed_at - started_at gives wall-clock runtime.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "description": "How the synthesizer run resolved. 'complete' = single-shot Opus dispatch succeeded. 'partial' = degraded-mode per-device dispatch succeeded but the Layer 2 pre-computed phrasing seeds were used for scope:page findings instead of synthesizer-authored prose. 'failed_synthesis_drift' = degraded-mode per-device dispatch ran but Levenshtein assertion >10% on scope:page rendering — engagement aborts; lead writes lead-reflection.md.",
+      "type": "string",
+      "enum": ["complete", "partial", "failed_synthesis_drift"]
+    },
+    "dispatch_shape": {
+      "description": "'single' = happy-path single-shot Opus call read everything and emitted both audit documents. 'per-device' = degraded-mode fallback after happy-path failed (rate-limit retry exhausted or 1M-context overflow); two device-scoped Opus calls ran with identical Layer-2-computed phrasing seeds for scope:page findings. Phase F.3 of the canonical plan defines the failure recovery sequence.",
+      "type": "string",
+      "enum": ["single", "per-device"]
+    },
+    "degraded_mode": {
+      "description": "Convenience boolean equal to (dispatch_shape == 'per-device'). Renderer surfaces a 'synthesis ran in degraded mode' banner when true so the operator knows scope:page prose came from deterministic Layer-2 seeds, not single-author voice. Phase G consumes this.",
+      "type": "boolean"
+    },
+    "audit_documents": {
+      "description": "Paths to the per-device audit markdown files the synthesizer wrote. Repo-relative or engagement-relative; renderer reads both and validates the cross-device synchronization invariant by computing Levenshtein distance over the scope:page findings the synthesizer marked synchronized in scope_page_synchronized_refs.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["desktop", "mobile"],
+      "properties": {
+        "desktop": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "mobile": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "priority_path": {
+      "description": "Synthesizer-curated 3-5 stories integrating cross-cluster findings into client-deliverable narrative. Each story tags its mode (bundle | severity | quick-wins) and lists the f_refs it cites. The JSON-derived allowlist enforces every f_ref resolves to a real (cluster, display_index) pair from the cluster emissions.",
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["mode", "title", "severity", "narrative", "f_refs"],
+        "properties": {
+          "mode": {
+            "description": "How the synthesizer framed this story. 'bundle' = thematic grouping integrating findings across clusters around an architectural pattern (e.g., 'sticky CTA absence' integrates visual-cta + performance-ux + trust-credibility + checkout-flows). 'severity' = highest-severity-x-evidence-tier-x-confidence findings the operator must address first. 'quick-wins' = low-effort findings (change_type IN {copy, css, html-attr}, change_scope IN {single-file, component}) the operator can ship today.",
+            "type": "string",
+            "enum": ["bundle", "severity", "quick-wins"]
+          },
+          "title": {
+            "description": "Story headline; senior-strategist voice; NOT a cluster slug; NOT a finding title verbatim. The synthesizer integrates 2-4 findings into one narrative arc and titles the arc.",
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 140
+          },
+          "severity": {
+            "description": "Story severity = max(severity of f_refs cited). Used by Phase G renderer to order Priority Path stories in the audit document.",
+            "type": "string",
+            "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+          },
+          "narrative": {
+            "description": "Senior-strategist prose integrating the cited findings into a coherent story. 1-3 paragraphs. Banned-phrase contract from contracts/specialist-prompt-v2.md applies (no 'baton', 'DOM', 'cluster', 'consider adding', etc.). The senior-strategist humanizer pass also extends to the embedded recommendations within this prose, closing v1 §18.2.5.",
+            "type": "string",
+            "minLength": 60,
+            "maxLength": 4000
+          },
+          "f_refs": {
+            "description": "Finding references this story integrates. Each ref is '{cluster} F-{NN}' (zero-padded NN). Must resolve to a (cluster, display_index) pair in the cluster emissions; the synthesizer parser validates against the JSON-derived allowlist built by scripts/assembly/pipeline.py FinalizedFindings.valid_refs(). Hallucinated refs trigger a retry prompt.",
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 6,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]* F-\\d{2}$"
+            }
+          }
+        }
+      }
+    },
+    "quick_wins_manifest": {
+      "description": "Deterministic list of f_refs filtered by quick-win criteria (change_type IN {copy, css, html-attr} AND change_scope IN {single-file, component}). Computed by Layer 2 from the structured cluster emissions — no LLM call needed. The synthesizer mirrors Layer 2's computation in its emission so Phase G renderer can offer 'Quick Wins' as an alternative ordering of the audit without recomputing. May overlap with priority_path[mode='quick-wins'] entries.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]* F-\\d{2}$"
+      },
+      "maxItems": 200
+    },
+    "severity_manifest": {
+      "description": "Deterministic list of f_refs sorted by (severity, evidence_tier, confidence) descending. Computed by Layer 2. Phase G renderer uses this for the 'Severity-ordered' alternative view of the audit. Tie-breaker: cluster slug ascending, then display_index ascending — byte-identical across runs.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]* F-\\d{2}$"
+      },
+      "maxItems": 200
+    },
+    "scope_page_synchronized_refs": {
+      "description": "f_refs of findings the synthesizer marked scope='page' and rendered with byte-identical (or Levenshtein <=10% in degraded mode) OBSERVATION + RECOMMENDATION + why-this-matters phrasing into BOTH audit-desktop.md and audit-mobile.md. Phase G renderer + Phase K parity test verify cross-device synchronization by re-extracting the prose for these refs from both audit documents and comparing. Empty array is valid (page may have zero scope:page findings) but unusual on real PDPs.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]* F-\\d{2}$"
+      },
+      "maxItems": 200
+    },
+    "telemetry": {
+      "description": "Optional cost/quality telemetry the synthesizer self-reports. additionalProperties: true (mirrors cluster-emission-v1.json's relaxation; specialists naturally self-report extra metrics). Canonical fields below remain documented; synthesizer may add others.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cached_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scope_page_count": {
+          "description": "Total scope='page' findings in the assembled candidate set the synthesizer received as input.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "scope_device_desktop_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scope_device_mobile_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ethics_findings_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "baton_elements_total": {
+          "description": "Pre-trim baton element count summed across both devices. Useful when diagnosing 1M-context overflow that triggered degraded mode.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "baton_elements_kept_after_trim": {
+          "description": "Post-trim baton element count summed across both devices (only elements referenced by specialist findings retained). Phase F.3 mandates baton pre-trim before synthesizer dispatch — this field records the trim outcome for audit-trace.log.",
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "notes": {
+      "description": "Free-form synthesizer commentary that doesn't rise to a Priority Path story but is worth surfacing. Examples: 'Three findings about the inline fitment guide were excluded from Priority Path because slingmods.com's customer cohort is hyper-specialized and fitment errors are caught at the cart level, not the PDP'. Phase G renderer ignores; useful for operator review and Phase K parity diff.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 1200
+      },
+      "maxItems": 16
+    },
+    "humanized_findings": {
+      "description": "Per-finding plain-English summary for the Phase G HTML report (customer-facing voice). The markdown audit (audit-{device}.md) carries dev-handoff technical voice; HTML reports surface the humanized summary as the headline, with the dev-spec OBSERVATION/RECOMMENDATION rendered below for the dev who picks up the action plan. Phase F.checkpoint architectural decision (2026-04-28): markdown=dev-spec, HTML=humanized; the synthesizer is the only prose writer in v2, so it emits both voices in one pass. Required for every actionable f_ref the synthesizer cited (every f_ref in priority_path[].f_refs and the per-cluster Findings sections of audit-{device}.md). Optional during the v2.0 rollout window (Phase G renderer falls back to dev-spec prose when humanized entry is absent). v2.1 should make this required.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["f_ref", "plain_english_summary"],
+        "properties": {
+          "f_ref": {
+            "description": "Canonical finding reference like 'pricing F-01'. Must match an entry in scope_page_synchronized_refs OR a finding rendered into audit-{device}.md.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*\\s+F-\\d{2}$"
+          },
+          "plain_english_summary": {
+            "description": "2-4 sentence customer-facing description of the issue and its impact. Plain language, no JSON-LD jargon, no template-system specifics, no 'fetchpriority' / 'schema:InStock' / 'aria-label' code-spec language. Frame as: what the visitor experiences (or doesn't), why it costs the business, what should happen instead. The dev-spec details live in the markdown audit; this field is for the operator/customer reading the HTML report.",
+            "type": "string",
+            "minLength": 60,
+            "maxLength": 600
+          },
+          "plain_english_action": {
+            "description": "Optional. 1-2 sentence customer-facing description of the fix in plain language. When set, the HTML renderer surfaces it alongside the summary; when absent, the renderer skips it. NOT a code recipe — that's what RECOMMENDATION in the markdown audit is for.",
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 300
+          }
+        }
+      },
+      "maxItems": 200
+    },
+    "lead_reflection_path": {
+      "description": "Set ONLY when status='failed_synthesis_drift'. Path to the lead-reflection.md the lead wrote documenting the drift event (Levenshtein >10% on scope:page rendering). Empty/absent in the happy path.",
+      "type": "string",
+      "maxLength": 512
+    }
+  },
+  "allOf": [
+    {
+      "description": "degraded_mode boolean and dispatch_shape enum must agree. degraded_mode=true iff dispatch_shape='per-device'.",
+      "if": {
+        "properties": {
+          "dispatch_shape": {
+            "const": "per-device"
+          }
+        },
+        "required": ["dispatch_shape"]
+      },
+      "then": {
+        "properties": {
+          "degraded_mode": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "description": "Single-shot dispatch implies degraded_mode=false.",
+      "if": {
+        "properties": {
+          "dispatch_shape": {
+            "const": "single"
+          }
+        },
+        "required": ["dispatch_shape"]
+      },
+      "then": {
+        "properties": {
+          "degraded_mode": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "description": "status='failed_synthesis_drift' requires lead_reflection_path. The lead writes lead-reflection.md when the Levenshtein assertion fails on degraded-mode per-device output; the operator inspects that file to diagnose the drift source. Without the path, the failure is undebuggable.",
+      "if": {
+        "properties": {
+          "status": {
+            "const": "failed_synthesis_drift"
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "required": ["lead_reflection_path"]
+      }
+    },
+    {
+      "description": "status='failed_synthesis_drift' implies degraded_mode=true (only the per-device fallback can produce drift; single-shot dispatch produces the documents in one author voice and cannot exceed the assertion).",
+      "if": {
+        "properties": {
+          "status": {
+            "const": "failed_synthesis_drift"
+          }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "degraded_mode": {
+            "const": true
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "schema_version": 1,
+      "engagement_id": "2026-04-27-a231b248",
+      "synthesizer_model": {
+        "family": "opus",
+        "version": "4.6",
+        "context_window": "1M"
+      },
+      "started_at": "2026-04-27T18:02:14.000Z",
+      "completed_at": "2026-04-27T18:06:53.000Z",
+      "status": "complete",
+      "dispatch_shape": "single",
+      "degraded_mode": false,
+      "audit_documents": {
+        "desktop": "docs/ecp/2026-04-27-a231b248/audit-desktop.md",
+        "mobile": "docs/ecp/2026-04-27-a231b248/audit-mobile.md"
+      },
+      "priority_path": [
+        {
+          "mode": "bundle",
+          "title": "Restore Anchor and Decision Confidence to the $69.95 Price Block",
+          "severity": "HIGH",
+          "narrative": "The price block on this page renders $69.95 as a standalone number. There is no MSRP strikethrough, no Affirm installment widget, no free-shipping badge, and no Price Match Guarantee mark — even though all four signals exist somewhere on the site. Affirm is in the footer payments row, free shipping is buried in a footer asterisk, and the price-match link is under Extras. The result: shoppers evaluating a $69.95 specialty accessory have to assemble the value story themselves, often after they have already left to comparison-shop. The fix is concentration, not invention. Pull each of these signals up to the price block where the purchase decision is actually made.",
+          "f_refs": [
+            "pricing F-01",
+            "pricing F-02",
+            "pricing F-03",
+            "pricing F-04"
+          ]
+        },
+        {
+          "mode": "severity",
+          "title": "The Add to Cart Button Disappears Past Scroll, and Nothing Replaces It",
+          "severity": "HIGH",
+          "narrative": "On mobile, the Add to Cart button sits at scroll_y ~860 and uses a mid-grey fill that matches three other interactive elements within the same viewport. Once a visitor scrolls past the price block to read fitment, specs, or the Q&A tab, the only conversion action on the page is offscreen and there is no persistent replacement. Visual-CTA, performance-UX, trust-credibility, and checkout-flows all flagged the same architectural gap from different angles — a strong signal that this is not an opinion-call but a structural omission. A persistent bottom-of-screen ATC bar with the brand red and a clear 'Add to Cart - $69.95' label would resolve the visibility, the contrast, and the long-page friction in a single component.",
+          "f_refs": [
+            "visual-cta F-01",
+            "performance-ux F-04",
+            "checkout-flows F-02"
+          ]
+        },
+        {
+          "mode": "quick-wins",
+          "title": "Three Copy Changes That Cost a Theme Edit and Pay Back the Same Day",
+          "severity": "MEDIUM",
+          "narrative": "Three of the highest-confidence findings on this page resolve with copy or HTML-attribute changes inside a single theme template. Adding the Affirm widget partial below the price line, adding a 'Free Shipping' line near the ATC, and surfacing the existing Price Match Guarantee as a tooltip alongside the price each take less than an hour and address abandonment causes the operator already has the underlying programs for. None require new infrastructure or design review.",
+          "f_refs": [
+            "pricing F-02",
+            "pricing F-03",
+            "pricing F-04"
+          ]
+        }
+      ],
+      "quick_wins_manifest": [
+        "pricing F-02",
+        "pricing F-03",
+        "pricing F-04",
+        "trust-credibility F-06",
+        "content-seo F-02"
+      ],
+      "severity_manifest": [
+        "visual-cta F-01",
+        "pricing F-01",
+        "performance-ux F-04",
+        "checkout-flows F-02",
+        "trust-credibility F-03",
+        "pricing F-02"
+      ],
+      "scope_page_synchronized_refs": [
+        "pricing F-01",
+        "pricing F-02",
+        "pricing F-03",
+        "pricing F-04",
+        "visual-cta F-01"
+      ],
+      "telemetry": {
+        "input_tokens": 248320,
+        "output_tokens": 8540,
+        "scope_page_count": 22,
+        "scope_device_desktop_count": 0,
+        "scope_device_mobile_count": 29,
+        "ethics_findings_count": 13,
+        "baton_elements_total": 32,
+        "baton_elements_kept_after_trim": 14
+      }
+    },
+    {
+      "schema_version": 1,
+      "engagement_id": "2026-04-27-a231b248",
+      "synthesizer_model": {
+        "family": "opus",
+        "version": "4.6",
+        "context_window": "1M"
+      },
+      "started_at": "2026-04-27T18:02:14.000Z",
+      "completed_at": "2026-04-27T18:14:09.000Z",
+      "status": "failed_synthesis_drift",
+      "dispatch_shape": "per-device",
+      "degraded_mode": true,
+      "audit_documents": {
+        "desktop": "docs/ecp/2026-04-27-a231b248/audit-desktop.md",
+        "mobile": "docs/ecp/2026-04-27-a231b248/audit-mobile.md"
+      },
+      "priority_path": [
+        {
+          "mode": "severity",
+          "title": "Sticky Mobile CTA Architecture Gap",
+          "severity": "HIGH",
+          "narrative": "Four cluster specialists independently flagged that the Add to Cart button is offscreen for the bottom 40 percent of the mobile page with no persistent replacement. The convergence across visual-cta, performance-ux, trust-credibility, and checkout-flows is the signal: this is a structural omission, not a stylistic preference.",
+          "f_refs": [
+            "visual-cta F-01",
+            "performance-ux F-04",
+            "trust-credibility F-02",
+            "checkout-flows F-02"
+          ]
+        },
+        {
+          "mode": "bundle",
+          "title": "Price Block Lacks Anchoring",
+          "severity": "HIGH",
+          "narrative": "Bare $69.95 with no MSRP strikethrough, no Affirm install widget, no free-shipping badge, no price-match mark. All four signals exist on the site but live in the footer or behind nav links. Pull them up to the price block.",
+          "f_refs": [
+            "pricing F-01",
+            "pricing F-02",
+            "pricing F-03"
+          ]
+        },
+        {
+          "mode": "quick-wins",
+          "title": "Theme-Template Copy Pass",
+          "severity": "MEDIUM",
+          "narrative": "Three high-confidence quick-win findings resolve inside a single theme template edit. Affirm widget below price, free-shipping line near ATC, price-match tooltip.",
+          "f_refs": [
+            "pricing F-02",
+            "pricing F-03",
+            "pricing F-04"
+          ]
+        }
+      ],
+      "quick_wins_manifest": [
+        "pricing F-02",
+        "pricing F-03",
+        "pricing F-04"
+      ],
+      "severity_manifest": [
+        "visual-cta F-01",
+        "pricing F-01"
+      ],
+      "scope_page_synchronized_refs": [
+        "pricing F-01",
+        "pricing F-02",
+        "visual-cta F-01"
+      ],
+      "lead_reflection_path": "docs/ecp/2026-04-27-a231b248/lead-reflection.md",
+      "telemetry": {
+        "input_tokens": 412800,
+        "output_tokens": 12440,
+        "scope_page_count": 22,
+        "ethics_findings_count": 13,
+        "baton_elements_total": 32,
+        "baton_elements_kept_after_trim": 14,
+        "drift_levenshtein_ratio_max": 0.18
+      },
+      "notes": [
+        "Per-device fallback ran after single-shot Opus retry exhausted on a 429 rate-limit. Levenshtein assertion exceeded 10% threshold on 1 of 5 scope:page findings (max ratio 0.18 on visual-cta F-01). Lead aborted and wrote lead-reflection.md per Phase F.3 of the canonical plan."
+      ]
+    }
+  ]
+}

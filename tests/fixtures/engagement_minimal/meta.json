@@ -1,0 +1,12 @@
+{
+  "engagement_id": "fixture-engagement",
+  "id": "fixture-engagement",
+  "created": "2026-04-16T00:00:00Z",
+  "url": "https://example.test/",
+  "platform": "fixture",
+  "page_type": "fixture",
+  "clusters_used": ["visual-cta", "pricing"],
+  "devices_requested": ["laptop"],
+  "devices_scanned": ["laptop"],
+  "source_mode": "fixture"
+}

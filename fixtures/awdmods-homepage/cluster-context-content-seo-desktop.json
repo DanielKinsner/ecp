@@ -1,0 +1,874 @@
+{
+  "cluster": "content-seo",
+  "device": "desktop",
+  "sections": [
+    {
+      "label": "Header, navigation bar, and hero banner",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "visual-cta",
+        "product-media",
+        "category-navigation",
+        "content-seo"
+      ],
+      "is_global": true,
+      "dom_slice": "<header class=\\\"header header--top-left header--mobile-left page-width drawer-menu drawer-menu--on-scroll header--has-menu header--has-social header--has-account header--keep-mobile-search\\\">\\n<header-drawer>\\n  <details id=\\\"Details-menu-drawer-container\\\" class=\\\"menu-drawer-container js-header-drawer-main\\\">\\n    <summary class=\\\"header__icon header__icon--menu header__icon--summary link focus-inset\\\" aria-label=\\\"Menu\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" aria-controls=\\\"menu-drawer\\\">\\n      <span>\\n        <svg/>\\n        <svg/>\\n      </span>\\n    </summary>\\n    <div id=\\\"menu-drawer\\\" class=\\\"gradient menu-drawer motion-reduce color-scheme-3\\\">\\n      <div class=\\\"menu-drawer__inner-container\\\">\\n        <div class=\\\"menu-drawer__navigation-container custom-scrollbar\\\">\\n          <nav class=\\\"menu-drawer__navigation\\\">\\n            <div class=\\\"border-bottom flex justify-end p-1 mb-1 hidden-xs\\\">\\n              <button class=\\\"button-control--no-colors color-foreground\\\" type=\\\"button\\\" aria-label=\\\"Close\\\">\\n                <svg/>\\n              </button>\\n            </div>\\n\\n            \\n            <ul class=\\\"menu-drawer__menu has-submenu list-menu\\\" role=\\\"list\\\"><li class=\\\"\\\"><a id=\\\"HeaderDrawer-shop-all\\\" href=\\\"/collections\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text focus-inset\\\"><svg/><span>Shop All</span>\\n                    </a></li><li class=\\\"\\\"><details id=\\\"Details-menu-drawer-menu-item-2\\\" class=\\\"js-header-drawer-sub\\\">\\n                      <summary id=\\\"HeaderDrawer-shop-by-category\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text arrow-inset focus-inset\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" aria-controls=\\\"link-shop-by-category\\\"><svg/><span>Shop by Category</span>\\n                        <svg/>\\n                      </summary>\\n                      <div id=\\\"link-shop-by-category\\\" class=\\\"menu-drawer__submenu custom-scrollbar has-submenu gradient motion-reduce\\\" tabindex=\\\"-1\\\">\\n                        <div class=\\\"menu-drawer__inner-submenu custom-scrollbar\\\">\\n                          <button class=\\\"menu-drawer__close-button link link--text focus-inset\\\" aria-expanded=\\\"true\\\" dir=\\\"ltr\\\">\\n                            <svg/>\\n                            Back\\n                          </button>\\n<ul class=\\\"menu-drawer__menu list-menu\\\" role=\\\"list\\\" tabindex=\\\"-1\\\"><li>\\n                                  <a href=\\\"/collections\\\" class=\\\"menu-drawer__menu-item menu__menu-item-title link link--text list-menu__item focus-inset\\\">\\n                                    <span>Shop by Category</span>\\n                                  </a>\\n                                </li><li><a id=\\\"HeaderDrawer-shop-by-category-performance\\\" href=\\\"/collections/performance\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Performance</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-exterior\\\" href=\\\"/collections/exterior\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Exterior</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-interior\\\" href=\\\"/collections/interior\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Interior</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-handling\\\" href=\\\"/collections/handling-brakes\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Handling</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-drivetrain\\\" href=\\\"/collections/drivetrain\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Drivetrain</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-brakes\\\" href=\\\"/collections/brakes\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Brakes</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-cooling\\\" href=\\\"/collections/cooling\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Cooling</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-wheels\\\" href=\\\"/collections/wheels\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Wheels</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-accessories\\\" href=\\\"/collections/accessories\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Accessories</span>\\n                                    </a></li></ul></div>\\n                      </div>\\n                    </details></li><li class=\\\"\\\"><details id=\\\"Details-menu-drawer-menu-item-3\\\" class=\\\"js-header-drawer-sub\\\">\\n                      <summary id=\\\"HeaderDrawer-shop-by-vehicle\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text arrow-inset focus-inset\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" aria-controls=\\\"link-shop-by-vehicle\\\"><svg/><span>Shop by Vehicle</span>\\n                        <svg/>\\n                      </summary>\\n                      <div id=\\\"link-shop-by-vehicle\\\" class=\\\"menu-drawer__submenu custom-scrollbar has-submenu gradient motion-reduce\\\" tabindex=\\\"-1\\\">\\n                        <div class=\\\"menu-drawer__inner-submenu custom-scrollbar\\\">\\n                          <button class=\\\"menu-drawer__close-button link link--text focus-inset\\\" aria-expanded=\\\"true\\\" dir=\\\"ltr\\\">\\n                            <svg/>\\n                            Back\\n                          </button>\\n<ul class=\\\"menu-drawer__menu list-menu\\\" role=\\\"list\\\" tabindex=\\\"-1\\\"><li>\\n                                  <a href=\\\"/pages/shop-by-vehicle\\\" class=\\\"menu-drawer__menu-item menu__menu-item-title link link--text list-menu__item focus-inset\\\">\\n                                    <span>Shop by Vehicle</span>\\n                                  </a>\\n                                </li><li><a id=\\\"HeaderDrawer-shop-by-vehicle-subaru-wrx-sti\\\" href=\\\"/collections/subaru-wrx-sti\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Subaru WRX / STI</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-vehicle-ford-focus-rs-st\\\" href=\\\"/collections/ford-focus\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Ford Focus RS / ST</span>\\n                                    </a></li></ul></div>\\n                      </div>\\n                    </details></li><li class=\\\"\\\"><a id=\\\"HeaderDrawer-contact\\\" href=\\\"/pages/contact\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text focus-inset\\\"><svg/><span>Contact</span>\\n                    </a></li><li class=\\\"\\\">\\n                  <a href=\\\"https://www.awdmods.com/customer_authentication/redirect?locale=en&amp;region_country=US\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text focus-inset\\\">\\n                    <span>My Account</span>\\n                  </a>\\n                </li></ul>\\n          </nav>\\n          <div class=\\\"menu-drawer__utility-links border-top\\\">\\n            <div class=\\\"flex flex-wrap items-center gap-2 justify-between\\\">\\n<ul class=\\\"list-unstyled list-social\\\" role=\\\"list\\\"><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.facebook.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Facebook</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.instagram.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Instagram</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.youtube.com/@AWDMods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">YouTube</span>\\n        </a>\\n      </li></ul>\\n<div class=\\\"menu-drawer__localization header-localization flex\\\"></div></div>\\n          </div>\\n        </div>\\n      </div>\\n    </div>\\n  </details>\\n</header-drawer>\\n<a href=\\\"/\\\" class=\\\"header__heading-link link link--text focus-inset\\\"><div class=\\\"header__heading-logo-wrapper\\\">\\n            \\n            <img src=\\\"//www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=600\\\" alt=\\\"AWDMods\\\" srcset=\\\"//www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=80 80w, //www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=120 120w, //www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=160 160w\\\" width=\\\"80\\\" height=\\\"45.02194907813872\\\" loading=\\\"eager\\\" class=\\\"header__heading-logo motion-reduce\\\" sizes=\\\"(max-width: 160px) 50vw, 80px\\\" style=\\\"object-position:51.6096% 52.8617%;\\\">\\n          </div></a><div class=\\\"header__search-bar flex justify-end\\\">\\n<form class=\\\"predictive_search_form hidden\\\">\\n    <input type=\\\"hidden\\\" name=\\\"resources[options][fields]\\\" value=\\\"title,product_type,variants.title,vendor,variants.sku,variants.barcode,tag,body\\\">\\n    <input type=\\\"hidden\\\" name=\\\"resources[limit]\\\" value=\\\"8\\\">\\n    <input type=\\\"hidden\\\" name=\\\"resources[limit_scope]\\\" value=\\\"each\\\">\\n    <input type=\\\"hidden\\\" name=\\\"section_id\\\" value=\\\"predictive-search\\\">\\n  </form>\\n  <predictive-search class=\\\"search-modal__form search-modal__form--large\\\"><form action=\\\"/search\\\" method=\\\"get\\\" role=\\\"search\\\" class=\\\"search search-modal__form\\\">\\n    <input type=\\\"hidden\\\" name=\\\"options[prefix]\\\" value=\\\"last\\\"><div class=\\\"field border-radius-input color-scheme-9 gradient field--diff-color-scheme\\\"><input class=\\\"search__input field__input visible-placeholder\\\" id=\\\"Inline-Search\\\" type=\\\"search\\\" name=\\\"q\\\" value=\\\"\\\" placeholder=\\\"Search\\\" role=\\\"combobox\\\" aria-expanded=\\\"false\\\" aria-owns=\\\"predictive-search-results\\\" aria-controls=\\\"predictive-search-results\\\" aria-haspopup=\\\"listbox\\\" aria-autocomplete=\\\"list\\\" autocorrect=\\\"off\\\" autocomplete=\\\"off\\\" autocapitalize=\\\"off\\\" spellcheck=\\\"false\\\">\\n      <label class=\\\"visually-hidden\\\" for=\\\"Inline-Search\\\">\\n        Search our store\\n      </label>\\n      <button class=\\\"search__button field__button\\\">\\n        <svg/>\\n\\n<span class=\\\"predictive-search__loading-state\\\">\\n  <svg/>\\n</span>\\n<span class=\\\"visually-hidden\\\">What are you looking for?</span>\\n      </button>\\n    </div><button type=\\\"button\\\" class=\\\"inline-search__close-button modal__close-button absolute link link--text focus-inset opacity-0 visibility-hidden\\\" aria-label=\\\"Close\\\">\\n        <svg/>\\n      </button><div class=\\\"predictive-search predictive-search--header color-scheme-9 gradient custom-scrollbar\\\" tabindex=\\\"-1\\\"></div><span class=\\\"predictive-search-status color-scheme-9 gradient visually-hidden\\\" role=\\\"status\\\" aria-hidden=\\\"true\\\"></span></form></predictive-search></div><div class=\\\"header__icons\\\"><div class=\\\"header__cta header__cta--garage flex items-center z-1 p-1 gap-1 pl-15 pr-2 whitespace-nowrap hidden-xs medium-hide border-radius-input color-scheme-3 gradient\\\" YOUR VEHICLE\\\" parts, simplified.\\\"><span class=\\\"header__cta-icon\\\"><svg/></span><span class=\\\"header__cta-icon\\\" style=\\\"display: none;\\\">\\n              <svg/>\\n            </span>\\n            <div class=\\\"header__cta-text\\\">\\n              <p class=\\\"m-0 lh-13 t6\\\"><strong>SELECT YOUR VEHICLE</strong></p>\\n              <p class=\\\"m-0 lh-13 opacity-80 t6\\\">Car parts, simplified.</p>\\n            </div>\\n            <button type=\\\"button\\\" class=\\\"header__cta-clear\\\" aria-label=\\\"Clear saved vehicle\\\" style=\\\"display: none;\\\">\\n              <svg/>\\n            </button>\\n          </div><a href=\\\"https://www.awdmods.com/customer_authentication/redirect?locale=en&amp;region_country=US\\\" class=\\\"header__icon header__icon--account link focus-inset\\\">\\n          <account-icon><svg/>\\n</account-icon>\\n          <span class=\\\"visually-hidden\\\">My Account</span>\\n        </a><a href=\\\"/cart\\\" class=\\\"header__icon header__icon--cart link focus-inset\\\" id=\\\"cart-icon-bubble\\\" role=\\\"button\\\" aria-haspopup=\\\"dialog\\\"><svg/><span class=\\\"visually-hidden\\\">Cart</span></a>\\n    </div>\\n  </header>"
+    },
+    {
+      "label": "Category feature grid shop by category tiles",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "category-navigation"
+      ],
+      "is_global": true,
+      "dom_slice": ""
+    },
+    {
+      "label": "Featured collection product cards first row",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "product-media",
+        "category-navigation"
+      ],
+      "is_global": true,
+      "dom_slice": ""
+    },
+    {
+      "label": "Featured collection product cards second row",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "product-media",
+        "category-navigation"
+      ],
+      "is_global": true,
+      "dom_slice": ""
+    },
+    {
+      "label": "Newsletter signup and footer with payment icons",
+      "scrollY": 0,
+      "height": null,
+      "clusters": [
+        "checkout-flows",
+        "post-purchase"
+      ],
+      "is_global": true,
+      "dom_slice": "<footer><div class=\\\"color-scheme-3 gradient section__inner\\\">\\n      <div class=\\\"page-width\\\"><div class=\\\"footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet scroll-trigger animate--fade-in\\\"><div class=\\\"footer-block grid__item footer-block--menu\\\"><footer-accordion class=\\\"custom-accordion\\\">\\n                    <details id=\\\"Details-collapsible_link_list_yAXYbY\\\" open=\\\"\\\">\\n                      <summary id=\\\"Summary-collapsible_link_list_yAXYbY\\\" class=\\\"t2 pointer-events-none\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" tabindex=\\\"-1\\\">\\n                        <h2 class=\\\"accordion__title inline-richtext t3\\\">Information</h2>\\n                        <svg/>\\n                      </summary>\\n                      <div class=\\\"custom-accordion__panel custom-scrollbar\\\">\\n                        <div class=\\\"flex\\\">\\n                          <div class=\\\"accordion__content\\\" id=\\\"CollapsibleAccordion-collapsible_link_list_yAXYbY\\\" role=\\\"region\\\" aria-labelledby=\\\"Summary-collapsible_link_list_yAXYbY\\\"><ul class=\\\"footer-block__details-content list-unstyled\\\"><li>\\n                              <a href=\\\"/pages/about-us\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                About Us\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"/pages/data-sharing-opt-out\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Your Privacy Choices<img src=\\\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxNCI+IDxzdHlsZT4uc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRn0uc3Qxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzA2Rn0uc3Qye2ZpbGw6I0ZGRn0uc3Qze2ZpbGw6IzA2Rn08L3N0eWxlPiA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNy40IDEyLjhoNi44bDMuMS0xMS42SDcuNEM0LjIgMS4yIDEuNiAzLjggMS42IDdzMi42IDUuOCA1LjggNS44eiIvPiA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjIuNiAwSDcuNEMzLjUgMCAuNCAzLjEuNCA3czMuMSA3IDcgN2gxNS4yYzMuOSAwIDctMy4xIDctN3MtMy4xLTctNy03ek0xLjYgN2MwLTMuMiAyLjYtNS44IDUuOC01LjhoOS45bC0zLjEgMTEuNkg3LjRDNC4yIDEyLjggMS42IDEwLjIgMS42IDd6Ii8+IDxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNC42IDRjLjIuMi4yLjYgMCAuOEwyMi41IDdsMi4yIDIuMmMuMi4yLjIuNiAwIC44LS4yLjItLjYuMi0uOCAwbC0yLjItMi4yTDE5LjUgMTBjLS4yLjItLjYuMi0uOCAwLS4yLS4yLS4yLS42IDAtLjhMMjAuOCA3bC0yLjItMi4yYy0uMi0uMi0uMi0uNiAwLS44LjItLjIuNi0uMi44IDBsMi4yIDIuMkwyMy44IDRjLjItLjIuNi0uMi44IDB6Ii8+IDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xMi43IDQuMWMuMi4yLjMuNi4xLjhMOC42IDkuOGMtLjEuMS0uMi4yLS4zLjItLjIuMS0uNS4xLS43LS4xTDUuNCA3LjdjLS4yLS4yLS4yLS42IDAtLjguMi0uMi42LS4yLjggMEw4IDguNmwzLjgtNC41Yy4yLS4yLjYtLjIuOSAweiIvPiA8L3N2Zz4=\\\" alt=\\\"California Consumer Privacy Act (CCPA) Opt-Out Icon\\\" role=\\\"presentation\\\" class=\\\"shopify-dns-link-icon\\\" style=\\\"margin-left:.25em;height:.7em;vertical-align:middle;display: inline; width: auto;\\\">\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://e1520g-k3.myshopify.com/policies/privacy-policy\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Privacy Policy\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"/pages/terms-of-service\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Terms and Conditions\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"/pages/carb-policy\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                CARB Policy\\n                              </a>\\n                            </li></ul>\\n                          </div>\\n                        </div>\\n                      </div>\\n                    </details>\\n                  </footer-accordion></div><div class=\\\"footer-block grid__item footer-block--menu\\\"><footer-accordion class=\\\"custom-accordion\\\">\\n                    <details id=\\\"Details-collapsible_link_list_XDr4wH\\\" open=\\\"\\\">\\n                      <summary id=\\\"Summary-collapsible_link_list_XDr4wH\\\" class=\\\"t2 pointer-events-none\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" tabindex=\\\"-1\\\">\\n                        <h2 class=\\\"accordion__title inline-richtext t3\\\">My Account</h2>\\n                        <svg/>\\n                      </summary>\\n                      <div class=\\\"custom-accordion__panel custom-scrollbar\\\">\\n                        <div class=\\\"flex\\\">\\n                          <div class=\\\"accordion__content\\\" id=\\\"CollapsibleAccordion-collapsible_link_list_XDr4wH\\\" role=\\\"region\\\" aria-labelledby=\\\"Summary-collapsible_link_list_XDr4wH\\\"><ul class=\\\"footer-block__details-content list-unstyled\\\"><li>\\n                              <a href=\\\"https://account.awdmods.com/profile?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                My Account\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://account.awdmods.com/orders?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Order History\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://account.awdmods.com/profile?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Wish List\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://account.awdmods.com/orders?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Track My Order\\n                              </a>\\n                            </li></ul>\\n                          </div>\\n                        </div>\\n                      </div>\\n                    </details>\\n                  </footer-accordion></div></div></div>\\n    </div><div class=\\\"footer__content-bottom color-scheme-3 gradient\\\" style=\\\"--color-background: 26,26,26; --gradient-background: rgb(26,26,26)\\\">\\n    <div class=\\\"page-width\\\">\\n      <div class=\\\"md:pb-1 md:pt-1 pt-s05 pb-s05\\\">\\n        <div class=\\\"flex flex-col-reverse mt-1px md:flex-row flex-wrap gap-1 justify-between items-center\\\">\\n\\n          <div class=\\\"flex flex-col-reverse md:flex-row text-center md:text-left items-center gap-1\\\">\\n            <div class=\\\"flex flex-wrap items-center justify-center md:justify-start mt-2 md:mt-0 xs:mb-1\\\">\\n              <small class=\\\"copyright__content copyright__content-copy t7\\\">© 2026, <a href=\\\"/\\\">AWDMods</a>.</small>\\n              \\n            </div><ul class=\\\"list list-payment pt-0 mb-0\\\" role=\\\"list\\\"><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li></ul></div>\\n\\n          <div class=\\\"flex flex-col md:flex-row items-center gap-1 md:gap-2\\\">\\n            <div class=\\\"flex flex-col md:flex-row items-center\\\">\\n<ul class=\\\"list-unstyled list-social footer__list-social\\\" role=\\\"list\\\"><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.facebook.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Facebook</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.instagram.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Instagram</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.youtube.com/@AWDMods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">YouTube</span>\\n        </a>\\n      </li></ul></div></div>\\n\\n        </div>\\n      </div>\\n    </div>\\n  </div>\\n</footer>"
+    }
+  ],
+  "page_head": "<head>\\n    <meta charset=\\\"utf-8\\\">\\n    <meta http-equiv=\\\"X-UA-Compatible\\\" content=\\\"IE=edge\\\">\\n    <meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\">\\n    <meta name=\\\"theme-color\\\" content=\\\"\\\"><link rel=\\\"canonical\\\" href=\\\"https://www.awdmods.com/\\\"><link rel=\\\"icon\\\" type=\\\"image/png\\\" href=\\\"//www.awdmods.com/cdn/shop/files/favicon.png?crop=center&amp;height=32&amp;v=1774452987&amp;width=32\\\"><link rel=\\\"preconnect\\\" href=\\\"https://fonts.shopifycdn.com\\\" crossorigin=\\\"\\\"><title>\\n      AWDMods\\n – AWDMods</title>\\n\\n    \\n\\n    \\n\\n<meta property=\\\"og:site_name\\\" content=\\\"AWDMods\\\">\\n<meta property=\\\"og:url\\\" content=\\\"https://www.awdmods.com/\\\">\\n<meta property=\\\"og:title\\\" content=\\\"AWDMods\\\">\\n<meta property=\\\"og:type\\\" content=\\\"website\\\">\\n<meta property=\\\"og:description\\\" content=\\\"AWDMods\\\"><meta name=\\\"twitter:card\\\" content=\\\"summary_large_image\\\">\\n<meta name=\\\"twitter:title\\\" content=\\\"AWDMods\\\">\\n<meta name=\\\"twitter:description\\\" content=\\\"AWDMods\\\">\\n\\n<meta name=\\\"theme:name\\\" content=\\\"Ignite\\\">\\n<meta name=\\\"theme:version\\\" content=\\\"2.4.0\\\">\\n<meta name=\\\"theme:preset\\\" content=\\\"unknown\\\">\\n\\n\\n    <link rel=\\\"preload\\\" href=\\\"//www.awdmods.com/cdn/fonts/roboto_condensed/robotocondensed_n4.01812de96ca5a5e9d19bef3ca9cc80dd1bf6c8b8.woff2\\\" as=\\\"font\\\" crossorigin=\\\"\\\" fetchpriority=\\\"high\\\" type=\\\"font/woff2\\\"><link rel=\\\"preload\\\" href=\\\"//www.awdmods.com/cdn/fonts/open_sans_condensed/opensanscondensed_n7.540ad984d87539ff9a03e07d9527f1ec85e214bc.woff2\\\" as=\\\"font\\\" crossorigin=\\\"\\\" fetchpriority=\\\"high\\\" type=\\\"font/woff2\\\"><meta id=\\\"shopify-digital-wallet\\\" name=\\\"shopify-digital-wallet\\\" content=\\\"/69686427713/digital_wallets/dialog\\\">\\n<meta name=\\\"shopify-checkout-api-token\\\" content=\\\"467cc8a8c80d438e7fd720fe7b6df020\\\">\\n<meta id=\\\"in-context-paypal-metadata\\\">\\n\\n<link rel=\\\"preconnect\\\" href=\\\"https://shop.app\\\" crossorigin=\\\"anonymous\\\">\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n<link id=\\\"shopify-accelerated-checkout-styles\\\" rel=\\\"stylesheet\\\" media=\\\"screen\\\" href=\\\"https://www.awdmods.com/cdn/shopifycloud/portable-wallets/latest/accelerated-checkout-backwards-compat.css\\\" crossorigin=\\\"anonymous\\\">\\n\\n\\n\\n\\n\\n    \\n\\n    <link href=\\\"//www.awdmods.com/cdn/shop/t/18/assets/base.css?v=51259230120410514841770841530\\\" rel=\\\"stylesheet\\\" type=\\\"text/css\\\" media=\\\"all\\\">\\n<link rel=\\\"stylesheet\\\" href=\\\"//www.awdmods.com/cdn/shop/t/18/assets/standard.css?v=149958717719879108301772688035\\\" media=\\\"all\\\" onload=\\\"this.media='all'\\\"><link rel=\\\"stylesheet\\\" href=\\\"//www.awdmods.com/cdn/shop/t/18/assets/component-predictive-search.css?v=62479591507126246201770841528\\\" media=\\\"all\\\" onload=\\\"this.media='all'\\\">\\n\\n    <link rel=\\\"dns-prefetch preconnect\\\" href=\\\"https://cdn.shopify.com\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/polyfills.CgsWKOqO.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/app.DHsyljj7.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/dist-vendor.Ci0dSXZP.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/browser.DegC2jOA.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/utilities-FullScreenBackground.BZlJeAkz.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/graphql-unactionable-errors.CTtb6GFr.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/actions-shop-discount-offer.mTu7Rxko.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/utilities-alternativePaymentCurrency.DkQsV2Im.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/utilities-shared.CEwEVciX.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/utils-BusinessCustomerShippingAddressManager.DX_v0kY6.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/helpers-shared.kaHgZYG3.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/shop-pay-Page.C43i33ob.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/images-flag-icon.C_eXYJRt.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/images-payment-icon.D2Fpq5Mq.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/locale-en.CPcIxq2M.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/page-OnePage.l-cpKOFY.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/Captcha-MarketsProDisclaimer.Duvb0_2m.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/Menu-CrossBorderConsolidation.CWpopSED.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/hooks-useSubscribeMessenger.Dg6WeCw-.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/types-useHasOrdersFromMultipleShops.jgSlJoKh.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/utilities-PaymentButtons.5lRVqq96.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/icons-OffsitePaymentFailed.CiQYd7Ra.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/hooks-useSuppressShopPayModalOnLoad.BkEBkVUY.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/BuyWithPrimeChangeLink-VaultedPayment.DKxJB84x.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/DeliveryMacros-ShippingGroupsSummaryLine.vG1X0mRQ.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/MerchandisePreviewThumbnail-StackedMerchandisePreview.BDlYHJ5w.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/Map-PickupPointCarrierLogo.Cp2Yw2tb.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/hooks.BKBEv8Nv.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/PostPurchaseShouldRender-LocalizationExtensionField.DyaAyQWK.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/graphql-ShopPayOptInDisclaimer.BnvwvuQf.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/adapter-RememberMeDescriptionText.rNMQ6i56.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/utilities-MobileOrderSummary.D_cM4soB.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/hooks-OrderEditVaultedDelivery.BNfIqFUF.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/captcha-SeparatePaymentsNotice.BCBr4Nwe.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/StockProblems-StockProblemsLineItemList.1X3kqBYb.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/redemption-constants.Dfth8Kg0.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/negotiated-ShipmentBreakdown.B0Ul2xTC.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/hooks-MerchandiseModal.Bo8IYa80.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/utilities-shipping-options.CLzE3S7X.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/graphql-DutyOptions.CPXIF7C2.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/DeliveryInstructionsFooter-ShippingMethodSelector.BbAaLIDO.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"script\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/hooks-SubscriptionPriceBreakdown.BSDFiSap.js\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/app.Ct4r0T82.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/FullScreenBackground.CfHxiIwO.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/Page.PaEnwh9S.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/OnePage.BB2ha-x7.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/CrossBorderConsolidation.CvXXnYCy.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/LocalizationExtensionField.CFFbuBu-.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/MobileOrderSummary.Cko1fUoG.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/OrderEditVaultedDelivery.CSQKPDv7.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/useSubscribeMessenger.BrcQzLuH.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/DutyOptions.LcqrKXE1.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/VaultedPayment.OxMVm7u-.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/PickupPointCarrierLogo.cbVP6Hp_.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/OffsitePaymentFailed.BxwwfmsJ.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/StackedMerchandisePreview.D6OuIVjc.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/ShippingMethodSelector.B0hio2RO.css\\\" crossorigin=\\\"\\\"><link rel=\\\"prefetch\\\" fetchpriority=\\\"low\\\" as=\\\"style\\\" href=\\\"/cdn/shopifycloud/checkout-web/assets/c1/assets/SubscriptionPriceBreakdown.BSemv9tH.css\\\" crossorigin=\\\"\\\"><link rel=\\\"stylesheet\\\" href=\\\"//www.awdmods.com/cdn/shop/t/18/assets/quantity-popover.css?v=158112609692343651221770841573\\\" media=\\\"all\\\" onload=\\\"this.media='all'\\\"><link rel=\\\"stylesheet\\\" href=\\\"//www.awdmods.com/cdn/shop/t/18/assets/component-card.css?v=142288266843829202341770843396\\\" media=\\\"all\\\" onload=\\\"this.media='all'\\\"></head>",
+  "header_html": "<header class=\\\"header header--top-left header--mobile-left page-width drawer-menu drawer-menu--on-scroll header--has-menu header--has-social header--has-account header--keep-mobile-search\\\">\\n<header-drawer>\\n  <details id=\\\"Details-menu-drawer-container\\\" class=\\\"menu-drawer-container js-header-drawer-main\\\">\\n    <summary class=\\\"header__icon header__icon--menu header__icon--summary link focus-inset\\\" aria-label=\\\"Menu\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" aria-controls=\\\"menu-drawer\\\">\\n      <span>\\n        <svg/>\\n        <svg/>\\n      </span>\\n    </summary>\\n    <div id=\\\"menu-drawer\\\" class=\\\"gradient menu-drawer motion-reduce color-scheme-3\\\">\\n      <div class=\\\"menu-drawer__inner-container\\\">\\n        <div class=\\\"menu-drawer__navigation-container custom-scrollbar\\\">\\n          <nav class=\\\"menu-drawer__navigation\\\">\\n            <div class=\\\"border-bottom flex justify-end p-1 mb-1 hidden-xs\\\">\\n              <button class=\\\"button-control--no-colors color-foreground\\\" type=\\\"button\\\" aria-label=\\\"Close\\\">\\n                <svg/>\\n              </button>\\n            </div>\\n\\n            \\n            <ul class=\\\"menu-drawer__menu has-submenu list-menu\\\" role=\\\"list\\\"><li class=\\\"\\\"><a id=\\\"HeaderDrawer-shop-all\\\" href=\\\"/collections\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text focus-inset\\\"><svg/><span>Shop All</span>\\n                    </a></li><li class=\\\"\\\"><details id=\\\"Details-menu-drawer-menu-item-2\\\" class=\\\"js-header-drawer-sub\\\">\\n                      <summary id=\\\"HeaderDrawer-shop-by-category\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text arrow-inset focus-inset\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" aria-controls=\\\"link-shop-by-category\\\"><svg/><span>Shop by Category</span>\\n                        <svg/>\\n                      </summary>\\n                      <div id=\\\"link-shop-by-category\\\" class=\\\"menu-drawer__submenu custom-scrollbar has-submenu gradient motion-reduce\\\" tabindex=\\\"-1\\\">\\n                        <div class=\\\"menu-drawer__inner-submenu custom-scrollbar\\\">\\n                          <button class=\\\"menu-drawer__close-button link link--text focus-inset\\\" aria-expanded=\\\"true\\\" dir=\\\"ltr\\\">\\n                            <svg/>\\n                            Back\\n                          </button>\\n<ul class=\\\"menu-drawer__menu list-menu\\\" role=\\\"list\\\" tabindex=\\\"-1\\\"><li>\\n                                  <a href=\\\"/collections\\\" class=\\\"menu-drawer__menu-item menu__menu-item-title link link--text list-menu__item focus-inset\\\">\\n                                    <span>Shop by Category</span>\\n                                  </a>\\n                                </li><li><a id=\\\"HeaderDrawer-shop-by-category-performance\\\" href=\\\"/collections/performance\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Performance</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-exterior\\\" href=\\\"/collections/exterior\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Exterior</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-interior\\\" href=\\\"/collections/interior\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Interior</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-handling\\\" href=\\\"/collections/handling-brakes\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Handling</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-drivetrain\\\" href=\\\"/collections/drivetrain\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Drivetrain</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-brakes\\\" href=\\\"/collections/brakes\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Brakes</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-cooling\\\" href=\\\"/collections/cooling\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Cooling</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-wheels\\\" href=\\\"/collections/wheels\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Wheels</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-category-accessories\\\" href=\\\"/collections/accessories\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Accessories</span>\\n                                    </a></li></ul></div>\\n                      </div>\\n                    </details></li><li class=\\\"\\\"><details id=\\\"Details-menu-drawer-menu-item-3\\\" class=\\\"js-header-drawer-sub\\\">\\n                      <summary id=\\\"HeaderDrawer-shop-by-vehicle\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text arrow-inset focus-inset\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" aria-controls=\\\"link-shop-by-vehicle\\\"><svg/><span>Shop by Vehicle</span>\\n                        <svg/>\\n                      </summary>\\n                      <div id=\\\"link-shop-by-vehicle\\\" class=\\\"menu-drawer__submenu custom-scrollbar has-submenu gradient motion-reduce\\\" tabindex=\\\"-1\\\">\\n                        <div class=\\\"menu-drawer__inner-submenu custom-scrollbar\\\">\\n                          <button class=\\\"menu-drawer__close-button link link--text focus-inset\\\" aria-expanded=\\\"true\\\" dir=\\\"ltr\\\">\\n                            <svg/>\\n                            Back\\n                          </button>\\n<ul class=\\\"menu-drawer__menu list-menu\\\" role=\\\"list\\\" tabindex=\\\"-1\\\"><li>\\n                                  <a href=\\\"/pages/shop-by-vehicle\\\" class=\\\"menu-drawer__menu-item menu__menu-item-title link link--text list-menu__item focus-inset\\\">\\n                                    <span>Shop by Vehicle</span>\\n                                  </a>\\n                                </li><li><a id=\\\"HeaderDrawer-shop-by-vehicle-subaru-wrx-sti\\\" href=\\\"/collections/subaru-wrx-sti\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Subaru WRX / STI</span>\\n                                    </a></li><li><a id=\\\"HeaderDrawer-shop-by-vehicle-ford-focus-rs-st\\\" href=\\\"/collections/ford-focus\\\" class=\\\"menu-drawer__menu-item menu-drawer__child-menu-item link link--text list-menu__item focus-inset\\\">\\n                                      <span>Ford Focus RS / ST</span>\\n                                    </a></li></ul></div>\\n                      </div>\\n                    </details></li><li class=\\\"\\\"><a id=\\\"HeaderDrawer-contact\\\" href=\\\"/pages/contact\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text focus-inset\\\"><svg/><span>Contact</span>\\n                    </a></li><li class=\\\"\\\">\\n                  <a href=\\\"https://www.awdmods.com/customer_authentication/redirect?locale=en&amp;region_country=US\\\" class=\\\"menu-drawer__menu-item items-center list-menu__item link link--text focus-inset\\\">\\n                    <span>My Account</span>\\n                  </a>\\n                </li></ul>\\n          </nav>\\n          <div class=\\\"menu-drawer__utility-links border-top\\\">\\n            <div class=\\\"flex flex-wrap items-center gap-2 justify-between\\\">\\n<ul class=\\\"list-unstyled list-social\\\" role=\\\"list\\\"><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.facebook.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Facebook</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.instagram.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Instagram</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.youtube.com/@AWDMods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">YouTube</span>\\n        </a>\\n      </li></ul>\\n<div class=\\\"menu-drawer__localization header-localization flex\\\"></div></div>\\n          </div>\\n        </div>\\n      </div>\\n    </div>\\n  </details>\\n</header-drawer>\\n<a href=\\\"/\\\" class=\\\"header__heading-link link link--text focus-inset\\\"><div class=\\\"header__heading-logo-wrapper\\\">\\n            \\n            <img src=\\\"//www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=600\\\" alt=\\\"AWDMods\\\" srcset=\\\"//www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=80 80w, //www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=120 120w, //www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&amp;width=160 160w\\\" width=\\\"80\\\" height=\\\"45.02194907813872\\\" loading=\\\"eager\\\" class=\\\"header__heading-logo motion-reduce\\\" sizes=\\\"(max-width: 160px) 50vw, 80px\\\" style=\\\"object-position:51.6096% 52.8617%;\\\">\\n          </div></a><div class=\\\"header__search-bar flex justify-end\\\">\\n<form class=\\\"predictive_search_form hidden\\\">\\n    <input type=\\\"hidden\\\" name=\\\"resources[options][fields]\\\" value=\\\"title,product_type,variants.title,vendor,variants.sku,variants.barcode,tag,body\\\">\\n    <input type=\\\"hidden\\\" name=\\\"resources[limit]\\\" value=\\\"8\\\">\\n    <input type=\\\"hidden\\\" name=\\\"resources[limit_scope]\\\" value=\\\"each\\\">\\n    <input type=\\\"hidden\\\" name=\\\"section_id\\\" value=\\\"predictive-search\\\">\\n  </form>\\n  <predictive-search class=\\\"search-modal__form search-modal__form--large\\\"><form action=\\\"/search\\\" method=\\\"get\\\" role=\\\"search\\\" class=\\\"search search-modal__form\\\">\\n    <input type=\\\"hidden\\\" name=\\\"options[prefix]\\\" value=\\\"last\\\"><div class=\\\"field border-radius-input color-scheme-9 gradient field--diff-color-scheme\\\"><input class=\\\"search__input field__input visible-placeholder\\\" id=\\\"Inline-Search\\\" type=\\\"search\\\" name=\\\"q\\\" value=\\\"\\\" placeholder=\\\"Search\\\" role=\\\"combobox\\\" aria-expanded=\\\"false\\\" aria-owns=\\\"predictive-search-results\\\" aria-controls=\\\"predictive-search-results\\\" aria-haspopup=\\\"listbox\\\" aria-autocomplete=\\\"list\\\" autocorrect=\\\"off\\\" autocomplete=\\\"off\\\" autocapitalize=\\\"off\\\" spellcheck=\\\"false\\\">\\n      <label class=\\\"visually-hidden\\\" for=\\\"Inline-Search\\\">\\n        Search our store\\n      </label>\\n      <button class=\\\"search__button field__button\\\">\\n        <svg/>\\n\\n<span class=\\\"predictive-search__loading-state\\\">\\n  <svg/>\\n</span>\\n<span class=\\\"visually-hidden\\\">What are you looking for?</span>\\n      </button>\\n    </div><button type=\\\"button\\\" class=\\\"inline-search__close-button modal__close-button absolute link link--text focus-inset opacity-0 visibility-hidden\\\" aria-label=\\\"Close\\\">\\n        <svg/>\\n      </button><div class=\\\"predictive-search predictive-search--header color-scheme-9 gradient custom-scrollbar\\\" tabindex=\\\"-1\\\"></div><span class=\\\"predictive-search-status color-scheme-9 gradient visually-hidden\\\" role=\\\"status\\\" aria-hidden=\\\"true\\\"></span></form></predictive-search></div><div class=\\\"header__icons\\\"><div class=\\\"header__cta header__cta--garage flex items-center z-1 p-1 gap-1 pl-15 pr-2 whitespace-nowrap hidden-xs medium-hide border-radius-input color-scheme-3 gradient\\\" YOUR VEHICLE\\\" parts, simplified.\\\"><span class=\\\"header__cta-icon\\\"><svg/></span><span class=\\\"header__cta-icon\\\" style=\\\"display: none;\\\">\\n              <svg/>\\n            </span>\\n            <div class=\\\"header__cta-text\\\">\\n              <p class=\\\"m-0 lh-13 t6\\\"><strong>SELECT YOUR VEHICLE</strong></p>\\n              <p class=\\\"m-0 lh-13 opacity-80 t6\\\">Car parts, simplified.</p>\\n            </div>\\n            <button type=\\\"button\\\" class=\\\"header__cta-clear\\\" aria-label=\\\"Clear saved vehicle\\\" style=\\\"display: none;\\\">\\n              <svg/>\\n            </button>\\n          </div><a href=\\\"https://www.awdmods.com/customer_authentication/redirect?locale=en&amp;region_country=US\\\" class=\\\"header__icon header__icon--account link focus-inset\\\">\\n          <account-icon><svg/>\\n</account-icon>\\n          <span class=\\\"visually-hidden\\\">My Account</span>\\n        </a><a href=\\\"/cart\\\" class=\\\"header__icon header__icon--cart link focus-inset\\\" id=\\\"cart-icon-bubble\\\" role=\\\"button\\\" aria-haspopup=\\\"dialog\\\"><svg/><span class=\\\"visually-hidden\\\">Cart</span></a>\\n    </div>\\n  </header>",
+  "footer_html": "<footer><div class=\\\"color-scheme-3 gradient section__inner\\\">\\n      <div class=\\\"page-width\\\"><div class=\\\"footer__blocks-wrapper grid grid--1-col grid--2-col grid--4-col-tablet scroll-trigger animate--fade-in\\\"><div class=\\\"footer-block grid__item footer-block--menu\\\"><footer-accordion class=\\\"custom-accordion\\\">\\n                    <details id=\\\"Details-collapsible_link_list_yAXYbY\\\" open=\\\"\\\">\\n                      <summary id=\\\"Summary-collapsible_link_list_yAXYbY\\\" class=\\\"t2 pointer-events-none\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" tabindex=\\\"-1\\\">\\n                        <h2 class=\\\"accordion__title inline-richtext t3\\\">Information</h2>\\n                        <svg/>\\n                      </summary>\\n                      <div class=\\\"custom-accordion__panel custom-scrollbar\\\">\\n                        <div class=\\\"flex\\\">\\n                          <div class=\\\"accordion__content\\\" id=\\\"CollapsibleAccordion-collapsible_link_list_yAXYbY\\\" role=\\\"region\\\" aria-labelledby=\\\"Summary-collapsible_link_list_yAXYbY\\\"><ul class=\\\"footer-block__details-content list-unstyled\\\"><li>\\n                              <a href=\\\"/pages/about-us\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                About Us\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"/pages/data-sharing-opt-out\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Your Privacy Choices<img src=\\\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxNCI+IDxzdHlsZT4uc3Qwe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6I0ZGRn0uc3Qxe2ZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO2ZpbGw6IzA2Rn0uc3Qye2ZpbGw6I0ZGRn0uc3Qze2ZpbGw6IzA2Rn08L3N0eWxlPiA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNy40IDEyLjhoNi44bDMuMS0xMS42SDcuNEM0LjIgMS4yIDEuNiAzLjggMS42IDdzMi42IDUuOCA1LjggNS44eiIvPiA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMjIuNiAwSDcuNEMzLjUgMCAuNCAzLjEuNCA3czMuMSA3IDcgN2gxNS4yYzMuOSAwIDctMy4xIDctN3MtMy4xLTctNy03ek0xLjYgN2MwLTMuMiAyLjYtNS44IDUuOC01LjhoOS45bC0zLjEgMTEuNkg3LjRDNC4yIDEyLjggMS42IDEwLjIgMS42IDd6Ii8+IDxwYXRoIGNsYXNzPSJzdDIiIGQ9Ik0yNC42IDRjLjIuMi4yLjYgMCAuOEwyMi41IDdsMi4yIDIuMmMuMi4yLjIuNiAwIC44LS4yLjItLjYuMi0uOCAwbC0yLjItMi4yTDE5LjUgMTBjLS4yLjItLjYuMi0uOCAwLS4yLS4yLS4yLS42IDAtLjhMMjAuOCA3bC0yLjItMi4yYy0uMi0uMi0uMi0uNiAwLS44LjItLjIuNi0uMi44IDBsMi4yIDIuMkwyMy44IDRjLjItLjIuNi0uMi44IDB6Ii8+IDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xMi43IDQuMWMuMi4yLjMuNi4xLjhMOC42IDkuOGMtLjEuMS0uMi4yLS4zLjItLjIuMS0uNS4xLS43LS4xTDUuNCA3LjdjLS4yLS4yLS4yLS42IDAtLjguMi0uMi42LS4yLjggMEw4IDguNmwzLjgtNC41Yy4yLS4yLjYtLjIuOSAweiIvPiA8L3N2Zz4=\\\" alt=\\\"California Consumer Privacy Act (CCPA) Opt-Out Icon\\\" role=\\\"presentation\\\" class=\\\"shopify-dns-link-icon\\\" style=\\\"margin-left:.25em;height:.7em;vertical-align:middle;display: inline; width: auto;\\\">\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://e1520g-k3.myshopify.com/policies/privacy-policy\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Privacy Policy\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"/pages/terms-of-service\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Terms and Conditions\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"/pages/carb-policy\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                CARB Policy\\n                              </a>\\n                            </li></ul>\\n                          </div>\\n                        </div>\\n                      </div>\\n                    </details>\\n                  </footer-accordion></div><div class=\\\"footer-block grid__item footer-block--menu\\\"><footer-accordion class=\\\"custom-accordion\\\">\\n                    <details id=\\\"Details-collapsible_link_list_XDr4wH\\\" open=\\\"\\\">\\n                      <summary id=\\\"Summary-collapsible_link_list_XDr4wH\\\" class=\\\"t2 pointer-events-none\\\" role=\\\"button\\\" aria-expanded=\\\"false\\\" tabindex=\\\"-1\\\">\\n                        <h2 class=\\\"accordion__title inline-richtext t3\\\">My Account</h2>\\n                        <svg/>\\n                      </summary>\\n                      <div class=\\\"custom-accordion__panel custom-scrollbar\\\">\\n                        <div class=\\\"flex\\\">\\n                          <div class=\\\"accordion__content\\\" id=\\\"CollapsibleAccordion-collapsible_link_list_XDr4wH\\\" role=\\\"region\\\" aria-labelledby=\\\"Summary-collapsible_link_list_XDr4wH\\\"><ul class=\\\"footer-block__details-content list-unstyled\\\"><li>\\n                              <a href=\\\"https://account.awdmods.com/profile?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                My Account\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://account.awdmods.com/orders?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Order History\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://account.awdmods.com/profile?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Wish List\\n                              </a>\\n                            </li><li>\\n                              <a href=\\\"https://account.awdmods.com/orders?locale=en&amp;region_country=US&amp;buyer_flags=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlMTUyMGctazMubXlzaG9waWZ5LmNvbSIsImZsYWdzIjpbXSwiZXhwIjoxNzc4MDMyNDkzLCJuYmYiOjE3Nzc0Mjc2OTN9.1_52fW2lPL_zU6EBuJQUChMRFiFFJTMpek86Els9jRw\\\" class=\\\"link link--text focus-inset full-unstyled-link--foreground t4 footer__link\\\">\\n                                Track My Order\\n                              </a>\\n                            </li></ul>\\n                          </div>\\n                        </div>\\n                      </div>\\n                    </details>\\n                  </footer-accordion></div></div></div>\\n    </div><div class=\\\"footer__content-bottom color-scheme-3 gradient\\\" style=\\\"--color-background: 26,26,26; --gradient-background: rgb(26,26,26)\\\">\\n    <div class=\\\"page-width\\\">\\n      <div class=\\\"md:pb-1 md:pt-1 pt-s05 pb-s05\\\">\\n        <div class=\\\"flex flex-col-reverse mt-1px md:flex-row flex-wrap gap-1 justify-between items-center\\\">\\n\\n          <div class=\\\"flex flex-col-reverse md:flex-row text-center md:text-left items-center gap-1\\\">\\n            <div class=\\\"flex flex-wrap items-center justify-center md:justify-start mt-2 md:mt-0 xs:mb-1\\\">\\n              <small class=\\\"copyright__content copyright__content-copy t7\\\">© 2026, <a href=\\\"/\\\">AWDMods</a>.</small>\\n              \\n            </div><ul class=\\\"list list-payment pt-0 mb-0\\\" role=\\\"list\\\"><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n\\n                  </li><li class=\\\"list-payment__item\\\">\\n                    <svg/>\\n                  </li></ul></div>\\n\\n          <div class=\\\"flex flex-col md:flex-row items-center gap-1 md:gap-2\\\">\\n            <div class=\\\"flex flex-col md:flex-row items-center\\\">\\n<ul class=\\\"list-unstyled list-social footer__list-social\\\" role=\\\"list\\\"><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.facebook.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Facebook</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.instagram.com/awdmods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">Instagram</span>\\n        </a>\\n      </li><li class=\\\"list-social__item\\\">\\n        <a href=\\\"https://www.youtube.com/@AWDMods\\\" class=\\\"link tap-target list-social__link\\\"><svg/>\\n<span class=\\\"visually-hidden\\\">YouTube</span>\\n        </a>\\n      </li></ul></div></div>\\n\\n        </div>\\n      </div>\\n    </div>\\n  </div>\\n</footer>",
+  "elements": [
+    {
+      "accessible_name": "Close",
+      "e_index": "e0",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 44,
+        "width": 44,
+        "x": 313,
+        "y": 62
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "What are you looking for?",
+      "e_index": "e1",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 44,
+        "width": 44,
+        "x": 1246,
+        "y": 56
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "What are you looking for?",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Cart",
+      "e_index": "e2",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 55,
+        "width": 55,
+        "x": 1616,
+        "y": 51
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "role_button",
+      "tag": "a",
+      "text_content": "Cart",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Shop by Category",
+      "e_index": "e3",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 41,
+        "width": 158,
+        "x": 795,
+        "y": 116
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "role_button",
+      "tag": "summary",
+      "text_content": "Shop by Category",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Featured Collection",
+      "e_index": "e4",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 50,
+        "width": 286,
+        "x": 239,
+        "y": 906
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Featured Collection",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Performance",
+      "e_index": "e5",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 191
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Performance",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Exterior",
+      "e_index": "e6",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 326
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Exterior",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Interior",
+      "e_index": "e7",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 413
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Interior",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Handling and Brakes",
+      "e_index": "e8",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 19,
+        "width": 120,
+        "x": 848,
+        "y": 549
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h3",
+      "tag": "h3",
+      "text_content": "Handling and Brakes",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "AWDMods",
+      "e_index": "e9",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 45,
+        "width": 80,
+        "x": 239,
+        "y": 56
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img",
+      "tag": "img",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)",
+      "e_index": "e10",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 271,
+        "width": 271,
+        "x": 240,
+        "y": 989
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img",
+      "tag": "img",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Revo Designs Rocker Stripes Decal Kit for the Ford Focus RS / ST (Set of 2)",
+      "e_index": "e11",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 271,
+        "width": 271,
+        "x": 528,
+        "y": 989
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img",
+      "tag": "img",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Performance",
+      "e_index": "e12",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 239,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Performance Intakes Exhaust Cooling Drivetrain upgrades Shop Performance",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Handling and Brakes",
+      "e_index": "e13",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 527,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Handling and Brakes Suspension Wheels Brake kits Chassis control Shop Handling",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Interior",
+      "e_index": "e14",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 816,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Interior Shifters Trim Seating Cabin upgrades Shop Interior",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Exterior",
+      "e_index": "e15",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 1105,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Exterior Aero Styling Body components Accents Shop Exterior",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Electronics",
+      "e_index": "e16",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302,
+        "width": 273,
+        "x": 1394,
+        "y": 544
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "multicolumn",
+      "tag": "div",
+      "text_content": "Electronics Lighting Wiring Infotainment Vehicle tech Shop Electronics",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e17",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 55,
+        "width": 929,
+        "x": 367,
+        "y": 51
+      },
+      "role": "combobox",
+      "scroll_y_at_capture": 0,
+      "selector": "input",
+      "tag": "input",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Shop All",
+      "e_index": "e18",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 47,
+        "width": 1905,
+        "x": 0,
+        "y": 115
+      },
+      "role": "navigation",
+      "scroll_y_at_capture": 0,
+      "selector": "nav",
+      "tag": "nav",
+      "text_content": "Shop All",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Shop All",
+      "e_index": "e19",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 74,
+        "width": 1533,
+        "x": 186,
+        "y": 41
+      },
+      "role": "banner",
+      "scroll_y_at_capture": 0,
+      "selector": "header",
+      "tag": "header",
+      "text_content": "Shop All",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Menu",
+      "e_index": "e20",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 55,
+        "width": 55,
+        "x": 228,
+        "y": 476
+      },
+      "role": "button",
+      "scroll_y_at_capture": 466,
+      "selector": "role_button",
+      "tag": "summary",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "5.0 / 5.0",
+      "e_index": "e21",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 229,
+        "x": 549,
+        "y": 1362
+      },
+      "role": "div",
+      "scroll_y_at_capture": 466,
+      "selector": "rating",
+      "tag": "div",
+      "text_content": "5.0 / 5.0 (2) 2 total reviews",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "5.0 out of 5.0 stars",
+      "e_index": "e22",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18,
+        "width": 67,
+        "x": 549,
+        "y": 1364
+      },
+      "role": "img",
+      "scroll_y_at_capture": 466,
+      "selector": "rating",
+      "tag": "div",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "(2) 2 total reviews",
+      "e_index": "e23",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 16,
+        "x": 622,
+        "y": 1362
+      },
+      "role": "p",
+      "scroll_y_at_capture": 466,
+      "selector": "rating",
+      "tag": "p",
+      "text_content": "(2) 2 total reviews",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Regular price From $135.99",
+      "e_index": "e24",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 26,
+        "width": 229,
+        "x": 261,
+        "y": 1346
+      },
+      "role": "div",
+      "scroll_y_at_capture": 466,
+      "selector": "price",
+      "tag": "div",
+      "text_content": "Regular price From $135.99",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "From $135.99",
+      "e_index": "e25",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 26,
+        "width": 104,
+        "x": 261,
+        "y": 1346
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "price",
+      "tag": "span",
+      "text_content": "From $135.99",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e26",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 375,
+        "y": 1351
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e27",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 609,
+        "y": 1396
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e28",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 1475,
+        "y": 1420
+      },
+      "role": "span",
+      "scroll_y_at_capture": 466,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e29",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 366,
+        "y": 1941
+      },
+      "role": "span",
+      "scroll_y_at_capture": 876,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Made to Order",
+      "e_index": "e30",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 80,
+        "x": 630,
+        "y": 1921
+      },
+      "role": "span",
+      "scroll_y_at_capture": 876,
+      "selector": "badge",
+      "tag": "span",
+      "text_content": "Made to Order",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Join Our Newsletter!",
+      "e_index": "e31",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 50,
+        "width": 483,
+        "x": 281,
+        "y": 2158
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1580,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Join Our Newsletter!",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Information",
+      "e_index": "e32",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 690,
+        "x": 239,
+        "y": 2612
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1580,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Information",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "My Account",
+      "e_index": "e33",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21,
+        "width": 690,
+        "x": 977,
+        "y": 2612
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1580,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "My Account",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Information",
+      "e_index": "e34",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 310,
+        "width": 1905,
+        "x": 0,
+        "y": 2585
+      },
+      "role": "contentinfo",
+      "scroll_y_at_capture": 1580,
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Join Our Newsletter!",
+      "e_index": "e35",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 512,
+        "width": 1905,
+        "x": 0,
+        "y": 2073
+      },
+      "role": "section",
+      "scroll_y_at_capture": 1815,
+      "selector": "newsletter",
+      "tag": "section",
+      "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Subscribe",
+      "e_index": "e36",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 49,
+        "width": 46,
+        "x": 716,
+        "y": 2302
+      },
+      "role": "button",
+      "scroll_y_at_capture": 1815,
+      "selector": "newsletter",
+      "tag": "button",
+      "text_content": "",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "American Express",
+      "e_index": "e37",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 388,
+        "x": 338,
+        "y": 2841
+      },
+      "role": "list",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "ul",
+      "text_content": "American Express Apple Pay Discover Google Pay Mastercard",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "American Express",
+      "e_index": "e38",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 338,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "American Express",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Apple Pay",
+      "e_index": "e39",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 386,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "Apple Pay",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Discover",
+      "e_index": "e40",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 435,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "Discover",
+      "coords": "css"
+    },
+    {
+      "accessible_name": "Google Pay",
+      "e_index": "e41",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35,
+        "width": 49,
+        "x": 483,
+        "y": 2841
+      },
+      "role": "li",
+      "scroll_y_at_capture": 1815,
+      "selector": "payment",
+      "tag": "li",
+      "text_content": "Google Pay",
+      "coords": "css"
+    }
+  ],
+  "coords": "css",
+  "styles": {},
+  "structured_data": [],
+  "viewport": {
+    "dpr_actual": 1,
+    "dpr_requested": 1,
+    "height": 1080,
+    "width": 1920
+  }
+}

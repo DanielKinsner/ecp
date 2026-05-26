@@ -1,0 +1,1052 @@
+{
+  "valid_refs": [
+    "audience F-01",
+    "audience F-02",
+    "category-navigation F-01",
+    "category-navigation F-02",
+    "category-navigation F-03",
+    "category-navigation F-04",
+    "category-navigation F-05",
+    "category-navigation F-06",
+    "category-navigation F-07",
+    "category-navigation F-08",
+    "category-navigation F-09",
+    "category-navigation F-10",
+    "category-navigation F-11",
+    "checkout-flows F-01",
+    "checkout-flows F-02",
+    "checkout-flows F-03",
+    "checkout-flows F-04",
+    "checkout-flows F-05",
+    "checkout-flows F-06",
+    "checkout-flows F-07",
+    "checkout-flows F-08",
+    "checkout-flows F-09",
+    "content-seo F-01",
+    "content-seo F-02",
+    "content-seo F-03",
+    "content-seo F-04",
+    "content-seo F-05",
+    "content-seo F-06",
+    "content-seo F-07",
+    "content-seo F-08",
+    "content-seo F-09",
+    "content-seo F-10",
+    "content-seo F-11",
+    "content-seo F-12",
+    "content-seo F-13",
+    "content-seo F-14",
+    "content-seo F-15",
+    "content-seo F-16",
+    "content-seo F-17",
+    "content-seo F-18",
+    "ethics F-01",
+    "ethics F-02",
+    "ethics F-03",
+    "ethics F-04",
+    "ethics F-05",
+    "ethics F-06",
+    "performance-ux F-01",
+    "performance-ux F-02",
+    "performance-ux F-03",
+    "performance-ux F-04",
+    "performance-ux F-05",
+    "performance-ux F-06",
+    "performance-ux F-07",
+    "performance-ux F-08",
+    "performance-ux F-09",
+    "post-purchase F-01",
+    "post-purchase F-02",
+    "post-purchase F-03",
+    "post-purchase F-04",
+    "post-purchase F-05",
+    "post-purchase F-06",
+    "pricing F-01",
+    "pricing F-02",
+    "pricing F-03",
+    "pricing F-04",
+    "pricing F-05",
+    "pricing F-06",
+    "pricing F-07",
+    "pricing F-08",
+    "pricing F-09",
+    "product-media F-01",
+    "product-media F-02",
+    "product-media F-03",
+    "product-media F-04",
+    "product-media F-05",
+    "trust-credibility F-01",
+    "trust-credibility F-02",
+    "trust-credibility F-03",
+    "trust-credibility F-04",
+    "trust-credibility F-05",
+    "trust-credibility F-06",
+    "trust-credibility F-07",
+    "trust-credibility F-08",
+    "trust-credibility F-09",
+    "trust-credibility F-10",
+    "trust-credibility F-11",
+    "visual-cta F-01",
+    "visual-cta F-02",
+    "visual-cta F-03",
+    "visual-cta F-04",
+    "visual-cta F-05",
+    "visual-cta F-06",
+    "visual-cta F-07",
+    "visual-cta F-08",
+    "visual-cta F-09"
+  ],
+  "by_canonical_ref": {
+    "audience F-01": {
+      "title": "Newsletter Framing Uses Vehicle Segments but Lacks Consent Clarity for Data Use",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "audience F-02": {
+      "title": "Domestic US Page Correctly Scoped \u2014 No Localization Defects",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-01": {
+      "title": "Search Input Is Icon-Toggle Only \u2014 No Visible Text Box",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-02": {
+      "title": "No Compatibility Filter in Primary Navigation or Category Tiles",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-03": {
+      "title": "Vehicle Compatibility Finder Siloed in Hero \u00e2\u20ac\u201d Not Integrated Into Category Navigation",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-04": {
+      "title": "Category Navigation Tiles Missing Product Counts",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-05": {
+      "title": "Category Carousel Tiles Show No Product Counts",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-06": {
+      "title": "Breadcrumbs Absent on Homepage \u2014 No Hierarchy or History Type Present",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-07": {
+      "title": "Featured Collection Grid Uses 5-Column Layout \u2014 Exceeds Recommended Maximum",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-08": {
+      "title": "Full-Width Inline Search Bar in Sticky Header",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-09": {
+      "title": "Vehicle Selector Widget Present Above the Fold on Homepage",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "category-navigation F-10": {
+      "title": "Hamburger Drawer Navigation Lacks Category Product Preview",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "category-navigation F-11": {
+      "title": "Category Tiles Provide Clear Subcategory Hierarchy for Five Major Segments",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "checkout-flows F-01": {
+      "title": "No Express Checkout Buttons in Cart Drawer or Buy-Box",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-02": {
+      "title": "No Express Checkout Buttons on Homepage Buy Path",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "checkout-flows F-03": {
+      "title": "Payment Method Icons Footer-Only \u2014 Not Surfaced Pre-Cart",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-04": {
+      "title": "No BNPL Option for High-AOV Products",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "checkout-flows F-05": {
+      "title": "Cart Drawer Lacks Shipping Progress and Subtotal Confirmation",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-06": {
+      "title": "Cart Icon Has No Item Count Badge or Drawer Preview",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "checkout-flows F-07": {
+      "title": "Free Shipping Threshold Visible Above Fold",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "checkout-flows F-08": {
+      "title": "Free Shipping Threshold Visible Above the Fold",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "checkout-flows F-09": {
+      "title": "Payment Method Breadth Meets Minimum Threshold",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-01": {
+      "title": "Title Tag Is 18 Characters and Duplicates Brand Name",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-02": {
+      "title": "Title Tag Is 16 Characters \u2014 Rewritten >95% of the Time",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-03": {
+      "title": "Meta Description Is Absent \u2014 Homepage Has No SERP Snippet Copy",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-04": {
+      "title": "No Meta Description \u2014 OG Description Is Also 'AWDMods'",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-05": {
+      "title": "Homepage JSON-LD Lacks Product, Offer, AggregateRating, and GTIN Schema",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-06": {
+      "title": "No Product or Merchant Schema \u2014 Homepage Has Only OnlineStore and WebSite Types",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-07": {
+      "title": "No H1 on Homepage \u2014 Highest Heading Is H2",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-08": {
+      "title": "No Open Graph Image \u2014 Social and AI Thumbnail Sharing Is Unbranded",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-09": {
+      "title": "No og:image \u2014 Social Shares and AI Thumbnails Will Be Blank",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-10": {
+      "title": "No H1 Tag on Homepage \u2014 Title/H1 Alignment Impossible",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-11": {
+      "title": "Homepage Has No Product Description Content \u2014 AI Agents Cannot Extract Answers",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-12": {
+      "title": "sameAs Array in OnlineStore Schema Contains Empty Strings",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-13": {
+      "title": "Product Card Image Alt Text Relies on Full Product Titles \u2014 Descriptive but Not Optimized",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-14": {
+      "title": "Canonical Tag Is Self-Referencing, HTTPS, and Correctly Structured",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-15": {
+      "title": "Canonical Tag Is Self-Referencing, HTTPS, and Lowercase",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-16": {
+      "title": "Homepage URL Is Clean, Lowercase, and Correctly Structured",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "content-seo F-17": {
+      "title": "Viewport Meta Tag Present \u2014 Mobile-Ready Signal Confirmed",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "content-seo F-18": {
+      "title": "Product Card Alt Text Is Descriptive and Follows [Product Name] Template",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-01": {
+      "title": "Hero Car Image Implemented as CSS Background \u2014 Not LCP-Optimizable",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-02": {
+      "title": "Hamburger-Only Navigation Hides Primary Destinations",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-03": {
+      "title": "Logo Image Missing fetchpriority \u2014 No Image Preload in Page Head",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-04": {
+      "title": "No AVIF/WebP Format Negotiation \u2014 Zero <picture> Elements Sitewide",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-05": {
+      "title": "Hero Vehicle Selector Dropdowns \u2014 Four Sequential Decisions Before Finding Parts",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-06": {
+      "title": "Navigation Information Architecture \u2014 Well-Chunked Category Tiles",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-07": {
+      "title": "Carousel Swipe Handler and Scroll Indicator Present",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "performance-ux F-08": {
+      "title": "Speculation Rules API Absent \u2014 No Prerendering on Collection Navigation",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "performance-ux F-09": {
+      "title": "Sticky Header Preserves Navigation Access on Scroll",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "post-purchase F-01": {
+      "title": "No Loyalty Program Signal on Repeat-Purchase Platform",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "post-purchase F-02": {
+      "title": "No Loyalty Program Teaser on Homepage",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "post-purchase F-03": {
+      "title": "No Referral CTA in Footer or Newsletter Section",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "post-purchase F-04": {
+      "title": "Newsletter Value Proposition Frames Signup as News Delivery, Not Subscriber Benefit",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "post-purchase F-05": {
+      "title": "No Referral Program CTA for High-Advocacy Enthusiast Audience",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "post-purchase F-06": {
+      "title": "Order Tracking and Account Access Present in Footer",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-01": {
+      "title": "Most Featured Products Lack Price Anchoring",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-02": {
+      "title": "Featured Card Price Has No MSRP or Comparison Anchor",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-03": {
+      "title": "No BNPL Markers on High-Ticket Products",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-04": {
+      "title": "No BNPL Option on $135+ Featured Product",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-05": {
+      "title": "No Free-Shipping Signal at Product Card Level",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-06": {
+      "title": "Free Shipping Banner Uses Hedged Language That Dilutes Goal-Gradient Pull",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-07": {
+      "title": "Borla Exhaust Uses Correct MSRP Strikethrough Anchoring",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "pricing F-08": {
+      "title": "Charm Pricing Applied Consistently Across Featured Cards",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "pricing F-09": {
+      "title": "Charm Pricing Applied Inconsistently Across Product Cards",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-01": {
+      "title": "Category Carousel Uses JS Scroll Component \u2014 No CSS Scroll-Snap",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "product-media F-02": {
+      "title": "No Hover Image Swap on Featured Collection Cards",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-03": {
+      "title": "Product Cards Expose Only One Image \u2014 No Multi-Image Access or Count Signal",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-04": {
+      "title": "Featured Collection Cards Lack Unified Hit Area",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "product-media F-05": {
+      "title": "All Category Card Background Images Have Empty Alt Text",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-01": {
+      "title": "5.0 Stars on 2 Reviews \u2014 Skepticism Trigger",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-02": {
+      "title": "Featured Product Has 2 Reviews at Perfect 5.0 \u2014 Below Threshold and Suspect Rating",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-03": {
+      "title": "No Trust Badges Near Any CTA \u2014 Payment Icons Confined to Footer Only",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-04": {
+      "title": "Most Featured Products Have Zero Reviews",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-05": {
+      "title": "No Trust Badges Near Featured Product CTAs",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-06": {
+      "title": "Return Policy Absent From Homepage \u2014 No Visible Link or Snippet in Any Section",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-07": {
+      "title": "No Expert Editorial Content \u2014 Homepage Carries Only Category Navigation and Product Cards",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-08": {
+      "title": "OnlineStore Schema Incomplete \u2014 Missing AggregateRating and Physical Address",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "trust-credibility F-09": {
+      "title": "Payment Icons in Footer Only \u2014 No Return Policy on Product Cards",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PARTIAL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-10": {
+      "title": "Product Images Have Descriptive Alt Text",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "trust-credibility F-11": {
+      "title": "Product Images Carry Descriptive Alt Text \u2014 Accessibility Baseline Met",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-01": {
+      "title": "Hero Section Has No Headline or Value Proposition",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "visual-cta F-02": {
+      "title": "No Above-Fold Headline or Value Proposition",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-03": {
+      "title": "Product Cards Lack Visible Add-to-Cart CTA",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-04": {
+      "title": "No Trust Signal Visible Above the Fold",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "visual-cta F-05": {
+      "title": "No Trust Signal in Above-Fold Hero",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-06": {
+      "title": "Newsletter Subscribe Button Is Icon-Only With No Text Label",
+      "scope": "device",
+      "device": "desktop",
+      "verdict": "FAIL",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "visual-cta F-07": {
+      "title": "FIND PARTS CTA Button Visually Distinct on Dark Hero",
+      "scope": "device",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-08": {
+      "title": "Newsletter CTA Copy Is Audience-Specific",
+      "scope": "page",
+      "device": "mobile",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "mobile"
+      ]
+    },
+    "visual-cta F-09": {
+      "title": "Newsletter Section Copy Is Specific and Audience-Named",
+      "scope": "page",
+      "device": "desktop",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "desktop"
+      ]
+    },
+    "ethics F-01": {
+      "title": "No Countdown Timers or Fabricated Urgency",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-02": {
+      "title": "No Phantom Social Proof \u2014 Reviews Are Truthful With Explicit Count",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-03": {
+      "title": "AI-Generated Images Are Decorative \u2014 FTC Materiality Test Passed",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-04": {
+      "title": "Free Shipping Threshold Disclosed \u2014 No Drip Pricing Violation",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-05": {
+      "title": "No Cookie Consent Banner Required \u2014 US-Only Targeting Confirmed",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    },
+    "ethics F-06": {
+      "title": "No Pre-Checked Boxes or Subscription Dark Patterns Detected",
+      "scope": "page",
+      "device": "page",
+      "verdict": "PASS",
+      "severity": "?",
+      "devices_present": [
+        "page"
+      ]
+    }
+  },
+  "merge_aliases": {}
+}

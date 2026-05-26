@@ -1,0 +1,601 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "synthesizer_model": {
+    "family": "opus",
+    "version": "4.7",
+    "context_window": "1M"
+  },
+  "started_at": "2026-04-28T23:55:00.000Z",
+  "completed_at": "2026-04-29T00:08:00.000Z",
+  "status": "complete",
+  "dispatch_shape": "single",
+  "degraded_mode": false,
+  "audit_documents": {
+    "desktop": "docs/ecp/2026-04-28-f9d69ee3/audit-desktop.md",
+    "mobile": "docs/ecp/2026-04-28-f9d69ee3/audit-mobile.md"
+  },
+  "priority_path": [
+    {
+      "mode": "bundle",
+      "title": "Consolidate the price block: MSRP anchor, free-shipping gap, price match, and Affirm at the price line",
+      "severity": "HIGH",
+      "narrative": "The buy-box at $59.95 renders as a standalone number on both devices: no MSRP strikethrough, no compare-at price, no inline shipping cost, no price-match callout, and only one of the two BNPL providers visible at the price. The site already has all four supporting signals — the Price Match Guarantee link in the footer Extras column, the $75 free-shipping threshold in the top announcement bar, an Affirm payment option referenced in the footer Information column, and the PayPal Pay Later widget already correctly placed beside the price. Pull them up to the price block as one component. A two-row anchor (MSRP strikethrough above $59.95, \"Save $X / Y% off\" beneath), a goal-gradient line (\"Add $15.05 more to qualify for free shipping\"), an Affirm \"as low as $X/month\" line directly under the PayPal line, and a Price Match Guarantee mark beside the price together turn a bare number into a full value story at the moment of purchase decision. All four are template edits in the product-page template; no schema or backend changes needed.",
+      "f_refs": [
+        "pricing F-02",
+        "pricing F-04",
+        "pricing F-05",
+        "checkout-flows F-04"
+      ]
+    },
+    {
+      "mode": "severity",
+      "title": "Ship the schema package: GTIN/MPN, BreadcrumbList, VideoObject, MerchantReturnPolicy, HTTPS image, longer priceValidUntil",
+      "severity": "HIGH",
+      "narrative": "The Product JSON-LD has the right skeleton but is missing every identifier and adjacent type that AI shopping agents and Google Shopping rich results read. There is no BreadcrumbList alongside Product, no VideoObject for the embedded YouTube demonstration, no GTIN field, the desktop schema lacks MerchantReturnPolicy entirely (mobile carries one), the schema image URL still uses http:// not https://, and priceValidUntil is dated 2026-04-29 — within 24 hours of audit capture. Each gap removes one rich-result lever; the priceValidUntil field is the one that breaks on its own, on a deadline. Treat the schema block as a single template change: populate identifiers (mobile already has mpn, reconcile to desktop and add gtin if available), add BreadcrumbList with at least three ListItems matching the visible breadcrumb, add a VideoObject with name/thumbnailUrl/uploadDate/embedUrl, force https on the image URL, and set priceValidUntil to a rolling 30-90 day window driven by catalog sync rather than a hard-coded date.",
+      "f_refs": [
+        "content-seo F-03",
+        "content-seo F-02",
+        "product-media F-01",
+        "category-navigation F-03",
+        "content-seo F-08"
+      ]
+    },
+    {
+      "mode": "severity",
+      "title": "Reclaim the mobile above-fold and add a sticky bottom CTA bar",
+      "severity": "HIGH",
+      "narrative": "On a 390x844 mobile viewport, the hero gallery (main image plus a 4+3 thumbnail grid) consumes roughly 650px of vertical space. The H1 begins at y=676, the price element sits at y=823, and the Add to Cart button is entirely off-screen on initial load. As the visitor scrolls down through 3,297px of product content, the only conversion action disappears with no sticky bar bringing it back. Two component changes resolve both issues: cap the main gallery image at max-height 360-380px for viewports below 480px so the H1, rating, price, and Add to Cart all sit within the first 1-1.5 viewports; then implement a sticky bottom bar that appears once the visitor scrolls 200px past the inline CTA, rendering the truncated product name, the $59.95 price, and a full-width Add to Cart button at minimum 48px height. This single architectural pair turns the mobile decision-without-button friction into a one-tap action whenever the visitor is ready.",
+      "f_refs": [
+        "visual-cta F-05",
+        "visual-cta F-01",
+        "performance-ux F-06"
+      ]
+    },
+    {
+      "mode": "bundle",
+      "title": "Fix the LCP/CLS path on the hero: fetchpriority, preload, modern image formats, explicit dimensions, drop the duplicate stylesheet",
+      "severity": "HIGH",
+      "narrative": "The product hero image has no fetchpriority=\"high\" attribute and no matching preload link in the head — the browser deprioritizes the LCP element to the same priority as below-fold gallery thumbnails. The same image is served as a JPEG with no AVIF or WebP source, paying a 30-50% file-size penalty on every page load. The header logo and icons render without explicit width/height, contributing CLS during the first seconds of paint. And brainyfilter.css?v=1.4 is loaded twice in the head from a template merge or copy-paste error. None of these requires new infrastructure: fetchpriority=\"high\" and a preload hint go in the existing template, the picture element wrapper or CDN format negotiation handles the image format, width/height attributes use the rendered pixel sizes already captured, and the duplicate link tag gets deleted. Vodafone's controlled A/B test logged 8% more online sales from a 31% LCP improvement; Swappie logged a 42% mobile revenue increase from a 91% CLS reduction.",
+      "f_refs": [
+        "performance-ux F-01",
+        "performance-ux F-03",
+        "performance-ux F-04",
+        "performance-ux F-07"
+      ]
+    },
+    {
+      "mode": "quick-wins",
+      "title": "Move payment icons and risk-reversal microcopy to the Add to Cart zone, surface the return policy near the CTA",
+      "severity": "HIGH",
+      "narrative": "The desktop hero buy-box currently shows price, PayPal Pay Later, an Add to Cart button, and a \"Login & Earn 60 Points\" loyalty prompt — but no security badge, no return-policy mark, no inline shipping line, and no price-match assurance. Payment-method logos sit in the footer at scroll_y ~1500, roughly 1,000 pixels below the purchase decision point. Baymard's research is unambiguous: trust-badge proximity to the CTA matters more than presence on the page. Compress the footer payment row into a 4-icon strip directly below the Add to Cart button (Visa / PayPal / Apple Pay / Affirm), add a one-line risk-reversal microcopy (\"Free shipping on orders over $75 · 90-day returns · Price Match Guarantee\"), and surface the existing 90-day MerchantReturnPolicy as a small badge near the CTA. The CTA zone goes from purely transactional to fully reassuring at the cost of one CSS layout change.",
+      "f_refs": [
+        "trust-credibility F-01",
+        "visual-cta F-03",
+        "visual-cta F-04",
+        "trust-credibility F-07"
+      ]
+    }
+  ],
+  "quick_wins_manifest": [
+    "audience F-02",
+    "audience F-03",
+    "category-navigation F-02",
+    "category-navigation F-03",
+    "category-navigation F-04",
+    "category-navigation F-05",
+    "category-navigation F-06",
+    "category-navigation F-07",
+    "category-navigation F-08",
+    "checkout-flows F-03",
+    "checkout-flows F-05",
+    "checkout-flows F-06",
+    "content-seo F-01",
+    "content-seo F-02",
+    "content-seo F-03",
+    "content-seo F-05",
+    "content-seo F-06",
+    "content-seo F-07",
+    "content-seo F-08",
+    "content-seo F-09",
+    "content-seo F-10",
+    "content-seo F-11",
+    "ethics F-01",
+    "ethics F-02",
+    "ethics F-03",
+    "ethics F-04",
+    "ethics F-05",
+    "ethics F-06",
+    "performance-ux F-01",
+    "performance-ux F-02",
+    "performance-ux F-03",
+    "performance-ux F-04",
+    "performance-ux F-05",
+    "performance-ux F-07",
+    "performance-ux F-09",
+    "post-purchase F-05",
+    "pricing F-01",
+    "pricing F-02",
+    "pricing F-03",
+    "pricing F-04",
+    "pricing F-05",
+    "pricing F-06",
+    "pricing F-07",
+    "pricing F-08",
+    "product-media F-01",
+    "product-media F-06",
+    "product-media F-07",
+    "product-media F-08",
+    "trust-credibility F-02",
+    "trust-credibility F-05",
+    "trust-credibility F-07",
+    "trust-credibility F-09",
+    "trust-credibility F-10",
+    "visual-cta F-02",
+    "visual-cta F-03",
+    "visual-cta F-04",
+    "visual-cta F-05",
+    "visual-cta F-06",
+    "visual-cta F-07"
+  ],
+  "severity_manifest": [
+    "content-seo F-03",
+    "category-navigation F-03",
+    "content-seo F-02",
+    "product-media F-01",
+    "category-navigation F-01",
+    "performance-ux F-01",
+    "pricing F-01",
+    "pricing F-02",
+    "product-media F-02",
+    "performance-ux F-02",
+    "performance-ux F-03",
+    "pricing F-03",
+    "trust-credibility F-01",
+    "checkout-flows F-03",
+    "post-purchase F-01",
+    "category-navigation F-02",
+    "content-seo F-01",
+    "checkout-flows F-01",
+    "checkout-flows F-02",
+    "visual-cta F-01",
+    "content-seo F-08",
+    "product-media F-06",
+    "category-navigation F-04",
+    "content-seo F-06",
+    "trust-credibility F-02",
+    "category-navigation F-06",
+    "content-seo F-07",
+    "performance-ux F-05",
+    "trust-credibility F-03",
+    "performance-ux F-04",
+    "pricing F-04",
+    "product-media F-03",
+    "product-media F-04",
+    "visual-cta F-02",
+    "post-purchase F-02",
+    "audience F-01",
+    "content-seo F-09",
+    "trust-credibility F-04",
+    "trust-credibility F-05",
+    "visual-cta F-05",
+    "pricing F-05",
+    "product-media F-05",
+    "trust-credibility F-07",
+    "trust-credibility F-08",
+    "visual-cta F-03",
+    "checkout-flows F-04",
+    "performance-ux F-08",
+    "product-media F-07",
+    "content-seo F-05",
+    "category-navigation F-05",
+    "trust-credibility F-06",
+    "visual-cta F-04",
+    "performance-ux F-07",
+    "performance-ux F-06",
+    "post-purchase F-03",
+    "trust-credibility F-09",
+    "audience F-02",
+    "content-seo F-11",
+    "product-media F-08",
+    "trust-credibility F-10",
+    "checkout-flows F-05",
+    "product-media F-09",
+    "trust-credibility F-11",
+    "category-navigation F-07",
+    "pricing F-07",
+    "pricing F-06",
+    "audience F-03",
+    "content-seo F-10",
+    "visual-cta F-07",
+    "pricing F-08",
+    "category-navigation F-08",
+    "performance-ux F-09",
+    "visual-cta F-06",
+    "post-purchase F-04",
+    "checkout-flows F-06",
+    "post-purchase F-05"
+  ],
+  "scope_page_synchronized_refs": [
+    "content-seo F-03"
+  ],
+  "humanized_findings": [
+    {
+      "f_ref": "audience F-01",
+      "plain_english_summary": "Visitors who land here see no recommendations for related Spyder accessories — the page goes from product description straight to footer with nothing prompting the natural follow-on purchase. For a niche enthusiast audience already shopping for their specific bike, every visitor leaves without seeing the complementary parts you also sell.",
+      "plain_english_action": "Add a 'Popular with Spyder F3 & RT owners' block of 3-4 related products between the description and the footer."
+    },
+    {
+      "f_ref": "audience F-02",
+      "plain_english_summary": "The 5-star rating and review count appear right beside the product title, above the fold — so first-time visitors see social proof at the same moment they evaluate the price. This positioning is doing its job."
+    },
+    {
+      "f_ref": "audience F-03",
+      "plain_english_summary": "Your fitment guide and vehicle navigation correctly tell shoppers which Spyder models this fits, but the product copy reads as conditional ('if you own a 2024+ Spyder...') rather than confirming. A Spyder owner has to do a small mental check instead of feeling immediately welcomed.",
+      "plain_english_action": "Add a single line under the rating, above the price: 'Built for the 2024+ Can-Am Spyder F3 and RT.'"
+    },
+    {
+      "f_ref": "category-navigation F-01",
+      "plain_english_summary": "A shopper who clicked into this product from a filtered category page (say, after picking Comfort/Touring and a 2024 model year) has no easy way back to those filtered results. Hitting the home icon dumps them at the homepage, and the browser back button often loses scroll position. Many of those engaged shoppers leave at this point.",
+      "plain_english_action": "Add a 'Back to [Category]' link that preserves the visitor's filter state alongside the standard breadcrumb trail."
+    },
+    {
+      "f_ref": "category-navigation F-02",
+      "plain_english_summary": "Search engines see only a raw URL in their results for this page rather than a readable category path like 'Spyder > Handlebar Accessories'. That makes the listing harder for shoppers to recognize as relevant when scanning Google results — and tests show losing this markup costs 5-7% of organic search traffic.",
+      "plain_english_action": "Add BreadcrumbList structured data alongside the existing Product schema so Google can show the category path in search results."
+    },
+    {
+      "f_ref": "category-navigation F-03",
+      "plain_english_summary": "Search engines see only a raw URL in their results for this page rather than a readable category path like 'Comfort/Touring > Handlebar Accessories'. That makes the listing harder for shoppers to recognize as relevant when scanning Google results — and tests show losing this markup costs 5-7% of organic search traffic.",
+      "plain_english_action": "Add BreadcrumbList structured data alongside the existing Product schema so Google can show the category path in search results."
+    },
+    {
+      "f_ref": "category-navigation F-04",
+      "plain_english_summary": "The breadcrumb above the product name jumps directly from the home icon to the product title with no category in between. A shopper who arrived from Google and wants to browse other Spyder handlebar parts has no clear way to navigate up into the relevant category.",
+      "plain_english_action": "Add a clickable category level (e.g., Spyder > Handlebar Accessories) between the home icon and the product name in the breadcrumb."
+    },
+    {
+      "f_ref": "category-navigation F-05",
+      "plain_english_summary": "The category and vehicle navigation bars at the top of the page disappear once the visitor scrolls into the product description. A shopper who decides to look at a different model year or a related accessory has to scroll back to the top to navigate.",
+      "plain_english_action": "Make the header navigation stick to the top of the screen as the visitor scrolls."
+    },
+    {
+      "f_ref": "category-navigation F-06",
+      "plain_english_summary": "The breadcrumb above the product name jumps from the home icon directly to the product title with no category level in between. A shopper who wants to browse other handlebar accessories or other Spyder parts has no clickable path in the breadcrumb to do so, and Google sees no internal link to those category pages from this product page.",
+      "plain_english_action": "Add a clickable parent-category link (e.g., Comfort/Touring > Handlebar Accessories) between the home icon and the product name."
+    },
+    {
+      "f_ref": "category-navigation F-07",
+      "plain_english_summary": "On mobile, the breadcrumb cuts off the product name in the middle of a word — readers see 'EvolutionR Stainless Steel Weighted Handlebar End Caps for t' with no ellipsis. It is a small detail but it makes the page header feel unfinished on the device most visitors arrive on.",
+      "plain_english_action": "On mobile, replace the truncated product name in the breadcrumb with a single back-link to the parent category."
+    },
+    {
+      "f_ref": "category-navigation F-08",
+      "plain_english_summary": "The footer's Year/Model Charts column gives mobile visitors a clean way to find compatibility info for any vehicle in the store's lineup — Canyon, Ryker, Spyder, Slingshot. This works as a safety net for shoppers who scroll all the way down without converting."
+    },
+    {
+      "f_ref": "checkout-flows F-01",
+      "plain_english_summary": "Shoppers with Apple Pay, Google Pay, or Amazon Pay set up on their device could buy in one tap from this page — but those buttons exist only as static logos in the footer, not as real purchase buttons in the buy box. Every step they have to take through cart and checkout is a step where conversion drops.",
+      "plain_english_action": "Add Apple Pay, Google Pay, and Amazon Pay express checkout buttons directly below the Add to Cart button."
+    },
+    {
+      "f_ref": "checkout-flows F-02",
+      "plain_english_summary": "Mobile shoppers with Apple Pay or Google Pay set up on their phone could buy in one biometric tap from this page — but those buttons exist only as static logos in the footer, not as real purchase buttons in the buy box. Thumb-typing a card number is the biggest friction point on mobile checkout, and removing it for wallet users is the single highest-leverage change available.",
+      "plain_english_action": "Add Apple Pay and Google Pay express checkout buttons in the purchase zone above or just below the Add to Cart button."
+    },
+    {
+      "f_ref": "checkout-flows F-03",
+      "plain_english_summary": "The page shows $59.95 with no shipping cost anywhere in the buy box, but the underlying data records a $7.99 shipping charge for this item. Shoppers don't see that until checkout — and an unexpected $7.99 surprise on a $60 item is the textbook cause of cart abandonment late in the flow.",
+      "plain_english_action": "Add a single line under the price showing the actual shipping cost or free-shipping eligibility for this product."
+    },
+    {
+      "f_ref": "checkout-flows F-04",
+      "plain_english_summary": "PayPal Pay Later shows up nicely beside the price ('Pay in 4 of $14.99'), but Affirm — which the store also accepts and links to from the footer — never appears at the price block. Shoppers who prefer Affirm have to trust that checkout will offer it, and many don't take that on faith.",
+      "plain_english_action": "Add an Affirm 'as low as $X/month' line right alongside the existing PayPal Pay Later message."
+    },
+    {
+      "f_ref": "checkout-flows F-05",
+      "plain_english_summary": "PayPal Pay Later shows 'Pay in 4 interest-free payments of $14.99' immediately below the price on mobile — exactly where it needs to be for shoppers evaluating affordability. This is doing its job."
+    },
+    {
+      "f_ref": "checkout-flows F-06",
+      "plain_english_summary": "The header keeps the cart, login, and full category navigation visible at all times on desktop, so visitors can browse, add to cart, and check out without losing their session. This works."
+    },
+    {
+      "f_ref": "content-seo F-01",
+      "plain_english_summary": "Your page title (what shows in Google search results) calls these 'End Weights' but your page heading calls them 'End Caps'. Two different names for the same product makes Google more likely to rewrite your title in search results — often dropping your brand name in the process.",
+      "plain_english_action": "Pick one term — End Weights or End Caps — and use it consistently in both the page title and the H1."
+    },
+    {
+      "f_ref": "content-seo F-02",
+      "plain_english_summary": "Your product page is missing the standard product identifier codes (GTIN/MPN) that Google Shopping and AI shopping assistants like ChatGPT use to match your product across the web. Without them, your product becomes invisible in cross-platform price comparisons and AI-driven shopping searches.",
+      "plain_english_action": "Add the manufacturer part number (mpn) and, if available, a UPC/EAN (gtin) to the product's structured data."
+    },
+    {
+      "f_ref": "content-seo F-03",
+      "plain_english_summary": "Your product schema declares the price valid only through April 29, 2026. Once that date passes, Google flags the price as expired and removes the product from Shopping rich results, price-comparison panels, and AI shopping agent listings. This is one of the few problems on the page that gets dramatically worse on its own, on a deadline.",
+      "plain_english_action": "Set the price-valid-until date to roll forward 30-90 days automatically rather than expiring on a near-term hardcoded date."
+    },
+    {
+      "f_ref": "content-seo F-05",
+      "plain_english_summary": "Your page title (what shows in Google search results) calls these 'End Weights' but your page heading calls them 'End Caps'. Two different names for the same product makes Google more likely to rewrite your title in search results — often dropping your brand name in the process.",
+      "plain_english_action": "Pick one term — End Weights or End Caps — and use it consistently in both the page title and the H1."
+    },
+    {
+      "f_ref": "content-seo F-06",
+      "plain_english_summary": "The desktop product schema is missing the return-policy block that the mobile version already has. AI shopping assistants compare return policies when ranking equivalent products — your competitors with this data have an advantage in those comparisons.",
+      "plain_english_action": "Reconcile the desktop schema to include the same 90-day MerchantReturnPolicy block already present on mobile."
+    },
+    {
+      "f_ref": "content-seo F-07",
+      "plain_english_summary": "Your product schema has the manufacturer part number but no GTIN — the universal barcode identifier. AI shopping agents (ChatGPT Shopping, Google AI Shopping) use GTIN to confirm they're looking at the same product across multiple stores. Without it, your product is invisible to those cross-store comparisons.",
+      "plain_english_action": "Add the EvolutionR-assigned UPC or EAN to the product schema if one exists; otherwise verify the MPN is fully populated as a fallback."
+    },
+    {
+      "f_ref": "content-seo F-08",
+      "plain_english_summary": "Your product image URL in the structured data starts with http:// instead of https://. Google flags this protocol mismatch, and it can cause the product image to be disapproved in Google Shopping, removing the picture from comparison panels.",
+      "plain_english_action": "Change the image URL in the JSON-LD template from http:// to https://."
+    },
+    {
+      "f_ref": "content-seo F-09",
+      "plain_english_summary": "The 90-day return policy is correctly described in the structured data — that's a real competitive advantage since most product pages skip this entirely. The data fields are all present and properly formed; the one thing to confirm is that the 90-day window in schema matches what you actually publish on your terms page."
+    },
+    {
+      "f_ref": "content-seo F-10",
+      "plain_english_summary": "Your page URL, canonical tag, page title, and meta description are all clean and well-formed — proper length, no junk parameters, descriptive slug. This basic SEO hygiene is in good shape."
+    },
+    {
+      "f_ref": "content-seo F-11",
+      "plain_english_summary": "Your URL structure is clean and Google-friendly — short, descriptive, no junk parameters. This is doing its job for both search and link consolidation."
+    },
+    {
+      "f_ref": "performance-ux F-01",
+      "plain_english_summary": "Your hero product image — the big photo that loads first — is treated by browsers as no more important than the small thumbnails further down the page. That delay slows the page load metric Google ranks on and that controlled tests link directly to conversion lift. Two attribute tweaks in the template fix this.",
+      "plain_english_action": "Add fetchpriority='high' to the hero image and a preload hint in the page head."
+    },
+    {
+      "f_ref": "performance-ux F-02",
+      "plain_english_summary": "Your hero product image — the big photo that loads first on mobile — is treated by browsers as no more important than the small font files. That delay slows the page load metric Google ranks on and that controlled tests link directly to conversion lift. Two attribute tweaks in the template fix this.",
+      "plain_english_action": "Add fetchpriority='high' to the hero image and a preload hint in the page head."
+    },
+    {
+      "f_ref": "performance-ux F-03",
+      "plain_english_summary": "Your logo and other above-the-fold images don't tell the browser their dimensions in advance, so the page jumps and reflows as each image loads. That visible jitter during the first seconds of page load drags down both your search ranking and conversion rate.",
+      "plain_english_action": "Add explicit width and height attributes to the logo and other header images."
+    },
+    {
+      "f_ref": "performance-ux F-04",
+      "plain_english_summary": "Your product images are JPEG files only — no modern AVIF or WebP versions. AVIF cuts file size by 45-55% at the same visual quality and is supported by 95% of browsers. The bandwidth waste compounds across every page load and drags your page-speed score that Google uses for ranking.",
+      "plain_english_action": "Enable automatic AVIF/WebP format negotiation through your image CDN, or wrap images in a <picture> element offering modern formats."
+    },
+    {
+      "f_ref": "performance-ux F-05",
+      "plain_english_summary": "Your logo image doesn't tell the browser its dimensions in advance, so the page header jumps and reflows as the logo loads. That visible jitter during the first seconds of page load drags down both your search ranking and your mobile revenue.",
+      "plain_english_action": "Add explicit width='209' and height='50' attributes to the logo image tag."
+    },
+    {
+      "f_ref": "performance-ux F-06",
+      "plain_english_summary": "Once a mobile shopper scrolls past the Add to Cart button to read the description and reviews, the purchase button disappears entirely. They have to scroll all the way back to the top to buy — and that extra friction is exactly where engaged shoppers quietly drop off.",
+      "plain_english_action": "Add a sticky bottom bar that follows the visitor down the page, showing the price and an Add to Cart button at all times."
+    },
+    {
+      "f_ref": "performance-ux F-07",
+      "plain_english_summary": "Your page loads the same stylesheet (brainyfilter.css) twice in the page header from what looks like a template copy-paste mistake. Each render-blocking duplicate slows the first paint by one extra round-trip and parse pass. There's no benefit, just overhead.",
+      "plain_english_action": "Delete the duplicate <link> tag for brainyfilter.css from the page head template."
+    },
+    {
+      "f_ref": "performance-ux F-08",
+      "plain_english_summary": "On mobile, all your category navigation hides behind a single hamburger menu icon. The vehicle category strip below the header almost helps, but the rightmost option (Gear) gets clipped at the screen edge. Hidden navigation hurts cross-product browsing — and shoppers who arrive for one part don't realize you carry their full vehicle's worth of accessories.",
+      "plain_english_action": "Either shorten the vehicle-category labels so all five fit at 390px without clipping, or add a 4-item persistent bottom navigation bar."
+    },
+    {
+      "f_ref": "performance-ux F-09",
+      "plain_english_summary": "The header tap targets — menu, search, cart — are all 44x44 pixels, meeting Apple and Google's recommendation and exceeding the WCAG accessibility minimum. Tapping these works reliably."
+    },
+    {
+      "f_ref": "post-purchase F-01",
+      "plain_english_summary": "Your Reward Points loyalty program is hidden in the footer, more than 2,400 pixels down on mobile — most shoppers never scroll that far. Visitors making a $59.95 purchase have no idea they could be earning points right now, which is the single highest-converting moment to ask them to enroll.",
+      "plain_english_action": "Add a 'Earn 60 points on this purchase' callout right under the price with a one-tap free enrollment link."
+    },
+    {
+      "f_ref": "post-purchase F-02",
+      "plain_english_summary": "Your Reward Points loyalty program is hidden in the footer with no mention near the price or Add to Cart button. A buyer evaluating $59.95 has no idea they're about to earn points on this purchase — a piece of value that visibly rewards the decision they're considering.",
+      "plain_english_action": "Show 'Earn 60 points with this purchase ($0.60 toward your next reward)' directly under the price."
+    },
+    {
+      "f_ref": "post-purchase F-03",
+      "plain_english_summary": "Slingmods' customers are tight-knit Spyder and Slingshot enthusiasts who actively recommend products to each other in forums and at rallies. Right now, every satisfied customer who would naturally share has no way to do it through your store — no referral incentive, no share button.",
+      "plain_english_action": "Launch a referral program with double-sided framing ('Give $15, Get $15') and surface it in the order confirmation email at minimum."
+    },
+    {
+      "f_ref": "post-purchase F-04",
+      "plain_english_summary": "Slingmods' customers are tight-knit Spyder and Slingshot enthusiasts who recommend products to each other in forums and at rallies. Right now, every satisfied customer who would naturally share has no way to do it through your store — no referral incentive, no share mechanism, nothing in the footer.",
+      "plain_english_action": "Launch a referral program with double-sided framing ('Give $15, Get $15') and surface it in the post-purchase email and PDP footer."
+    },
+    {
+      "f_ref": "post-purchase F-05",
+      "plain_english_summary": "Track My Order is in the footer for returning customers, which is fine — but first-time buyers see no reassurance about what happens after they click Add to Cart. A single line near the button telling them they'll get an email with tracking would reduce the post-purchase anxiety that drives 'where is my order?' support tickets.",
+      "plain_english_action": "Add 'You'll receive a tracking number by email when your order ships' below the Add to Cart button."
+    },
+    {
+      "f_ref": "pricing F-01",
+      "plain_english_summary": "Your $59.95 sits alone with no original price crossed out, no compare-at, no savings line. Shoppers who haven't seen this product before have no reference for whether $59.95 is a great deal or expensive for what they're getting. Without an anchor, they default to whatever cheaper alternative they last saw on Google.",
+      "plain_english_action": "Show an MSRP strikethrough above the price (e.g., 'MSRP $79.95 — Your Price $59.95') with the savings amount displayed as its own line."
+    },
+    {
+      "f_ref": "pricing F-02",
+      "plain_english_summary": "Your $59.95 sits alone with no original price crossed out, no compare-at, no savings line. Shoppers who haven't seen this product before have no reference for whether $59.95 is a great deal or expensive for what they're getting. Without an anchor, they default to whatever cheaper alternative they last saw on Google.",
+      "plain_english_action": "Show an MSRP strikethrough above the price (e.g., 'MSRP $79.95 — Your Price $59.95') with the savings amount displayed as its own line."
+    },
+    {
+      "f_ref": "pricing F-03",
+      "plain_english_summary": "Mobile shoppers see $59.95 with no shipping information anywhere near the price, but your data records a $7.99 shipping charge for this item. The first time a buyer learns they owe $67.94 instead of $59.95 is at checkout — and that 13% surprise on top of the price is what drives carts to be abandoned at the last step.",
+      "plain_english_action": "Add a single line under the price showing 'Ships for $7.99' or 'Free shipping on orders over $75'."
+    },
+    {
+      "f_ref": "pricing F-04",
+      "plain_english_summary": "Your top banner advertises 'Free Shipping On Most Orders Over $75', but the $59.95 product on this page has no callout telling the visitor they're $15.05 from qualifying. The free-shipping goal only motivates an additional purchase if the shopper sees the gap right when they're about to commit.",
+      "plain_english_action": "Add a 'Add $15.05 more for free shipping' line near the price block or below the Add to Cart button."
+    },
+    {
+      "f_ref": "pricing F-05",
+      "plain_english_summary": "You publish a Price Match Guarantee but it's buried in the footer. A shopper comparing your $59.95 against another vendor sees the bare price with no reassurance you'll match a lower number — so they go check the competitor instead of clicking buy.",
+      "plain_english_action": "Add a small Price Match Guarantee mark or one-line statement adjacent to the price block or below the Add to Cart button."
+    },
+    {
+      "f_ref": "pricing F-06",
+      "plain_english_summary": "Your $59.95 ending uses the standard charm-pricing pattern, but at this price level the .95 trick doesn't actually move the leftmost digit — the brain still reads it as 'fifty-something'. The genuine left-digit threshold for charm pricing here would be $49.99 or below; at $59.95, the cent ending is essentially neutral.",
+      "plain_english_action": "Either evaluate $49.99 as a feasible price point, or accept that .95 vs .99 vs round numbers makes negligible difference at this level — and prioritize the MSRP anchor instead."
+    },
+    {
+      "f_ref": "pricing F-07",
+      "plain_english_summary": "The $59.95 price ending preserves the small left-digit charm-pricing benefit, which is appropriate for a utilitarian accessory. But you're missing the companion piece: showing 'Save $X' or '% off' alongside the price would make the deal explicit instead of leaving it implied. Charm pricing alone is a small effect; pairing it with a visible savings number multiplies it.",
+      "plain_english_action": "If the product had a higher original price, add a 'Save $20' (or whatever the actual savings) line below the price."
+    },
+    {
+      "f_ref": "pricing F-08",
+      "plain_english_summary": "PayPal Pay Later shows 'Pay in 4 interest-free payments of $14.99' right below the price — visible, accurate, and at the moment of purchase decision. This is doing its job and adds an Affirm option alongside it (see checkout-flows F-04) to capture both BNPL audiences."
+    },
+    {
+      "f_ref": "product-media F-01",
+      "plain_english_summary": "Your product page has a YouTube demonstration video but no structured data telling search engines about it. Without that markup, the video can never appear in Google's Video tab or get a video thumbnail in regular search results — losing the 25-40% click-through bump that videos provide for high-intent searchers looking for product demos.",
+      "plain_english_action": "Add VideoObject structured data to the page head with the video name, thumbnail URL, upload date, and embed URL."
+    },
+    {
+      "f_ref": "product-media F-02",
+      "plain_english_summary": "Your product video sits below the Add to Cart button on mobile, separated from the image gallery shoppers actually look at when evaluating the product. Visitors who don't scroll past the purchase zone never see it — meaning your video reaches mostly low-intent browsers, not the high-intent shoppers it would convert.",
+      "plain_english_action": "Move the video into the gallery as the second or third image with a play-button thumbnail."
+    },
+    {
+      "f_ref": "product-media F-03",
+      "plain_english_summary": "Your product video sits in the right column outside the main image gallery shoppers look through when evaluating the product. Visitors who scan the gallery sequentially miss the video entirely — meaning a well-produced demonstration becomes invisible to the buyers who would convert from seeing it.",
+      "plain_english_action": "Move the video into the gallery as the second or third image with a play-button thumbnail."
+    },
+    {
+      "f_ref": "product-media F-04",
+      "plain_english_summary": "Your gallery has 7 product images but none of them shows the end weights against a hand, ruler, or installed handlebar for scale. Buyers can't tell from packshots how big these parts actually are — and for a fitment accessory that's the question that drives both purchase hesitation and post-purchase returns.",
+      "plain_english_action": "Add one image to the gallery showing the end weights held in a hand or installed alongside a recognizable reference."
+    },
+    {
+      "f_ref": "product-media F-05",
+      "plain_english_summary": "Your gallery shows the end weights from multiple angles but none of them shows the part against a hand, handlebar, or familiar object for scale. Buyers can't tell from packshots how big these parts actually are — and for a fitment accessory that's the question that drives both purchase hesitation and post-purchase returns.",
+      "plain_english_action": "Add one image to the gallery showing the end weights held in a hand or installed alongside a recognizable reference."
+    },
+    {
+      "f_ref": "product-media F-06",
+      "plain_english_summary": "Your product page has a YouTube demonstration video but no structured data telling search engines about it. Without that markup, the video can never appear in Google's Video tab or get a video thumbnail in regular search results — missing high-intent buyers searching specifically for product demos.",
+      "plain_english_action": "Add VideoObject structured data to the page head with the video name, thumbnail URL, upload date, and embed URL."
+    },
+    {
+      "f_ref": "product-media F-07",
+      "plain_english_summary": "On mobile, your 7 thumbnails show as a static 4-plus-3 grid below the hero image, with no image counter and no swipe affordance. Visitors who don't realize there are 7 images may decide based on the first hero shot alone — missing the installed-on-bike lifestyle shots that are the most persuasive for a fitment accessory.",
+      "plain_english_action": "Reconfigure the thumbnails as a horizontal scrollable strip with an 'X of 7' counter overlay on the hero image."
+    },
+    {
+      "f_ref": "product-media F-08",
+      "plain_english_summary": "Your desktop gallery uses an actual thumbnail strip with all 8 product images visible at once — much better than the dot indicators that hide images from half of desktop visitors. This pattern works."
+    },
+    {
+      "f_ref": "product-media F-09",
+      "plain_english_summary": "Your 7-image gallery covers the right product types — hero shot, detail close-ups, installed-on-handlebar lifestyle angles. Quantity and variety are appropriate for this category. The one missing piece is a scale reference image (covered separately in F-04)."
+    },
+    {
+      "f_ref": "trust-credibility F-01",
+      "plain_english_summary": "The Add to Cart button has no security mark, no payment icons, no return-policy badge, no shipping reassurance — just a 'Login & Earn 60 Points' loyalty prompt. Your payment icons (Visa, PayPal, Apple Pay, etc.) sit 1,000 pixels down in the footer. Baymard's research is consistent: trust signals only build confidence when they're right next to the buy button, not floating on the page elsewhere.",
+      "plain_english_action": "Move a small payment-icon strip and a one-line return/shipping reassurance to directly below the Add to Cart button."
+    },
+    {
+      "f_ref": "trust-credibility F-02",
+      "plain_english_summary": "The five star icons next to the review count are invisible to screen readers — visitors using assistive technology hear '15 reviews, In Stock' but never learn the actual rating is 5 stars. That's a missed conversion signal for the 7.5 million US screen reader users, plus an ADA accessibility compliance gap.",
+      "plain_english_action": "Add an aria-label='Rated 5 out of 5 stars' to the star group and mark each individual star icon aria-hidden."
+    },
+    {
+      "f_ref": "trust-credibility F-03",
+      "plain_english_summary": "Your perfect 5.0 rating across 15 reviews looks great at first glance, but informed shoppers have learned to be suspicious of perfect scores — they read as filtered or fabricated. Spiegel's research finds purchase likelihood actually peaks at 4.0-4.7 stars and drops as ratings approach 5.0. The fix isn't to lower the rating — it's to grow the review base so authentic distribution naturally emerges.",
+      "plain_english_action": "Implement a post-delivery review-request email to all buyers (not just satisfied ones) so the rating distribution moves toward authentic over time."
+    },
+    {
+      "f_ref": "trust-credibility F-04",
+      "plain_english_summary": "Your 15 customer reviews are hidden behind a 'Reviews' tab that requires a tap to open. Mobile shoppers who don't tap never see them — and Google indexes that hidden text less reliably, so the SEO value of those reviews is also wasted. Showing even 3-5 reviews in the initial page would unlock both conversion trust and organic traffic.",
+      "plain_english_action": "Render the first 3-5 reviews directly in the page rather than hiding them behind the tab."
+    },
+    {
+      "f_ref": "trust-credibility F-05",
+      "plain_english_summary": "Your perfect 5.0 rating across 15 reviews looks great at first glance, but informed shoppers have learned to be suspicious of perfect scores — they read as filtered or fabricated. Spiegel's research finds purchase likelihood actually peaks at 4.0-4.7 stars and drops as ratings approach 5.0. The fix isn't to lower the rating — it's to grow the review base so authentic distribution naturally emerges.",
+      "plain_english_action": "Implement a post-delivery review-request email to all buyers (not just satisfied ones) and display the full star-rating distribution alongside the average."
+    },
+    {
+      "f_ref": "trust-credibility F-06",
+      "plain_english_summary": "Your Photos tab shows '(1)' — just one customer photo of this product installed. For a handlebar accessory where the entire purchase decision hinges on 'will this look right on my bike?', a single hidden customer photo provides almost none of the trust lift that real-world installation photos can deliver.",
+      "plain_english_action": "Run a post-purchase photo collection campaign offering bonus loyalty points for photo reviews, then surface the best 1-2 customer photos in the main gallery."
+    },
+    {
+      "f_ref": "trust-credibility F-07",
+      "plain_english_summary": "Your store offers a 90-day return window — that's already in the product schema — but nothing on the page actually tells shoppers about it near the Add to Cart button. The reassurance is locked away in the Terms & Conditions footer link that most shoppers never click.",
+      "plain_english_action": "Add a small '90-Day Returns' badge or one-line statement adjacent to the Add to Cart button."
+    },
+    {
+      "f_ref": "trust-credibility F-08",
+      "plain_english_summary": "Your 15 reviews are above the threshold where reviews matter most (the jump from 0 to 5 reviews is huge), but you're still in the range where each additional review adds meaningful credibility. For a niche fitment item where buyers want confirmation from other Spyder owners, getting to 50+ reviews would noticeably strengthen the social-proof signal.",
+      "plain_english_action": "Set up an automatic post-delivery review-request email going to all buyers, sent 7-14 days after delivery for highest response rates."
+    },
+    {
+      "f_ref": "trust-credibility F-09",
+      "plain_english_summary": "Your phone number and physical address are clearly visible in both the header and the footer. For a specialty parts retailer that buyers may not have purchased from before, those visible contact signals tell shoppers a real business stands behind the transaction. This is doing its job."
+    },
+    {
+      "f_ref": "trust-credibility F-10",
+      "plain_english_summary": "Your product description goes beyond what manufacturers typically publish — it explains the physics of why hollow handlebars vibrate, quantifies the weight differential ('8x heavier than stock'), and lists exact Spyder model variants for 2024-2026. That demonstrates real expertise in the category and is exactly the kind of content Google's E-E-A-T quality criteria reward."
+    },
+    {
+      "f_ref": "trust-credibility F-11",
+      "plain_english_summary": "Your aggregate rating is correctly marked up in structured data, so it appears as star ratings in Google search results — that's worth roughly 20% organic traffic uplift. The schema is doing its job; the underlying issue is the perfect 5.0 score itself, which informed shoppers find suspicious whether they see it on-page or in search results."
+    },
+    {
+      "f_ref": "visual-cta F-01",
+      "plain_english_summary": "Once a mobile shopper scrolls past the Add to Cart button to read the description, fitment guide, and reviews, the purchase button is gone — and there's no sticky bar bringing it along. Engaged shoppers who finish reading have already made the decision, but the button isn't where their thumb is.",
+      "plain_english_action": "Add a sticky bottom bar showing the price and a full-width Add to Cart button as soon as the visitor scrolls past the inline button."
+    },
+    {
+      "f_ref": "visual-cta F-02",
+      "plain_english_summary": "Your H1 leads with construction material and product type ('Stainless Steel Weighted Handlebar End Caps') before the visitor knows why they should care. The actual benefit — eliminating handlebar vibration on long rides — only shows up below the fold. Benefit-led headlines consistently outperform feature-led ones, and this fix costs one copywriting pass.",
+      "plain_english_action": "Rewrite the H1 to lead with the rider outcome: 'Eliminate Handlebar Vibration on Your Can-Am Spyder F3 & RT (2024+)' or similar."
+    },
+    {
+      "f_ref": "visual-cta F-03",
+      "plain_english_summary": "Your Add to Cart button has a loyalty-points prompt next to it but no return-policy mark, no shipping line, no satisfaction guarantee. The free-shipping threshold and price-match guarantee both exist on the site — they're just not where the buyer is making the decision.",
+      "plain_english_action": "Add a single line of microcopy directly below the Add to Cart button summarizing shipping and returns ('Free shipping over $75 · 90-day returns')."
+    },
+    {
+      "f_ref": "visual-cta F-04",
+      "plain_english_summary": "Your Add to Cart button has no microcopy beneath it — no shipping policy, no return reassurance, no satisfaction guarantee. Your store actually has a 90-day return policy and free shipping over $75; both are buried in places mobile shoppers never scroll to see.",
+      "plain_english_action": "Add a single line of microcopy directly below the Add to Cart button summarizing shipping and returns ('Free shipping on most U.S. orders · 90-day returns')."
+    },
+    {
+      "f_ref": "visual-cta F-05",
+      "plain_english_summary": "On a mobile phone, your hero gallery (main image plus thumbnails) takes up the entire first screen — pushing the H1 to the very bottom edge, the price below the fold, and the Add to Cart button completely off-screen. A shopper who arrives with intent has to scroll just to find the buy button.",
+      "plain_english_action": "Cap the main gallery image at 360-380px tall on mobile so the title, rating, price, and Add to Cart all fit within the first screen."
+    },
+    {
+      "f_ref": "visual-cta F-06",
+      "plain_english_summary": "On desktop, your image gallery sits on the left and the buy box (title, rating, price, Add to Cart) sits on the right, all above the fold. This matches the natural left-to-right reading flow that eye-tracking studies identify as the strongest pattern for ecommerce. This is doing its job."
+    },
+    {
+      "f_ref": "visual-cta F-07",
+      "plain_english_summary": "Your Add to Cart button uses the standard 'Add to Cart' label with a cart icon — full width, white-on-black, clearly the primary action. The label is correct: 'Add to Cart' frames the action as low-commitment and reversible, which converts better than 'Buy Now' for most ecommerce. This is doing its job."
+    }
+  ],
+  "telemetry": {
+    "scope_page_count": 67,
+    "scope_device_desktop_count": 6,
+    "scope_device_mobile_count": 9,
+    "ethics_findings_count": 7,
+    "baton_elements_kept_after_trim": 33
+  },
+  "notes": [
+    "audience-mobile cluster returned status='skipped' with no sections routed; desktop audience emission carries the cross-device audience signal. No audience-mobile findings expected.",
+    "ethics emission included 7 findings (1 ADJACENT email-subscribe form, 6 PASS); the canonical f_refs allowlist exposes only the 6 PASS findings as ethics F-01..F-06. The ADJACENT note is rendered in the Ethics Gate section without an f_ref heading, per ethics-state policy.",
+    "Desktop checkout-flows specialist emitted a local F-2 'No Shipping Cost Estimate at $59.95 Price Point' that is not present in the canonical f_refs manifest — the lead's Layer-2 dedup folded it into the page-scoped checkout-flows F-03 (mobile-titled). Desktop coverage of the shipping-cost gap is carried in the Top Priorities narrative for the price-block consolidation story.",
+    "Only one canonical f_ref carries devices_present: ['desktop', 'mobile'] — content-seo F-03 (priceValidUntil expires within 24 hours of audit capture). Sync_refs contains exactly that one ref, rendered with byte-identical OBSERVATION/RECOMMENDATION/Why-this-matters paragraphs in both audit documents."
+  ]
+}

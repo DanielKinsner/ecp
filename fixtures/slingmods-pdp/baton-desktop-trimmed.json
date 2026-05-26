@@ -1,0 +1,386 @@
+{
+  "capture_state": {
+    "hydration": "post-hydration",
+    "overlays_detected": [
+      {
+        "dismissal_method": "close-button",
+        "dismissed": true,
+        "e_index": "e16",
+        "type": "newsletter-modal"
+      },
+      {
+        "dismissal_method": "accept-button",
+        "dismissed": true,
+        "e_index": "e15",
+        "type": "cookie-consent"
+      }
+    ],
+    "page_height_px": 1661
+  },
+  "captured_at": "2026-04-28T23:11:00.000Z",
+  "device": "desktop",
+  "elements": [
+    {
+      "accessible_name": "SLINGSHOT",
+      "e_index": "e0",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 34.0,
+        "width": 129.0,
+        "x": 359.0,
+        "y": 138.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "[role='button']",
+      "tag": "a",
+      "text_content": "SLINGSHOT"
+    },
+    {
+      "accessible_name": "0  - $0.00",
+      "e_index": "e3",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 37.0,
+        "width": 263.0,
+        "x": 1260.0,
+        "y": 77.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": ".btn.dropdown-toggle",
+      "tag": "button",
+      "text_content": "0  - $0.00"
+    },
+    {
+      "accessible_name": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3",
+      "e_index": "e4",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 73.0,
+        "width": 458.0,
+        "x": 773.0,
+        "y": 280.0
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h1",
+      "tag": "h1",
+      "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)"
+    },
+    {
+      "accessible_name": "$59.95",
+      "e_index": "e5",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 458.0,
+        "x": 773.0,
+        "y": 403.0
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "$59.95"
+    },
+    {
+      "accessible_name": "(15 reviews) In Stock",
+      "e_index": "e6",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 458.0,
+        "x": 773.0,
+        "y": 353.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*='rating']",
+      "tag": "div",
+      "text_content": "(15 reviews) In Stock"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e7",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 18.0,
+        "width": 16.0,
+        "x": 773.0,
+        "y": 354.0
+      },
+      "role": "i",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*='star']",
+      "tag": "i",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "$59.95",
+      "e_index": "e8",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 64.0,
+        "width": 458.0,
+        "x": 773.0,
+        "y": 403.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*='price']",
+      "tag": "div",
+      "text_content": "$59.95"
+    },
+    {
+      "accessible_name": "59.95",
+      "e_index": "e9",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 30.0,
+        "width": 68.0,
+        "x": 788.0,
+        "y": 402.0
+      },
+      "role": "span",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*='price']",
+      "tag": "span",
+      "text_content": "59.95"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e10",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": true,
+      "rect": {
+        "height": 60.0,
+        "width": 256.0,
+        "x": 1835.0,
+        "y": 1006.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*='badge']",
+      "tag": "div",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "0",
+      "e_index": "e11",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 12.0,
+        "width": 12.0,
+        "x": 1370.0,
+        "y": 84.0
+      },
+      "role": "span",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*='cart']",
+      "tag": "span",
+      "text_content": "0"
+    },
+    {
+      "accessible_name": "FREE SHIPPING ON MOST ORDERS OVER $75*",
+      "e_index": "e12",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35.0,
+        "width": 1905.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "role": "navigation",
+      "scroll_y_at_capture": 0,
+      "selector": "nav",
+      "tag": "nav",
+      "text_content": "FREE SHIPPING ON MOST ORDERS OVER $75*"
+    },
+    {
+      "accessible_name": "Vehicles",
+      "e_index": "e13",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 36.0,
+        "width": 1190.0,
+        "x": 358.0,
+        "y": 137.0
+      },
+      "role": "navigation",
+      "scroll_y_at_capture": 0,
+      "selector": "nav#modelmenu",
+      "tag": "nav",
+      "text_content": "Vehicles"
+    },
+    {
+      "accessible_name": "Categories",
+      "e_index": "e14",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 51.0,
+        "width": 1190.0,
+        "x": 358.0,
+        "y": 171.0
+      },
+      "role": "navigation",
+      "scroll_y_at_capture": 0,
+      "selector": "nav.default.superbig",
+      "tag": "nav",
+      "text_content": "Categories"
+    },
+    {
+      "accessible_name": "Call Us: (800)211-1396",
+      "e_index": "e15",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 102.0,
+        "width": 1190.0,
+        "x": 358.0,
+        "y": 35.0
+      },
+      "role": "banner",
+      "scroll_y_at_capture": 0,
+      "selector": "header",
+      "tag": "header",
+      "text_content": "Call Us: (800)211-1396 | Message Us"
+    },
+    {
+      "accessible_name": "PayPal Pay Later message",
+      "e_index": "e16",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 24.0,
+        "width": 458.0,
+        "x": 773.0,
+        "y": 442.0
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*='pay']",
+      "tag": "div",
+      "text_content": "PayPal Pay Later"
+    },
+    {
+      "accessible_name": "Information Affirm Monthly Payments About Us",
+      "e_index": "e18",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 296.0,
+        "width": 1905.0,
+        "x": 0.0,
+        "y": 1345.0
+      },
+      "role": "contentinfo",
+      "scroll_y_at_capture": 581,
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditions"
+    }
+  ],
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "page_head": {
+    "canonical": "https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights",
+    "hreflang": [],
+    "meta_description": "Reduce your Can-Am Spyder F3 & RT handlebar vibration with our EvolutionR Series weighted bar ends, end weights",
+    "og_image": null,
+    "schema_jsonld": [
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "reviewCount": "15"
+        },
+        "brand": {
+          "@type": "Brand",
+          "name": "EvolutionR"
+        },
+        "image": "http://www.slingmods.com/image/catalog/evolutionr/canam-spyder-rt-f3-handlebar-end-weights-2024-up/canam-spyder-handlebar-end-weights-2024-up-gradient-main.jpg",
+        "name": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)",
+        "offers": {
+          "@type": "Offer",
+          "availability": "http://schema.org/InStock",
+          "price": "59.95",
+          "priceCurrency": "USD",
+          "priceValidUntil": "2026-04-29"
+        }
+      }
+    ],
+    "title": "Can-Am Spyder F3 & RT Handlebar End Weights (2024+)",
+    "viewport_meta": "width=device-width, initial-scale=1"
+  },
+  "schema_version": 1,
+  "sections": [
+    {
+      "clusters": [
+        "visual-cta",
+        "pricing",
+        "checkout-flows",
+        "trust-credibility",
+        "category-navigation"
+      ],
+      "label": "Header navigation, product hero, pricing and PayPal widget",
+      "screenshot_ref": "section-1.jpg",
+      "scroll_y_bottom": 1080,
+      "scroll_y_top": 0,
+      "slug": "hero-pricing-paypal"
+    },
+    {
+      "clusters": [
+        "content-seo",
+        "trust-credibility",
+        "performance-ux"
+      ],
+      "label": "Product description, fitment guide and footer",
+      "screenshot_ref": "section-2.jpg",
+      "scroll_y_bottom": 1661,
+      "scroll_y_top": 581,
+      "slug": "product-description-footer"
+    }
+  ],
+  "telemetry": {
+    "chromium_binary": "chromium-1208",
+    "playwright_version": "1.x",
+    "wall_clock_seconds": 373.0
+  },
+  "url": "https://www.slingmods.com/canam-spyder-f3-rt-handlebar-end-weights",
+  "viewport": {
+    "dpr_actual": 1,
+    "dpr_requested": 1,
+    "height": 1080,
+    "width": 1920
+  }
+}

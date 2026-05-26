@@ -1,0 +1,15 @@
+{
+  "name": "ecommerce-conversion-psychology",
+  "description": "E-commerce Psychology toolkit for ecommerce pages using research-backed psychology",
+  "owner": {
+    "name": "Daniel Kinsner"
+  },
+  "plugins": [
+    {
+      "name": "ecp",
+      "description": "E-commerce Psychology toolkit for ecommerce pages, powered by 900+ research-backed findings across pricing, trust, SEO, mobile, visual design, content, and checkout. Audit existing pages or build from scratch with evidence-backed recommendations. Commands: /ecp:audit (full relay), /ecp:build (from scratch), /ecp:quick-scan (fast single-focus), /ecp:compare (competitor gap analysis), /ecp:resume (pick up where you left off). Screenshot-only input, annotated visual reports, ethics compliance, dark chrome design system. Platform-aware (Shopify, Next.js, OpenCart, WooCommerce).",
+      "category": "development",
+      "source": "./"
+    }
+  ]
+}

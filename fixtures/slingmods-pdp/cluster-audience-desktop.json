@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "audience",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:30:00.000Z",
+  "completed_at": "2026-04-28T23:32:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "audience",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "PASS",
+      "title": "Star Ratings and Review Count Above Fold",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e6",
+        "text_content": "(15 reviews) In Stock",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Star rating and '(15 reviews) IN STOCK' text renders immediately below the product title at y=353, above the fold on a 1080px viewport. The aggregate 5-star schema.org markup also surfaces the rating count to search engines."
+        },
+        {
+          "type": "dom",
+          "reference": "e6"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "personalization-psychology.md",
+          "section": "Finding 10: Social Proof Framing Outperforms Algorithmic Framing",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product page renders a 5-star rating block with '(15 reviews) IN STOCK' immediately below the product title, at y=353px — well within the above-fold zone on a 1920×1080 desktop viewport. The structured data markup (schema.org AggregateRating, reviewCount: 15, ratingValue: 5) reinforces this in search snippets. Social proof at this position intercepts the price-evaluation moment, directly reducing perceived risk before the visitor scrolls.",
+      "recommendation": "No change required for this element. The placement and format are well-executed for audience validation at the price-decision point.",
+      "why_this_matters": "Visible above-fold social proof at the moment a visitor evaluates the price directly reduces purchase hesitation. Removing or burying this signal would measurably reduce conversion for first-time visitors who haven't bought from EvolutionR before.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "audience",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Cross-Sell Framed with Social Proof Language",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": ""
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The product detail panel (x=773-1231, y=280-466) contains title, ratings, price, PayPal Pay Later, and an Add to Cart button. No 'customers who viewed this also bought' or 'popular with Spyder owners' block appears anywhere in the captured sections."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 581,
+          "viewport": "desktop",
+          "context": "Section 2 shows product description, fitment guide, benefits/features bullets, and footer. No social-proof-framed recommendation block appears in the product body or between the description and footer."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "personalization-psychology.md",
+          "section": "Finding 10: Social Proof Framing Outperforms Algorithmic Framing — 270% Purchase Lift with Reviews",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Neither captured section includes a product recommendation block framed with social proof language — there is no 'Customers who bought this also bought,' 'Popular with Spyder owners,' or 'Frequently paired with' widget anywhere on the page. The page ends with a description, fitment guide, and direct footer. A visitor who adds this product to their cart or scrolls to evaluate the purchase has no visible prompt connecting this item to complementary Spyder parts from EvolutionR or other brands on the site.",
+      "recommendation": "If this page's platform (OpenCart/PrestaShop architecture visible in the URL scheme) supports cross-sell widgets, add a 'Customers who bought the EvolutionR End Caps also bought' block using social-proof framing rather than algorithmic framing — 'Popular with Spyder F3 & RT owners' outperforms 'Recommended for you' because it anchors authority in peer behavior, not in the store's algorithm. Place this block between the product description and the footer, above scroll_y ~1200 so it lands in the read zone for engaged visitors who've consumed the description.",
+      "why_this_matters": "Products with visible social-proof-framed cross-sells show up to 270% higher attachment rates than products without recommendations. For a niche accessory product targeting a specific vehicle (Can-Am Spyder F3/RT 2024+), the audience is self-selected and already invested — they are high-intent for complementary products in the same fitment group. Missing this surface leaves revenue on the table from every engaged visitor.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "audience",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Fitment Navigation Confirms Audience but Lacks Acknowledgment Copy",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e13",
+        "text_content": "Vehicles",
+        "role": "navigation"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.75,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The vehicle model nav bar (SLINGSHOT, SPYDER, RYKER, CANYON) renders at y=138px. The product title explicitly names 'Can-Am Spyder F3 & RT Models (Pair) (2024+)' and a green 'Can-Am Spyder Fitment Guide' checkbox list appears at right (2024 Spyder F3-L / F3-S / F3-T / RT / RTL, 2025, 2026). This is strong fitment confirmation — but it is presented as a technical spec block, not as direct audience acknowledgment copy."
+        },
+        {
+          "type": "dom",
+          "reference": "e13"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "personalization-psychology.md",
+          "section": "Finding 9: 90-98% of E-Commerce Traffic is Anonymous — Personalization Strategy Must Account for This",
+          "tier": "Bronze"
+        },
+        {
+          "source": "social-commerce-psychology.md",
+          "section": "Finding 1: Trust Transfer is the Primary Conversion Mechanism — Not In-App Checkout",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The top nav correctly segments vehicles (SLINGSHOT, SPYDER, RYKER, CANYON) and the fitment guide confirms compatibility for 2024–2026 Can-Am Spyder F3 and RT variants. This is effective functional audience segmentation. However, the product page body copy opens with '2024+ Can-Am Spyder F3 & RT Handlebar End Weights — If you own a 2024 or newer Can-Am Spyder F3 or RT...' — this is conditional framing that places the visitor in the position of evaluating whether they qualify. The fitment guide (right column, section-1.jpg) is a checkbox list format, which reads as technical verification rather than as audience confirmation copy that says 'you're in the right place, this fits your bike.'",
+      "recommendation": "If the product description template allows a prominent above-description statement, add a single line immediately below the star rating block (above the price) that mirrors the visitor's vehicle context: for example, 'Built for the 2024+ Can-Am Spyder F3 and RT.' This collapses the fitment verification step into the title zone rather than requiring the visitor to scan a right-column checklist. The fitment guide can remain as a secondary confirmation, but the primary audience acknowledgment should be in the product's first readable line.",
+      "why_this_matters": "Visitors landing on a niche accessory page from a search or nav click have one immediate question — 'does this fit my bike?' Delaying that confirmation until the visitor scans a secondary column or reads through the description body increases bounce risk. Reducing the cognitive step from 'I need to check the fitment guide' to 'the headline already told me' shortens the time-to-confidence that precedes add-to-cart.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "audience",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Payment Breadth Covers Core US Audience Payment Preferences",
+      "surface": "product-description-footer",
+      "element": {
+        "baton_index": "e18",
+        "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditions",
+        "role": "contentinfo"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 581,
+          "viewport": "desktop",
+          "context": "Footer payment icon row (visible at bottom of section-2.jpg) shows: Visa, Mastercard, Amex, Discover, Google Pay, Apple Pay, PayPal, Amazon Pay, Affirm — 9 distinct payment methods. The PayPal Pay Later widget (e16, y=442) also surfaces BNPL messaging at the product level."
+        },
+        {
+          "type": "dom",
+          "reference": "e18"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cross-cultural-considerations.md",
+          "section": "Finding 5: Local Currency and Payment Localization Reduce International Cart Abandonment",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The footer payment icon row displays 9 methods: Visa, Mastercard, Amex, Discover, Google Pay, Apple Pay, PayPal, Amazon Pay, and Affirm. This covers the dominant US consumer payment preferences including both digital wallets (Google Pay, Apple Pay, Amazon Pay) and BNPL (Affirm). The PayPal Pay Later messaging also surfaces at the product hero level (e16, y=442), placing installment-payment framing at the price-evaluation moment rather than only in the footer.",
+      "recommendation": "No change required for this element. The payment breadth is appropriate for a US-focused niche accessory site. If the store expands to international markets, the payment icon set would need localization — but for the current US audience, coverage is comprehensive.",
+      "why_this_matters": "Displaying the full breadth of accepted payment methods at both the product level (PayPal Pay Later) and footer confirms that price-sensitive visitors have installment options, reducing the psychological barrier of a $59.95 single-item purchase.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "The cluster-context sections routed to audience include header and footer DOM slices; neither baton section explicitly lists 'audience' in the clusters array, but the audience-relevant signals (social proof, navigation segmentation, payment options, fitment framing) are present throughout the routed sections and were audited.",
+    "No personalization-as-surveillance risk was detected. The site uses fitment-based audience segmentation (vehicle model nav) which is first-party, user-initiated context — well within the safe-zone per the personalization paradox research. No behavioral retargeting signals, cross-site tracking declarations, or algorithmic recommendation framing were observed on the page.",
+    "The review count of 15 with a 5.0 aggregate rating is credible for a niche vehicle accessory SKU. No fake-review risk signals detected.",
+    "The footer disclaimer 'Slingmods and the products offered for sale by it are not affiliated with or endorsed by Polaris / BRP' is a brand-safety statement for the Slingshot product line but is rendered on a Can-Am Spyder product page — this may confuse Spyder buyers who associate BRP with their vehicle. Observed but not emitted as finding because the ambiguity is likely intentional site-wide boilerplate and is a content-seo concern more than audience."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "personalization-psychology.md",
+      "cross-cultural-considerations.md",
+      "social-commerce-psychology.md",
+      "evidence-tiers.md"
+    ],
+    "baton_elements_checked": ["e0", "e1", "e6", "e7", "e13", "e16", "e18"],
+    "screenshots_reviewed": ["section-1.jpg", "section-2.jpg"]
+  }
+}

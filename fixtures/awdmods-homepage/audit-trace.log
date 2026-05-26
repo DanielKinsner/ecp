@@ -1,0 +1,151 @@
+# ECP Audit Forensic Trace
+# Engagement: 2026-04-28-1909a7d0
+# Target: https://awdmods.com/
+# Started: 2026-04-28T19:09:00Z
+# Pipeline: v2
+# Devices: desktop, mobile
+# Clusters: visual-cta, trust-credibility, pricing, checkout-flows, performance-ux, product-media, category-navigation, content-seo, post-purchase, audience
+# Flags: --auto
+# Scope: everything
+# ASSERTIONS (must all be > 0 / true at audit completion):
+#   tasks_created_total: 0
+#   expected_specialist_count: 20
+#   subagent_spawned_acquirers: 2
+#   team_spawned_specialists: 20
+#   subagent_spawned_ethics: 1
+#   subagent_spawned_synthesizer: 1
+#   subagent_spawned_planner: 0
+#   team_spawned_planners: 0
+#   subagent_spawned_reviewer: 0
+#   subagent_spawned_builder: 0
+#   subagent_retried_acquirer: 0
+#   subagent_retried_ethics: 0
+#   subagent_retried_synthesizer: 0
+#   cluster_files_written: 20
+#   ethics_gate_executed: true
+#   idle_notification_total: 0
+# COST TRACE (model choices locked at dispatch time; estimated_tokens_total filled at completion):
+#   model_acquirer: sonnet
+#   model_cluster_specialists: sonnet
+#   model_ethics: sonnet
+#   model_synthesizer: opus
+#   model_planner: opus
+#   model_reviewer: opus
+#   model_builder: sonnet
+#   model_lead: opus
+#   estimated_tokens_total: ~0
+
+# Engagement: 2026-04-28-1909a7d0
+# URL: https://awdmods.com/
+# Devices: desktop, mobile
+# Clusters: all 10
+# Phase J fixture capture (audit-only; plan/review/build skipped per Phase J scope)
+
+# === Trace events (append below) ===
+
+[2026-04-28T19:09:00Z] engagement_setup_start
+  - meta.json written
+  - context.md written
+  - audit-trace.log header written
+
+[2026-04-28T19:09:00Z] agent_browser_detected
+  - agent-browser --version → 0.21.4 exit=0
+  - Playwright chromium-1208 cached at %LOCALAPPDATA%/ms-playwright/
+  - WebFetch fallback NOT engaged
+
+[2026-04-28T19:24:00Z] team_created
+  - TeamCreate audit-2026-04-28-1909-awdmods-homepage (lead-agent-id team-lead@audit-2026-04-28-1909-awdmods-homepage)
+  - Note: team name uses descriptive label form; engagement_id uses hex form (2026-04-28-1909a7d0) for schema/baton-v1.json compliance.
+
+[2026-04-28T19:24:00Z] acquirer_dispatch_complete (parallel desktop + mobile)
+  - subagent_spawned_acquirers: 2
+  - desktop: 5 sections, 5 screenshots, 42 elements, DOM 226KB, STATUS=COMPLETE
+  - mobile: 4 sections, 4 screenshots, 36 elements, DOM 108KB @ 3x DPR (no fallback), STATUS=COMPLETE
+  - No overlays detected on either device (page_head missing meta_description + og_image — content-seo specialist will catch).
+  - No timer/countdown elements.
+  - No configurator pattern.
+  - Batons normalized to schema/baton-v1.json: stripped 48 schema-extra fields from baton.json (mostly `elements[i].class` and `sections[i].occluded`); clamped 1 negative rect.x; baton-mobile.json clean as-acquired.
+  - Both batons VALIDATE OK against schema/baton-v1.json after normalization.
+
+[2026-04-28T19:25:00Z] engagement_id_renamed
+  - Original: 2026-04-28-1909-awdmods-homepage (failed schema/baton-v1.json regex `^\d{4}-\d{2}-\d{2}-[0-9a-f]{8}$`)
+  - New: 2026-04-28-1909a7d0 (8-hex preserves Dan's HHMM "1909" prefix; "a7d0" random hex)
+  - Directory renamed; meta.json + audit-trace.log + context.md updated.
+  - Display label "1909-awdmods-homepage" preserved in meta.json.display_label.
+  - Team name kept as audit-2026-04-28-1909-awdmods-homepage (team rename API not used; team_name is naming convention only and decoupled from engagement_id at the contract level).
+
+[2026-04-28T19:30:00Z] specialist_dispatch_wave_complete (20 teammates spawned in parallel)
+  - team_spawned_specialists: 20
+  - 10 clusters x 2 devices = 20 specialists, all model=sonnet, all team_name=audit-2026-04-28-1909-awdmods-homepage
+  - Clusters: visual-cta, trust-credibility, pricing, checkout-flows, performance-ux, product-media, category-navigation, content-seo, post-purchase, audience
+  - Devices: desktop (1920x1080 @ 1x), mobile (390x844 @ 3x)
+  - Dispatch shape: TEAMMATE (per Phase H lock — cluster specialists keep teammate dispatch in v2)
+  - Each specialist prompt is minimal — points at contracts/specialist-prompt-v2.md (template body) + contracts/specialists/{cluster}.md (per-cluster references + guidance) + cluster-context-{cluster}-{device}.json + baton + screenshots. Lead does NOT pre-load 10 cluster contracts into its own context; specialists self-load.
+  - Lead waits for completion notifications via team mailbox.
+
+[2026-04-29T02:55:00Z] specialist_emissions_validated
+  - cluster_files_written: 20
+  - 20/20 cluster emissions PASS schema/cluster-emission-v1.json after retries
+  - 109 total findings across all clusters
+  - status: 19 complete + 1 skipped (audience-desktop — no audience-cluster surfaces routed; justified)
+  - 4 retries via SendMessage in this run:
+    * specialist-trust-credibility-mobile: title length 104 -> 78 chars (findings[5])
+    * specialist-audience-desktop: skip_reason 870 -> trimmed to <240 chars
+    * specialist-content-seo-desktop: observation 1208 -> trimmed to <1200 chars (findings[3])
+    * specialist-category-navigation-mobile: verdict 'HIGH' -> proper FAIL/PARTIAL/PASS (findings[1] verdict/severity field mixup)
+  - 1 BOM-stripped: cluster-category-navigation-mobile.json had UTF-8 BOM on first emission; stripped in-place by lead.
+  - Business rules check (baton_index existence + evidence_tier == max(citations)): OK across all 20 files.
+
+[2026-04-29T03:25:00Z] ethics_dispatch_complete (subagent, single dispatch, page-scope)
+  - subagent_spawned_ethics: 1
+  - 7 findings: 1 ADJACENT (HIGH) + 6 CLEAR (LOW), status=complete
+  - ADJACENT: privacy policy footer link points to e1520g-k3.myshopify.com staging subdomain instead of canonical awdmods.com (GDPR Art 13 / CCPA chain-of-disclosure fragility)
+  - CLEAR coverage: timer absence, review honesty, AI-image materiality (7 ChatGPT/Gemini decorative images detected, classified non-material), free-shipping above-fold, no-EU-cookie-banner needed, newsletter explicit-opt-in
+  - All BLOCK/ADJACENT findings carry source_url from ethics-gate.md Source Registry (Phase I canary 1 will pass)
+  - ethics_gate_executed: true
+
+[2026-04-29T03:26:00Z] ethics_emission_lead_patch (mechanical schema fixups, no substantive change)
+  - Initial emission failed schema validation with 15 errors; lead applied mechanical patches in place rather than re-dispatching the subagent (10 min round-trip avoided; no substantive content changed):
+  - 14 patches: effort.change_type/scope enum normalization (CLEAR findings used 'none' as placeholder; lead mapped to 'copy'/'single-file' per schema enum constraint; the ADJACENT finding had change_type='content' which lead mapped to 'copy' for href-edit semantics)
+  - 1 patch: telemetry.reference_files_read field stripped (not in schema's telemetry enum: only wall_clock_seconds, input_tokens, output_tokens, playwright_version, chromium_binary allowed)
+  - 1 patch: findings[0].observation trimmed 1255 -> 1193 chars (preserved meaning; trimmed at word boundary + ellipsis)
+  - Re-validated: ethics-findings.json VALIDATES OK against schema/cluster-emission-v1.json
+  - Lead-discipline note: this is an edge case where mechanical schema-enum fixups were applied directly because (a) the ethics subagent has no persistent process to SendMessage; (b) substantive content of all 7 findings was correct; (c) re-dispatching would cost ~10 min for purely mechanical formatting. v2.1 should consider tightening the ethics-subagent template to prevent 'none' / 'content' enum violations at emission time.
+
+[2026-04-29T03:26:30Z] specialist_team_shutdown_initiated
+  - Sent shutdown_request to all 20 specialist teammates after their cluster emissions validated.
+  - UI sidebar will clear gradually as each teammate processes its shutdown_response and terminates.
+  - The audit team itself stays open until TeamDelete at the end of Phase J D1 (after fixture freeze).
+
+[2026-04-29T03:55:00Z] synthesizer_dispatch_complete (subagent, opus, single-shot)
+  - subagent_spawned_synthesizer: 1
+  - audit-desktop.md (75KB, 46 finding subsections + 5 Top Priority stories)
+  - audit-mobile.md (72KB, 45 finding subsections + 5 Top Priority stories)
+  - synthesizer-emission-v1.json (68KB)
+  - Priority Path: 5 stories — modes [bundle, bundle, severity, bundle, quick-wins]
+    * 1. Concentrate trust signals into the Featured Collection (6 refs)
+    * 2. Fix the page head: title, meta description, og:image (5 refs)
+    * 3. Add Product, Offer, AggregateRating JSON-LD (4 refs)
+    * 4. Surface express checkout in cart drawer + vehicle config (4 refs)
+    * 5. Theme template copy and HTML-attribute quick wins (4 refs)
+  - quick_wins_manifest: 46 refs
+  - severity_manifest: 90 refs (95 canonical minus 5 ethics CLEAR not severity-rankable)
+  - scope_page_synchronized_refs: 1 ref (ethics F-01 only — cluster findings each have single-device devices_present per Layer-2 dedup behavior; the synthesizer correctly recognized cross-cluster architectural patterns are integrated into Priority Path bundles, NOT into sync_refs)
+  - humanized_findings: 90 entries (one per actionable f_ref)
+  - Lead-side validation: schema PASS; allowlist PASS (90 unique f_refs all in canonical-f-refs.json valid_refs); cross-device synchronization Levenshtein <=10% confirmed on ethics F-01 (the synthesizer's self-check reported Lev=0.0000)
+
+[2026-04-29T03:58:00Z] visual_reports_rendered (after v2_html_builder.py screenshots adapter patch)
+  - visual-report-desktop-v2.html: 5 screenshots, 45 findings, 45 hotspots placed (e_index=21, section_centroid=17, banner=7)
+  - visual-report-mobile-v2.html:  4 screenshots, 69 findings, 69 hotspots placed (e_index=30, section_centroid=14, banner=25)
+  - Renderer patch: scripts/report/v2_html_builder.py now adapts v2 batons (sections[].screenshot_ref) to the v1 _process_screenshots helper's expected shape (baton.screenshots[]). Surfaced when first render produced 0 screenshots despite JPGs on disk; root cause is a v1-helper / v2-baton-schema contract gap. Forward-compatible: if a baton has both fields, v1 array wins.
+  - Mobile finding count 69 vs synthesizer's reported 45 needs investigation in lead-reflection (renderer may be counting priority-path subsections separately).
+
+[2026-04-29T04:00:00Z] substantive_canaries_run (Phase I run_all_canaries)
+  - ethics_findings_have_source_urls: PASS (1 actionable ADJACENT carries source_url, 6 CLEAR skipped)
+  - element_index_match_rate: FAIL — 0.580 (51/88 present-element findings cite `at eN`); threshold 0.80
+    * desktop: 25/44 = 0.568
+    * mobile:  26/44 = 0.591
+    * Same class of issue as slingmods 0.630 baseline; soft canary, NOT phase-blocking per Phase I lock
+    * Surface in lead-reflection.md "Anomalies"; operator decides at OC#5 whether this is fixture-acceptable
+  - cross_device_ethics_diff: PASS (1 desktop + 1 mobile, diff=0)
+  - Aggregate: all_passed=false (1 of 3 SOFT canaries failed; structural canaries above all PASS; engagement does NOT enter phase: blocked)

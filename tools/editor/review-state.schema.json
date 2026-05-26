@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecp.local/tools/editor/review-state.schema.json",
+  "description": "Editor-local copy of schema/review-state-v1.json. Keep in sync with the canonical schema file.",
+  "$ref": "../../schema/review-state-v1.json"
+}

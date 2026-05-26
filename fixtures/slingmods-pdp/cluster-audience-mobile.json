@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "audience",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:20:00.000Z",
+  "completed_at": "2026-04-28T23:21:30.000Z",
+  "status": "skipped",
+  "skip_reason": "No sections routed to audience cluster on this product page. No personalization, social commerce, locale, or audience-segmentation surfaces present.",
+  "findings": [],
+  "notes": [
+    "The page does include a rewards/loyalty points prompt ('Login & Earn 60 Points when purchasing this item') and an email capture block ('Subscribe to Stay Up to Date') that could be audience-relevant surfaces if routing rules are updated to include them. These were not routed to this cluster in the current dispatch.",
+    "The footer contains an Affirm monthly payments link and a Rewards link that touch loyalty/audience mechanics, but these were routed to trust-credibility and post-purchase clusters, not audience.",
+    "The product targets Can-Am Spyder F3 & RT owners (2024+) — a specific enthusiast segment. No on-page audience segmentation or personalization framing (vehicle selector, 'built for riders like you' copy) is present to surface findings against."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "personalization-psychology.md",
+      "cross-cultural-considerations.md",
+      "social-commerce-psychology.md",
+      "evidence-tiers.md"
+    ],
+    "sections_in_context": 5,
+    "sections_routed_to_cluster": 0
+  }
+}

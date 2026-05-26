@@ -1,0 +1,41 @@
+# ECP runtime Python dependencies.
+#
+# v1 had zero runtime third-party packages — the markdown-emission audit pipeline
+# parsed FINDING blocks via regex and emitted prose directly to disk. v2's Layer 2
+# structuring requires JSON Schema validation against schema/cluster-emission-v1.json
+# and schema/finding-v1.json (both draft 2020-12 with conditional if/then/else
+# rules), and the only Python validator with full draft 2020-12 support is
+# `jsonschema`. fastjsonschema is draft 04/06/07 only; pydantic would force a
+# schema rewrite.
+#
+# Tight pin avoids surprise major-version jumps; the 4.x line has been stable
+# since 4.18 (referencing.Registry pattern) and the 4.26 minimum guarantees
+# referencing is bundled and the format-checker is mature. See Phase B (Phase B
+# brings forward this dep so test-specialist.py can validate emissions in
+# isolation; Phase E extends usage to the structuring layer).
+#
+# Authored 2026-04-27. See:
+# - docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase E.1
+# - docs/brainstorms/2026-04-27-ecp-v2-architecture-brainstorm.md (validator selection)
+
+jsonschema>=4.26.0,<5
+
+# Phase J finding-stability metric (scripts/assembly/finding_stability.py).
+#
+# sentence-transformers loads the all-MiniLM-L6-v2 model (~80MB, downloaded
+# from HuggingFace on first use, cached locally thereafter under
+# ~/.cache/huggingface/) for prose-similarity scoring (per-finding cosine
+# similarity of OBSERVATION + RECOMMENDATION embeddings, plus document-level
+# SemScore via mean-pooled sentence embeddings). Used by the substantially-
+# similar finding-stability metric the v2 fixture-diff CI script depends on
+# (scripts/test-fixture-stability.py).
+#
+# Pulls torch as a transitive dependency. ~500MB total install footprint
+# the first time; idempotent thereafter. The pure-Python helpers in the
+# module (Jaccard, severity-distance, Levenshtein) do NOT require this
+# package — only the embedding-based helpers lazy-import it.
+#
+# Authored Phase J 2026-04-28. See:
+# - docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase J.3
+# - docs/plans/2026-04-27-phase-j-handoff.md "Deliverable 3"
+sentence-transformers>=3.0,<6

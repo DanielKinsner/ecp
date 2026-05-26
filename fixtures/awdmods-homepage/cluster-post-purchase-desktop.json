@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "post-purchase",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:20:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "post-purchase",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Loyalty Program Signal on Repeat-Purchase Platform",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "Newsletter section and footer contain no loyalty program teaser, no rewards enrollment CTA, and no mention of points or repeat-purchase benefits. The footer My Account column lists Order History, Wish List, and Track My Order -- no rewards or loyalty entry point visible anywhere in the section."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "loyalty-programs.md",
+          "section": "Finding 9",
+          "tier": "Bronze"
+        },
+        {
+          "source": "post-purchase-psychology.md",
+          "section": "Finding 6",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "AWDMods sells high-consideration performance parts for Focus RS, Focus ST, WRX, and STI owners -- a customer base that builds their cars over multiple purchases across months or years. The homepage newsletter section and footer carry zero loyalty program signal: no rewards enrollment invitation, no points-per-purchase teaser, and no 'join rewards' link in the footer navigation. The My Account column (visible at scroll position 2612px, e33) lists only Order History, Wish List, and Track My Order -- no rewards entry point. A customer who just placed their first order and returns to the site has no pathway to discover or enroll in a loyalty program from these surfaces.",
+      "recommendation": "If AWDMods has an active loyalty program, add a 'Earn rewards on every build' entry point to the footer My Account column alongside Order History. Add a one-line loyalty teaser beneath the newsletter headline: 'Plus earn points on every part you add to your build -- redeem for store credit.' If no loyalty program exists, the newsletter section and order confirmation page are the two highest-leverage locations to introduce one, given the repeat-purchase cadence of this customer base.",
+      "why_this_matters": "Loyalty program enrollment rates reach 12-25% of new customers when the prompt appears at or near the purchase confirmation moment (loyalty-programs.md F9). For a specialty auto parts store where a single customer may spend thousands across a year of modifications, a program that converts even one additional purchase from 15% of subscribers meaningfully outperforms most paid acquisition channels. Leaving the repeat-purchase opportunity unaddressed at this touchpoint loses the compounding effect of the endowed progress mechanism (loyalty-programs.md F1, Nunes and Dreze 2006, Journal of Consumer Research, Gold) on customer return rates.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "post-purchase",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Newsletter Value Proposition Frames Signup as News Delivery, Not Subscriber Benefit",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e35",
+        "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.",
+        "role": "section"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "Newsletter heading reads 'Join Our Newsletter!' with subtext 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' Purely broadcast framing -- no post-purchase relationship benefit, no content-as-reassurance value, no savings or community membership angle."
+        },
+        {
+          "type": "dom",
+          "reference": "e35"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "buyers-remorse.md",
+          "section": "Finding 6",
+          "tier": "Silver"
+        },
+        {
+          "source": "post-purchase-psychology.md",
+          "section": "Finding 6",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The newsletter section (e35, scroll_y 2073) carries the heading 'Join Our Newsletter!' and body copy: 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' This frames the newsletter as a broadcast channel for store announcements. For a customer who just purchased a performance part and returns to track their order, this copy offers no post-purchase relationship value -- no build guidance content, no owner tips, no reassurance framing, no community membership angle. The value proposition is 'we will send you news' rather than 'you will receive value as a builder and owner.'",
+      "recommendation": "Rewrite the newsletter subheadline to lead with subscriber benefit rather than product announcements. Example: 'Get exclusive build guides, early access to new parts, and subscriber-only discounts for your Focus RS, Focus ST, WRX, or STI build.' If AWDMods sends how-to content, installation tips, or owner spotlights, name those benefits explicitly. This reframe shifts the signup from passive news consumption to active community membership -- a meaningfully stronger proposition for an enthusiast audience already invested in modifying their vehicle.",
+      "why_this_matters": "The Post-Purchase Hug content framework (buyers-remorse.md F6, Silver -- Kumar et al. 2014, Psychological Science) shows that value-delivering content during the shipping window and beyond reduces cognitive dissonance and builds loyalty. The newsletter is the primary vehicle for delivering this content, but only if subscribers understand they will receive something worth opening. Benefit-led newsletter copy generates lower unsubscribe rates and higher engagement for content-producing brands relative to announcement-only framing.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "post-purchase",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No Referral Program CTA for High-Advocacy Enthusiast Audience",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "Footer Information and My Account columns contain no referral program link, no 'refer a friend' CTA, and no social sharing mechanism tied to purchase or rewards. Social icons (Facebook, Instagram, YouTube) appear in bottom right but are brand-follow links, not referral triggers."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "referral-programs.md",
+          "section": "Finding 3",
+          "tier": "Bronze"
+        },
+        {
+          "source": "referral-programs.md",
+          "section": "Finding 1",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The footer and newsletter section contain no referral program entry point. There is no 'Refer a Friend,' 'Give $X, Get $X,' or equivalent link visible in the footer navigation, newsletter block, or My Account column. Performance car modification is an intensely social, word-of-mouth category: owners share builds on Instagram, YouTube, and at events -- the exact audience most likely to refer peers who own the same vehicles covered by AWDMods (Focus RS, WRX, STI). The 72-hour post-purchase window is the peak referral opportunity, and a customer returning to check order status finds no referral mechanism anywhere on the page.",
+      "recommendation": "Add a 'Refer a Friend' link to the footer My Account or Information column that links to a referral program landing page. For the newsletter section, consider adding a one-line prompt beneath the email field: 'Already a customer? Share AWDMods with a fellow RS or WRX owner -- give them $15 off their first order, get $15 back.' The give-first framing (referral-programs.md F4, Silver) outperforms get-first framing and aligns with the community-oriented ethos of the enthusiast audience.",
+      "why_this_matters": "Referred customers from genuine peer recommendations show 16-25% higher profit margin over three years and 37% higher retention than non-referred customers (referral-programs.md F8, Villanueva et al. 2008, Journal of Marketing Research, Gold). For a niche performance parts brand whose customers self-identify through their vehicle (WRX owner, Focus RS owner), peer referrals carry outsized trust. Leaving the brand's most natural acquisition channel -- enthusiast word-of-mouth -- without a structured referral path means relying on organic sharing with no conversion mechanism.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "Page is a homepage, not an order confirmation page. Only one section was routed to post-purchase: 'Newsletter signup and footer with payment icons' (scroll_y 2073-2895, section-5.jpg). No order confirmation page was in scope for this engagement.",
+    "No active loyalty program was detectable from page DOM, baton metadata, or schema.org structured data. The OnlineStore schema.org markup carries no loyalty or rewards markup. Findings 1 and 3 assume no loyalty or referral program is currently active; if either exists but is simply not surfaced on the homepage, severity for both findings should increase to HIGH.",
+    "Newsletter subscribe button (e36) has accessible_name 'Subscribe' set programmatically but displays only a right-arrow icon with no visible text label. This is a minor visual clarity issue not emitted as a separate finding as it falls more naturally within the checkout-flows cluster scope.",
+    "The footer My Account column includes a 'Track My Order' link -- a functional post-purchase signal that provides anxious customers a self-service path to order status. Not emitted as a standalone PASS finding because no order confirmation page was in scope to evaluate the full reassurance hierarchy.",
+    "Social links (Facebook, Instagram, YouTube) present in footer bottom-right -- brand-follow only, not referral or UGC-sharing mechanisms."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "post-purchase-psychology.md",
+      "order-confirmation.md",
+      "buyers-remorse.md",
+      "loyalty-programs.md",
+      "referral-programs.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed": 1,
+    "sections_audited": ["newsletter-footer"],
+    "baton_elements_checked": 11
+  }
+}

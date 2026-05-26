@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "audience",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "audience",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "PASS",
+      "title": "Anonymous Visitor Personalization Correctly Absent",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e14",
+        "text_content": "Shop All",
+        "role": "banner"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Header presents generic vehicle-fitment selector (Select Make, Select Model, Select Year, Select Trim) with no algorithmic recommendation framing or surveillance-style personalization."
+        },
+        {
+          "type": "dom",
+          "reference": "e14"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "personalization-psychology.md",
+          "section": "Finding 9: 90-98% of E-Commerce Traffic is Anonymous",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "AWDMods presents a vehicle-fitment selector on the homepage hero rather than algorithmic recommendations — the correct approach for a logged-out anonymous visitor session. The page uses no covert tracking signals, no 'recommended for you' framing, and no personalization mechanisms that could trigger a creepiness response. The vehicle selector collects zero-party data (visitor discloses their own vehicle) rather than inferring from browsing history, which is the safest form of data collection.",
+      "recommendation": "No change required for the personalization approach on this surface. The zero-party vehicle-selector is textbook safe personalization. If the site later introduces recommendation widgets for returning visitors, frame them as 'Popular for Focus RS owners' rather than 'Because you viewed' to maintain social-proof framing over algorithmic framing.",
+      "why_this_matters": "Personalization that reveals covert data collection reduces click-through and purchase intent — 64% of consumers who feel personalization is too personal cite using data they didn't willingly provide. The current zero-party approach eliminates that risk entirely.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "audience",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "PARTIAL",
+      "title": "Newsletter Framing Uses Vehicle Segments but Lacks Consent Clarity for Data Use",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e29",
+        "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.",
+        "role": "section"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.80,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "Newsletter signup shows 'Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' with an email field and arrow submit button. No explicit statement of what data is collected, how often emails send, or what 'exclusive deals' means in practice."
+        },
+        {
+          "type": "dom",
+          "reference": "e33"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "personalization-psychology.md",
+          "section": "Finding 8: First-Party Data Personalization is Accepted; Third-Party Data Triggers Distrust",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The newsletter copy correctly names specific vehicle models ('Focus RS, Focus ST, WRX, or STI'), signaling segment-aware curation — this is effective audience framing. However, the form provides no indication of send frequency, content type beyond 'parts and deals,' or what the subscriber is specifically agreeing to receive. The submit button has no visible accessible label (empty text_content in baton) beyond the arrow icon, and no inline description of what personal data is collected or how it is used. The 'Your Privacy Choices' link exists in the footer but is three scroll interactions below the newsletter form — not adjacent to the signup flow where it provides maximum reassurance.",
+      "recommendation": "Add a one-line sub-copy beneath the email field: 'No spam — vehicle-specific parts drops and occasional deals only. Unsubscribe anytime.' This establishes the fair-value exchange that makes first-party data collection feel transparent rather than covert. Additionally, place a 'Privacy Policy' inline link within one tap of the submit button so the consent context is visible at the moment of opt-in, not buried in the footer.",
+      "why_this_matters": "Consumers view first-party email opt-in as a fair trade — data for better experience — but only when the value exchange is explicit. Without frequency and content expectations set at signup, subscriber expectations go unmet, which increases unsubscribe rates and reduces the brand trust that makes email personalization effective.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "audience",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Social Icons Carry No Community-Size Signal for Niche Enthusiast Audience",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e30",
+        "text_content": "Information About Us",
+        "role": "contentinfo"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.78,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1629,
+          "viewport": "mobile",
+          "context": "Footer social row shows Facebook, Instagram, and YouTube icon-only links with no follower counts, subscriber numbers, or engagement indicators. Icons are uniform size with no differentiation between platforms."
+        },
+        {
+          "type": "dom",
+          "reference": "e30"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "social-commerce-psychology.md",
+          "section": "Finding 4: Social Proof Drives Impulse Buying on Short-Form Video — Hedonic Products Benefit Most",
+          "tier": "Silver"
+        },
+        {
+          "source": "personalization-psychology.md",
+          "section": "Finding 10: Social Proof Framing Outperforms Algorithmic Framing — 270% Purchase Lift with Reviews",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The footer social row links to Facebook, Instagram, and YouTube with icon-only presentation and no community size signals. For a specialty motorsports retailer whose credibility depends in part on being embedded in the enthusiast community, raw follower counts or subscriber numbers adjacent to these links would provide immediate trust context. The YouTube link (youtube.com/@AWDMods) in particular — where build content and product demos live — carries no viewer or subscriber count that would anchor the brand's content authority for a first-time visitor.",
+      "recommendation": "If AWDMods' social accounts have meaningful community scale (e.g., 10K+ YouTube subscribers, 5K+ Instagram followers), render the counts as small numeric labels beneath each icon (e.g., '12K' under the YouTube icon). If counts are modest and would undermine credibility, omit them — this recommendation only applies when the numbers reinforce the brand's authority rather than expose its scale. Do not fabricate or approximate counts; use live API data or manually confirmed figures.",
+      "why_this_matters": "Social proof quantity signals are meaningful trust anchors for enthusiast buyers evaluating whether a retailer is embedded in the community they care about. A niche motorsports buyer cross-shopping AWDMods against other specialty retailers will form a quick credibility impression from community size — an absent signal leaves that impression to chance.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "audience",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Domestic US Page Correctly Scoped — No Localization Defects",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e32"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cross-cultural-considerations.md",
+          "section": "Finding 5: Local Currency and Payment Localization Reduce International Cart Abandonment",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The page has no hreflang tags, a US-canonical URL (awdmods.com), USD pricing, and US-standard payment methods (Amex, Apple Pay, Discover, Google Pay, Mastercard, Visa, Shop Pay). No RTL content, no non-USD currency markers, no non-English copy. The page is correctly scoped as a domestic US storefront with no international presentation defects.",
+      "recommendation": "No cross-cultural changes required for the current domestic US presentation. If AWDMods expands to serve Canadian or international buyers in the future, the first localization step should be local currency display and locally relevant payment methods — these deliver the highest measurable conversion lift per the localization ROI hierarchy.",
+      "why_this_matters": "Forcing cross-cultural localization requirements on a domestic US page would add unnecessary cost and complexity. The current setup is appropriate for the stated market.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "Baton capture_state has no auth_state field — page was captured as a logged-out anonymous visitor. This is consistent with 90-98% of e-commerce traffic being anonymous and explains the absence of any personalization widgets without that being a defect.",
+    "AWDMods' schema.org sameAs list includes facebook.com/awdmods, instagram.com/awdmods, and youtube.com/@AWDMods but has several empty string entries suggesting additional social platform registrations may be pending or were removed.",
+    "The 'Your Privacy Choices' link in the footer footer renders the CCPA Opt-Out icon — this is a positive compliance signal for California visitors but is positioned far from the newsletter form where it would be most reassuring.",
+    "No TikTok presence was observed in the DOM or schema.org sameAs array. Given AWDMods' motorsports content focus (builds, installs, before/after), TikTok and YouTube Shorts are natural audience-building channels for the 18-35 enthusiast demographic, but absence is not a defect at this audit scope.",
+    "Social commerce cluster guidance edge case applied: no findings emitted for absent Instagram Shopping tags or TikTok Shop integration — AWDMods sells high-fitment-specificity performance parts where redirect-to-.com checkout is the correct path for a mixed demographic audience, not in-app checkout."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "personalization-psychology.md",
+      "cross-cultural-considerations.md",
+      "social-commerce-psychology.md",
+      "evidence-tiers.md"
+    ],
+    "sections_in_context": 4,
+    "baton_elements_count": 36,
+    "screenshots_reviewed": [
+      "section-1-mobile.jpg",
+      "section-2-mobile.jpg",
+      "section-3-mobile.jpg",
+      "section-4-mobile.jpg"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-05-18-deadbeef",
+  "cluster": "pricing",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-05-18T00:00:00.000Z",
+  "completed_at": "2026-05-18T00:01:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Price Block Has No MSRP Anchor",
+      "surface": "price-block",
+      "element": {
+        "baton_index": "e0",
+        "text_content": "$399.50",
+        "role": "text"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e0"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "msrp-anchor",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The product price $399.50 renders as a single number with no anchor — no MSRP strikethrough, no compare-at framing.",
+      "recommendation": "Render the MSRP as a strikethrough above the live price (e.g., 'MSRP $469.50 — Your Price $399.50').",
+      "why_this_matters": "Anchoring is the single highest-leverage pricing pattern for SKUs in the $50-500 range.",
+      "evidence_tier": "Silver"
+    }
+  ]
+}

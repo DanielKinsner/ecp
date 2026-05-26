@@ -1,0 +1,692 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "synthesizer_model": {
+    "family": "opus",
+    "version": "4.7",
+    "context_window": "1M"
+  },
+  "started_at": "2026-04-28T19:45:00.000Z",
+  "completed_at": "2026-04-28T20:25:00.000Z",
+  "status": "complete",
+  "dispatch_shape": "single",
+  "degraded_mode": false,
+  "audit_documents": {
+    "desktop": "docs/ecp/2026-04-28-1909a7d0/audit-desktop.md",
+    "mobile": "docs/ecp/2026-04-28-1909a7d0/audit-mobile.md"
+  },
+  "priority_path": [
+    {
+      "mode": "bundle",
+      "title": "Concentrate trust signals into the Featured Collection card template",
+      "severity": "HIGH",
+      "narrative": "The Featured Collection product cards are the highest-traffic conversion surface below the fold but they are missing four trust-credibility signals that are individually cheap to add and that compound when surfaced together: MSRP strikethroughs (eight of nine cards display bare prices on desktop; the $135.99 floor mat shows no anchor on mobile), star ratings on the highest-AOV cards (the $1,649 Borla, $1,766 Magnaflow, and $405 Injen all display no rating widget), payment-method icons or a return-policy line near the price, and BNPL installment messaging on items above $200. Every signal exists somewhere on the site — Borla already shows the correct strikethrough format, payment icons live in the footer at scroll_y ~2841 desktop / ~1629 mobile, the free-shipping threshold sits in the announcement bar, and Shopify supports Shop Pay Installments natively. Pull each into the product-card Liquid snippet so the entire row reads as a value statement rather than nine isolated prices. This is one template-level change that lands the pricing-anchor, BNPL, and zero-review gaps in a single PR.",
+      "f_refs": [
+        "pricing F-01",
+        "pricing F-02",
+        "pricing F-03",
+        "pricing F-04",
+        "trust-credibility F-04",
+        "trust-credibility F-05"
+      ]
+    },
+    {
+      "mode": "bundle",
+      "title": "Fix the page head: title, meta description, og:image, og:description, and H1",
+      "severity": "HIGH",
+      "narrative": "The homepage title is `AWDMods - AWDMods` (17–18 characters), the meta_description is null, og:description contains only `AWDMods`, og:image is absent, and there is no H1 element anywhere on the page. Zyppy's Q1 2025 analysis found titles under 30 characters are rewritten by Google more than 95% of the time, and H1/title alignment drops the rewrite rate from 76% to ~20%. All five fixes live inside `layout/theme.liquid` or `snippets/head-tags.liquid`. Set the title to a 51–60 character formula that names the vehicle coverage (`Performance Parts for Ford Focus RS, ST & WRX | AWDMods`), write a 140–155 character meta description that names the categories and the $75 free-shipping threshold, mirror the same text into og:description, point og:image at a 1200×630 crop of the existing hero photograph, and add a visually prominent (or visually hidden) H1 above the vehicle selector with the same primary noun phrase as the title. Single-file edit that ships in under an hour and corrects the SERP messaging on every branded and transactional query.",
+      "f_refs": [
+        "content-seo F-01",
+        "content-seo F-03",
+        "content-seo F-08",
+        "content-seo F-10",
+        "content-seo F-04"
+      ]
+    },
+    {
+      "mode": "severity",
+      "title": "Add Product, Offer, and AggregateRating JSON-LD to the Featured Collection",
+      "severity": "HIGH",
+      "narrative": "Schema markup is currently limited to `OnlineStore` and `WebSite` blocks. There is no `Product` block, no `Offer`, no `AggregateRating`, no `MerchantReturnPolicy` — meaning the page is ineligible for Google Shopping rich results, star-rating SERP snippets, ChatGPT Shopping (launched 2025-09-29), and Perplexity product cards. SearchPilot's controlled split test found that adding `AggregateRating` schema alone produced approximately 20% organic traffic uplift. For each Featured Collection product, emit a `Product` JSON-LD block with `name`, `image`, `offers` (price, priceCurrency, availability, url), `aggregateRating` where reviews exist, and `gtin`/`mpn` where available. Add `MerchantReturnPolicy` to the `OnlineStore` block as Option B (`merchantReturnLink` pointing to the policy page). Implement in the Shopify section template that renders the featured collection — output the Liquid loop's product data as JSON-LD before closing the section's wrapper. Remove the empty-string `sameAs` entries from the existing OnlineStore block in the same edit.",
+      "f_refs": [
+        "content-seo F-05",
+        "content-seo F-06",
+        "content-seo F-12",
+        "trust-credibility F-08"
+      ]
+    },
+    {
+      "mode": "bundle",
+      "title": "Surface express checkout in cart drawer and connect vehicle selector to category routing",
+      "severity": "HIGH",
+      "narrative": "The cart drawer is empty of express checkout entry points: no Apple Pay, no Google Pay, no Shop Pay buttons across either viewport. Payment-method logos sit in the footer at scroll_y ~2841 desktop / ~1629 mobile, far from any purchase action. Enable Shopify's `dynamic checkout buttons` setting on cart and product forms — this surfaces the wallet that matches the visitor's device above the standard `Checkout` button. In the same architectural pass, wire the hero vehicle selector to the category tile CTAs: clicking `Shop Performance` after selecting `2018 Subaru WRX` should pass the vehicle as a URL parameter and render a persistent `Showing parts for: 2018 Subaru WRX` chip on the resulting collection page. The selector is currently a standalone search redirect that does not propagate to category navigation, producing the 65% task-failure rate Baymard documents on automotive sites where compatibility filters are absent or unclear. Both changes are Shopify-native and reduce the friction concentrated at the two highest-leverage moments in the funnel — vehicle filter persistence and one-tap purchase.",
+      "f_refs": [
+        "checkout-flows F-01",
+        "checkout-flows F-02",
+        "category-navigation F-02",
+        "category-navigation F-03"
+      ]
+    },
+    {
+      "mode": "quick-wins",
+      "title": "Theme template copy and HTML-attribute fixes for the per-card trust gap",
+      "severity": "MEDIUM",
+      "narrative": "Three quick-wins resolve in single-file template edits and address the same trust-credibility gap from different angles. Add product counts to each category tile (`Performance (143 parts)`) — Liquid template change pulling from the Shopify collection product count. Tighten the free-shipping announcement copy from `FREE SHIPPING on most orders $75+` to either `FREE SHIPPING on orders $75+` (if all standard-size orders qualify) or a specific exclusion link — single string in the announcement bar template. Add a `Returns & Shipping` link to the footer Information column and surface a one-line `Free returns within 30 days` summary near the Featured Collection — both Shopify navigation menu edits in admin. None require new infrastructure or design review; all three ship in under an hour and address the most-cited missing trust signals on this page.",
+      "f_refs": [
+        "category-navigation F-04",
+        "pricing F-06",
+        "trust-credibility F-09",
+        "trust-credibility F-06"
+      ]
+    }
+  ],
+  "quick_wins_manifest": [
+    "audience F-01",
+    "audience F-02",
+    "category-navigation F-04",
+    "category-navigation F-05",
+    "category-navigation F-08",
+    "checkout-flows F-03",
+    "checkout-flows F-05",
+    "checkout-flows F-07",
+    "checkout-flows F-08",
+    "checkout-flows F-09",
+    "content-seo F-01",
+    "content-seo F-02",
+    "content-seo F-03",
+    "content-seo F-04",
+    "content-seo F-07",
+    "content-seo F-08",
+    "content-seo F-09",
+    "content-seo F-10",
+    "content-seo F-12",
+    "content-seo F-14",
+    "content-seo F-15",
+    "content-seo F-16",
+    "content-seo F-17",
+    "content-seo F-18",
+    "ethics F-01",
+    "performance-ux F-03",
+    "performance-ux F-07",
+    "performance-ux F-09",
+    "post-purchase F-04",
+    "post-purchase F-06",
+    "pricing F-01",
+    "pricing F-02",
+    "pricing F-05",
+    "pricing F-06",
+    "pricing F-07",
+    "pricing F-08",
+    "pricing F-09",
+    "trust-credibility F-06",
+    "trust-credibility F-08",
+    "trust-credibility F-09",
+    "trust-credibility F-10",
+    "trust-credibility F-11",
+    "visual-cta F-06",
+    "visual-cta F-07",
+    "visual-cta F-08",
+    "visual-cta F-09"
+  ],
+  "severity_manifest": [
+    "category-navigation F-01",
+    "category-navigation F-02",
+    "category-navigation F-03",
+    "checkout-flows F-01",
+    "checkout-flows F-02",
+    "content-seo F-01",
+    "content-seo F-02",
+    "content-seo F-03",
+    "content-seo F-04",
+    "content-seo F-05",
+    "content-seo F-06",
+    "content-seo F-07",
+    "ethics F-01",
+    "performance-ux F-01",
+    "pricing F-01",
+    "pricing F-02",
+    "pricing F-03",
+    "product-media F-01",
+    "trust-credibility F-01",
+    "trust-credibility F-02",
+    "trust-credibility F-03",
+    "trust-credibility F-04",
+    "visual-cta F-01",
+    "visual-cta F-02",
+    "visual-cta F-03",
+    "category-navigation F-04",
+    "category-navigation F-05",
+    "category-navigation F-06",
+    "category-navigation F-07",
+    "category-navigation F-10",
+    "checkout-flows F-03",
+    "checkout-flows F-04",
+    "checkout-flows F-05",
+    "checkout-flows F-06",
+    "content-seo F-08",
+    "content-seo F-09",
+    "content-seo F-10",
+    "content-seo F-11",
+    "performance-ux F-02",
+    "performance-ux F-03",
+    "performance-ux F-04",
+    "performance-ux F-05",
+    "post-purchase F-01",
+    "post-purchase F-02",
+    "trust-credibility F-06",
+    "pricing F-04",
+    "pricing F-05",
+    "product-media F-02",
+    "product-media F-03",
+    "product-media F-04",
+    "product-media F-05",
+    "trust-credibility F-05",
+    "trust-credibility F-07",
+    "trust-credibility F-08",
+    "trust-credibility F-09",
+    "visual-cta F-04",
+    "visual-cta F-05",
+    "audience F-01",
+    "category-navigation F-08",
+    "category-navigation F-09",
+    "category-navigation F-11",
+    "checkout-flows F-07",
+    "checkout-flows F-08",
+    "checkout-flows F-09",
+    "content-seo F-12",
+    "content-seo F-13",
+    "content-seo F-14",
+    "content-seo F-15",
+    "content-seo F-16",
+    "content-seo F-17",
+    "content-seo F-18",
+    "performance-ux F-06",
+    "performance-ux F-07",
+    "performance-ux F-08",
+    "performance-ux F-09",
+    "post-purchase F-03",
+    "post-purchase F-04",
+    "post-purchase F-05",
+    "post-purchase F-06",
+    "pricing F-06",
+    "pricing F-07",
+    "pricing F-08",
+    "pricing F-09",
+    "trust-credibility F-10",
+    "trust-credibility F-11",
+    "visual-cta F-06",
+    "visual-cta F-07",
+    "visual-cta F-08",
+    "visual-cta F-09",
+    "audience F-02"
+  ],
+  "scope_page_synchronized_refs": [
+    "ethics F-01"
+  ],
+  "humanized_findings": [
+    {
+      "f_ref": "pricing F-01",
+      "plain_english_summary": "Eight of the nine products in your Featured Collection show bare prices with no compare-at or MSRP — only the Borla exhaust gets the proper strikethrough treatment. Visitors evaluating the $405 intake or $1,766 exhaust have no reference point, so the price reads against whatever they last saw on a competitor site. The single most valuable pricing change available on this page is concentrating MSRP anchors into every card, not just the one.",
+      "plain_english_action": "For every product whose manufacturer publishes an MSRP, render that MSRP as a struck-through price above the selling price — copy the visual treatment Borla already uses across the rest of the row."
+    },
+    {
+      "f_ref": "pricing F-02",
+      "plain_english_summary": "On mobile, the $135.99 VelourTex floor mat displays as a single bare number with no MSRP, no `was/now` framing, no savings amount. Visitors have no signal for whether $135.99 is a fair price for a set of fitted floor mats — and a $135 utilitarian accessory evaluated in isolation feels expensive against the implicit $0 reference.",
+      "plain_english_action": "Show an MSRP strikethrough above the price, or a `Compare at` value documented from the previous selling price, so the card communicates value rather than just a number."
+    },
+    {
+      "f_ref": "pricing F-03",
+      "plain_english_summary": "AWDMods sells multiple performance parts in the $400–$2,000 range — the Injen intake at $405, Borla exhaust at $1,650, Magnaflow exhaust at $1,766 — but offers no Buy Now Pay Later option anywhere on the site. Customers evaluating these as lump sums hit a much larger psychological barrier than they would seeing `4 payments of $441.50`. Shopify offers Shop Pay Installments natively at no extra merchant cost.",
+      "plain_english_action": "Enable Shop Pay Installments in the Shopify Payments settings, and surface the installment price beneath the selling price on every product card priced $200 and above."
+    },
+    {
+      "f_ref": "pricing F-04",
+      "plain_english_summary": "On mobile, the $135.99 floor mat is a `Made to Order` item that sits in the exact price range where Buy Now Pay Later produces measurable conversion lift. Without an installment option visible at the card, the upfront commitment friction is higher than necessary. AWDMods can enable Shop Pay Installments natively in Shopify with no extra cost.",
+      "plain_english_action": "Turn on Shop Pay Installments in Shopify Payments and show `4 interest-free payments of $34.00` beneath the selling price on product cards."
+    },
+    {
+      "f_ref": "pricing F-05",
+      "plain_english_summary": "The free-shipping threshold sits in the announcement bar at the top of the page, but no individual product card communicates `Free shipping` at the moment a visitor is evaluating that specific item. Shipping ambiguity at the product stage is the top cited reason for cart abandonment in e-commerce.",
+      "plain_english_action": "Add a `Free shipping` sub-label below the price on cards for items that qualify, so the threshold becomes a per-item value signal rather than a top-of-page banner."
+    },
+    {
+      "f_ref": "pricing F-06",
+      "plain_english_summary": "The mobile free-shipping bar reads `FREE SHIPPING on most orders $75+`. The dollar threshold is good, but `on most orders` introduces an exclusion the visitor cannot resolve — they don't know whether their item, size, or location qualifies. Vague threshold copy weakens the goal-gradient effect that motivates shoppers to add more to reach the threshold.",
+      "plain_english_action": "If standard-size orders all qualify, drop `most` and write `FREE SHIPPING on orders $75+`. If exclusions exist, link them in a tooltip rather than burying them in the headline."
+    },
+    {
+      "f_ref": "pricing F-07",
+      "plain_english_summary": "The Borla exhaust card is the one product on the homepage that gets price anchoring right — it shows $1,847.99 struck through above $1,649.99, the textbook two-price treatment. This card is the template for what the rest of the Featured Collection should look like.",
+      "plain_english_action": "Keep the Borla execution as-is. Apply the same grey-strikethrough-above-styled-selling-price pattern to every other product whose manufacturer publishes an MSRP."
+    },
+    {
+      "f_ref": "pricing F-08",
+      "plain_english_summary": "The mobile cards use .99 charm pricing on the $135.99 floor mat — the right calibration for a utilitarian accessory at this price point. Decades of pricing research support .99 endings on non-luxury goods.",
+      "plain_english_action": "No change needed. As future variants and bundles are added, keep the .99 ending on items priced above $99 to preserve the left-digit effect."
+    },
+    {
+      "f_ref": "pricing F-09",
+      "plain_english_summary": "Most products in the Featured Collection use .99 endings ($135.99, $19.99, $59.99, $1,649.99) — but a few don't: $49.00, $1,766.00, and especially $405.48. The $405.48 is a mid-digit ending that gets neither the charm benefit (the left digit doesn't change) nor the round-number premium read.",
+      "plain_english_action": "Update the $405.48 SKU price to $399.99 (charm, left digit drops to 3) or $405.00 (clean round). Fix at the Shopify product level rather than the theme."
+    },
+    {
+      "f_ref": "trust-credibility F-01",
+      "plain_english_summary": "The Revo Designs decal kit shows a perfect 5.0 rating based on only 2 reviews. Both signals work against you: the 4.0–4.7 range converts better than 5.0 (perfect scores trigger skepticism), and pages below 5 reviews lose most of the social-proof lift that reviews provide. Aim for 5+ honest reviews; let the rating settle naturally.",
+      "plain_english_action": "Set up an automated post-purchase email to all buyers of this product asking for a review 7–14 days after delivery. Do not solicit only happy customers — the goal is 5 honest reviews, not a fabricated 5.0."
+    },
+    {
+      "f_ref": "trust-credibility F-02",
+      "plain_english_summary": "Two issues on the same mobile featured row: the Revo Designs card shows a perfect 5.0 from only 2 reviews (a skepticism trigger), and the $135.99 VelourTex floor mat shows no rating at all. The highest-priced card on the homepage has zero visible social proof, and the next card looks suspicious.",
+      "plain_english_action": "Run a post-purchase review request for both products. For VelourTex specifically, hide the empty star widget rather than displaying a blank — and prioritize getting it past 5 reviews, where the conversion lift on higher-priced items is most pronounced."
+    },
+    {
+      "f_ref": "trust-credibility F-03",
+      "plain_english_summary": "On mobile, payment-method logos appear only at the very bottom of the page, far below where purchase decisions actually happen. PayPal, Shop Pay, and other recognized marks should be visible near the product cards and inside the cart drawer — at the moment a shopper is deciding to buy — not buried in the footer where most mobile visitors never scroll.",
+      "plain_english_action": "Add a small trust strip with 2–3 marks (PayPal, Shop Pay, plus a free-shipping or returns badge) directly beneath the Featured Collection. Don't replicate the full 8-icon footer grid; a few well-chosen marks at the conversion point outperform many marks in the footer."
+    },
+    {
+      "f_ref": "trust-credibility F-04",
+      "plain_english_summary": "Most of the Featured Collection's highest-priced products show no reviews at all. The Borla exhaust at $1,650, Magnaflow at $1,766, and Injen intake at $405 are exactly the items where buyers want peer validation before clicking. Right now there's none.",
+      "plain_english_action": "Treat the Featured Collection as a curated trust showcase: only feature products that have reached 5+ reviews, or run a focused post-purchase review campaign on the high-AOV items. Even 5 honest reviews on a $1,650 exhaust have an outsized conversion impact."
+    },
+    {
+      "f_ref": "trust-credibility F-05",
+      "plain_english_summary": "There's no return policy, money-back guarantee, or security signal anywhere near the product cards on desktop. Payment icons live 2,000+ pixels away in the footer. For an independent specialty store selling `Made to Order` parts, visitors need reassurance about returns and security at the moment they're considering a purchase, not after they scroll past the entire page.",
+      "plain_english_action": "Add 2–3 trust elements to the product card or in a strip below the Featured Collection: a return-policy line (`Free returns within 30 days`), the PayPal mark (highest recognition), and a money-back guarantee phrased positively (`Love it or return it`)."
+    },
+    {
+      "f_ref": "trust-credibility F-06",
+      "plain_english_summary": "On mobile, the `Information` accordion in the footer is collapsed by default — meaning any return-policy link inside is invisible without an extra tap. Nothing on the page tells a first-time visitor whether they can return a product if it doesn't fit. For automotive parts where fitment errors are real risk, this absence directly suppresses purchase intent.",
+      "plain_english_action": "Surface a one-line `Free returns within 30 days` near the Featured Collection or in a global trust bar below the navigation. Either expand the footer Information accordion by default, or pull the return-policy link out where it's visible without tapping."
+    },
+    {
+      "f_ref": "trust-credibility F-07",
+      "plain_english_summary": "On mobile, the homepage shows category navigation and product cards but no editorial voice — no `Our Expert Take`, no fitment notes, no signal that AWDMods knows the platforms it serves. Performance buyers research extensively and trust focused retailers over generalists; without an expert voice, AWDMods reads identical to a generic drop-shipper aggregating the same catalog.",
+      "plain_english_action": "Add a 3–4 sentence expert-voice block beneath the Featured Collection: name the brand's focus (`We specialize in Focus RS/ST and WRX/STI builds — every part is one we've tested`) plus 1–2 staff-pick callouts with a specific fitment note. Copy change, no UI redesign."
+    },
+    {
+      "f_ref": "trust-credibility F-08",
+      "plain_english_summary": "The schema markup that tells Google about your store is incomplete: there's no physical address, no phone, no email, no AggregateRating, and the `sameAs` social-link array has 9 empty entries cluttering the data. Quality raters at Google look for these signals when evaluating whether an unknown brand is trustworthy — gaps here cost organic visibility.",
+      "plain_english_action": "Complete the OnlineStore schema with a physical address (PostalAddress block), phone number, and email. Remove the empty `sameAs` entries — only keep the actual Facebook, Instagram, and YouTube URLs. This is a small edit to the theme's SEO snippet."
+    },
+    {
+      "f_ref": "trust-credibility F-09",
+      "plain_english_summary": "The footer's Information column has About Us, Privacy Policy, Terms, and CARB Policy — but no Return Policy or Shipping Policy link. For visitors evaluating a `Made to Order` exhaust system at $1,650, the absence of a visible return path resolves to `probably non-refundable` and suppresses purchase intent.",
+      "plain_english_action": "Add a `Returns & Shipping` link to the footer Information column. For higher impact, surface a one-line `Free returns within 30 days on most orders` near the Featured Collection itself."
+    },
+    {
+      "f_ref": "trust-credibility F-10",
+      "plain_english_summary": "Product images on the desktop Featured Collection have descriptive alt text that names the product, vehicle, and variant — meeting accessibility standards and supporting Google Image indexing. This is correctly implemented.",
+      "plain_english_action": "No change needed. Maintain this alt-text standard as new products are added to the catalog."
+    },
+    {
+      "f_ref": "trust-credibility F-11",
+      "plain_english_summary": "Product images in the mobile Featured Collection carry full descriptive alt text following a clean `[Brand] [Product Name] [Fitment]` template. This passes WCAG accessibility requirements and supports Google Image indexing.",
+      "plain_english_action": "No change needed. Lock this alt-text pattern at the product-data level so new SKUs inherit it automatically."
+    },
+    {
+      "f_ref": "visual-cta F-01",
+      "plain_english_summary": "On desktop, the entire above-fold viewport shows a hero photograph and vehicle-selector dropdowns but zero text — no headline, no value proposition, nothing that answers `What does AWDMods sell?` for a first-time visitor. The phrase `Car parts, simplified.` only appears as 11px filler inside the selector widget. Visitors arriving cold from search bounce faster when they have no orientation signal.",
+      "plain_english_action": "Add a clear headline above the vehicle selector that names the vehicles served — `Performance Parts for the Ford Focus RS, Focus ST, WRX & STI`."
+    },
+    {
+      "f_ref": "visual-cta F-02",
+      "plain_english_summary": "On mobile, the entire 390×844 above-fold viewport shows a dark car photograph, four unlabeled dropdowns, and a `FIND PARTS` button — but no headline. A first-time visitor scrolling past this in 2 seconds has no clue what AWDMods sells or why they should care. The result is preventable bounce.",
+      "plain_english_action": "Add a one-line headline above the vehicle selector — `Performance Parts for Focus RS, Focus ST, WRX, and STI`. Costs no additional viewport height if line-height is constrained."
+    },
+    {
+      "f_ref": "visual-cta F-03",
+      "plain_english_summary": "On mobile, the only purchase action on each product card is a tiny (~40×40px) orange `+` icon at the bottom corner of the image — below the WCAG accessible touch-target minimum and unlabeled. A visitor cannot tell whether tapping it adds to cart, opens a configurator, or navigates to the PDP without trying it.",
+      "plain_english_action": "Add a clearly labeled, near-full-width CTA button beneath the price on every product card — `Add to Cart` or `Choose Options` for `Made to Order` items — at minimum 48px tall."
+    },
+    {
+      "f_ref": "visual-cta F-04",
+      "plain_english_summary": "The desktop above-fold viewport contains no trust signal — no review aggregate, no customer count, no media mention, no satisfaction guarantee. For an unknown brand selling $135–$1,766 specialty parts, every first-time visitor must scroll into the Featured Collection before encountering any credibility signal.",
+      "plain_english_action": "Add one compact trust signal directly in the hero — a review aggregate (`5.0 from verified buyers`) or a customer count (`Parts shipped to 10,000+ AWD enthusiasts`)."
+    },
+    {
+      "f_ref": "visual-cta F-05",
+      "plain_english_summary": "On mobile, the above-fold area has no trust signal at all. The free-shipping bar communicates a policy but not credibility — it doesn't answer `Can I trust this merchant?` for a first-time visitor. Cold-traffic visitors arriving from a paid ad land on a dark unfamiliar site with a vehicle form and no reassurance.",
+      "plain_english_action": "Add a one-line trust element beneath the vehicle selector — a star rating with order count or a `Trusted by WRX and Focus RS owners` line. ~30px of vertical space on mobile."
+    },
+    {
+      "f_ref": "visual-cta F-06",
+      "plain_english_summary": "The newsletter subscribe button on desktop is just a small right-arrow icon with no text. The newsletter copy itself is excellent (it names the specific vehicles), but the unlabeled button creates ambiguity at the commitment point — users have to infer the action from the adjacent input.",
+      "plain_english_action": "Replace the icon with a text button — `Subscribe`, `Get First Access`, or `Keep Me Posted`. The button is already tall enough; just give it a label."
+    },
+    {
+      "f_ref": "visual-cta F-07",
+      "plain_english_summary": "The blue FIND PARTS button on the mobile hero stands out clearly against the dark background — it's the only filled, bounded interactive element in the lower hero, satisfying the contrast-over-color principle. Visitors who engage with the vehicle selector can find the conversion action without hunting.",
+      "plain_english_action": "No change needed. If the hero gets a redesign, make sure the FIND PARTS button keeps its current contrast advantage."
+    },
+    {
+      "f_ref": "visual-cta F-08",
+      "plain_english_summary": "The mobile newsletter copy explicitly names the vehicles served — `your Focus RS, Focus ST, WRX, or STI`. This is the most audience-specific copy on the page, and the most relevant prompt for the people who will actually subscribe.",
+      "plain_english_action": "No change needed. Extend this same vehicle-naming pattern up-page to the hero headline so the relevance signal hits visitors at the highest-attention moment."
+    },
+    {
+      "f_ref": "visual-cta F-09",
+      "plain_english_summary": "The desktop newsletter copy names the specific vehicles AWDMods serves (`Focus RS, Focus ST, WRX, STI`) rather than using generic `stay updated` language. This specificity sets clear subscriber expectations and qualifies subscribers at signup — a Focus RS owner reads the line and immediately knows the value.",
+      "plain_english_action": "No change needed. Update the copy when new vehicle models are added to the catalog so the audience-naming stays current."
+    },
+    {
+      "f_ref": "content-seo F-01",
+      "plain_english_summary": "The desktop page title is `AWDMods - AWDMods` — only 18 characters, just the brand name twice. Google rewrites titles under 30 characters more than 95% of the time. The title gives Google no signal about Ford Focus RS, WRX, performance parts, or anything someone would actually search for — so Google substitutes its own version, often built from random nav text.",
+      "plain_english_action": "Rewrite the title to a 51–60 character formula that names the products and vehicles: `Performance Parts for Ford Focus RS, ST & WRX | AWDMods`."
+    },
+    {
+      "f_ref": "content-seo F-02",
+      "plain_english_summary": "The mobile page title is `AWDMods - AWDMods` (17 characters of the brand name twice). Google rewrites titles under 30 characters more than 95% of the time, so AWDMods is surrendering control over how it appears in every search result — including which keywords the page ranks for.",
+      "plain_english_action": "Rewrite to `Performance Parts for Focus RS, WRX & STI | AWDMods` (51 characters) — names the products, names the vehicles, includes the brand."
+    },
+    {
+      "f_ref": "content-seo F-03",
+      "plain_english_summary": "There's no meta description on the homepage. When Google generates one automatically, it pulls from whatever text is on the page — typically navigation labels or footer text — neither of which sells the store. This is uncontrolled messaging on the most-crawled page of the site.",
+      "plain_english_action": "Write a 140–155 character meta description that names the categories, the vehicles, and the $75 free-shipping threshold — `Shop performance parts, exhaust systems, and exterior upgrades for the Ford Focus RS, Focus ST, WRX, and STI. Free shipping on most orders over $75.`"
+    },
+    {
+      "f_ref": "content-seo F-04",
+      "plain_english_summary": "The mobile page has no meta description, and the open-graph description (used for social previews) is just `AWDMods` — the brand name and nothing else. Google generates its own snippet from random page text, and every social link preview shows `AWDMods` as the description.",
+      "plain_english_action": "Write a 140–155 character meta description — `Shop performance parts, exterior mods, and accessories for the Ford Focus RS, Focus ST, Subaru WRX, and STI. Free shipping on orders $75+.` Apply the same text to og:description."
+    },
+    {
+      "f_ref": "content-seo F-05",
+      "plain_english_summary": "On the desktop page, the homepage has structured data for the store identity and site search, but no Product schema, no review schema, no return-policy schema. This blocks Google Shopping rich results, ChatGPT Shopping, and the star-rating SERP snippets that controlled testing has shown deliver about 20% organic traffic uplift on their own.",
+      "plain_english_action": "Add JSON-LD Product schema for each Featured Collection product, including AggregateRating where reviews exist and GTIN/MPN for cross-platform matching. Add MerchantReturnPolicy to the OnlineStore block."
+    },
+    {
+      "f_ref": "content-seo F-06",
+      "plain_english_summary": "The mobile homepage has structured data for store identity and site search, but no Product, Offer, AggregateRating, or return-policy schema. Featured product cards display prices and stars on the page — but Google can't see any of it as structured data, blocking eligibility for Shopping rich results, ChatGPT Shopping, and star-rating SERP snippets.",
+      "plain_english_action": "Add Product JSON-LD blocks for each featured product including `name`, `image`, `offers`, and `aggregateRating` where reviews exist. Update the homepage Liquid template to inject the schema for each product."
+    },
+    {
+      "f_ref": "content-seo F-07",
+      "plain_english_summary": "The mobile page has no H1 — the hierarchy jumps from the page title straight to H2 (`Featured Collection`, `Join Our Newsletter!`). Without an H1, Google has no semantic anchor confirming what the page is about, and the alignment trick that drops title rewrites from 76% to 20% is impossible.",
+      "plain_english_action": "Add an H1 to the hero section that matches the new title's primary phrase — `Performance Parts and Accessories for Ford Focus RS, Focus ST, Subaru WRX & STI`. A visually hidden H1 is fine if the design can't accommodate visible text."
+    },
+    {
+      "f_ref": "content-seo F-08",
+      "plain_english_summary": "Sharing the AWDMods URL on Facebook, Twitter, iMessage, or Slack produces a blank thumbnail because there's no og:image meta tag. AI shopping agents that build link previews from Open Graph data also lack a visual anchor. The hero photograph would make a strong og:image — it just needs to be exposed as one.",
+      "plain_english_action": "Add og:image, og:title, og:description, and og:url meta tags. Use a 1200×630 crop of the hero photograph as the og:image."
+    },
+    {
+      "f_ref": "content-seo F-09",
+      "plain_english_summary": "The mobile homepage has no og:image. Every link share — Discord, Facebook, iMessage, Slack — renders blank where a thumbnail should be. For an enthusiast brand whose customers share builds and parts links across automotive communities, a blank thumbnail is dramatically reducing click-through on every share.",
+      "plain_english_action": "Add `<meta property='og:image' content='[hero image URL]'>` pointing to a 1200×630 crop of the hero photograph. Pre-size to exactly 1200×630 to prevent platform-side auto-cropping that might cut out the car."
+    },
+    {
+      "f_ref": "content-seo F-10",
+      "plain_english_summary": "There is no H1 on the desktop page either — every heading is H2 or H3. Without an H1, Google has nothing to align the title against, which is the single highest-leverage technique against title rewrites. Combined with the 18-character brand-only title, Google is generating its own SERP listing with near certainty.",
+      "plain_english_action": "Add an H1 above the vehicle selector with the same primary phrase as the new title — `Performance Parts for the Ford Focus RS, Focus ST, WRX & STI`."
+    },
+    {
+      "f_ref": "content-seo F-11",
+      "plain_english_summary": "The mobile homepage has no descriptive body copy — no store description, no positioning statement, nothing that answers `What does AWDMods sell?` and `Why this store?` AI shopping agents (ChatGPT Shopping, Perplexity) that crawl the page for those answers find nothing extractable, so AWDMods doesn't surface in their recommendations.",
+      "plain_english_action": "Add a 2–3 sentence store description between the hero vehicle finder and the category carousel — `AWDMods specializes in performance, exterior, and interior upgrades for the Ford Focus RS, Focus ST, Subaru WRX, and WRX STI. Every part is fitment-tested for your platform.`"
+    },
+    {
+      "f_ref": "content-seo F-12",
+      "plain_english_summary": "The OnlineStore schema's `sameAs` array (where social profile URLs live) has 12 entries — but 9 of them are empty strings. The three real entries (Facebook, Instagram, YouTube) work fine, but the empties create schema validation errors that may reduce Google's confidence in the entire data block.",
+      "plain_english_action": "Edit the SEO Liquid snippet to remove the empty entries from the `sameAs` array — keep only the three real social URLs."
+    },
+    {
+      "f_ref": "content-seo F-13",
+      "plain_english_summary": "Product card images use proper `<img>` elements (correctly indexable by Google Images) and the alt text describes the product and vehicle fitment — meeting the baseline. The opportunity is to add view-angle and visual context (`overhead view, custom-fit black velour`) so Google Lens visual search can match more confidently against the ~5 billion shopping-intent visual queries it processes monthly.",
+      "plain_english_action": "Update the product-card alt-text template to append a view angle and key visual attribute after the product title."
+    },
+    {
+      "f_ref": "content-seo F-14",
+      "plain_english_summary": "The desktop canonical tag is implemented correctly — absolute HTTPS URL, lowercase, self-referencing, and matches the homepage URL exactly. This prevents www/non-www variants from competing for link equity.",
+      "plain_english_action": "No change needed. Verify after any theme update — Shopify theme changes are the most common way canonical implementations break."
+    },
+    {
+      "f_ref": "content-seo F-15",
+      "plain_english_summary": "The mobile canonical tag is correctly implemented — absolute HTTPS URL, lowercase, self-referencing. No issues.",
+      "plain_english_action": "No change needed. Verify after any theme update."
+    },
+    {
+      "f_ref": "content-seo F-16",
+      "plain_english_summary": "The desktop homepage URL is the clean root domain — no parameters, no path issues, no uppercase or underscores. Nothing to fix at the homepage level.",
+      "plain_english_action": "No action needed at the homepage level. Focus URL audit work on `/products/` and `/collections/` paths instead."
+    },
+    {
+      "f_ref": "content-seo F-17",
+      "plain_english_summary": "The mobile viewport meta tag is correctly configured (`width=device-width,initial-scale=1`), confirming the page is mobile-ready and eligible for Google's mobile-first indexing.",
+      "plain_english_action": "No change needed. Verify after any theme update so the mobile viewport tag stays in place."
+    },
+    {
+      "f_ref": "content-seo F-18",
+      "plain_english_summary": "Mobile product card alt text is descriptive and follows a clean `[Brand] [Product Name] [Fitment]` template — informative, fitment-specific, under 80 characters, no keyword stuffing. Indexable by Google Images and Lens.",
+      "plain_english_action": "No change needed. Maintain this pattern across the catalog."
+    },
+    {
+      "f_ref": "checkout-flows F-01",
+      "plain_english_summary": "On mobile, the cart drawer has no Apple Pay, Google Pay, or Shop Pay buttons — even though those wallets sit on the same phone the visitor is using. Every buyer has to walk through the full checkout form when they could complete in 1–2 taps. On a mobile-first audience, this is the largest single conversion lift available.",
+      "plain_english_action": "Turn on Shopify's `dynamic checkout buttons` setting on cart and product forms. The wallet that matches each visitor's device appears at the top of the cart drawer above the standard Checkout button."
+    },
+    {
+      "f_ref": "checkout-flows F-02",
+      "plain_english_summary": "On desktop, payment-method logos sit in the footer, but no live Apple Pay, Google Pay, or Shop Pay button exists in the cart drawer or anywhere in the buy path. Stripe's data shows wallet buttons placed at the top of checkout convert at roughly 2x the rate of buttons placed at the end. AWDMods is offering visitors a slower path than their device supports.",
+      "plain_english_action": "Enable dynamic checkout buttons in Shopify Payments. Place the wallet buttons at the top of the cart drawer and the top of the checkout form, before the email/login field."
+    },
+    {
+      "f_ref": "checkout-flows F-03",
+      "plain_english_summary": "Payment method logos on mobile only appear in the footer at scroll_y ~1629 — visible only after a visitor scrolls past the newsletter section. Nothing near the product cards or in the cart drawer reassures shoppers that PayPal or Shop Pay is available before they commit to checkout.",
+      "plain_english_action": "Surface familiar payment logos (especially PayPal and Shop Pay) near the product-card buy buttons or inside the cart drawer summary. Static display is sufficient — the icons don't need to be interactive."
+    },
+    {
+      "f_ref": "checkout-flows F-04",
+      "plain_english_summary": "AWDMods accepts 8 payment methods — meeting the breadth threshold — but offers no Buy Now Pay Later option (Klarna, Afterpay, Affirm). With multiple products in the $400–$1,800 range, the absence of installment payments leaves price-sensitive shoppers to defect to a competitor that offers them.",
+      "plain_english_action": "Enable Shop Pay Installments in Shopify Payments or integrate Afterpay or Klarna. Display `Pay in 4 installments of $X` on product cards and PDPs for items above $200."
+    },
+    {
+      "f_ref": "checkout-flows F-05",
+      "plain_english_summary": "The mobile cart drawer doesn't show a free-shipping progress bar. Visitors see the $75 threshold once in the announcement bar at the top of the page, then get no feedback on how close they are to qualifying as items are added. The threshold becomes a one-time message instead of an active conversion lever.",
+      "plain_english_action": "Add a progress bar to the cart drawer showing the gap between the current subtotal and the $75 threshold (`You're $23 away from free shipping`). Update dynamically as items are added. Native feature in several Shopify cart drawer apps."
+    },
+    {
+      "f_ref": "checkout-flows F-06",
+      "plain_english_summary": "On desktop, the header cart icon doesn't show an item count or open a mini-cart drawer when clicked — visitors who add a product and continue browsing have no way to confirm what's in their cart without navigating to the full cart page. Cart-state invisibility creates abandonment friction for a funnel that already lacks express checkout.",
+      "plain_english_action": "Enable a cart item-count badge on the icon and configure the slide-out cart drawer (Shopify's Dawn theme supports this natively). The drawer should show line items, quantities, subtotal, and the wallet buttons above the Checkout button."
+    },
+    {
+      "f_ref": "checkout-flows F-07",
+      "plain_english_summary": "The free-shipping threshold is announced at the very top of the desktop page, before any scroll — the earliest possible disclosure point. Shoppers see it before engaging with any product, removing the late-funnel surprise that drives most cart abandonment.",
+      "plain_english_action": "Keep the placement. Add a cart-level progress indicator (`Add $X more for free shipping`) once items are in cart. Tighten `on most orders` to either `on orders $75+` (if everything qualifies) or a specific exclusion link."
+    },
+    {
+      "f_ref": "checkout-flows F-08",
+      "plain_english_summary": "The mobile page leads with a blue announcement bar declaring free shipping at the $75 threshold, visible before any scroll. This is the textbook treatment for the top abandonment driver — shipping cost surprise — placed at the earliest disclosure point.",
+      "plain_english_action": "Keep the implementation. Tighten `on most orders` to `on orders $75+` if all standard-size items qualify, or add a tooltip listing exclusions if some items don't."
+    },
+    {
+      "f_ref": "checkout-flows F-09",
+      "plain_english_summary": "AWDMods accepts 8 payment methods (American Express, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) — well above the 4-method minimum that prevents payment-driven abandonment. The breadth is good.",
+      "plain_english_action": "No change needed on breadth. The actionable gap is making these methods active checkout buttons in the cart drawer rather than static footer logos — see `checkout-flows F-02`."
+    },
+    {
+      "f_ref": "performance-ux F-01",
+      "plain_english_summary": "The big hero photograph is rendered as a CSS background image rather than an HTML `<img>` element. CSS backgrounds can't carry the modern browser hints (fetchpriority, picture/source for AVIF) that make hero images load fast. Hero images are typically the page's Largest Contentful Paint element — Google's ranking signal that the Vodafone A/B test linked directly to sales volume.",
+      "plain_english_action": "Replace the CSS background with a `<picture>` element using AVIF and WebP sources, fetchpriority=`high`, explicit width/height, and a preload link in the page head. Theme-template change to the hero section."
+    },
+    {
+      "f_ref": "performance-ux F-02",
+      "plain_english_summary": "On mobile, the entire site navigation lives behind the hamburger icon — `Shop by Category`, `Shop by Vehicle`, Contact, My Account are all invisible until a visitor taps a small icon in the top-left. NNGroup research consistently shows hidden navigation costs 25–50% in engagement on essential functions, and AWDMods' two primary discovery modes are exactly the ones being hidden.",
+      "plain_english_action": "Add a persistent bottom navigation bar with 4–5 destinations (Home, Search, Shop by Vehicle, Cart, Account). Reserve the hamburger for the deeper category tree."
+    },
+    {
+      "f_ref": "performance-ux F-03",
+      "plain_english_summary": "The desktop AWDMods logo loads eagerly (good) but doesn't have the `fetchpriority='high'` hint that tells the browser to prioritize this image alongside critical CSS. The page head also has no image preload at all. fetchpriority is now supported by all major browsers and costs nothing to add.",
+      "plain_english_action": "Add `fetchpriority='high'` to the logo `<img>` element. If the hero gets converted to an `<img>`, give that one fetchpriority and drop the logo to default."
+    },
+    {
+      "f_ref": "performance-ux F-04",
+      "plain_english_summary": "Every image on the page is served as a PNG or JPEG — none are negotiated to AVIF or WebP, even though those formats are now supported by ~95% of browsers and reduce file size 25–50%. The DOM contains zero `<picture>` elements anywhere. Shopify supports AVIF/WebP natively; the theme just isn't using it. This is wasted bandwidth on every page load, slowing LCP and conversion.",
+      "plain_english_action": "Switch to Shopify's `image_url` Liquid filter with `format: 'webp'` (or `image_tag` for automatic format negotiation). Wrap product images in `<picture>` elements with AVIF and WebP sources before the JPEG/PNG fallback."
+    },
+    {
+      "f_ref": "performance-ux F-05",
+      "plain_english_summary": "The mobile vehicle selector is four sequential dropdowns (Make → Model → Year → Trim) — the highest-friction input pattern on mobile, where each tap opens an OS picker, the user makes a choice, and it closes before the next dropdown can be tapped. Four sequential decisions before the FIND PARTS button activates, which is exactly the kind of friction that drops users before they see a product.",
+      "plain_english_action": "Replace the four dropdowns with a single predictive search input (`Type your vehicle — 2018 Subaru WRX`) that resolves all four fields in one gesture with autocomplete. If the dropdown flow stays, default Make to your most-purchased brand to reduce active selections from 4 to 3."
+    },
+    {
+      "f_ref": "performance-ux F-06",
+      "plain_english_summary": "The five-tile category grid (Performance, Handling & Brakes, Interior, Exterior, Electronics) is well-structured — five top-level segments, 4–5 sub-items per tile, a single CTA per tile. Five options is within the cognitively comfortable scanning range for first-time visitors.",
+      "plain_english_action": "No change needed. If the catalog expands beyond what fits in five tiles, consider promoting the top five to a primary row with a collapsible secondary row rather than expanding the single row."
+    },
+    {
+      "f_ref": "performance-ux F-07",
+      "plain_english_summary": "The mobile category carousel correctly implements swipe affordance — there's a partial-card peek of the next slide at the right edge plus a scrollbar indicator below. Mobile users see immediately that the carousel is swipeable.",
+      "plain_english_action": "No change needed. If carousel engagement is low in analytics, add higher-contrast dot indicators or numbered pagination as a supplement."
+    },
+    {
+      "f_ref": "performance-ux F-08",
+      "plain_english_summary": "The Speculation Rules API — which prerenders likely next pages so they appear instantly when a visitor clicks — isn't being used. Ray-Ban's controlled test found this single change produced +156% desktop and +101% mobile conversion on collection-to-PDP navigation. AWDMods' homepage has five high-confidence next destinations (the category CTAs) and 9 product links, which is an excellent fit for this pattern.",
+      "plain_english_action": "Add a `<script type='speculationrules'>` block targeting the five category collection URLs and the Featured Collection product URLs, with `eagerness: 'moderate'` so prerendering triggers on hover. Chrome-only, but ~65% of desktop traffic."
+    },
+    {
+      "f_ref": "performance-ux F-09",
+      "plain_english_summary": "The mobile header is sticky — the logo, hamburger, search, account, and cart icons all persist at the top of the viewport on every scroll position. The cart icon stays accessible no matter how far down the page a visitor goes.",
+      "plain_english_action": "No change needed. The remaining gap is that the hamburger is the only access to category browsing — see `performance-ux F-02`."
+    },
+    {
+      "f_ref": "category-navigation F-01",
+      "plain_english_summary": "On desktop, the search entry point is a tiny 44×44 icon button rather than a visible text field. Users who don't recognize the icon as search skip it entirely. NNGroup is explicit that hiding search behind an icon on sites with more than 50 products reduces findability, and 40% of users fail to locate filtering/search when it isn't immediately visible.",
+      "plain_english_action": "Render the search input as a persistently visible text field in the header — the existing 929px input is already the right size, just expose it by default with the `What are you looking for?` placeholder visible."
+    },
+    {
+      "f_ref": "category-navigation F-02",
+      "plain_english_summary": "The desktop hero has a vehicle-selector widget (Make/Model/Year/Trim) but it doesn't connect to the category tile CTAs below. A visitor who picks `2018 Subaru WRX` and clicks `Shop Performance` lands on a generic Performance collection with no fitment filter applied and no `Showing parts for your WRX` confirmation. Baymard's research documents 65% task failure when compatibility filters are absent or unclear — for a fitment-dependent catalog, this is the single biggest conversion gap on the homepage.",
+      "plain_english_action": "Wire the selector to pass vehicle parameters to category tile CTA URLs. Display a persistent `Showing parts for: [Year] [Make] [Model]` chip on every collection page when a vehicle has been selected."
+    },
+    {
+      "f_ref": "category-navigation F-03",
+      "plain_english_summary": "On mobile, the vehicle compatibility finder lives inside the hero section but doesn't follow visitors into category pages — once a shopper selects their vehicle and lands on a collection, there's no `Showing parts for: Ford Focus RS` chip and no way to re-filter by vehicle without going back. The hamburger's `Shop by Vehicle` requires re-entering the vehicle from scratch each session.",
+      "plain_english_action": "Persist the vehicle selection in localStorage after FIND PARTS submission. Surface a sticky `Vehicle: Ford Focus RS` chip below the site header that follows visitors into category pages and can be changed or cleared."
+    },
+    {
+      "f_ref": "category-navigation F-04",
+      "plain_english_summary": "The five category tiles on desktop don't show product counts. Visitors can't tell whether `Performance` has 12 parts or 1,200 before clicking through. Without that signal, the tiles function as blind links — and visitors who land on a thin category they expected to be deep lose trust in the catalog's breadth.",
+      "plain_english_action": "Add a product count beneath each tile heading — `Performance (143 parts)`. Server-side at build time or fetched dynamically when a vehicle is selected."
+    },
+    {
+      "f_ref": "category-navigation F-05",
+      "plain_english_summary": "The mobile category carousel tiles don't show product counts — visitors can't tell whether tapping `Performance` will load 12 parts or 1,200 before they commit to the tap. Counts give shoppers calibration before they invest in navigating.",
+      "plain_english_action": "Append a product count to each tile heading (`Performance (143 parts)`) sourced from the Shopify collection product count. Single-text-line addition to the tile template."
+    },
+    {
+      "f_ref": "category-navigation F-06",
+      "plain_english_summary": "There are no breadcrumbs anywhere on the site — neither hierarchy breadcrumbs (`Home > Performance`) nor history breadcrumbs (`← Back to results`). Two SearchPilot controlled tests found that removing breadcrumbs cost -5.5% and -7% organic traffic respectively. The schema JSON-LD also has no BreadcrumbList markup. For an SEO-dependent store competing on automotive parts keywords, this is structurally avoidable traffic loss.",
+      "plain_english_action": "Implement BreadcrumbList JSON-LD across all collection and product pages. For collection pages, render `Home > [Category]` with crawlable anchor links. For PDPs, add both a hierarchy breadcrumb and a `Back to [Collection]` history link."
+    },
+    {
+      "f_ref": "category-navigation F-07",
+      "plain_english_summary": "The desktop Featured Collection grid is 5 columns wide. Hugo Jenkins' UsabilityHub research found that scanning time per row jumps 35.7% from 4 to 5 columns. Narrower cards compress the visual evaluation signal — visitors slow down per card without becoming more confident in their click.",
+      "plain_english_action": "Cap the grid at 4 columns. At 1920×1080 the cards become roughly 450px wide — larger images, faster scanning, fewer products per row."
+    },
+    {
+      "f_ref": "category-navigation F-08",
+      "plain_english_summary": "The mobile sticky header has a full-width search bar visible on every page load — no icon-tap required. This is the textbook pattern for mobile persistent search: high-intent visitors who arrive with a specific query can search immediately without hunting for an entry point.",
+      "plain_english_action": "No change needed. Verify the search input remains visible at scroll_y=0 across the 390px viewport range."
+    },
+    {
+      "f_ref": "category-navigation F-09",
+      "plain_english_summary": "AWDMods correctly surfaces a Make/Model/Year/Trim vehicle selector in the desktop hero, visible above the fold. This is the right pattern for an automotive parts store — fitment-first navigation positioned where visitors can self-select before browsing the catalog.",
+      "plain_english_action": "Placement is correct. The remaining gap is wiring the submit button to pass vehicle parameters into category tile URLs — see `category-navigation F-02`."
+    },
+    {
+      "f_ref": "category-navigation F-10",
+      "plain_english_summary": "The mobile hamburger drawer's `Shop by Category` reveals nine category links as a flat text list — no images, no product counts, no subcategory hierarchy. Useful for exact-match navigation but offers no visual differentiation between categories or signal about catalog depth.",
+      "plain_english_action": "Add a small category icon or thumbnail (30–40px) to the left of each text label, and append the product count in a secondary text style. CSS and template change to the existing list items."
+    },
+    {
+      "f_ref": "category-navigation F-11",
+      "plain_english_summary": "The desktop `Shop by Category` tile grid surfaces all five major product segments (Performance, Handling & Brakes, Interior, Exterior, Electronics) with subcategory context text under each heading. This matches Baymard's subcategory navigation guidance for large-catalog parent categories.",
+      "plain_english_action": "No change needed. Priority improvements are connecting the vehicle selector to the tile CTAs and adding product counts."
+    },
+    {
+      "f_ref": "product-media F-01",
+      "plain_english_summary": "The mobile category carousel uses a custom JavaScript slider component instead of native CSS scroll-snap. JS scroll interception conflicts with mobile browsers' native touch handling — visitors trying to swipe horizontally accidentally scroll the page vertically, which produces a broken-feeling first impression on the homepage.",
+      "plain_english_action": "Replace the JS slider with CSS scroll-snap (`scroll-snap-type: x mandatory` on the container, `scroll-snap-align: start` on each slide). Hands swipe behavior to the browser's hardware-accelerated compositor thread."
+    },
+    {
+      "f_ref": "product-media F-02",
+      "plain_english_summary": "Desktop product cards show one static image with no hover interaction — no image swap, no lifestyle-vs-packshot reveal, no quick-action overlay. Baymard's benchmark identifies this as the highest single-interaction ROI enhancement for desktop product listings, and 76% of sites fail to implement it.",
+      "plain_english_action": "Add a CSS opacity-transition hover swap (150–200ms ease) that replaces the primary image with a secondary angle on `mouseenter`. Preload the secondary image for above-fold cards. Add a quick-add or `View Details` button visible on hover."
+    },
+    {
+      "f_ref": "product-media F-03",
+      "plain_english_summary": "Every desktop product card shows exactly one image — no thumbnail strip, no `1 of 4` counter, no hover carousel. Baymard requires a minimum of 3 accessible images per listing card. For automotive accessories where fit, finish, and installation context drive the click, single-image cards force every interested visitor to navigate to a full PDP just to see another angle.",
+      "plain_english_action": "Add a hover carousel revealing 2 additional images (3 total). Sequence: primary packshot → installed/lifestyle shot → detail close-up. Display a persistent `N of N` counter or thumbnail dots."
+    },
+    {
+      "f_ref": "product-media F-04",
+      "plain_english_summary": "Desktop product cards have a split hit area — the image links to the PDP, but the title, price, and metadata below aren't part of the same clickable region. Baymard finds this pattern at 76% of sites and identifies it as a consistent source of misclicks: visitors moving from the title text toward an adjacent card frequently click the wrong product.",
+      "plain_english_action": "Wrap the entire card surface — image, title, brand, price, badge, rating — in a single `<a>` element pointing to the PDP. Position separate-action elements (wishlist, quick-add) with absolute positioning and higher z-index above the link layer."
+    },
+    {
+      "f_ref": "product-media F-05",
+      "plain_english_summary": "Every category tile background image on mobile has empty `alt=''`. Screen reader users navigating the carousel hear only the heading text — they get no description of what the tile image actually shows. Beyond accessibility, alt text on category cards is also indexed by Google Image Search.",
+      "plain_english_action": "Add descriptive alt text that names the visual content rather than duplicating the heading. The Performance card showing turbo/intake parts should read `alt='Turbocharger and cold air intake performance parts'`, not `alt='Performance'`."
+    },
+    {
+      "f_ref": "post-purchase F-01",
+      "plain_english_summary": "The desktop newsletter and footer show no loyalty program signal — no points teaser, no rewards CTA, no entry point in the My Account column. AWDMods sells to a customer base that builds vehicles across multiple purchases over months or years — a textbook fit for loyalty. Without a homepage signal, returning customers have no reminder the program exists between orders.",
+      "plain_english_action": "If a loyalty program exists, add an `Earn rewards on every build` link to the footer My Account column and a one-line teaser beneath the newsletter headline (`Plus earn points on every part — redeem for store credit`). If no program exists, build one — the customer base and AOV are ideal."
+    },
+    {
+      "f_ref": "post-purchase F-02",
+      "plain_english_summary": "On mobile, the newsletter and footer carry no loyalty program awareness — no teaser in the newsletter, no Rewards link in the My Account accordion. Repeat customers visiting the homepage between orders have no reminder that a loyalty program exists, losing the goal-gradient effect that drives accelerated repeat purchase.",
+      "plain_english_action": "If a loyalty program exists, add an `Earn points on every order — join free` teaser above the newsletter email field and add a `Rewards` link to the footer My Account accordion. If no program exists, the newsletter is the natural anchor for a `Join Rewards` CTA."
+    },
+    {
+      "f_ref": "post-purchase F-03",
+      "plain_english_summary": "Neither the mobile newsletter nor the footer has a `Refer a Friend` mechanism. AWDMods' Facebook, Instagram, and YouTube social links are in the footer — proving social sharing infrastructure exists — but no structured referral incentive connects to that audience. The performance-mod community is intensely word-of-mouth driven; the absence of a referral program at the highest-trust acquisition channel is a meaningful forfeit.",
+      "plain_english_action": "Add a `Refer a Friend, Earn $X` link to the footer My Account accordion. Use give-first framing (`Give your friend $15 off. You get $15 too`) — outperforms get-first."
+    },
+    {
+      "f_ref": "post-purchase F-04",
+      "plain_english_summary": "The desktop newsletter copy reads `New parts, new builds, exclusive deals. Be the first to know when something drops...`. Vehicle-specific (good) but framed entirely as broadcast announcements — no signal to the post-purchase customer that subscribing delivers ongoing value (build guides, owner tips, community content, reassurance during the shipping window).",
+      "plain_english_action": "Rewrite the subheadline to lead with subscriber benefit: `Get exclusive build guides, early access to new parts, and subscriber-only discounts for your Focus RS, Focus ST, WRX, or STI build.`"
+    },
+    {
+      "f_ref": "post-purchase F-05",
+      "plain_english_summary": "The desktop footer and newsletter section have no referral entry point — no `Refer a Friend`, no `Give $X, Get $X`, no social-sharing mechanism connected to a structured incentive. Performance car modification is intensely social — owners share builds at events, on Instagram, on YouTube — and AWDMods has no path to convert that natural advocacy into measurable acquisition.",
+      "plain_english_action": "Add a `Refer a Friend` link to the footer My Account or Information column. In the newsletter section, add a one-line prompt below the email field: `Already a customer? Share AWDMods with a fellow RS or WRX owner — give them $15 off, get $15 back.`"
+    },
+    {
+      "f_ref": "post-purchase F-06",
+      "plain_english_summary": "The mobile footer's `My Account` accordion includes `Track My Order` and `Order History` links, giving customers a persistent path to order status from any page. This reduces support tickets and post-purchase anxiety for customers in the shipping window.",
+      "plain_english_action": "The baseline is good. Surface `Track your order` outside the collapsed accordion as a persistent text link above the footer so it's visible without an extra tap."
+    },
+    {
+      "f_ref": "audience F-01",
+      "plain_english_summary": "The mobile newsletter form names the specific vehicles served (Focus RS, Focus ST, WRX, STI) — strong audience targeting — but doesn't tell visitors what data is collected, how often emails will arrive, or what they'll receive beyond `parts and deals`. The Privacy Choices link sits three scrolls below the form, far from where consent is being given.",
+      "plain_english_action": "Add a one-line sub-copy beneath the email field: `No spam — vehicle-specific parts drops and occasional deals only. Unsubscribe anytime.` Place a Privacy Policy inline link within one tap of the submit button."
+    },
+    {
+      "f_ref": "audience F-02",
+      "plain_english_summary": "The mobile page is correctly scoped as a US domestic storefront — no hreflang, USD pricing, US-only payment methods, English-only copy. No localization defects to fix.",
+      "plain_english_action": "No change needed. If AWDMods later expands to Canadian or international buyers, start with local currency display and locally relevant payment methods."
+    },
+    {
+      "f_ref": "ethics F-01",
+      "plain_english_summary": "The footer Privacy Policy link points to a Shopify staging subdomain (`e1520g-k3.myshopify.com`) instead of awdmods.com. Every other footer link uses the right domain — only the Privacy Policy is misrouted. This is a fragile compliance posture: if the staging domain is ever retired or restricted, visitors hit a 404 at the exact moment they're trying to exercise privacy rights, creating an active GDPR Article 13 and CCPA notice violation.",
+      "plain_english_action": "In Shopify admin, navigate to Online Store > Navigation > footer menu, find the Privacy Policy link, and replace its destination URL with `/policies/privacy-policy` (relative) or `https://www.awdmods.com/policies/privacy-policy` (absolute). Two-minute fix."
+    }
+  ],
+  "telemetry": {
+    "scope_page_count": 78,
+    "scope_device_desktop_count": 9,
+    "scope_device_mobile_count": 8,
+    "ethics_findings_count": 7,
+    "baton_elements_total": 78,
+    "baton_elements_kept_after_trim": 60
+  },
+  "notes": [
+    "Audience-section desktop emission was status='skipped' (no audience surfaces routed to that device); mobile audience findings appear in audit-mobile.md only.",
+    "Each canonical f_ref has a single-device devices_present in the manifest. The ethics F-01 ADJACENT finding renders byte-identically into both audit documents (including the prose paragraphs); it is the only entry in scope_page_synchronized_refs because no other canonical ref was rendered with matching prose under the same heading in both audits.",
+    "Cross-device architectural pairs (e.g., pricing F-01 desktop / pricing F-02 mobile both addressing missing MSRP anchors) were grouped into Priority Path bundles rather than rendered as synchronized refs — they are different canonical f_refs covering the same architectural gap from each device's lens.",
+    "Six ethics CLEAR findings (no countdown timers, truthful reviews, decorative AI imagery, free-shipping disclosure, no cookie consent required, no pre-checked boxes) are recorded in ethics-findings.json and not rendered into audit-{device}.md per the default --include-ethics-clear flag state."
+  ]
+}

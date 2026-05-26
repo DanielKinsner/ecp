@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "checkout-flows",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "PASS",
+      "title": "Free Shipping Threshold Visible Above Fold",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e19",
+        "text_content": "FREE SHIPPING on most orders $75+ — Contiguous US only",
+        "role": "banner"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "A blue announcement bar at the very top of the page reads 'FREE SHIPPING on most orders $75+ — Contiguous US only SHOP NOW', visible before any scroll at y=0."
+        },
+        {
+          "type": "dom",
+          "reference": "e19"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 4: Shipping Cost Timing -- Early vs. Late Disclosure",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The free shipping threshold ($75+) is disclosed in a persistent announcement bar at the very top of the page, above the header, at scroll position y=0. Shoppers see this before engaging with any product — the earliest possible disclosure point in the funnel.",
+      "recommendation": "The threshold is correctly placed. To increase its conversion value, consider adding a cart-level threshold progress indicator (e.g., 'Add $X more for free shipping') once a visitor has items in their cart.",
+      "why_this_matters": "Shipping cost revealed late is the single largest actionable abandonment driver (39-48% of abandoning shoppers, Baymard). Early disclosure at the top of the homepage prevents this trigger from firing at checkout.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Express Checkout Buttons on Homepage Buy Path",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Header area shows a cart icon (top right) with no cart-drawer, no mini-cart, and no Apple Pay / Google Pay / Shop Pay express checkout buttons anywhere in the visible header or hero."
+        },
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "Footer payment icons row shows Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa logos — but these are static brand-recognition icons, not actionable express checkout buttons."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "biometric-and-express-checkout.md",
+          "section": "Finding 6: Place Wallet Buttons Early — Top of Checkout, Not Bottom",
+          "tier": "Silver"
+        },
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 15: Express Checkout Conversion Lifts (Shop Pay, Apple Pay)",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "Apple Pay, Google Pay, and Shop Pay buttons are entirely absent from the homepage buy path. The footer lists these payment methods as small brand icons at scroll position y=2841, but they are static logo images with no checkout action. There are no express checkout buttons in the cart icon area, no cart-drawer with an express option, and no quick-add-to-cart flow on the featured product cards. Visitors who want to use a digital wallet have no accelerated path from the homepage.",
+      "recommendation": "If this store runs on Shopify (which the page structure confirms — Shopify CDN URLs, Shopify checkout redirect), enable Shop Pay, Apple Pay, and Google Pay through Shopify Payments and display the express checkout buttons in the cart drawer. When a visitor clicks the cart icon, the cart drawer should show Shop Pay, Apple Pay, and Google Pay buttons above the 'Checkout' button. For stores with a checkout page at /checkout, position wallet buttons at the top of the checkout flow above the email/login field, per Stripe's controlled A/B data showing ~2x conversion at top-of-flow versus end-of-flow placement.",
+      "why_this_matters": "Apple Pay alone delivers +22.3% conversion lift (Stripe controlled A/B). Shop Pay converts approximately 9% higher across all checkouts. For a specialty performance parts store with AOV in the $135–$1,766 range, the incremental revenue from a 9–22% conversion lift on wallet-enabled visitors is material. Every visitor on macOS Safari or iOS who has Apple Pay configured is being offered a slower path than their device supports.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No BNPL Option for High-AOV Products",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e37",
+        "text_content": "American Express Apple Pay Discover Google Pay Mastercard",
+        "role": "list"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "Footer payment icons row (y~2841) shows Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa. No Afterpay, Klarna, or Affirm logo is present among the 8 payment icons."
+        },
+        {
+          "type": "dom",
+          "reference": "e37"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 13: Limited Payment Methods Cause 10% Abandonment",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The footer lists 8 accepted payment methods: American Express, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa. No buy-now-pay-later option (Afterpay, Klarna, or Affirm) is present. The featured product catalog includes items ranging from $19.99 to $1,766 — the Borla Cat-Back exhaust system is shown at $1,649.99 and the Magnaflow Competition exhaust at $1,766. For performance parts in this AOV range, installment payment options directly address price-sensitivity that causes shoppers to hesitate at checkout.",
+      "recommendation": "If the store is on Shopify (confirmed by page structure), enable Shop Pay Installments or integrate Afterpay or Klarna through the Shopify Payments settings. For products above $200 — which describes the majority of the exhaust and performance categories — displaying 'Pay in 4 installments of $X with Afterpay' on the product page and in the cart directly reduces the price-sensitivity barrier. Prioritize BNPL rollout for the highest-AOV SKUs (exhaust systems, intake kits) rather than site-wide initially.",
+      "why_this_matters": "10% of shoppers abandon because there are not enough payment methods (Baymard). For a store where a meaningful portion of catalog items exceed $300, installment payment options convert price-sensitive shoppers who would otherwise research and potentially defect to a competitor that offers BNPL.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Cart Icon Has No Item Count Badge or Drawer Preview",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e2",
+        "text_content": "Cart",
+        "role": "button"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Top-right header area shows a cart icon (bag icon) with no item count badge visible and no subtotal displayed. The icon is a plain anchor link to /cart with no drawer functionality triggered on hover or click visible in the DOM."
+        },
+        {
+          "type": "dom",
+          "reference": "e2"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 18: Cart Summary Visibility During Checkout",
+          "tier": "Bronze"
+        },
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 1: Extra Costs Are the #1 Abandonment Driver",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The header cart icon (e2, position x=1616, y=51) links to /cart and shows the text 'Cart' to screen readers but displays no item count badge, no running subtotal, and no mini-cart drawer when clicked. On desktop at 1920×1080, the cart icon is in the upper right at the persistent header position but provides no at-a-glance cart state. When a shopper adds a product and continues browsing, there is no visible confirmation that their cart has items or what the current cart value is.",
+      "recommendation": "Enable a cart item count badge on the icon and configure a slide-out cart drawer on click (Shopify's native Dawn theme supports this via the cart drawer section). The drawer should show: line items with product images, quantities, individual prices, subtotal, and — once express checkout buttons are enabled — the Shop Pay / Apple Pay / Google Pay buttons above the main 'Checkout' button. This keeps shoppers in context rather than navigating away to a full cart page.",
+      "why_this_matters": "A cart with no visible state creates a disconnect between the shopper's mental model and the actual cart contents. Shoppers who cannot confirm items are in their cart are more likely to abandon or re-browse — adding friction to a funnel that already lacks express checkout acceleration. Cart summary visibility reduces surprise totals, the #1 abandonment driver.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Payment Method Breadth Meets Minimum Threshold",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e37",
+        "text_content": "American Express Apple Pay Discover Google Pay Mastercard",
+        "role": "list"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "Footer shows 8 payment icons: American Express, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa — covering the four minimum methods (cards, PayPal, Apple Pay, Google Pay) plus additional options."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 13: Limited Payment Methods Cause 10% Abandonment",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Eight payment methods are shown in the footer: American Express, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa. This exceeds the 4-method minimum (cards, PayPal, Apple Pay, Google Pay) that Baymard identifies as the floor for avoiding payment-method-driven abandonment.",
+      "recommendation": "The payment method breadth is sufficient. The actionable gap is that these methods need to be surfaced as live express checkout buttons in the cart drawer and checkout flow (see Finding 2), not only as static brand logos in the footer.",
+      "why_this_matters": "Meeting the minimum payment method threshold removes the 10% payment-method abandonment trigger. Surfacing these methods actively at the cart and checkout entry points (rather than only in the footer) converts this passive assurance into an active conversion lift.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "Page type is homepage — checkout-specific patterns (form field count, progress indicators, inline validation, trust signals near payment fields) are out of scope per cluster guidance page-type routing rule. Findings are limited to express-checkout button presence, cart-drawer signals, and shipping threshold framing.",
+    "No cookie consent banner was detected at capture time (capture_state.overlays_detected is empty and no banner is visible in any screenshot). Cookie consent findings are not applicable for this capture.",
+    "The store is confirmed Shopify (CDN URLs: awdmods.com/cdn/shop/, Shopify checkout redirect URL pattern, schema.org OnlineStore type). All express checkout and cart drawer recommendations are native Shopify configuration changes, not custom development.",
+    "The announcement bar 'FREE SHIPPING on most orders $75+' qualifies shipping disclosure but uses 'most orders' — the hedge may still leave price uncertainty for some SKUs. The qualifier is noted but not emitted as a separate finding given the high-level homepage scope.",
+    "No exit-intent overlays, web push consent prompts, or cart expiry messaging was visible in the DOM or screenshots. These are absent but not finding-worthy on a homepage without an active cart session.",
+    "BNPL absence (Finding 3) is particularly relevant for the exhaust category — Borla at $1,649.99 and Magnaflow at $1,766 are the highest-AOV visible SKUs. The ethics subagent will handle any subscription or recurring-charge compliance review separately; no subscription elements were observed."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "checkout-optimization.md",
+      "biometric-and-express-checkout.md",
+      "abandoned-cart-psychology.md",
+      "cookie-consent-and-compliance.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 1,
+    "sections_with_dom_content": 1,
+    "baton_elements_referenced": ["e2", "e19", "e37"]
+  }
+}

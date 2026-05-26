@@ -1,0 +1,640 @@
+{
+  "capture_state": {
+    "hydration": "post-hydration",
+    "overlays_detected": [],
+    "page_height_px": 2305
+  },
+  "captured_at": "2026-04-29T02:21:55.000Z",
+  "device": "mobile",
+  "elements": [
+    {
+      "accessible_name": "What are you looking for?",
+      "e_index": "e1",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 132,
+        "width": 132,
+        "x": 960,
+        "y": 345
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "What are you looking for?"
+    },
+    {
+      "accessible_name": "Close",
+      "e_index": "e2",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 138,
+        "width": 75,
+        "x": 1032,
+        "y": 342
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Menu",
+      "e_index": "e3",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 138,
+        "width": 138,
+        "x": 33,
+        "y": 162
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "[role=\"button\"]",
+      "tag": "summary",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Shop by Category",
+      "e_index": "e4",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 1500,
+        "width": 420,
+        "x": 171,
+        "y": 768
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "[role=\"button\"]",
+      "tag": "summary",
+      "text_content": "Shop by Category"
+    },
+    {
+      "accessible_name": "Shop by Vehicle",
+      "e_index": "e5",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 1401,
+        "width": 420,
+        "x": 171,
+        "y": 2271
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "[role=\"button\"]",
+      "tag": "summary",
+      "text_content": "Shop by Vehicle"
+    },
+    {
+      "accessible_name": "Performance",
+      "e_index": "e8",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 834,
+        "width": 963,
+        "x": 63,
+        "y": 1713
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDrivetrain upgrades\n                    Shop Performance"
+    },
+    {
+      "accessible_name": "Handling & Brakes",
+      "e_index": "e9",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 834,
+        "width": 963,
+        "x": 1074,
+        "y": 1713
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Handling & Brakes\n\n\n                      SuspensionWheels Brake kitsChassis control\n                    Shop Handling"
+    },
+    {
+      "accessible_name": "Interior",
+      "e_index": "e10",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 834,
+        "width": 963,
+        "x": 2088,
+        "y": 1713
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Interior\n\n\n                      ShiftersTrimSeating Cabin upgrades\n                    Shop Interior"
+    },
+    {
+      "accessible_name": "Exterior",
+      "e_index": "e11",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 834,
+        "width": 963,
+        "x": 3099,
+        "y": 1713
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Exterior\n\n\n                      AeroStylingBody componentsAccents\n                    Shop Exterior"
+    },
+    {
+      "accessible_name": "Electronics",
+      "e_index": "e12",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 834,
+        "width": 963,
+        "x": 4113,
+        "y": 1713
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Electronics\n\n\n                      LightingWiringInfotainmentVehicle tech\n                    Shop Electronics"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e13",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 165,
+        "width": 1044,
+        "x": 63,
+        "y": 330
+      },
+      "role": "combobox",
+      "scroll_y_at_capture": 0,
+      "selector": "input[type=\"search\"]",
+      "tag": "input",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Shop All",
+      "e_index": "e14",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 420,
+        "width": 1170,
+        "x": 0,
+        "y": 123
+      },
+      "role": "banner",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"search\"]",
+      "tag": "header",
+      "text_content": "Shop All"
+    },
+    {
+      "accessible_name": "Search our store",
+      "e_index": "e15",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 165,
+        "width": 1044,
+        "x": 63,
+        "y": 330
+      },
+      "role": "search",
+      "scroll_y_at_capture": 0,
+      "selector": "form",
+      "tag": "form",
+      "text_content": "Search our store"
+    },
+    {
+      "accessible_name": "",
+      "e_index": "e17",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": true,
+      "rect": {
+        "height": 2532,
+        "width": 1170,
+        "x": 0,
+        "y": 0
+      },
+      "role": "cart-drawer",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"drawer\"]",
+      "tag": "cart-drawer",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "sticky header section",
+      "e_index": "e18",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": true,
+      "rect": {
+        "height": 420,
+        "width": 1170,
+        "x": 0,
+        "y": 123
+      },
+      "role": "div",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"sticky\"]",
+      "tag": "div",
+      "text_content": "sticky header section"
+    },
+    {
+      "accessible_name": "Choose options for VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)",
+      "e_index": "e19",
+      "is_above_fold": true,
+      "is_offscreen": true,
+      "is_sticky": false,
+      "rect": {
+        "height": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "role": "dialog",
+      "scroll_y_at_capture": 0,
+      "selector": "[role=\"dialog\"]",
+      "tag": "div",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Join Our Newsletter!",
+      "e_index": "e21",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 105,
+        "width": 918,
+        "x": 126,
+        "y": 5040
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 917,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Join Our Newsletter!"
+    },
+    {
+      "accessible_name": "VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)",
+      "e_index": "e22",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 798,
+        "width": 798,
+        "x": 66,
+        "y": 3000
+      },
+      "role": "image",
+      "scroll_y_at_capture": 917,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Revo Designs Rocker Stripes Decal Kit for the Ford Focus RS / ST (Set of 2)",
+      "e_index": "e23",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 798,
+        "width": 798,
+        "x": 921,
+        "y": 3000
+      },
+      "role": "image",
+      "scroll_y_at_capture": 917,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Injen Technology SP Series Cold Air Intake for the Subaru WRX STI",
+      "e_index": "e24",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 798,
+        "width": 798,
+        "x": 1776,
+        "y": 3000
+      },
+      "role": "image",
+      "scroll_y_at_capture": 917,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Borla Cat-Back ATAK Exhaust System for the Ford Focus RS",
+      "e_index": "e25",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 798,
+        "width": 798,
+        "x": 2631,
+        "y": 3000
+      },
+      "role": "image",
+      "scroll_y_at_capture": 917,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "5.0 / 5.0 (2) 2 total reviews",
+      "e_index": "e26",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 63,
+        "width": 672,
+        "x": 984,
+        "y": 4272
+      },
+      "role": "div",
+      "scroll_y_at_capture": 917,
+      "selector": "[class*=\"rating\"]",
+      "tag": "div",
+      "text_content": "5.0 / 5.0 (2) 2 total reviews"
+    },
+    {
+      "accessible_name": "From $135.99",
+      "e_index": "e27",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 84,
+        "width": 333,
+        "x": 129,
+        "y": 4218
+      },
+      "role": "span",
+      "scroll_y_at_capture": 917,
+      "selector": "[class*=\"price\"]",
+      "tag": "span",
+      "text_content": "From $135.99"
+    },
+    {
+      "accessible_name": "Join Our Newsletter!",
+      "e_index": "e29",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 906,
+        "width": 1170,
+        "x": 0,
+        "y": 4887
+      },
+      "role": "section",
+      "scroll_y_at_capture": 917,
+      "selector": "[class*=\"newsletter\"]",
+      "tag": "section",
+      "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI."
+    },
+    {
+      "accessible_name": "Information",
+      "e_index": "e30",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 1122,
+        "width": 1170,
+        "x": 0,
+        "y": 5793
+      },
+      "role": "contentinfo",
+      "scroll_y_at_capture": 1461,
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information About Us"
+    },
+    {
+      "accessible_name": "American Express",
+      "e_index": "e32",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 207,
+        "width": 1044,
+        "x": 63,
+        "y": 6456
+      },
+      "role": "list",
+      "scroll_y_at_capture": 1461,
+      "selector": "[class*=\"payment\"]",
+      "tag": "ul",
+      "text_content": "American Express Apple Pay Discover Google Pay Mastercard"
+    },
+    {
+      "accessible_name": "Join Our Newsletter!",
+      "e_index": "e33",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 789,
+        "width": 1170,
+        "x": 0,
+        "y": 4944
+      },
+      "role": "form",
+      "scroll_y_at_capture": 1461,
+      "selector": "form",
+      "tag": "form",
+      "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI."
+    },
+    {
+      "accessible_name": "Information",
+      "e_index": "e34",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 60,
+        "width": 981,
+        "x": 63,
+        "y": 5898
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1461,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Information"
+    },
+    {
+      "accessible_name": "My Account",
+      "e_index": "e35",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 60,
+        "width": 981,
+        "x": 63,
+        "y": 6087
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 1461,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "My Account"
+    }
+  ],
+  "engagement_id": "2026-04-28-1909a7d0",
+  "page_head": {
+    "canonical": "https://www.awdmods.com/",
+    "hreflang": [],
+    "meta_description": null,
+    "og_image": null,
+    "schema_jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "OnlineStore",
+        "logo": "https://www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&width=500",
+        "name": "AWDMods",
+        "sameAs": [
+          "",
+          "https://www.facebook.com/awdmods",
+          "",
+          "https://www.instagram.com/awdmods",
+          "",
+          "",
+          "",
+          "https://www.youtube.com/@AWDMods",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "url": "https://www.awdmods.com"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AWDMods",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "query-input": "required name=search_term_string",
+          "target": "https://www.awdmods.com/search?q={search_term_string}"
+        },
+        "url": "https://www.awdmods.com"
+      }
+    ],
+    "title": "AWDMods - AWDMods",
+    "viewport_meta": "width=device-width,initial-scale=1"
+  },
+  "schema_version": 1,
+  "sections": [
+    {
+      "clusters": [
+        "category-navigation",
+        "performance-ux",
+        "visual-cta"
+      ],
+      "label": "Header navigation and quick-filter category selector",
+      "screenshot_ref": "section-1-mobile.jpg",
+      "scroll_y_bottom": 543,
+      "scroll_y_top": 0,
+      "slug": "header-quick-filter"
+    },
+    {
+      "clusters": [
+        "category-navigation",
+        "visual-cta",
+        "performance-ux"
+      ],
+      "label": "Category multicolumn swipe carousel",
+      "screenshot_ref": "section-2-mobile.jpg",
+      "scroll_y_bottom": 917,
+      "scroll_y_top": 543,
+      "slug": "category-carousel"
+    },
+    {
+      "clusters": [
+        "product-media",
+        "pricing",
+        "trust-credibility",
+        "visual-cta"
+      ],
+      "label": "Featured collection product cards",
+      "screenshot_ref": "section-3-mobile.jpg",
+      "scroll_y_bottom": 1629,
+      "scroll_y_top": 917,
+      "slug": "featured-collection"
+    },
+    {
+      "clusters": [
+        "checkout-flows",
+        "trust-credibility",
+        "content-seo"
+      ],
+      "label": "Newsletter signup and footer with payment icons",
+      "screenshot_ref": "section-4-mobile.jpg",
+      "scroll_y_bottom": 2305,
+      "scroll_y_top": 1629,
+      "slug": "newsletter-footer"
+    }
+  ],
+  "telemetry": {
+    "chromium_binary": "chromium-1208",
+    "playwright_version": "unknown",
+    "wall_clock_seconds": 92.0
+  },
+  "url": "https://www.awdmods.com/",
+  "viewport": {
+    "dpr_actual": 3,
+    "dpr_requested": 3,
+    "height": 844,
+    "width": 390
+  }
+}

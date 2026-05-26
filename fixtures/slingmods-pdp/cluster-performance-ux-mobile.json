@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "performance-ux",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:20:00.000Z",
+  "completed_at": "2026-04-28T23:35:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Hero Product Image Lacks fetchpriority and Preload",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "img"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Hero product image of the EvolutionR handlebar end weights renders at full viewport width as the primary above-fold content. No fetchpriority or preload link visible in page head markup."
+        },
+        {
+          "type": "dom",
+          "reference": "e5",
+          "context": "Page head confirms no <link rel=preload as=image> for the hero product image. The page head contains font preloads (Teko woff2, FontAwesome woff) but no product image preload."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 1: Product Hero Image Is the LCP Element — Requires fetchpriority=high and Preload",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 6: Never Lazy-Load the LCP Hero Image",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The page head preloads two font files (the Teko display font and FontAwesome) but contains no <link rel=\"preload\" as=\"image\"> for the hero product image — the large above-fold photo of the handlebar end weights that dominates the first viewport on a 390px screen. Without fetchpriority=\"high\" on the <img> element and a matching preload hint in the <head>, the browser queues the hero image at the same priority as decorative resources, delaying Largest Contentful Paint beyond what the hardware can recover in the render pipeline.",
+      "recommendation": "Add fetchpriority=\"high\" to the hero product <img> element and add a corresponding <link rel=\"preload\" as=\"image\" href=\"[hero-image-url]\" fetchpriority=\"high\"> in the <head> immediately after the stylesheet links. Do not add loading=\"lazy\" to the hero image — lazy-loading the LCP element is one of the most direct ways to worsen the metric. Gallery images from position 3 onward should retain loading=\"lazy\".",
+      "why_this_matters": "On an ecommerce PDP, the hero product image is the LCP element on most mobile viewports. A controlled Vodafone A/B test showed a 31% LCP improvement produced 8% more online sales. Google/Deloitte data across 37 brands found every 0.1-second improvement in mobile load time yields 8.4% higher retail conversion rate. Adding two HTML attributes costs nothing in engineering time and can materially improve both conversion and organic search ranking.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Logo Image Missing Width and Height Attributes (CLS Risk)",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "e5",
+        "text_content": "",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Slingmods logo renders at top of every page view as the first above-fold element. Baton records its rendered rect as 209x50px at position y:5."
+        },
+        {
+          "type": "dom",
+          "reference": "e5",
+          "context": "Header DOM: <img src=\"/image/catalog/slingmods-logo-main.png\" title=\"Slingmods\" alt=\"Slingmods\" class=\"img-responsive ma-center\"> — no width or height attributes present."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 5: Explicit Width and Height Attributes Prevent Cumulative Layout Shift (CLS)",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 12: CLS — Reserve Space for All Dynamic Elements",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The Slingmods logo <img> element is rendered without width or height attributes. The baton confirms its rendered size is 209x50px, but the browser must wait for the image to load before reserving that space. On every page load, the 50px vertical space the logo occupies is not pre-allocated by the browser, contributing to header layout shift as the logo loads. This affects every page on the site, not just this PDP, since the header is a global element.",
+      "recommendation": "Add width=\"209\" height=\"50\" to the logo <img> tag. Pair with CSS img { max-width: 100%; height: auto; } if not already present to preserve responsive scaling. The baton-measured rendered dimensions of 209x50px are the correct values to use. Apply the same treatment to all other img elements in the header that currently omit explicit dimensions.",
+      "why_this_matters": "CLS is a confirmed Core Web Vitals ranking signal. Swappie's 91% CLS reduction contributed to a 42% mobile revenue increase. The logo is the first above-fold element on every page — layout shift during its load sets a jagged visual tone for the entire page and contributes to the site's overall CLS score across all URLs.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No Sticky Bottom Add to Cart Bar on Mobile",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "button"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 700,
+          "viewport": "mobile",
+          "context": "Add to Cart button appears inline at approximately y:862 in the page. As the user scrolls into the product description (sections 3-4), the CTA scrolls completely out of view with no sticky element taking its place at the bottom of the viewport."
+        },
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1044,
+          "viewport": "mobile",
+          "context": "At section-3 scroll position (fitment guide and video), no sticky CTA bar is visible at the bottom of the viewport. The primary conversion action is unreachable without scrolling back to the top."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 18: Thumb-Friendly Sticky CTA Bars",
+          "tier": "Bronze"
+        },
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 1: Thumb Zone Mapping for Modern Phones",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "Once a mobile visitor scrolls past the Add to Cart button at y:862 to read the product description, review the fitment guide, or watch the YouTube video below, the primary purchase action disappears from view. There is no sticky bottom bar maintaining the Add to Cart action in the thumb zone. At 390px viewport width, the page height is 3,297px — a visitor who reads the full description and scrolls to the reviews tab travels more than 4 viewport-heights past the CTA before any conversion opportunity reappears.",
+      "recommendation": "Implement a sticky bottom bar that appears once the user scrolls past the inline Add to Cart button. The bar should show the product price ($59.95) and an Add to Cart button sized to at least 48px height to meet touch-target guidelines. The bar should dismiss when the user scrolls back up to the inline CTA to avoid redundancy. Ensure the sticky bar adds bottom padding to the page body so it does not obscure the last viewport of content.",
+      "why_this_matters": "Mobile shoppers who scroll deep into product content to validate a purchase decision must also reverse that scroll to complete the action. Requiring scroll-back friction at the highest-intent moment of the session directly suppresses conversion — particularly for engaged visitors who have read the full description and fitment guide, which signals purchase intent.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Hamburger-Only Navigation Hides All Category Access",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "e0",
+        "text_content": "",
+        "role": "button"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Mobile header shows hamburger menu icon (e0, 44x44px at x:12 y:8) as the sole navigation entry point. The five vehicle-category tabs visible in the screenshot (SLINGSHOT, SPYDER, RYKER, CANYON, GEAR) are a horizontal scroll strip that extends beyond the 390px viewport — the GEAR tab is clipped. No bottom navigation bar is present at any scroll position."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 13: Mobile Navigation — Hamburger Menu vs. Bottom Navigation",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The mobile header relies on a hamburger menu button (e0, 44x44px at top-left) as the primary gateway to all site navigation. The horizontal vehicle-category strip below the header partially addresses this by showing five categories (Slingshot, Spyder, Ryker, Canyon, Gear), but the strip overflows the 390px viewport — the rightmost category (Gear) is visually clipped and may not be discoverable without horizontal scroll. NNGroup's research confirms that hidden hamburger navigation consistently performs worse than visible navigation on discoverability metrics.",
+      "recommendation": "If a full bottom navigation bar is not feasible in the near term, elevate the five vehicle category links into a persistently visible horizontal tab strip that fits within 390px without overflow clipping — either by abbreviating labels or reducing to the four most-purchased categories. As a more impactful improvement, implement a 4-item persistent bottom navigation bar (Home, Browse/Categories, Cart, Account) with the hamburger reserved for secondary items like policies and model charts.",
+      "why_this_matters": "Navigation discoverability directly constrains upsell and cross-sell browsing. A shopper arriving at this handlebar end weights PDP from a paid or organic search may not realize Slingmods carries complementary accessories for their vehicle. Replacing hamburger-only navigation with visible navigation has shown 25-50% engagement increases across documented platform-level A/B tests.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Touch Target Sizing Meets Minimum Standards for Core Header Actions",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "e0",
+        "text_content": "",
+        "role": "button"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e0",
+          "context": "Menu button: 44x44px. Search button (e1): 44x44px. Cart button (e2): 44x44px. All three header action buttons meet the 44x44px platform recommendation (Apple HIG, Material Design) and well exceed the WCAG 2.2 AA 24x24px minimum."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 6: Touch Target Sizing Research",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The three core header action buttons — Menu (e0), Search (e1), and Cart (e2) — are all 44x44px, meeting the Apple HIG and Google Material Design platform recommendation and exceeding the WCAG 2.2 AA 24x24px legal minimum. The cart badge (e12) is 16x16px but is a display element only, not an interactive tap target. The interactive cart trigger is the 44x44px cart button (e2), not the badge itself.",
+      "recommendation": "No change needed for header touch targets. When implementing the sticky CTA bar recommended in F-3, size the Add to Cart button to at least 48px height to maintain consistency with platform guidelines.",
+      "why_this_matters": "Properly sized touch targets reduce tap errors and prevent the frustration of misfired taps that erode user confidence in the interface.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "The page head contains a preload for the Teko font (woff2) and FontAwesome (woff) — both are render-blocking font resources. The Teko preload is appropriate for above-fold heading text. FontAwesome woff preload is worth auditing: if most FA icons are below-fold (nav icons, star ratings), preloading the font file competes with the hero image for bandwidth in the initial load window. This was not emitted as a finding because the cluster-context DOM slice for section 1 does not contain enough icon inventory to assess whether preloading FontAwesome is net-positive or net-negative for LCP. The synthesizer may want to flag this for third-party script audit consideration.",
+    "The page includes an inline YouTube video in section 2 (Can-Am Spyder Handlebar End Weights). YouTube embeds are among the most significant third-party script LCP contributors on PDPs — a single YouTube iframe can add 200-500ms to LCP through its preconnect and script chain. Section 2 is not routed to this cluster, but the presence of an embedded video is noted for cross-cluster synthesis. The performance-ux recommendation would be to replace with a lightweight video facade (poster image + play button) that loads the YouTube iframe only on user tap.",
+    "The page uses Bootstrap 3-column grid (col-sm-4, col-sm-5, col-sm-3) in the header template. On a 390px mobile viewport, Bootstrap's sm breakpoint triggers at 768px, meaning the header renders in the stacked mobile layout. The actual mobile header shown in section-1-mobile.jpg correctly collapses to icon-only controls (hamburger, search, cart). This suggests a responsive breakpoint is functioning correctly for the header bar, though the underlying Bootstrap CSS adds render-blocking stylesheet weight."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "mobile-conversion.md",
+      "cognitive-load-management.md",
+      "page-performance-psychology.md",
+      "core-web-vitals.md",
+      "media-performance-optimization.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 1,
+    "baton_elements_total": 20,
+    "findings_by_verdict": {
+      "FAIL": 4,
+      "PARTIAL": 0,
+      "PASS": 1
+    }
+  }
+}

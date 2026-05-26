@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecp.local/schema/cluster-emission-v1.json",
+  "title": "ECP Cluster Emission v1",
+  "description": "Canonical shape of what a v2 specialist auditor (one per cluster per device) emits to disk. Replaces the v1 cluster-{cluster}-{device}.md markdown file. JSON in; JSON out; no prose parsing. Reconciler reads these files via JSON Schema validation, not regex against finding-block prose. Authored 2026-04-27 brainstorm; pairs with finding-v1.json. See docs/brainstorms/2026-04-27-ecp-v2-architecture-brainstorm.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "engagement_id",
+    "cluster",
+    "device",
+    "specialist_model",
+    "started_at",
+    "completed_at",
+    "status",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "description": "Version of the cluster-emission schema. v1 is current. Bump on backward-incompatible changes to the emission shape.",
+      "type": "integer",
+      "const": 1
+    },
+    "engagement_id": {
+      "description": "The audit engagement this emission belongs to. Format: YYYY-MM-DD-<8 hex>. Reconciler verifies this matches the parent meta.json.id.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}-[0-9a-f]{8}$"
+    },
+    "cluster": {
+      "description": "Which cluster this specialist audited. Must match the dispatch slug. Ethics emissions use cluster='ethics'.",
+      "type": "string",
+      "enum": [
+        "visual-cta",
+        "trust-credibility",
+        "pricing",
+        "checkout-flows",
+        "performance-ux",
+        "product-media",
+        "category-navigation",
+        "content-seo",
+        "post-purchase",
+        "audience",
+        "ethics"
+      ]
+    },
+    "device": {
+      "description": "Which device this specialist audited. Ethics specialists may use 'page' to indicate a single emission across both devices (consumed identically by both device assemblies).",
+      "type": "string",
+      "enum": ["desktop", "mobile", "page"]
+    },
+    "specialist_model": {
+      "description": "Which model produced the findings. Useful for cost/quality telemetry and for parity-test comparisons across model versions.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "version"],
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": ["sonnet", "opus", "haiku"]
+        },
+        "version": {
+          "description": "Model version string (e.g., '4.6', '4.7'). Free-form to accommodate future versions; the synthesizer treats this as opaque.",
+          "type": "string",
+          "maxLength": 16
+        },
+        "context_window": {
+          "description": "Optional. The context window the specialist ran in. Accepts string form ('1M', '200K') or integer form (200000, 1000000). Useful when comparing context-window-conditioned behavior across runs.",
+          "oneOf": [
+            {"type": "string", "maxLength": 16},
+            {"type": "integer", "minimum": 1000}
+          ]
+        },
+        "temperature": {
+          "description": "Optional. Sampling temperature the specialist ran at. v2 default is low (0.0-0.2) for determinism.",
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 2.0
+        }
+      }
+    },
+    "started_at": {
+      "description": "ISO 8601 timestamp when the specialist began. Used for runtime telemetry and parity-test comparisons.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "description": "ISO 8601 timestamp when the specialist finished writing this file. completed_at - started_at gives the wall-clock runtime.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "description": "How the specialist run resolved. 'complete' = all findings emitted normally. 'partial' = ran but found a degraded condition (e.g., DOM slice missing critical sections). 'skipped' = specialist did not run; common for clusters with empty cluster-context post-pruning.",
+      "type": "string",
+      "enum": ["complete", "partial", "skipped"]
+    },
+    "skip_reason": {
+      "description": "Required when status='skipped'. Free-form prose explaining why the specialist didn't produce findings. Visible in the agent-behavior-log.",
+      "type": "string",
+      "maxLength": 240
+    },
+    "findings": {
+      "description": "All FAIL, PARTIAL, and PASS findings emitted by this specialist, in dispatch order. Empty array allowed (specialist ran cleanly but found nothing actionable; emit at least one PASS finding to confirm the specialist actually executed).",
+      "type": "array",
+      "items": {
+        "$ref": "https://ecp.local/schema/finding-v1.json"
+      }
+    },
+    "notes": {
+      "description": "Free-form specialist commentary that doesn't rise to a finding. Examples: 'No related-products carousel exists on this page (factually true; not a finding because absence is not always a defect on PDPs).' or 'Could not determine canonical URL — head section was malformed in this DOM slice.' Synthesizer may quote when integrating; reconciler ignores for validation. Relaxed to 1200 chars per item after Phase B/C/D testing showed specialists naturally write paragraph-length notes when documenting cross-cluster signals or degraded-condition reasoning.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 1200
+      },
+      "maxItems": 16
+    },
+    "telemetry": {
+      "description": "Optional cost/quality telemetry the specialist self-reports. Used by Phase 2 parity testing and the substantive canary 'finding-stability' assertion. additionalProperties: true (relaxed from false after Phase B/C/D testing showed specialists naturally self-report cluster-specific metrics like baton_elements_referenced, sections_routed_to_cluster, findings_by_verdict). Canonical fields below remain documented; specialists may add others.",
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "input_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cached_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reference_files_read": {
+          "description": "Reference filenames the specialist actually read (subset of the cluster reference pack), OR an integer count of files read. Array form is canonical and lets the synthesizer weight evidence; integer form is accepted for specialists that only have count-level information. Canary can verify the specialist read what it was supposed to.",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]*\\.md$"
+              }
+            },
+            {
+              "type": "integer",
+              "minimum": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "When status='skipped', skip_reason is required and findings must be empty.",
+      "if": {
+        "properties": {
+          "status": {
+            "const": "skipped"
+          }
+        }
+      },
+      "then": {
+        "required": ["skip_reason"],
+        "properties": {
+          "findings": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "description": "When status='complete' or 'partial', findings must contain at least one entry. A specialist that ran but emits zero findings should produce one PASS finding to confirm execution.",
+      "if": {
+        "properties": {
+          "status": {
+            "enum": ["complete", "partial"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "findings": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "Ethics emissions (cluster='ethics') use device='page'. The ethics subagent runs once on the union of both devices; cluster auditors run per-device.",
+      "if": {
+        "properties": {
+          "cluster": {
+            "const": "ethics"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "device": {
+            "const": "page"
+          }
+        }
+      }
+    },
+    {
+      "description": "Cluster auditor emissions (cluster != 'ethics') use device='desktop' or device='mobile', never 'page'.",
+      "if": {
+        "not": {
+          "properties": {
+            "cluster": {
+              "const": "ethics"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "device": {
+            "enum": ["desktop", "mobile"]
+          }
+        }
+      }
+    },
+    {
+      "description": "Every finding's cluster field MUST equal this emission's cluster field. Specialists cannot emit findings tagged for other clusters; cross-cluster integration happens in the synthesizer, not at emission time.",
+      "if": {
+        "properties": {
+          "findings": {
+            "minItems": 1
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "findings": {
+            "items": {
+              "properties": {
+                "cluster": {
+                  "$ref": "#/properties/cluster"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "schema_version": 1,
+      "engagement_id": "2026-04-27-a231b248",
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "specialist_model": {
+        "family": "sonnet",
+        "version": "4.6",
+        "context_window": "1M",
+        "temperature": 0.1
+      },
+      "started_at": "2026-04-27T16:14:02.000Z",
+      "completed_at": "2026-04-27T16:15:38.000Z",
+      "status": "complete",
+      "findings": [
+        {
+          "cluster": "visual-cta",
+          "device": "mobile",
+          "local_id": 3,
+          "verdict": "FAIL",
+          "title": "ATC Button Color Blends Into Page",
+          "surface": "primary-cta",
+          "element": {
+            "baton_index": "e47",
+            "text_content": "Add to Cart",
+            "role": "button"
+          },
+          "severity": "MEDIUM",
+          "scope": "device",
+          "effort": {
+            "change_type": "css",
+            "change_scope": "single-file"
+          },
+          "confidence": 0.85,
+          "evidence_anchors": [
+            {
+              "type": "visual",
+              "reference": "section-2-mobile.jpg",
+              "scroll_y": 920,
+              "viewport": "mobile",
+              "context": "Add to Cart button uses #6B6B6B against white card; matches three other mid-grey UI elements above the fold."
+            },
+            {
+              "type": "dom",
+              "reference": "e47"
+            }
+          ],
+          "reference_citations": [
+            {
+              "source": "color-psychology.md",
+              "line": 142,
+              "tier": "Silver"
+            }
+          ],
+          "observation": "The Add to Cart button uses a mid-grey fill that matches three other interactive elements within the same viewport. Without a distinct primary-action color, the button has no visual claim to being the most important action on the page.",
+          "recommendation": "If the brand has a primary accent color (the SlingMods red), apply it as the Add to Cart button background and reserve that color for purchase actions only.",
+          "why_this_matters": "On mobile product pages, the Add to Cart button is the only conversion action that matters; if it doesn't visually own the page, every conversion costs more attention than it should.",
+          "evidence_tier": "Silver"
+        }
+      ],
+      "notes": [
+        "Hero image renders cleanly above the fold; no LCP-impact CTA conflicts noted on this template."
+      ],
+      "telemetry": {
+        "input_tokens": 78400,
+        "output_tokens": 4220,
+        "cached_tokens": 12800,
+        "reference_files_read": [
+          "color-psychology.md",
+          "cta-design-and-placement.md",
+          "primary-action-contrast.md"
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "engagement_id": "2026-04-27-a231b248",
+      "cluster": "post-purchase",
+      "device": "mobile",
+      "specialist_model": {
+        "family": "sonnet",
+        "version": "4.6",
+        "temperature": 0.1
+      },
+      "started_at": "2026-04-27T16:14:02.000Z",
+      "completed_at": "2026-04-27T16:14:08.000Z",
+      "status": "skipped",
+      "skip_reason": "Cluster context for post-purchase contained zero routed sections after empty-slice pruning. Specialist not dispatched to avoid forcing thin findings on a $69.95 PDP.",
+      "findings": []
+    }
+  ]
+}

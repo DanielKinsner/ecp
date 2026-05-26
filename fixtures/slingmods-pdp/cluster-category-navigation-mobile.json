@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "category-navigation",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6",
+    "context_window": 200000
+  },
+  "started_at": "2026-04-28T23:42:00.000Z",
+  "completed_at": "2026-04-28T23:55:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No BreadcrumbList Schema — Breadcrumb Absent from Structured Data",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "navigation"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.97,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "A hierarchy breadcrumb is visibly rendered below the vehicle model selector tabs — showing a home icon followed by the product title — yet the captured schema_jsonld payload contains only a single Product object. No BreadcrumbList type is present anywhere in the structured data."
+        },
+        {
+          "type": "dom",
+          "reference": "absent"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 6: Schema.org BreadcrumbList Markup Required for Search Engine Rich Results",
+          "tier": "Silver"
+        },
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 9: SearchPilot Controlled Test — Removing Breadcrumbs Caused -5.5% Organic Traffic",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The page's JSON-LD payload (verified in the captured structured data) contains one schema object of type Product — covering price, availability, brand, and aggregate rating. No BreadcrumbList object exists. Google requires BreadcrumbList JSON-LD with at least two ListItems to display the breadcrumb path in search snippets. Without it, Google's SERP snippet for this PDP shows a raw URL rather than a readable category path such as 'slingmods.com > Spyder > Handlebar Accessories,' which reduces the relevance signal available to searchers evaluating results for 'Can-Am Spyder handlebar end weights.' A SearchPilot controlled test found breadcrumb removal caused a statistically significant 5.5% drop in organic traffic, and a second SearchPilot test found a 7% loss on category-level pages after breadcrumb schema was removed.",
+      "recommendation": "Add a BreadcrumbList JSON-LD block to this page template alongside the existing Product schema. Include at minimum three ListItems: (1) homepage at position 1, (2) the canonical parent category (e.g., Spyder > Handlebar Accessories) at positions 2–3, and (3) the current product page as the final item. Align the ListItem names and URLs to the visible HTML breadcrumb trail — Google validates consistency between markup and rendered content and flags mismatches. Test with Google's Rich Results Test before deploying to the full catalog.",
+      "why_this_matters": "BreadcrumbList schema enables Google to replace the raw domain URL in search snippets with a human-readable category path. For a niche powersports accessory with a specific vehicle compatibility, a snippet showing 'Spyder > Handlebar Accessories' signals relevance faster than a URL string and improves click-through rate from organic search. Every product page in the catalog that lacks this markup is leaving an organic traffic lever unpulled.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Breadcrumb Jumps Home to Product — No Category Level",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for t",
+        "role": "navigation"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.93,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The breadcrumb row beneath the vehicle model tabs shows: home icon > 'EvolutionR Stainless Steel Weighted Handlebar End Caps for t...' — a two-level trail with no intermediate category or subcategory link between the homepage and the product name."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 1: Ecommerce Requires Two Types of Breadcrumbs — 68% of Sites Fail to Implement Both",
+          "tier": "Gold"
+        },
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 4: Hierarchy Breadcrumbs — Structure and Interaction Requirements",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The visible breadcrumb trail on this product page has two levels only: a home icon link and the product title as plain text. There is no intermediate category link — no 'Spyder,' 'Handlebar Parts,' or 'Comfort / Touring' level between home and the product name. Nielsen Norman Group's breadcrumb guidelines require all intermediate hierarchy levels to be present as clickable links. Baymard Institute benchmarking finds 68% of ecommerce sites fail to implement both hierarchy and history breadcrumb types; this page omits the intermediate hierarchy level entirely. A customer who arrived via a Google search for 'Can-Am Spyder handlebar end weights' has no breadcrumb path to discover what other handlebar accessories or Spyder parts the store carries — the breadcrumb provides no 'you are here' context within the site taxonomy.",
+      "recommendation": "Extend the breadcrumb to at least three levels: Home > [Parent Category] > [Product Name]. If the product belongs to a subcategory (e.g., Home > Spyder Parts > Handlebar Accessories > [Product]), include that intermediate level as a linked element. Only the final product-name element should be non-linked plain text. Each intermediate link must point to the corresponding category page. This change also creates the internal link anchor text needed to support the BreadcrumbList schema fix (F-1) and passes topical context to the parent category pages in Google's crawl.",
+      "why_this_matters": "Shoppers landing on this page from external search — with no prior browsing context — rely on the breadcrumb to understand where the product sits in the catalog and whether the store carries related items. A two-level trail gives them no path into the category hierarchy. Without an intermediate category link, there is also no internal link passing PageRank authority toward the category pages that drive the site's broadest organic traffic.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Mobile Breadcrumb Product Name Truncated at Viewport Edge",
+      "surface": "header-product-gallery",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for t",
+        "role": "navigation"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "At 390px viewport width, the breadcrumb text reads 'EvolutionR Stainless Steel Weighted Handlebar End Caps for t' — the product name is cut off abruptly mid-word at the right viewport edge with no ellipsis or wrapping. The truncation makes the breadcrumb's current-page label unreadable as a complete title."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "breadcrumbs.md",
+          "section": "Finding 5: Mobile Breadcrumbs — Three Viable Patterns",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "On the 390px mobile viewport, the breadcrumb's current-page label — the product name — is clipped at the right edge of the screen, reading 'EvolutionR Stainless Steel Weighted Handlebar End Caps for t' with no ellipsis and no text wrap. The full product name (81 characters) overflows the breadcrumb container width without any overflow handling. Nielsen Norman Group's mobile breadcrumb research recommends either a single '← [Immediate Parent]' link pattern or a scrollable trail — both of which would eliminate this overflow problem. The current implementation attempts a desktop-style breadcrumb trail on a narrow viewport without responsive overflow handling.",
+      "recommendation": "On mobile (max-width: 480px), replace the current full-text breadcrumb with a single '← [Immediate Parent Category]' link — for example, '← Handlebar Accessories' — rather than showing the product name as the final breadcrumb level. The product name is already in the H1 immediately below; repeating it as a truncated breadcrumb item adds no navigation value and produces a broken text display. If the full trail is required, apply CSS `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` to the final breadcrumb item and cap its `max-width` so truncation is clean with a visible ellipsis.",
+      "why_this_matters": "A visibly truncated breadcrumb item reduces the perceived quality of the page header on mobile — the first visible content area below the navigation. While low-severity in isolation, it contributes to a first-impression signal that the site's mobile experience is not fully optimized, which can affect bounce rate from mobile organic visitors.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Footer Year/Model Chart Navigation Supports Vehicle-First Browsing",
+      "surface": "footer-trust-links",
+      "element": {
+        "baton_index": "e19",
+        "text_content": "Information Affirm Monthly Payments About Us Privacy Policy Terms & Conditio",
+        "role": "contentinfo"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-5-mobile.jpg",
+          "scroll_y": 2417,
+          "viewport": "mobile",
+          "context": "The footer includes a 'Year / Model Charts' column with four vehicle-specific links: Can-Am Canyon Model Chart, Can-Am Ryker Model Chart, Can-Am Spyder Model Chart, and Polaris Slingshot Model Chart — providing direct navigation paths organized by the store's primary vehicle taxonomy."
+        },
+        {
+          "type": "dom",
+          "reference": "e19"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "collection-page-architecture.md",
+          "section": "Finding 1: Click Depth — Every Product Reachable Within 3–4 Clicks from Homepage",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The footer provides a 'Year / Model Charts' navigation column with direct links to model-specific fitment reference pages for all four vehicle families the store serves: Can-Am Canyon, Can-Am Ryker, Can-Am Spyder, and Polaris Slingshot. This matches the store's vehicle-first navigation taxonomy and gives any mobile visitor who has scrolled to the footer a direct path to compatibility charts for their specific vehicle.",
+      "recommendation": "This pattern is working. To extend its value, consider adding a 'Shop by Vehicle' column alongside the Year/Model Charts column — linking directly to the top-level category page for each vehicle family (e.g., 'Shop Spyder Parts'). This would complement the model chart links with a product discovery path at the footer level.",
+      "why_this_matters": "Footer navigation is a safety net for mobile visitors who scroll past the main content without converting. Vehicle-specific navigation links in the footer reduce the effort required to pivot to a related category after evaluating a product that does not fit — supporting continued session engagement.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "The vehicle model selector tabs visible in section-1-mobile.jpg (SLINGSHOT, SPYDER, RYKER, CANYON, GEAR at y~68) represent a useful fitment-first navigation pattern that appears to function correctly on mobile as a horizontally-scrollable row. No negative finding emitted — the pattern is appropriate for a multi-vehicle powersports store.",
+    "The header section (header-product-gallery) was not routed to category-navigation in the mobile cluster context; however, the breadcrumb navigation residing in that section is squarely within this cluster's domain. Findings F-1, F-2, and F-3 are emitted from this cluster's lens on visible evidence. The synthesizer may need to note the cross-section boundary.",
+    "The desktop category-navigation specialist (cluster-category-navigation-desktop.json) emitted breadcrumb hierarchy and BreadcrumbList schema findings as scope 'page' — F-1 and F-2 in this mobile emission confirm the same page-scope issues are present at the mobile viewport. Layer 2 deduplication should merge these with the desktop emission.",
+    "No history breadcrumb ('Back to results') is present on the mobile page — same finding as desktop F-1. Not re-emitted here as a separate finding given desktop scope: 'page' coverage; noted for synthesizer awareness."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "breadcrumbs.md",
+      "collection-page-architecture.md",
+      "filtering-ux.md",
+      "evidence-tiers.md",
+      "search-and-filter-ux.md"
+    ],
+    "baton_elements_referenced": [
+      "e19"
+    ],
+    "screenshots_reviewed": [
+      "section-1-mobile.jpg",
+      "section-2-mobile.jpg",
+      "section-3-mobile.jpg",
+      "section-4-mobile.jpg",
+      "section-5-mobile.jpg"
+    ]
+  }
+}

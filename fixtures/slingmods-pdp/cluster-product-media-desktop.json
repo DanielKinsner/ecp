@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "product-media",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6",
+    "context_window": 200000
+  },
+  "started_at": "2026-04-28T23:30:00.000Z",
+  "completed_at": "2026-04-28T23:45:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Product Video Has No VideoObject Schema Markup",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "baton.json",
+          "context": "page_head.schema_jsonld contains a single Product schema object; no VideoObject entry is present despite a YouTube product video being embedded on the page."
+        },
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "A YouTube video thumbnail labeled 'Can-Am Spyder Handlebar End Weights' is visibly embedded in the product page at the top of the viewport, adjacent to the product title and pricing block — confirming a video is present with no corresponding schema."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "video-schema.md",
+          "section": "Finding 1: VideoObject Required and Recommended Properties",
+          "tier": "Gold"
+        },
+        {
+          "source": "video-integration.md",
+          "section": "Finding 16: VideoObject Schema — Required vs Recommended Fields",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "A YouTube video for the EvolutionR handlebar end weights is embedded on the product page, but the page's structured data block contains only a Product schema — no VideoObject JSON-LD is present. Google requires name, thumbnailUrl, and uploadDate at minimum to generate video rich results. Without this markup, the video cannot appear in Google's Video tab, cannot generate a video thumbnail in search results, and cannot contribute to click-through rate improvements from video-enriched SERP listings.",
+      "recommendation": "Add a VideoObject JSON-LD block to the page's <head> alongside the existing Product schema. Required fields: name (e.g., 'Can-Am Spyder F3 & RT Handlebar End Weights — Product Overview'), thumbnailUrl (a public JPEG of the video poster frame), and uploadDate in ISO 8601 format. Strongly recommended additions: embedUrl pointing to the YouTube embed URL, description matching the product's use case, and duration in ISO 8601 format (e.g., PT1M30S). Use a @graph array to co-locate both schema types in a single script block. Validate with Google's Rich Results Test before deploying.",
+      "why_this_matters": "VideoObject markup enables video carousels and thumbnail previews in Google Search — pages with valid video schema see 25–40% higher click-through rates on the affected listings. For a specialty motorcycle accessory where demonstration video shows the product being installed and used, those incremental clicks come from high-intent buyers who want to see the product in action before purchasing.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Product Video Placed Outside Gallery, Not at Position 2–3",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The YouTube video panel appears as a standalone block to the right of the product title/pricing column — it is visually separated from the left-side image gallery that shows thumbnail strips. The main product gallery (with ~8 thumbnail images) and the video are in separate layout columns rather than the video being integrated as a gallery item."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 8: Video Integration in Gallery — Position 2 or 3 is Optimal",
+          "tier": "Gold"
+        },
+        {
+          "source": "video-integration.md",
+          "section": "Finding 8: Video Placement — Gallery Position 2-3 Outperforms Separate Tab",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The 'Can-Am Spyder Handlebar End Weights' YouTube video is displayed as a standalone panel in the right-hand product information column, separate from the image gallery on the left. Baymard Institute's usability testing found that 35% of major e-commerce sites implement video placement this way — and that users frequently miss videos placed outside the main gallery flow. The video does not appear as a clickable gallery thumbnail alongside the 8 product images; it exists in a distinct layout region that users may scroll past after reviewing the gallery.",
+      "recommendation": "Integrate the product video as a gallery item — place it at position 2 or 3 in the main image thumbnail strip, after the hero packshot. Give it a custom video thumbnail still (not a black frame or YouTube default) with a visible play button overlay of at least 48px. When the thumbnail is clicked, the video should play inline within the main gallery viewport, not redirect to YouTube. If the current template architecture separates gallery from product info, this is a component-level change but has an outsized discovery impact.",
+      "why_this_matters": "Users who scan the product gallery sequentially will encounter and engage with a gallery-integrated video naturally. When the video sits in a separate layout region, Baymard testing shows the majority of visitors never interact with it — a well-produced product demonstration video effectively becomes invisible, wasting its persuasive value on a high-consideration fitment-sensitive accessory where demonstrating installation and appearance is the primary purchase confidence lever.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No In-Scale Image for Small Physical Accessory",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The gallery thumbnails visible in the product page show the EvolutionR weighted end caps in product-only shots against dark/gradient backgrounds. No thumbnail shows the end caps alongside a hand, handlebar section, ruler, or recognizable reference object that would communicate physical scale. The product listing description mentions 'Pair' and '0.85 lbs. (8x heavier than stock)' but no image communicates the physical diameter or length of these parts."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "image-quantity-types.md",
+          "section": "Finding 4: 28% of Major Sites Lack In-Scale Images, Directly Driving Size-Mismatch Returns",
+          "tier": "Gold"
+        },
+        {
+          "source": "image-quantity-types.md",
+          "section": "Finding 3: Four Universal Image Types Are Required Across All Categories",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The gallery for the EvolutionR Stainless Steel Weighted Handlebar End Caps contains approximately 8 product images — all appear to be packshots against dark or gradient backgrounds showing the end caps from multiple angles. None of the visible thumbnails include a scale reference: no hand holding the part, no comparison against the handlebar it replaces, no ruler or coin. For a handlebar accessory with fitment specifics tied to the 2024+ Can-Am Spyder F3 and RT, buyers need to verify physical size before purchasing — the existing images leave this question unanswered.",
+      "recommendation": "Add at least one image showing the end caps installed on an actual handlebar end, or held in hand against the bar they replace. A side-by-side comparison of stock OEM end cap vs. the EvolutionR part would directly answer the size and fitment question for hesitant buyers. The product weights 0.85 lbs. per pair — the mass difference vs. stock is a key selling point that a size-comparison image could reinforce visually.",
+      "why_this_matters": "Baymard Institute found 42% of users actively attempt to judge product scale from images, and 28% of major e-commerce sites still provide no in-scale reference. For fitment-specific motorcycle accessories, a buyer who can't assess the physical dimensions may either abandon the purchase or order and return when the part doesn't match their expectation — both outcomes are directly preventable with one additional photograph.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Thumbnail Strip Navigation Present on Desktop Gallery",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e4",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3",
+        "role": "heading"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The product gallery on the left side of the page shows a main hero image with a vertical thumbnail strip containing approximately 8 thumbnails — consistent with best practice for desktop gallery navigation. Dot navigation is not present; individual image thumbnails with visual previews are used."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 1: Dot Navigation Causes 50% of Desktop Users to Miss Additional Images",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product gallery uses a thumbnail strip with individual image previews rather than dot indicators. Approximately 8 thumbnails are visible and accessible without additional interaction, providing users with a clear visual overview of all available product images.",
+      "recommendation": "Maintain the current thumbnail strip approach. If the gallery expands beyond 10 images, consider displaying the strip with partial peek on the last thumbnail to signal scrollability, and add an image count indicator.",
+      "why_this_matters": "Baymard Institute found that 50% of desktop users miss additional product images when only dot indicators are shown. The current thumbnail strip approach correctly surfaces all available images upfront.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The baton does not index any img or iframe elements from the product gallery — gallery images and the YouTube video iframe are not individually represented in baton.elements[]. Findings about the gallery and video therefore use baton_index: 'absent' and anchor to visual evidence in section-1.jpg.",
+    "The page's Product schema (baton.json page_head.schema_jsonld) includes a single product image URL pointing to the main product shot — no fetchpriority='high' attribute is observable from the DOM slice, though this could exist in the full rendered template outside the captured slice. The LCP/fetchpriority finding was not emitted as it could not be confirmed absent from the full page render.",
+    "The gallery appears to contain approximately 8 images based on the thumbnail count visible in section-1.jpg — adequate for a specialty motorcycle accessory (commodity/small parts category per image-quantity-types.md F2 recommends 3-5 minimum; 8 exceeds this). Image count is a pass; the gaps are video schema, video placement, and in-scale photography."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "gallery-ux.md",
+      "image-quantity-types.md",
+      "thumbnail-design.md",
+      "video-integration.md",
+      "video-optimization.md",
+      "video-schema.md",
+      "ar-3d-visualization.md",
+      "color-accuracy.md",
+      "evidence-tiers.md"
+    ],
+    "baton_elements_checked": [
+      "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9",
+      "e10", "e11", "e12", "e13", "e14", "e15", "e16", "e17", "e18"
+    ],
+    "screenshots_reviewed": ["section-1.jpg", "section-2.jpg"]
+  }
+}

@@ -1,0 +1,784 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecp.local/schema/finding-v1.json",
+  "title": "ECP Finding v1",
+  "description": "Single structured finding emitted by a v2 specialist auditor or the ethics subagent. JSON is the source of truth; markdown audit-mirror, HTML report, and bulleted exports all render from this shape. Mechanically validatable. Authored 2026-04-27 brainstorm; see docs/brainstorms/2026-04-27-ecp-v2-architecture-brainstorm.md and docs/redesign-v2-proposal.md §21.4.3.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cluster",
+    "device",
+    "local_id",
+    "verdict",
+    "title",
+    "surface",
+    "element",
+    "severity",
+    "scope",
+    "effort",
+    "evidence_anchors",
+    "reference_citations",
+    "observation",
+    "recommendation",
+    "why_this_matters",
+    "evidence_tier"
+  ],
+  "properties": {
+    "cluster": {
+      "description": "Which specialist cluster emitted this finding. The ethics subagent uses 'ethics'.",
+      "type": "string",
+      "enum": [
+        "visual-cta",
+        "trust-credibility",
+        "pricing",
+        "checkout-flows",
+        "performance-ux",
+        "product-media",
+        "category-navigation",
+        "content-seo",
+        "post-purchase",
+        "audience",
+        "ethics"
+      ]
+    },
+    "device": {
+      "description": "Which device the finding was emitted against. For scope='page' findings the synthesizer renders into both device documents; for scope='device' findings only the matching device document. Ethics findings (cluster='ethics') use device='page' to indicate evaluation against the union of devices — the cluster-emission level enforces the cluster='ethics' ↔ device='page' invariant.",
+      "type": "string",
+      "enum": ["desktop", "mobile", "page"]
+    },
+    "local_id": {
+      "description": "1-based index of this finding within its cluster file for this device. Forms F-{NN} references in Priority Path stories (e.g., 'pricing F-03').",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99
+    },
+    "verdict": {
+      "description": "Whether the page passes the audited rule. PASS findings describe what the page does well and may legitimately reference generic patterns; FAIL and PARTIAL findings require concrete evidence anchors.",
+      "type": "string",
+      "enum": ["FAIL", "PARTIAL", "PASS"]
+    },
+    "title": {
+      "description": "Short identifier for the finding. Must name the specific element or sub-issue (not match the surface slug). Unique within the (cluster, device) pair. <=100 characters (relaxed from 60 after Phase B/C/D smoke testing showed real specialist titles run 70-90 chars when naming both the element and the sub-issue).",
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 100
+    },
+    "surface": {
+      "description": "The page surface this finding is about. Slug-style; Phase L makes this a closed enum: MUST be one of the cluster's surface_vocabulary, a baton.sections[].slug, or the literal 'other' (paired with surface_note). Validator: scripts/assembly/business_rules.py:_check_surface_in_vocabulary.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "maxLength": 64
+    },
+    "surface_note": {
+      "description": "Phase L: free-form note explaining the finding's surface choice. REQUIRED when surface='other' (signals the cluster vocabulary should grow to cover this concept). Omit otherwise. Validator: scripts/assembly/business_rules.py:_check_surface_in_vocabulary.",
+      "type": "string",
+      "maxLength": 240
+    },
+    "element": {
+      "description": "Reference to the specific captured element this finding targets. baton_index is the primary key — renderer hotspots resolve via dictionary lookup, never fuzzy CSS-selector matching. text_content and role are non-authoritative hints for human readability and synthesizer integration.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baton_index"],
+      "properties": {
+        "baton_index": {
+          "description": "Stable element index from baton.elements[]. Format 'e<int>' (e.g., 'e23'). Renderer renders the hotspot at this element's captured pixel coordinates.",
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^e[0-9]+$"
+            },
+            {
+              "description": "Reserved sentinel for findings that legitimately reference an element NOT in baton.elements[] — e.g., 'sticky CTA absence' findings where the missing element has no DOM presence to capture. Render with a section-level hotspot instead of an element-level one. Should be rare; the acquirer's element capture rules should cover most real elements.",
+              "type": "string",
+              "const": "absent"
+            }
+          ]
+        },
+        "text_content": {
+          "description": "Visible text or accessible name of the element (for synthesizer prose integration). Relaxed to 256 chars after Phase B/C/D testing showed specialists also use this field to record canonical URLs, meta-description quotes, and other identifying strings for 'absent' elements where there is no DOM text but identification context is useful.",
+          "type": "string",
+          "maxLength": 256
+        },
+        "role": {
+          "description": "Element role (button, link, heading, image, form, navigation, etc.) for synthesizer prose integration. When element.baton_index is a real e_index (not 'absent'), this MUST agree with the cited baton element's role under a small alias map (banner↔header, link↔a, image↔img). Coordinator-level lint enforces this in scripts/assembly/business_rules.py:_check_element_text_match.",
+          "type": "string",
+          "maxLength": 32
+        },
+        "tag": {
+          "description": "Optional HTML tag of the cited element (button, header, img, div, etc.). When provided AND element.baton_index is a real e_index, MUST match baton.elements[].tag exactly (case-insensitive). Lets coordinator lint catch hallucinated selectors like 'div.announcement-bar' when the cited e_index is actually a <header>. Specialists are encouraged to copy this verbatim from baton.elements[<index>].tag rather than infer it from the screenshot.",
+          "type": "string",
+          "maxLength": 32
+        }
+      }
+    },
+    "proposed_anchor": {
+      "description": "Placement hint for findings whose target element does not exist on the page (element.baton_index = 'absent'). Tells the renderer where the missing thing should appear if it existed. Discriminated union on `kind`: 'element' anchors near a real baton element, 'section' anchors inside a baton section, 'viewport' anchors at a page-global viewport position (sticky bars, above-fold persistence). Section-bound behaviors (e.g. trust badges entering the purchase zone) MUST use kind='section' with placement='section-bottom-overlay', NOT kind='viewport' with a section-bound trigger — that keeps kind='viewport' truly page-global. The `reason` field is operator-tooltip prose ONLY; the renderer MUST NEVER parse it for placement logic. Architectural fix B (2026-04-30): replaces brittle surface-string matching for absent findings. See docs/plans/2026-04-30-evening-handoff.md 'Architectural fix B'.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "placement", "viewport"],
+      "properties": {
+        "kind": {
+          "description": "Discriminator for the placement variant. Drives the oneOf branching below.",
+          "type": "string",
+          "enum": ["element", "section", "viewport"]
+        },
+        "element_baton_index": {
+          "description": "REQUIRED when kind='element'. Baton e_index of the real element to anchor relative to. Format 'e<int>'. FORBIDDEN for kind='section' or kind='viewport'.",
+          "type": "string",
+          "pattern": "^e[0-9]+$"
+        },
+        "section_index": {
+          "description": "REQUIRED when kind='section'. 0-based index into baton.sections[]. FORBIDDEN for kind='element' or kind='viewport'.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewport_trigger": {
+          "description": "REQUIRED when kind='viewport'. Closed enum of page-global trigger conditions. 'after_primary_cta_offscreen': fires once the page's primary CTA scrolls past the viewport (sticky-CTA case). 'before_first_scroll': applies on initial page load, no scroll needed (above-fold persistence case). Section-bound triggers were intentionally dropped from v1 — use kind='section' for those. FORBIDDEN for kind='element' or kind='section'.",
+          "type": "string",
+          "enum": ["after_primary_cta_offscreen", "before_first_scroll"]
+        },
+        "placement": {
+          "description": "Where the renderer pins the hotspot relative to the anchor target. Values are constrained per 'kind' by the oneOf below — element variants use the element-relative values, section uses 'section-bottom-overlay' (inside the section near its bottom edge) or 'after-section' (immediately after the section ends, before the next one begins), viewport uses 'viewport-bottom-sticky'. The schema rejects cross-variant placements via oneOf. NOTE on section placements: 'section-bottom-overlay' means INSIDE this section, near its bottom — use for in-section overlay annotations. 'after-section' means AFTER this section ends — use for content that visually belongs in the gap between this section and the next (e.g., 'trust strip below the featured collection').",
+          "type": "string",
+          "enum": [
+            "before-element",
+            "after-element",
+            "inside-element-top",
+            "inside-element-center",
+            "inside-element-bottom",
+            "section-bottom-overlay",
+            "after-section",
+            "viewport-bottom-sticky"
+          ]
+        },
+        "viewport": {
+          "description": "Which device viewport this placement applies to. Behaviors that apply to BOTH devices must emit two findings (one per device specialist) — there is no 'both' value in v1.",
+          "type": "string",
+          "enum": ["mobile", "desktop"]
+        },
+        "reason": {
+          "description": "Free-form prose for the operator-facing hotspot tooltip explaining why this placement was chosen. EXCLUSIVELY for human display. The renderer MUST NOT parse this field for placement logic — encode anything load-bearing in the structured fields above.",
+          "type": "string",
+          "maxLength": 200
+        }
+      },
+      "oneOf": [
+        {
+          "title": "kind=element variant",
+          "description": "Pin near a real baton element. Use when the missing thing has a natural anchor element on the page (e.g. MSRP missing above the live price element).",
+          "properties": {
+            "kind": {"const": "element"},
+            "placement": {
+              "enum": [
+                "before-element",
+                "after-element",
+                "inside-element-top",
+                "inside-element-center",
+                "inside-element-bottom"
+              ]
+            }
+          },
+          "required": ["element_baton_index"],
+          "not": {
+            "anyOf": [
+              {"required": ["section_index"]},
+              {"required": ["viewport_trigger"]}
+            ]
+          }
+        },
+        {
+          "title": "kind=section variant",
+          "description": "Pin in or after a baton section. Use 'section-bottom-overlay' when the missing thing belongs INSIDE a section near its bottom (e.g. payment method badges absent from the purchase-zone section). Use 'after-section' when the missing thing belongs in the gap AFTER a section ends (e.g. trust strip below the featured-collection grid). The two were conflated in earlier schema versions; specialists must now distinguish them.",
+          "properties": {
+            "kind": {"const": "section"},
+            "placement": {"enum": ["section-bottom-overlay", "after-section"]}
+          },
+          "required": ["section_index"],
+          "not": {
+            "anyOf": [
+              {"required": ["element_baton_index"]},
+              {"required": ["viewport_trigger"]}
+            ]
+          }
+        },
+        {
+          "title": "kind=viewport variant",
+          "description": "Pin at a page-global viewport position. Use ONLY when the missing thing is a TRULY page-global viewport behavior (sticky bars, above-fold persistence). Section-bound behaviors use kind='section' instead.",
+          "properties": {
+            "kind": {"const": "viewport"},
+            "placement": {"const": "viewport-bottom-sticky"}
+          },
+          "required": ["viewport_trigger"],
+          "not": {
+            "anyOf": [
+              {"required": ["element_baton_index"]},
+              {"required": ["section_index"]}
+            ]
+          }
+        }
+      ]
+    },
+    "severity": {
+      "description": "Impact tier of the finding. CRITICAL is reserved for ethics BLOCK findings. HIGH/MEDIUM/LOW correspond to the v1 PRIORITY field.",
+      "type": "string",
+      "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+    },
+    "scope": {
+      "description": "Whether the finding applies to the entire page (both devices) or only this specific device's viewport. page-scope findings are deduplicated cross-device and rendered with synchronized prose in both device audit documents; device-scope findings appear only in their own device's document.",
+      "type": "string",
+      "enum": ["page", "device"]
+    },
+    "effort": {
+      "description": "Decomposed effort estimate for fixing this finding. Used by the synthesizer's Quick Wins Priority Path mode (filters change_type IN {copy, css, html-attr} AND change_scope = single-file or component) without an additional LLM call. Phase 7 (2026-05-18) adds 'not_applicable' for CLEAR ethics findings — those record 'we checked and it's fine' with no change to ship; the enforced contract below (in allOf) requires CLEAR ethics findings to use not_applicable in both fields and rejects not_applicable for any other finding.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_type", "change_scope"],
+      "properties": {
+        "change_type": {
+          "description": "Class of code/content change required. Use 'not_applicable' ONLY for CLEAR ethics findings (no change to ship).",
+          "type": "string",
+          "enum": ["copy", "css", "html-attr", "component", "feature", "not_applicable"]
+        },
+        "change_scope": {
+          "description": "Footprint of the change in the codebase. Use 'not_applicable' ONLY for CLEAR ethics findings (no change to ship).",
+          "type": "string",
+          "enum": ["single-file", "component", "cross-cutting", "not_applicable"]
+        }
+      }
+    },
+    "confidence": {
+      "description": "Specialist's self-rated confidence in the finding, 0.0-1.0. Used by the synthesizer's Severity Priority Path mode (sort by severity x evidence_tier x confidence) without an additional LLM call. Default 0.8 if absent.",
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "evidence_anchors": {
+      "description": "Concrete tie-points to the page under audit. At least one anchor required for FAIL/PARTIAL findings (the specialist must show its work) — enforced via the conditional rule in allOf below, NOT via top-level minItems (PASS findings may omit). DOM-only findings (alt text, h1 absence, schema) anchor to dom; visual findings (above-fold position, contrast) MUST include at least one visual anchor.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "reference"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["dom", "visual", "both"]
+          },
+          "reference": {
+            "description": "For type=dom: a baton element index ('e23') or a unique DOM path. For type=visual: a screenshot file reference ('section-3.jpg' or 'section-3-mobile.jpg').",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "scroll_y": {
+            "description": "For visual anchors: the scrollY position where the element appears, in pixels. Required for findings that make above-fold/below-fold/sticky claims.",
+            "type": "integer",
+            "minimum": 0
+          },
+          "viewport": {
+            "description": "For visual anchors: which device viewport the screenshot is from. Defaults to the finding's device.",
+            "type": "string",
+            "enum": ["desktop", "mobile"]
+          },
+          "context": {
+            "description": "Optional human-readable context describing what this anchor evidences. Synthesizer may quote. Relaxed to 800 chars after Phase B/C/D smoke testing (real anchor contexts run up to ~660 chars when describing what's visible in the screenshot or DOM slice with enough specificity to verify against the page).",
+            "type": "string",
+            "maxLength": 800
+          }
+        }
+      }
+    },
+    "reference_citations": {
+      "description": "Citations to ECP reference files. At least one required for FAIL/PARTIAL findings. PASS findings exempt. The dedup engine uses the highest-tier citation as the kept finding's anchor.",
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "tier"],
+        "properties": {
+          "source": {
+            "description": "Reference filename relative to references/ directory. Must end in .md.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*\\.md$"
+          },
+          "line": {
+            "description": "Optional line number in the reference file the finding cites. When present, allows the synthesizer to quote the specific source line.",
+            "type": "integer",
+            "minimum": 1
+          },
+          "section": {
+            "description": "Optional section heading or anchor in the reference file. Mutually exclusive with line; either may be used. Relaxed to 160 chars after Phase B/C/D testing showed real reference section headings run 80-100+ chars (e.g., 'Finding 1: Customer Video and Photo UGC Can Increase Conversion 80% Over Professional-Only Content').",
+            "type": "string",
+            "maxLength": 160
+          },
+          "tier": {
+            "description": "Strength of evidence per references/evidence-tiers.md. Gold = controlled studies / authoritative bodies; Silver = case studies / industry data; Bronze = expert pattern recognition.",
+            "type": "string",
+            "enum": ["Gold", "Silver", "Bronze"]
+          }
+        }
+      }
+    },
+    "observation": {
+      "description": "What the specialist observed, in client-facing prose. Plain language; no internal jargon (no 'baton', 'DOM', 'cluster', 'context'); no first-person scan narration ('I searched...', 'A thorough search of...'); no token counts or context-management commentary. The synthesizer extends the senior-strategist humanizer pass over this field in v2. Top-level minLength is 1 (PASS findings may be terse — 'Hero CTA is the highest-contrast element on the page'). The conditional rule in allOf below bumps minLength to 20 for FAIL/PARTIAL findings, where the specialist must show its work.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1200
+    },
+    "recommendation": {
+      "description": "What the specialist recommends doing about it. Lead with the gate ('If X, then Y'); avoid 'Do X. But do not Z.' construction (negation-after-affirmation produces muddled reasoning per §18.2.5). The synthesizer's senior-strategist humanizer pass extends to this field in v2 (closes §18.2.5 — v1 only humanized observation). Top-level minLength is 1 (PASS findings may be terse or even reduce to a 'keep doing this' affirmation). The conditional rule in allOf below bumps minLength to 20 for FAIL/PARTIAL findings.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1200
+    },
+    "why_this_matters": {
+      "description": "Stakes statement: what happens to conversion / trust / accessibility / legal exposure if this finding goes unaddressed. One to two sentences typical; longer when citing research effect sizes, dollar figures, or regulatory penalty schedules. Relaxed to 1000 chars after Phase B/C/D testing.",
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 1000
+    },
+    "evidence_tier": {
+      "description": "Highest tier across reference_citations[]. Computed at emission time, not derived. Used by dedup tie-breaker (Gold > Silver > Bronze) and Priority Path Severity-mode sort.",
+      "type": "string",
+      "enum": ["Gold", "Silver", "Bronze"]
+    },
+    "ethics_state": {
+      "description": "Set ONLY by the ethics subagent. cluster='ethics' findings carry this field; cluster auditor findings do not (cluster auditors run zero ethics rules in v2). BLOCK = audit fails until resolved; ADJACENT = warning surfaced to operator; CLEAR = ethics-cleared but worth noting.",
+      "type": "string",
+      "enum": ["BLOCK", "ADJACENT", "CLEAR"]
+    },
+    "source_url": {
+      "description": "When ethics_state is BLOCK or ADJACENT, the SOURCE_URL from ethics-gate.md's Source Registry that justifies the finding. Required for ethics findings; absent for cluster auditor findings.",
+      "type": "string",
+      "format": "uri",
+      "maxLength": 512
+    },
+    "merged_from": {
+      "description": "When dedup merges multiple specialist findings into one, the kept finding records the source finding identifiers here. Format: ['<cluster> F-<NN>', ...]. Empty for findings that were never merged.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]* F-[0-9]{1,2}$"
+      },
+      "default": []
+    },
+    "intentional_outside_registry": {
+      "description": "Phase 4b (2026-05-18) escape hatch: when true, this finding's element.baton_index is deliberately NOT one of the candidates in anchor-candidates-{device}.json. Used when the candidate ranker missed an element the specialist needs to anchor against. Requires intentional_outside_registry_reason to be a non-empty string. Default false. See contracts/specialist-prompt-v2.md 'Anchor candidates' section.",
+      "type": "boolean",
+      "default": false
+    },
+    "intentional_outside_registry_reason": {
+      "description": "Free-form prose explaining WHY this finding anchors against an element outside the candidate registry. Required when intentional_outside_registry=true. Logged for ranker tuning — every opt-out signals a class the classifier should be taught to recognize.",
+      "type": "string",
+      "maxLength": 400
+    },
+    "visual_evidence": {
+      "description": "Phase 2 visual evidence taxonomy (2026-05-18). Separates FINDING IDENTITY from HOW THE REPORT REPRESENTS IT VISUALLY. The pre-Phase-2 renderer inferred visual treatment from baton_index alone, which caused absent findings (no sticky CTA, no reviews) to render as generic circular proxy markers on the wrong region of the page. visual_evidence makes the visual contract explicit per finding. Optional field — legacy emissions without it are accepted; scripts/report/visual_evidence.derive_visual_evidence() back-fills the type by inspecting match_method + proposed_anchor + baton_index. Producers SHOULD populate this field explicitly; consumers MUST tolerate its absence. See docs/ecp/2026-05-18-report-accuracy-and-hotspot-remediation-plan.md Phase 2.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "confidence"],
+      "properties": {
+        "type": {
+          "description": "How the visual report should represent this finding. exact_element: tight selector matching a specific DOM element the finding is about (solid rect). proxy_element: a real baton element near the finding's subject but not exactly it (dashed rect). generated_expected_zone: a ghost/dashed overlay showing where the missing UI SHOULD appear (use for 'no sticky CTA', 'no reviews block', 'no payment badges'). section_absence: a section-level marker for absences that don't have a single anchor point (pill). page_level: a banner spanning the page header for engagement-wide signals (e.g., 'DOM was edited during capture').",
+          "type": "string",
+          "enum": ["exact_element", "proxy_element", "generated_expected_zone", "section_absence", "page_level"]
+        },
+        "confidence": {
+          "description": "How sure the producer is that the visual representation is correct. high: anchor element is verbatim-cited by name and the rect is tight (Codex-style direct selector). medium: anchor is a real baton element near the finding's subject but the rect may include extra siblings (proxy). low: section or viewport anchor with implicit placement (generated expected zone). needs_review: producer punted on placement, operator should pick the exact marker location in editor.html before shipping. Phase 3 quality gates reject Priority Path and ethics findings with needs_review.",
+          "type": "string",
+          "enum": ["high", "medium", "low", "needs_review"]
+        },
+        "observed_anchor": {
+          "description": "When type is exact_element or proxy_element, the baton element this finding visually anchors to. Either baton_index (direct eN reference) OR candidate_id (Phase 4a anchor candidate registry reference; resolved through anchor-candidates-{device}.json's candidate_to_e_index map) — at least one must be present. selector_hint and text_quote are for human-readable hover tooltips and operator review; the renderer uses baton_index (or the resolved candidate_id → baton_index lookup) for the actual lookup.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "baton_index": {"type": "string", "pattern": "^e[0-9]+$"},
+            "candidate_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*-[0-9]+$",
+              "description": "Phase 4a: stable candidate ID from anchor-candidates-{device}.json's candidates_by_role buckets (e.g., 'primary-cta-1', 'price-block-1', 'trust-strip-2'). The lead's post-validation layer resolves this through candidate_to_e_index map and substitutes the canonical baton_index. Specialists may use candidate_id INSTEAD OF baton_index in Phase 4a (side-channel); Phase 4b makes it mandatory."
+            },
+            "selector_hint": {"type": "string"},
+            "text_quote": {"type": "string"}
+          }
+        },
+        "expected_overlay": {
+          "description": "When type is generated_expected_zone, the template the renderer should draw to represent the missing UI. template_id is the registered overlay name (sticky-cta, reviews-block, payment-badges, trust-strip, video-tile, msrp-anchor, etc. — extensible). anchor_relative_to is the baton element or section the overlay should be positioned against. placement names the relative position (above, below, inside-bottom, sticky-viewport-bottom, etc.).",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "template_id": {"type": "string"},
+            "anchor_relative_to": {"type": "string"},
+            "placement": {"type": "string"}
+          }
+        },
+        "reason": {
+          "description": "Free-form prose explaining the visual evidence choice. Operator-facing tooltip only — the renderer MUST NOT parse this for placement logic. Use it to explain WHY the producer chose this type (e.g., 'No real element exists for missing sticky CTA; ghost overlay at viewport bottom').",
+          "type": "string",
+          "maxLength": 240
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "FAIL and PARTIAL findings must cite at least one reference.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "enum": ["FAIL", "PARTIAL"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reference_citations": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "FAIL and PARTIAL findings must include at least one evidence anchor (PASS findings may omit).",
+      "if": {
+        "properties": {
+          "verdict": {
+            "enum": ["FAIL", "PARTIAL"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence_anchors": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "FAIL and PARTIAL findings must have substantial observation and recommendation prose (>=20 chars each); the specialist must show its work. PASS findings may be terse — they're recording 'this works' without needing to justify a fix. SpecFlow gap #11.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "enum": ["FAIL", "PARTIAL"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "observation": {
+            "minLength": 20
+          },
+          "recommendation": {
+            "minLength": 20
+          }
+        }
+      }
+    },
+    {
+      "description": "Ethics findings (cluster='ethics') with BLOCK or ADJACENT ethics_state require a source_url from the ethics-gate Source Registry.",
+      "if": {
+        "properties": {
+          "cluster": {
+            "const": "ethics"
+          },
+          "ethics_state": {
+            "enum": ["BLOCK", "ADJACENT"]
+          }
+        },
+        "required": ["cluster", "ethics_state"]
+      },
+      "then": {
+        "required": ["source_url"]
+      }
+    },
+    {
+      "description": "Non-ethics findings must NOT carry ethics_state. Ethics is a property of the ethics subagent's output only — cluster auditors do not emit ethics findings in v2.",
+      "if": {
+        "not": {
+          "properties": {
+            "cluster": {
+              "const": "ethics"
+            }
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": ["ethics_state"]
+        }
+      }
+    },
+    {
+      "description": "evidence_tier promotion: any Gold citation forces evidence_tier=Gold.",
+      "if": {
+        "properties": {
+          "reference_citations": {
+            "contains": {
+              "properties": {
+                "tier": {
+                  "const": "Gold"
+                }
+              },
+              "required": ["tier"]
+            }
+          }
+        },
+        "required": ["reference_citations"]
+      },
+      "then": {
+        "properties": {
+          "evidence_tier": {
+            "const": "Gold"
+          }
+        }
+      }
+    },
+    {
+      "description": "evidence_tier promotion: any Silver citation (and no Gold) forces evidence_tier=Silver. Combined with the Gold rule above, this enforces evidence_tier == max(citation tiers).",
+      "if": {
+        "allOf": [
+          {
+            "properties": {
+              "reference_citations": {
+                "contains": {
+                  "properties": {
+                    "tier": {
+                      "const": "Silver"
+                    }
+                  },
+                  "required": ["tier"]
+                }
+              }
+            },
+            "required": ["reference_citations"]
+          },
+          {
+            "not": {
+              "properties": {
+                "reference_citations": {
+                  "contains": {
+                    "properties": {
+                      "tier": {
+                        "const": "Gold"
+                      }
+                    },
+                    "required": ["tier"]
+                  }
+                }
+              },
+              "required": ["reference_citations"]
+            }
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidence_tier": {
+            "const": "Silver"
+          }
+        }
+      }
+    },
+    {
+      "description": "Findings whose element.baton_index is 'absent' MUST emit proposed_anchor. Without it the renderer falls back to a generic top-of-page banner indicator that visually flattens every absent finding to the same point on the page. Architectural fix B (2026-04-30) — see docs/plans/2026-04-30-evening-handoff.md.",
+      "if": {
+        "properties": {
+          "element": {
+            "properties": {
+              "baton_index": {"const": "absent"}
+            },
+            "required": ["baton_index"]
+          }
+        },
+        "required": ["element"]
+      },
+      "then": {
+        "required": ["proposed_anchor"]
+      }
+    },
+    {
+      "description": "Visual position findings (above-fold, below-fold, sticky claims) must include at least one visual evidence_anchor with scroll_y. Closes §18.2.3 vehicle-selector-position-error class.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "enum": ["FAIL", "PARTIAL"]
+          },
+          "observation": {
+            "pattern": "(?i)(above[ -]fold|below[ -]fold|sticky|fixed[ -]position|hidden[ -]on[ -]scroll)"
+          }
+        },
+        "required": ["verdict", "observation"]
+      },
+      "then": {
+        "properties": {
+          "evidence_anchors": {
+            "contains": {
+              "properties": {
+                "type": {
+                  "enum": ["visual", "both"]
+                },
+                "scroll_y": {
+                  "type": "integer"
+                }
+              },
+              "required": ["type", "scroll_y"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Phase 4b (2026-05-18) — when intentional_outside_registry is true, the reason field must be a non-empty string. This pins the contract that every opt-out from the anchor candidate registry carries a human-readable justification for ranker tuning.",
+      "if": {
+        "properties": {
+          "intentional_outside_registry": {"const": true}
+        },
+        "required": ["intentional_outside_registry"]
+      },
+      "then": {
+        "required": ["intentional_outside_registry_reason"],
+        "properties": {
+          "intentional_outside_registry_reason": {
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "description": "Phase 7 (2026-05-18) — CLEAR ethics findings MUST use change_type/change_scope = not_applicable. These findings record 'we checked the surface and it's fine' with no change to ship; pretending a copy/single-file change exists (the pre-Phase-7 workaround the awdmods 2026-05-18 run had to inline-patch when the specialist emitted change_type=none) misrepresents the data. Closes Codex Q7 from the original 13-question review.",
+      "if": {
+        "properties": {
+          "cluster": {"const": "ethics"},
+          "ethics_state": {"const": "CLEAR"}
+        },
+        "required": ["cluster", "ethics_state"]
+      },
+      "then": {
+        "properties": {
+          "effort": {
+            "properties": {
+              "change_type": {"const": "not_applicable"},
+              "change_scope": {"const": "not_applicable"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "Phase 7 (2026-05-18) — non-CLEAR findings (every cluster except ethics, plus ethics BLOCK/ADJACENT) MUST NOT use not_applicable for change_type. Those findings DO have a change to ship; not_applicable is reserved for the 'we checked and it's fine' shape. This rule + the CLEAR-requires-not_applicable rule together pin the contract symmetrically.",
+      "if": {
+        "not": {
+          "properties": {
+            "cluster": {"const": "ethics"},
+            "ethics_state": {"const": "CLEAR"}
+          },
+          "required": ["cluster", "ethics_state"]
+        }
+      },
+      "then": {
+        "properties": {
+          "effort": {
+            "properties": {
+              "change_type": {"not": {"const": "not_applicable"}},
+              "change_scope": {"not": {"const": "not_applicable"}}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "cluster": "visual-cta",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "ATC Button Color Blends Into Page",
+      "surface": "primary-cta",
+      "element": {
+        "baton_index": "e47",
+        "text_content": "Add to Cart",
+        "role": "button"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 920,
+          "viewport": "mobile",
+          "context": "Add to Cart button uses #6B6B6B against white card; matches three other mid-grey UI elements above the fold."
+        },
+        {
+          "type": "dom",
+          "reference": "e47"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "color-psychology.md",
+          "line": 142,
+          "tier": "Silver"
+        },
+        {
+          "source": "cta-design.md",
+          "section": "primary-action-contrast",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The Add to Cart button uses a mid-grey fill that matches three other interactive elements within the same viewport. Without a distinct primary-action color, the button has no visual claim to being the most important action on the page; visitors scanning for the buy decision have to read every grey element to find it.",
+      "recommendation": "If the brand has a primary accent color (the SlingMods red), apply it as the Add to Cart button's background and reserve that color for purchase actions only. Do not introduce a new color the brand doesn't already own — pull the accent from the logo or an existing high-priority surface so the action color reads as intentional.",
+      "why_this_matters": "On mobile product pages, the Add to Cart button is the only conversion action that matters; if it doesn't visually own the page, every conversion costs more attention than it should.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "ethics",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Privacy Policy Links to Non-Canonical Staging Domain",
+      "surface": "footer-policy-links",
+      "element": {
+        "baton_index": "e112",
+        "text_content": "Privacy Policy",
+        "role": "link"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "ethics_state": "ADJACENT",
+      "source_url": "https://gdpr.eu/article-13-information-collected/",
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e112",
+          "context": "href points to e1520g-k3.myshopify.com, the store's pre-launch staging domain, not the canonical awdmods.com policy."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "regulatory-disclosure",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The footer privacy policy link points at the store's Shopify staging domain instead of a canonical first-party URL on the storefront. Visitors clicking through expect the policy to be hosted by the store they're buying from; instead they land on an infrastructure domain the store does not visibly control, which weakens the regulatory chain of disclosure.",
+      "recommendation": "Replace the staging-domain href with a first-party policy URL on the canonical store domain. If the policy is currently only hosted on the staging domain, mirror the content to a /policies/privacy-policy route on the production domain and update all storefront links to that path.",
+      "why_this_matters": "EU and California disclosure regimes assume the policy URL is operated by the merchant. A staging-domain redirect creates ambiguity about who controls the policy text, which is exactly the disclosure failure mode the EAA and CCPA require merchants to avoid.",
+      "evidence_tier": "Gold"
+    }
+  ]
+}

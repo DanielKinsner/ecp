@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "checkout-flows",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:30:00.000Z",
+  "completed_at": "2026-04-28T23:35:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Express Checkout Buttons on PDP",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": ""
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The product hero area (scroll_y 0-1080) contains an Add to Cart button and a PayPal Pay Later message (e16) but no Apple Pay, Google Pay, Shop Pay, or Amazon Pay express checkout buttons. Payment method logos appear only in the footer (e18, scroll_y 1345)."
+        },
+        {
+          "type": "dom",
+          "reference": "e16"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "biometric-and-express-checkout.md",
+          "section": "Finding 6: Place Wallet Buttons Early — Top of Checkout, Not Bottom",
+          "tier": "Silver"
+        },
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 15: Express Checkout Conversion Lifts (Shop Pay, Apple Pay)",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The product detail page for the EvolutionR Handlebar End Caps ($59.95) offers no express checkout buttons — no Apple Pay, Google Pay, Shop Pay, or Amazon Pay — anywhere in the purchase flow above the footer. The only accelerated payment signal is a PayPal Pay Later informational widget (scroll_y 442) that links to a BNPL calculator rather than enabling one-tap purchase. Payment logos for Google Pay, Apple Pay, and Amazon Pay are visible in the footer payment strip (scroll_y ~1500), but these are static images, not interactive checkout buttons.",
+      "recommendation": "If this product runs on a platform that supports Apple Pay and Google Pay (as signaled by the footer payment logos), add express checkout buttons directly below the Add to Cart button in the product hero area, above the PayPal Pay Later widget. Use a labeled 'Express Checkout' section header to visually separate them from the standard cart flow. Stripe's controlled A/B testing shows express buttons placed at the start of the purchase path convert at approximately 2x the rate of the same buttons positioned at or near the checkout page — placement on the PDP is the highest-leverage deployment.",
+      "why_this_matters": "Shoppers who have Apple Pay or Google Pay configured on their device can complete purchase in a single biometric tap from the PDP — bypassing the entire cart and checkout form. Without these buttons on the product page, those shoppers must navigate through cart, then checkout, adding 3-5 friction steps that cost conversion at each stage. Stripe's data shows a +22.3% conversion lift specifically attributable to Apple Pay when surfaced early in the purchase flow.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Shipping Cost Estimate at $59.95 Price Point",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "$59.95",
+        "role": "div"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The price block shows $59.95 with no shipping estimate or calculator. The top navigation bar (e12, scroll_y 0) reads 'FREE SHIPPING ON MOST ORDERS OVER $75*' — this product at $59.95 is below the free-shipping threshold, meaning shipping costs will be charged, yet no estimate or disclosure appears on the PDP."
+        },
+        {
+          "type": "dom",
+          "reference": "e12"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 4: Shipping Cost Timing -- Early vs. Late Disclosure",
+          "tier": "Gold"
+        },
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 1: Extra Costs Are the #1 Abandonment Driver",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product page displays $59.95 for the EvolutionR Handlebar End Caps. The site-wide free shipping banner (e12) states 'FREE SHIPPING ON MOST ORDERS OVER $75*' — this SKU at $59.95 falls below the $75 threshold, meaning the customer will encounter a shipping charge at checkout. No shipping estimate, ZIP code calculator, or cost disclosure appears anywhere on the PDP. The footer disclaimer (e18) adds a second asterisk: '* Free Shipping Applies to Most Contiguous U.S. Orders - Some Items May Not Qualify.' Customers who reach cart or checkout for the first time will see the shipping charge for the first time — a textbook late-cost reveal.",
+      "recommendation": "Below the $59.95 price (e8), add a shipping estimate line that states the actual shipping cost range for this product — for example, 'Shipping from $X.XX or Free on orders over $75' — or embed a ZIP code shipping calculator that resolves before the customer clicks Add to Cart. If the free-shipping threshold is $75 and this product is $59.95, a bundle prompt reading 'Add $15.05 more for free shipping' serves both conversion and AOV simultaneously and eliminates the reveal problem entirely.",
+      "why_this_matters": "Baymard Institute's meta-analysis of 50+ cart abandonment studies identifies extra costs revealed late in checkout as the single largest driver of abandonment, cited by 39-48% of abandoners. A $59.95 product that triggers an unexpected shipping charge at checkout will generate abandonment precisely from the customers who were furthest along the purchase funnel — the most costly loss in the conversion flow.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "PayPal Pay Later Present but Affirm Not Surfaced on PDP",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e16",
+        "text_content": "PayPal Pay Later",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Below the $59.95 price, a PayPal Pay Later widget (e16, scroll_y 442) displays 'Pay in 4 interest-free payments of $14.99 with PayPal.' The footer (e18, scroll_y 1345) shows an Affirm logo in the payment strip and the footer Information column links to 'Affirm Monthly Payments' — but no Affirm installment widget appears in the product hero."
+        },
+        {
+          "type": "dom",
+          "reference": "e18"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 13: Limited Payment Methods Cause 10% Abandonment",
+          "tier": "Gold"
+        },
+        {
+          "source": "checkout-optimization.md",
+          "section": "Finding 14: Payment Method Visibility Before Checkout",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The page correctly surfaces a PayPal Pay Later '4 payments of $14.99' message (e16) adjacent to the price — a strong BNPL signal for a $59.95 product. However, the footer payment strip (e18) shows an Affirm logo and the footer Information column links to 'Affirm Monthly Payments,' indicating Affirm is an active payment option on this store. No Affirm installment widget or 'as low as $X/month' callout appears anywhere in the product hero. The page is delivering PayPal Pay Later to one segment of BNPL shoppers while leaving Affirm — which serves a different credit profile and offers longer repayment terms — invisible at the point of decision.",
+      "recommendation": "If Affirm is live on this store (as the footer links indicate), add an Affirm installment estimate directly alongside the PayPal Pay Later message. For a $59.95 product, the Affirm message would read approximately 'or 3 monthly payments of $XX.XX with Affirm — check your rate' with a link. Stripe's data across 50+ payment methods shows surfacing at least one additional relevant payment method beyond cards produces a 12% revenue increase on average — adding a second visible BNPL option at the price block costs one line of template code.",
+      "why_this_matters": "10% of shoppers abandon specifically because their preferred payment method is not offered (Baymard, 2024). PayPal Pay Later and Affirm serve overlapping but distinct borrower profiles. Suppressing Affirm at the PDP level means shoppers who prefer Affirm must either trust the checkout will surface it or leave to find a store that shows it upfront — and at $59.95, a price point where financing is marginal, the visible presence of multiple installment options is the signal that converts hesitating buyers.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "checkout-flows",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Cart Widget and Navigation Support Session Continuity",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e3",
+        "text_content": "0  - $0.00",
+        "role": "button"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.75,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The persistent header (e15, scroll_y 0) renders a cart button (e3) showing current cart state, Login/Sign Up links, phone number (800)211-1396, a search field, and full category/vehicle navigation. Shoppers can orient within the site and resume purchase without losing session state."
+        }
+      ],
+      "reference_citations": [],
+      "observation": "The desktop header provides a cart button (e3) showing live cart value, Login and Sign Up links, full category navigation (e14), vehicle model navigation (e13), and a phone/contact strip. These give shoppers the orientation and recovery signals to browse adjacent products or return to the purchase flow without abandoning the session.",
+      "recommendation": "No structural change required. Future checkpoint: when items are in cart, confirm the dropdown from e3 shows product thumbnail, quantity, subtotal, and a direct 'Checkout' button — this closes the gap between cart add and checkout initiation for return visits.",
+      "why_this_matters": "Shoppers who can see their cart state at all times are less likely to abandon mid-session — this page does this correctly at desktop viewport.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "The baton capture_state records a cookie-consent overlay dismissed via accept-button and a newsletter-modal dismissed via close-button before capture. Cookie consent was accepted so no ePrivacy/GDPR consent-before-tracking issue is visible in this capture state. Cookie consent compliance is owned by a separate specialist.",
+    "The footer payment strip (e18) shows Amazon Pay as a logo but no Amazon Pay button appears on the PDP. This is consistent with F-1 (no express buttons on PDP) and was not emitted as a separate finding to avoid duplicate coverage with that finding.",
+    "Cart recovery infrastructure — exit-intent overlays, cart-expiry messaging, abandoned-cart email triggers — cannot be audited from a static PDP capture. The page showed no in-session exit-intent mechanism observable in scope.",
+    "The sticky badge elements (e10, e17) have empty text_content and accessible_name. Their role is unclear from the baton data — they may be floating widgets. No checkout-flows finding was emitted against them as their function cannot be determined from the captured state."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "checkout-optimization.md",
+      "biometric-and-express-checkout.md",
+      "abandoned-cart-psychology.md",
+      "cookie-consent-and-compliance.md",
+      "evidence-tiers.md"
+    ]
+  }
+}

@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "category-navigation",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:32:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "PASS",
+      "title": "Full-Width Inline Search Bar in Sticky Header",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e15",
+        "text_content": "Search our store",
+        "role": "search"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Full-width search input field labeled 'Search' is rendered inline in the sticky header, visible immediately on page load without requiring any icon tap. The field spans the full viewport width below the logo/cart row."
+        },
+        {
+          "type": "dom",
+          "reference": "e15"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 17 â€” persistent search entry point mobile",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The search field renders as a full-width visible input in the sticky header bar, present on every page scroll position without requiring an icon tap. The placeholder text reads 'Search' and the field is immediately interactive on page load. The baton confirms the input is not offscreen at scroll_y=0.",
+      "recommendation": "This pattern meets the mobile persistent search standard. No change required. Monitor that the search input remains visible at scroll_y=0 on all device sizes in the 390px viewport range.",
+      "why_this_matters": "A visible search entry point in the sticky header removes friction for visitors who know what part they need and arrive with a specific query, directly supporting conversion on high-intent automotive parts searches.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Vehicle Compatibility Finder Siloed in Hero â€” Not Integrated Into Category Navigation",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e5",
+        "text_content": "Shop by Vehicle",
+        "role": "button"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Select Make / Select Model / Select Year / Select your Trim dropdowns appear inside the hero image section overlaid on the car photograph. The FIND PARTS CTA button is present. This widget is a standalone hero block, not a filter applied to any product collection page."
+        },
+        {
+          "type": "dom",
+          "reference": "e5"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 5 â€” compatibility filters 65% task failure",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "AWDMods sells vehicle-specific parts (Focus RS, WRX STI, Focus ST). A 'Select Make / Model / Year / Trim' compatibility widget is embedded inside the homepage hero section, but it functions as a standalone search redirect â€” not as a persistent filter that follows visitors into category pages. Once a shopper selects their vehicle and lands on a collection, there is no visible 'Showing parts for: Ford Focus RS' confirmation, no ability to re-filter by vehicle from within a category, and the hamburger 'Shop by Vehicle' drawer requires re-entry of the vehicle context from scratch on every session.",
+      "recommendation": "If vehicle data can be persisted in a session cookie or localStorage after the FIND PARTS submission, surface a sticky 'Vehicle: Ford Focus RS' chip below the site header that remains visible on all collection pages and can be changed or cleared. This confirmation chip serves three purposes: it reassures the visitor their fitment filter is active, it disambiguates results for cross-compatible parts, and it reduces repetitive vehicle re-selection. A secondary improvement is surfacing the compatibility finder as an inline filter within collection page headers for visitors who land directly on a category URL without using the hero widget.",
+      "why_this_matters": "Baymard research documents 65% task failure rates on automotive and electronics sites where compatibility filters are absent or disconnected from the browsing flow. Visitors who cannot confirm their selected vehicle is filtering results will either distrust the results entirely or purchase an incompatible part â€” both outcomes are high-cost for the business and the customer.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Category Carousel Tiles Show No Product Counts",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDrivetrain upgrades\n                    Shop Performance",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "The Performance category tile is partially visible at the bottom of section 1. It shows the category heading 'Performance', a sub-list of 'Intakes / Exhaust / Cooling / Drivetrain upgrades', and a 'SHOP PERFORMANCE' CTA button. No product count is displayed on the tile."
+        },
+        {
+          "type": "dom",
+          "reference": "e8"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "merchandising-psychology.md",
+          "section": "Finding 8 â€” subcategory navigation tiles product count",
+          "tier": "Silver"
+        },
+        {
+          "source": "filtering-ux.md",
+          "section": "Finding 4 â€” filter value counts reduce dead-end risk",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The five category tiles in the horizontal swipe carousel (Performance, Handling & Brakes, Interior, Exterior, Electronics) each show a category name, 3-4 subcategory keyword lines, and a 'Shop [Category]' CTA. No product count appears on any tile. The subcategory keywords ('Intakes, Exhaust, Cooling, Drivetrain upgrades' under Performance) are useful orientation signals, but a visitor cannot tell whether Performance has 12 products or 1,200 before tapping through.",
+      "recommendation": "Add a product count label to each category tile â€” for example, 'Performance (143 parts)' â€” sourced from the collection's product count in Shopify. For tiles where subcategories vary by vehicle fitment, show the total collection count unconditionally and rely on the compatibility widget to filter results after tap. The count requires no layout change beyond appending a small text line or badge to the existing tile structure.",
+      "why_this_matters": "Product counts on category tiles give visitors calibration before committing to a tap, reducing bounce when a category turns out to be smaller than expected. For a focused automotive catalog, showing counts also builds confidence that the category has real depth.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Category Carousel Horizontal Overflow Has No Explicit Swipe Affordance",
+      "surface": "category-carousel",
+      "element": {
+        "baton_index": "e9",
+        "text_content": "Handling & Brakes\n\n\n                      SuspensionWheels Brake kitsChassis control\n                    Shop Handling",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 543,
+          "viewport": "mobile",
+          "context": "At the bottom of section 1, the category carousel shows the Performance tile nearly full-width with a small peek of the next tile (Handling & Brakes heading partially visible at right edge). The slider navigation dots appear below. No arrow buttons, swipe hint text, or scroll indicator is visible on the tile itself."
+        },
+        {
+          "type": "dom",
+          "reference": "e9"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "merchandising-psychology.md",
+          "section": "Finding 8 â€” subcategory tiles horizontal scrollable pills mobile",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The category carousel renders as a horizontal-scroll slider on mobile. At the 390px viewport, the Performance tile occupies most of the screen width with only a narrow sliver of the Handling & Brakes tile peeking in from the right. The DOM includes 'Slide left' and 'Slide right' aria-label arrow buttons, but these are not visible in the screenshots â€” the only affordance for the remaining four categories is the peek edge and a small dot-indicator below the carousel. Visitors who do not notice the peek or the dots may treat the carousel as a single-card section and miss four of five product categories entirely.",
+      "recommendation": "Increase the peek width of the second tile to at least 30â€“40px so the category title text ('Handling') is legible, reinforcing the swipeable nature of the section. Alternatively, render the arrow buttons as visible persistent overlays on the carousel edges rather than hiding them (they are present in the DOM with correct aria-labels but are not shown visually). A short 'Swipe to explore categories' label below the first tile on first-page-load is a lightweight fallback for first-time visitors.",
+      "why_this_matters": "Five product categories is the full browsable catalog scope for AWDMods. If mobile visitors navigate only the first visible tile, the effective navigation surface is reduced to a single category â€” directly suppressing cross-category discovery and reducing average order value.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "FAIL",
+      "title": "First Featured Product Card Missing Star Rating Display",
+      "surface": "featured-collection",
+      "element": {
+        "baton_index": "e27",
+        "text_content": "From $135.99",
+        "role": "span"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 917,
+          "viewport": "mobile",
+          "context": "The Featured Collection section shows two product cards in a 2-column grid. The left card (VelourTex Fitted Carpet Floor Mats, From $135.99) shows no star rating â€” only the product title, price, and 'Made to Order' badge. The right card (Revo Designs Rocker Stripes Decal Kit, $49.00) shows star icons and a numeric rating."
+        },
+        {
+          "type": "dom",
+          "reference": "e27"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "product-cards.md",
+          "section": "Finding 1 â€” 270% higher purchase likelihood with 5 reviews vs 0",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The VelourTex floor mats card (left column, first visible product card in the Featured Collection) renders 'From $135.99' and a 'Made to Order' badge but no star rating widget. The Revo Designs card in the right column correctly shows star icons and a rating. The baton confirms e26 ('5.0 / 5.0 (2) 2 total reviews') is associated with the Revo Designs card, not the floor mats card. Whether the floor mats card has zero reviews or a non-zero review count that is hidden is not determinable from the DOM alone â€” but the absence of any rating display on the highest-priced card in the featured section is a concrete gap.",
+      "recommendation": "If the VelourTex product has at least one review, add the standard rating widget ('â˜…â˜…â˜…â˜…â˜… X.X (N reviews)') to the card, positioned below the product title and above the price. If it has zero reviews, the card should still reserve the rating slot as an empty state ('Be the first to review') or display a placeholder to maintain visual card-height consistency across the grid row. Do not hide the rating area entirely â€” doing so creates card height asymmetry that disrupts the 2-column scanning rhythm.",
+      "why_this_matters": "Spiegel Research Center (Northwestern University) found that products with even 5 reviews have 270% higher purchase likelihood than zero-review products. The 380% lift applies specifically to higher-priced products â€” which this $135.99 floor mat qualifies as â€” making the missing rating the single highest-leverage copy-level fix on this card.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "FAIL",
+      "title": "Hamburger Drawer Navigation Lacks Category Product Preview",
+      "surface": "header-quick-filter",
+      "element": {
+        "baton_index": "e4",
+        "text_content": "Shop by Category",
+        "role": "button"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.78,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e4"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "merchandising-psychology.md",
+          "section": "Finding 8 â€” subcategory tiles image preview for large hierarchies",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The 'Shop by Category' submenu in the hamburger drawer reveals text-only links: Performance, Exterior, Interior, Handling, Drivetrain, Brakes, Cooling, Wheels, Accessories. These are nine category links presented as a flat text list with no images, product counts, or subcategory hierarchy. The list is useful for exact-match navigation but offers no visual differentiation between categories and no signal about catalog depth per category.",
+      "recommendation": "For the nine category items in the 'Shop by Category' drawer, add a small category icon or thumbnail image (30â€“40px) to the left of each text label, and append the product count in a secondary text style. This does not require a full redesign â€” it is a CSS and template change to the existing `<li>` items. The visual thumbnail reduces cognitive load when scanning unfamiliar category names and helps newcomers to the brand understand what each category contains at a glance.",
+      "why_this_matters": "Text-only category lists in mobile drawers require users to parse each label sequentially, slowing navigation for first-time visitors who are not yet familiar with AWDMods' product taxonomy. Visual thumbnails reduce evaluation time and increase confidence before committing to a tap.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "Page is a homepage (awdmods.com/), not a collection page. Findings about filter/sort controls, applied filter chips, pagination, and zero-results states are not applicable â€” those surfaces do not exist on this page type. Cluster guidance edge cases for single-brand stores apply: AWDMods appears to be a single-brand or focused multi-brand automotive accessories store targeting Ford Focus RS/ST and Subaru WRX/STI owners, which suppresses the Brand filter finding.",
+    "The vehicle compatibility finder (Select Make/Model/Year/Trim) is an automotive-specific navigation pattern that functions as a compatibility filter. This is assessed in Finding 2 as a HIGH finding due to its siloed placement and lack of persistence into category pages.",
+    "Schema.org WebSite markup with SearchAction potentialAction is present in page_head.schema_jsonld â€” this correctly implements site search structured data. BreadcrumbList markup is absent from the homepage structured data, which is expected and correct (homepages do not require BreadcrumbList).",
+    "The two-column featured product grid (Finding 5 area) is a homepage merchandising widget, not a full collection page. Review display inconsistency between cards is evaluated for the category-navigation cluster because it affects the discovery experience for users evaluating categories via the homepage featured section.",
+    "The category carousel uses a Shopify Multicolumn section component with slider-component JavaScript. The horizontal scroll behavior and dot navigation indicators are present in the DOM (aria-label='Slide left', 'Slide right' buttons exist). Finding 4 notes that these controls are not visually surfaced in the screenshots."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "search-and-filter-ux.md",
+      "filtering-ux.md",
+      "grid-layout.md",
+      "merchandising-psychology.md",
+      "product-cards.md",
+      "sorting-psychology.md",
+      "breadcrumbs.md",
+      "collection-page-architecture.md",
+      "evidence-tiers.md"
+    ],
+    "sections_audited": [
+      "header-quick-filter",
+      "category-carousel",
+      "featured-collection"
+    ],
+    "sections_skipped": [
+      "newsletter-footer"
+    ],
+    "baton_elements_referenced": ["e4", "e5", "e8", "e9", "e15", "e27"]
+  }
+}
+

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-05-18-deadbeef",
+  "cluster": "ethics",
+  "device": "page",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-05-18T00:00:00.000Z",
+  "completed_at": "2026-05-18T00:01:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "ethics_state": "ADJACENT",
+      "source_url": "https://www.ftc.gov/legal-library/browse/rules/guides-against-deceptive-pricing-16-cfr-part-233",
+      "title": "Compare-At Price Unverifiable",
+      "surface": "msrp-anchor",
+      "element": {
+        "baton_index": "e0",
+        "text_content": "$469.50",
+        "role": "text"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e0"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ethics-gate.md",
+          "section": "ftc-pricing",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Strikethrough $469.50 compare-at price needs documented prior-selling-price evidence under FTC 16 CFR 233.1.",
+      "recommendation": "Provide pricing records demonstrating the $469.50 was a bona fide prior selling price.",
+      "why_this_matters": "Unsupported reference prices are deceptive under FTC Act § 5 and trigger §233.1 enforcement.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "ethics",
+      "device": "page",
+      "local_id": 2,
+      "verdict": "PASS",
+      "ethics_state": "CLEAR",
+      "title": "No Countdown Timer Detected",
+      "surface": "scarcity-marker",
+      "element": {
+        "baton_index": "absent"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
+      },
+      "confidence": 0.95,
+      "proposed_anchor": {
+        "kind": "viewport",
+        "viewport_trigger": "before_first_scroll",
+        "placement": "viewport-bottom-sticky",
+        "viewport": "desktop",
+        "reason": "Absence-confirmed page-global check"
+      },
+      "evidence_anchors": [],
+      "reference_citations": [],
+      "observation": "No countdown or urgency timer elements detected on the page.",
+      "recommendation": "Maintain absence of fabricated urgency elements.",
+      "why_this_matters": "Fabricated scarcity violates FTC Act § 5 deception standards.",
+      "evidence_tier": "Bronze"
+    }
+  ]
+}

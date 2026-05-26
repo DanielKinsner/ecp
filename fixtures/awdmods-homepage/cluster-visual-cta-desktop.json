@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "visual-cta",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Hero Section Has No Headline or Value Proposition",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The above-fold area shows a full-width hero image of a white Subaru WRX at night with four vehicle-selector dropdowns overlaid. No headline text appears anywhere in the hero. The only brand statement visible is 'SELECT YOUR VEHICLE / Car parts, simplified.' in the top-right header utility area — not a hero headline."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 4: Required Above-Fold Elements — Minimum Viable Hero",
+          "tier": "Gold"
+        },
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 1: The 5-Second Test — Clarity Is the Foundational Hero Metric",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The hero section at awdmods.com displays a full-width dark car photograph with a vehicle year/make/model selector overlay, but contains no headline, no subheadline, and no explicit value proposition copy. The phrase 'Car parts, simplified.' appears only as a small secondary line inside the header utility widget, not as a hero headline. A first-time visitor arriving from paid or organic traffic cannot answer 'What does AWDMods offer that competitors do not?' within 5 seconds. Baymard and NNGroup research identifies the hero headline as the first of five required above-fold elements for cold-traffic landing pages; without it, visitors lack the orientation signal needed to build purchase confidence.",
+      "recommendation": "If AWDMods targets first-time visitors from paid search or social ads, add a headline layer to the hero image containing a specific, differentiated value proposition — for example: 'Ford Focus RS / ST and WRX/STI Performance Parts — Curated by Enthusiasts, Shipped Fast.' Place the headline at a readable size (40px minimum) in the upper-left or center of the hero, above the vehicle selector widget. If the vehicle selector is intended to replace the headline, add a one-line benefit statement directly above the selector dropdowns to anchor context: something that names the vehicle makes served and the key differentiator before asking visitors to self-select.",
+      "why_this_matters": "Visitors without a headline to anchor context bounce faster than visitors who receive an immediate relevance signal. The 5-second-test standard holds that if visitors cannot identify what a site sells and why they should care before the first scroll, a significant share will leave before engaging the category tiles or featured collection — directly suppressing the click-through the category CTAs below the fold are designed to generate.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Trust Signal Visible Above the Fold",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "absent"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.92,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The entire above-fold viewport shows the navigation header, hero image, vehicle selector, and category tiles. No review aggregate, customer count, media mention, or satisfaction guarantee is visible anywhere in the first 1080px of page height."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 10: Trust Signal in Hero — The Single Minimum Viable Trust Element",
+          "tier": "Gold"
+        },
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 4: Required Above-Fold Elements — Minimum Viable Hero",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The full above-fold viewport on desktop (1920×1080) contains no trust signal of any kind — no star rating, no review count, no customer count, no recognized media mention, and no satisfaction guarantee. The free-shipping announcement bar at the very top ('FREE SHIPPING on most orders $75+ — Contiguous US only SHOP NOW') is the only policy signal present, but it is not a credibility indicator for an unknown brand. The 'Featured Collection' h2 and product cards with review stars appear at scroll_y 906 and below — outside the above-fold zone for a 1080px viewport.",
+      "recommendation": "Add one compact trust signal directly in the hero or immediately beneath the vehicle selector widget. The minimum viable option: a review aggregate pulled from the existing product reviews ('★★★★★ 5.0 from verified buyers') or a customer count ('Parts shipped to 10,000+ AWD enthusiasts'). Position it at approximately the same vertical level as the vehicle selector dropdowns, left- or center-aligned, in a small but readable type size. If aggregate site-level reviews are unavailable, a media mention or a single strong brand qualifier ('Focused exclusively on Ford Focus RS/ST and Subaru WRX/STI — no generic parts catalog') serves the same credibility anchoring function.",
+      "why_this_matters": "Stanford credibility research (Fogg et al., 2002) found users assess website credibility within seconds, primarily on first-impression cues. An automotive parts site selling $135–$1,766 products to enthusiasts who do not already know the brand faces a high trust bar. The absence of any above-fold credibility signal means every first-time visitor must scroll into the featured collection before encountering social proof — a friction point that increases bounce for cold traffic.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Hero Headline Copy Is Absent — 5-Second Clarity Test Fails",
+      "surface": "hero-nav",
+      "element": {
+        "baton_index": "e9",
+        "text_content": "AWDMods",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.90,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e9"
+        },
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Logo (AWDMods text mark, ~80×45px) is the only brand-identifying text element in the hero zone. The page <title> is 'AWDMods – AWDMods' and meta_description is null, providing no secondary value proposition hook. 'Car parts, simplified.' appears as a micro-label inside the header garage widget, not as a standalone headline."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 2: The Value Proposition Must Pass the In-Context Test",
+          "tier": "Bronze"
+        },
+        {
+          "source": "headline-copywriting.md",
+          "section": "Finding 3: The Value Proposition Framework — Three-Component Structure",
+          "tier": "Bronze"
+        },
+        {
+          "source": "headline-copywriting.md",
+          "section": "Finding 1: Specific, Quantified Headlines Outperform Vague Claims",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The value proposition 'Car parts, simplified.' — the closest thing to a headline on the page — appears only as an 11px secondary line inside the vehicle-selector utility widget at the top right of the header (baton accessible_name on the header element). It is not rendered as a hero headline, it is visually buried, and it fails the competitor copy-test: any automotive parts retailer could place the same phrase on their page without modification. The page title tag 'AWDMods – AWDMods' repeats the brand name rather than communicating a differentiator. A complete value proposition requires relevance, quantified value, and differentiation — the current above-fold state communicates none of the three.",
+      "recommendation": "If a hero headline redesign is not immediately feasible, at minimum update the page title tag to something differentiated: 'AWDMods — Ford Focus RS/ST and Subaru WRX/STI Performance Parts.' Also expand the 'Car parts, simplified.' tagline within the vehicle selector widget to a two-line statement that names the makes served: 'Performance upgrades for Focus RS, Focus ST, WRX, and STI — find your parts in seconds.' For a complete fix, introduce a proper hero headline layer above the vehicle selector dropdowns as described in Finding 1 (local_id 1).",
+      "why_this_matters": "A value proposition that a competitor could copy verbatim provides zero differentiation signal for first-time visitors. AWDMods serves a narrow, enthusiast niche — explicitly naming the vehicles served (Focus RS, Focus ST, WRX, STI) would immediately filter in the right visitors and build relevance faster than any visual element alone.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Five Equal-Weight Category CTAs Create No Primary Conversion Hierarchy",
+      "surface": "category-grid",
+      "element": {
+        "baton_index": "e12",
+        "text_content": "Performance Intakes Exhaust Cooling Drivetrain upgrades Shop Performan",
+        "role": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Five category tiles — Performance, Handling & Brakes, Interior, Exterior, Electronics — are displayed in a horizontal row, each containing an identical solid-blue filled CTA button of the same size (approximately 120×38px visible) and the same color. All five buttons have visually identical weight, color, fill, and typography."
+        },
+        {
+          "type": "dom",
+          "reference": "e12"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 9: Single CTA Focus — Whirlpool 42% documented",
+          "tier": "Bronze"
+        },
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 3: Jackson's Art Supplies — CTA Color Differentiation Lifted Conversion 18.4%",
+          "tier": "Bronze"
+        },
+        {
+          "source": "eye-tracking-and-scan-patterns.md",
+          "section": "Finding 4: 57% of Viewing Time Is Spent Above the Fold",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "All five category CTAs — 'SHOP PERFORMANCE,' 'SHOP HANDLING,' 'SHOP INTERIOR,' 'SHOP EXTERIOR,' 'SHOP ELECTRONICS' — render as identical solid-blue filled buttons at equal size within their tiles. The visual weight is perfectly uniform across all five. For a homepage where the typical visitor is already targeting a specific vehicle and category (e.g., a Focus RS owner looking for suspension), equal-weight CTAs force the eye to scan all five before finding the relevant one. There is no visual signal identifying a featured or recommended starting point.",
+      "recommendation": "If analytics show that one category (e.g., Performance) drives the largest share of first visits and conversions, elevate it visually: increase the button width, apply a higher-contrast accent color (distinct from the standard tile blue), or place it first with slightly larger tile dimensions. If no single category dominates, accept the equal-weight layout as appropriate for a category-entry homepage — but add a visual secondary cue (e.g., a 'Most Popular' badge on the leading tile) to give scanning visitors a cognitive anchor. The category tile CTA copy 'SHOP X' is acceptable — all-caps action verb with the category name is specific and scannable.",
+      "why_this_matters": "Eye-tracking data shows 57% of viewing time is spent above the fold. Five identically styled CTAs distribute that attention equally across five options, reducing the probability that any single category CTA receives the decisive fixation that triggers a click. Even a modest visual differentiation on the most-visited category has historically produced double-digit conversion lifts for comparable multi-CTA category layouts.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "FAIL",
+      "title": "Newsletter Subscribe Button Is Icon-Only With No Text Label",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e36",
+        "text_content": "",
+        "role": "button"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "The newsletter section shows an email input field followed by a small arrow-icon-only button (approximately 46×49px per baton rect). The button has no visible text label. The CTA is a right-arrow chevron only, with no 'Subscribe,' 'Join,' or 'Get Updates' text."
+        },
+        {
+          "type": "dom",
+          "reference": "e36"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 14: NNGroup — Specific Labels Outperform Generic Labels",
+          "tier": "Gold"
+        },
+        {
+          "source": "headline-copywriting.md",
+          "section": "Finding 13: CTA Copy — Weak Verbs vs Strong Action Verbs",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The newsletter subscribe button at scroll_y 2302 renders as a 46×49px icon-only button containing only a right-arrow icon and no text (baton e36 text_content is empty string). NNGroup research establishes that generic or absent CTA labels reduce click-through because users scan without context; an arrow icon alone provides no benefit statement and forces the user to infer the action from the adjacent input field. The newsletter section headline 'Join Our Newsletter!' and the copy 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' are well-written and specific — but the submit button undercuts the surrounding copy by providing no action confirmation.",
+      "recommendation": "Replace the arrow-icon-only button with a text CTA: 'Subscribe' at minimum, or a benefit-led variant like 'Get First Access' or 'Keep Me Posted.' The button should be at least 48px tall (already meets this at 49px) but wide enough to accommodate 2–4 words of label text. Keep the existing newsletter copy — 'New parts, new builds, exclusive deals' is specific and on-brand — but close the loop with a CTA label that confirms the action.",
+      "why_this_matters": "The newsletter section is the last primary conversion surface before the footer. Icon-only submit buttons introduce ambiguity at the commitment point — the exact moment NNGroup identifies as highest friction. A text label costs nothing to add and eliminates the interpretive step users must take when they see a bare arrow.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Category Tile CTAs Use Correct Primary/Secondary Visual Hierarchy",
+      "surface": "category-grid",
+      "element": {
+        "baton_index": "e13",
+        "text_content": "Handling and Brakes Suspension Wheels Brake kits Chassis control Shop H",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Each category tile presents one solid-fill blue CTA button per tile with no competing secondary buttons inside the tile. The sub-category links (Intakes, Exhaust, Cooling, etc.) are rendered as plain text — visually subordinate to the primary 'SHOP X' CTA button. The CTA buttons are filled, sized at approximately 120px wide × 38px tall, and use a high-contrast white label on blue background."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 18: Secondary CTAs Should Use Ghost/Outline Styling",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "Within each category tile, the primary 'SHOP X' CTA is correctly styled as a solid-fill button, while the sub-category links (Intakes, Exhaust, Cooling, Drivetrain upgrades) are plain text links with no button styling. The primary-versus-secondary CTA hierarchy is appropriately executed at the tile level — no secondary element within a tile competes visually with the primary 'SHOP' button.",
+      "recommendation": "Maintain the current intra-tile hierarchy. The separation between the filled primary CTA and the plain-text sub-links is the correct pattern and should be preserved as the page evolves.",
+      "why_this_matters": "Correct primary/secondary CTA differentiation within tiles prevents the visual competition that cost Jackson's Art Supplies 18.4% in conversion. The current tile design avoids that failure mode.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 7,
+      "verdict": "PASS",
+      "title": "Newsletter Section Copy Is Specific and Audience-Named",
+      "surface": "newsletter-footer",
+      "element": {
+        "baton_index": "e35",
+        "text_content": "Join Our Newsletter! New parts, new builds, exclusive deals. Be the fir",
+        "role": "section"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 2073,
+          "viewport": "desktop",
+          "context": "Newsletter section heading reads 'Join Our Newsletter!' and subtext reads 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' — vehicle model names are explicitly called out."
+        },
+        {
+          "type": "dom",
+          "reference": "e35"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "headline-copywriting.md",
+          "section": "Finding 1: Specific, Quantified Headlines Outperform Vague Claims",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The newsletter section copy names the exact vehicles served (Focus RS, Focus ST, WRX, STI) and the specific benefit of subscribing (first to know when parts drop). This specificity — naming the audience by vehicle — is a strong application of the specificity principle: a Focus RS owner reading 'something drops for your Focus RS' experiences immediate personal relevance that a generic 'stay updated' message would not provide.",
+      "recommendation": "Maintain the vehicle-named specificity in all newsletter copy. When future vehicle models are added to the catalog, update the newsletter copy to include them.",
+      "why_this_matters": "Audience-specific copy increases opt-in rates by reducing the ambiguity of what subscribers will receive. The current copy sets an appropriate expectation and qualifies the subscriber at the point of sign-up.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "The hero vehicle-selector widget (year/make/model dropdowns) is the primary above-fold conversion surface, functioning as a hybrid CTA and navigation tool. It is well-executed from a functional standpoint — visually centered, dropdowns clearly labeled. However, it replaces rather than accompanies a headline, which is the root cause of Finding 1 and Finding 2.",
+    "The free shipping announcement bar ('FREE SHIPPING on most orders $75+ — Contiguous US only') is visible in the topmost strip of the page. It serves as a partial trust/policy signal but is formatted as a promotional banner (dark background, narrow strip) and may be subject to banner blindness (eye-tracking-and-scan-patterns.md Finding 6).",
+    "The 'There's plenty more... Show me →' card at the end of the Featured Collection second row (visible in section-3.jpg and section-4.jpg) is a directional CTA. The 'Show me →' label is a weak-verb CTA per headline-copywriting.md Finding 13. A stronger label ('See All Products' or 'Browse Full Catalog') would be more action-specific, but this is a minor finding and was not emitted as a FAIL given the low priority relative to the hero issues.",
+    "The page has no above-fold primary conversion CTA of the type typically found on automotive parts homepages (e.g., 'Shop Now,' 'Build My Car,' or 'Find Parts for My Vehicle' as a standalone styled CTA). The vehicle selector functions as this CTA, which is a reasonable UX decision for a niche catalog site — but the absence of any surrounding copy context reduces its conversion effectiveness for cold visitors."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "cta-design-and-placement.md",
+      "color-psychology.md",
+      "eye-tracking-and-scan-patterns.md",
+      "hero-section-psychology.md",
+      "headline-copywriting.md",
+      "page-length-strategy.md"
+    ],
+    "baton_elements_checked": 42,
+    "sections_routed_to_cluster": 2,
+    "sections_in_baton": 5
+  }
+}

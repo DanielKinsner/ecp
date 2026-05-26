@@ -1,0 +1,37 @@
+{
+  "schema_version": 3,
+  "id": "2026-05-18-deadbeef",
+  "created": "2026-05-18T00:00:00.000Z",
+  "updated": "2026-05-18T00:00:00.000Z",
+  "type": "audit",
+  "phase": "audit",
+  "engagement_status": "complete",
+  "reconciled": true,
+  "page": {
+    "url": "https://example.test/products/fixture",
+    "url_normalized": "example.test/products/fixture",
+    "file_path": null,
+    "type": "product"
+  },
+  "platform": "shopify",
+  "source_mode": "url-dual",
+  "devices_requested": [
+    "desktop",
+    "mobile"
+  ],
+  "devices_scanned": [
+    "desktop",
+    "mobile"
+  ],
+  "clusters_used": [
+    "pricing"
+  ],
+  "scope": "focused",
+  "min_priority": null,
+  "compare_target": null,
+  "quick_scan": false,
+  "blocked": false,
+  "plans_queue": [],
+  "screenshot_input": null,
+  "user_scope_notes": "Synthetic fixture for tests/test_dedup_consumer_parity.py + tests/test_ethics_ref_agreement.py. Contains 1 pricing cluster x 2 devices + 1 ethics emission with 1 ADJACENT + 1 CLEAR. Designed to be the minimum needed to reproduce the 2026-05-18 ethics namespace drift bug."
+}

@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-f9d69ee3",
+  "cluster": "visual-cta",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T23:30:00.000Z",
+  "completed_at": "2026-04-28T23:32:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "H1 Leads with Material/Form Factor, Not Rider Benefit",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e4",
+        "text_content": "EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3",
+        "role": "heading"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.88,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "H1 reads 'EvolutionR Stainless Steel Weighted Handlebar End Caps for the Can-Am Spyder F3 & RT Models (Pair) (2024+)' — 103 characters leading with construction material and product form factor. The product benefit (vibration reduction, smoother ride) appears only in the body text below the fold."
+        },
+        {
+          "type": "dom",
+          "reference": "e4"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 1: The 5-Second Test — Clarity Is the Foundational Hero Metric",
+          "tier": "Gold"
+        },
+        {
+          "source": "headline-copywriting.md",
+          "section": "Finding 2: Benefit-Led Headlines Outperform Feature-Led Headlines",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The H1 headline opens with construction material and product category — 'EvolutionR Stainless Steel Weighted Handlebar End Caps' — before the visitor has any context for why weighted bar ends matter. A Can-Am Spyder rider arriving on this page for the first time cannot answer 'why should I care?' from the headline alone. The actual selling point — reducing handlebar vibration during long rides — only surfaces in the body copy below the visible viewport at 1920×1080.",
+      "recommendation": "If the primary buyer motivation is vibration and fatigue reduction, rewrite the H1 to lead with that outcome: 'Eliminate Handlebar Vibration on Your Can-Am Spyder F3 & RT (2024+).' Reserve the stainless steel and product-type detail for the subheadline or first bullet, where buyers who already care will find it. Keep the model year and fitment in the headline — that specificity is high-value for this audience — but open with the rider outcome rather than the part name.",
+      "why_this_matters": "On a specialist accessories page like this, headline clarity is the first gate a buyer hits. A feature-first headline forces the visitor to do the mental translation from 'weighted handlebar caps' to 'my hands won't hurt after a two-hour ride' — a step many buyers won't complete before scrolling away. Benefit-led headlines consistently outperform feature-led equivalents across 50+ years of direct-response testing; the cost of this fix is one copywriting pass.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Risk-Reversal Microcopy Adjacent to Add to Cart Button",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "button"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.82,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The buy-box area shows the price ($59.95), PayPal Pay Later widget, and 'Add to Cart' button. The only supporting text adjacent to the button is 'Login & Earn 60 Points when purchasing this item' — a loyalty prompt rather than a risk-reversal statement. No free-shipping threshold reminder, no return-policy callout, and no satisfaction guarantee appears within the immediate CTA zone."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 23: Microcopy Proximity to CTA — Risk Reversal at Button Reduces Friction",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The 'Add to Cart' button sits in a zone containing a loyalty-points prompt ('Login & Earn 60 Points') but nothing that addresses the buyer's purchase hesitation at the moment of commitment. The site's footer references a Price Match Guarantee and a Free Shipping threshold, and the top navigation bar shows 'FREE SHIPPING ON MOST ORDERS OVER $75' — but neither of these appears within the buy-box where the buyer is deciding whether to click. At $59.95, the purchase is close enough to the $75 free-shipping threshold that a one-line reminder would be directly actionable.",
+      "recommendation": "If the order qualifies for free shipping above $75, add a single line of microcopy directly below the 'Add to Cart' button: 'Add $15.05 more for free shipping · 30-day easy returns.' If the product ships free regardless of order size, update the line to reflect that. The copy should be factually accurate and match the actual shipping policy. Keep it to one line — it is a friction-reducer at the conversion point, not a secondary pitch.",
+      "why_this_matters": "Baymard's checkout usability research consistently shows that unanswered questions at the moment of commitment are the primary driver of silent abandonment on product pages. A buyer who wants the item but isn't sure about shipping cost or return risk will hesitate; a single accurate sentence removes both uncertainties at zero development cost.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "PASS",
+      "title": "Above-Fold Layout Follows Optimal Image-Left, CTA-Right Visual Flow",
+      "surface": "hero-pricing-paypal",
+      "element": {
+        "baton_index": "e8",
+        "text_content": "$59.95",
+        "role": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Product image gallery occupies the left column; H1, star rating, price, PayPal widget, and Add to Cart button are stacked in the right column — all visible without scrolling at 1920×1080."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "eye-tracking-and-scan-patterns.md",
+          "section": "Finding 18: Product Page Visual Flow — Image Left, Price Near CTA",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The desktop product page correctly places the image gallery on the left and the buy-box (H1, rating, price, Add to Cart) on the right, with all primary purchase elements above the fold at 1920×1080. Price (e8, y=403) is positioned immediately above the 'Add to Cart' button, satisfying the proximity rule that reduces cognitive friction between price evaluation and purchase commitment.",
+      "recommendation": "No structural change needed. If future redesign touches the buy-box layout, preserve the price-to-CTA vertical adjacency and keep both elements in the right column above the fold.",
+      "why_this_matters": "Maintaining the established image-left, buy-box-right layout ensures the page continues to benefit from users' natural left-to-right reading flow, which eye-tracking studies identify as the dominant pattern on Western e-commerce product pages.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "The sticky elements (e10 at scroll_y=0, e17 at scroll_y=581) both have blank text_content and are positioned at x=1835 — far right edge of a 1920px viewport. These appear to be floating badge/trust widgets (possibly a Trusted Shops or review widget), not a sticky Add to Cart bar. A sticky CTA bar in the conventional sense (price + button, following scroll) was not detected on the desktop capture. If a sticky CTA is present as a JavaScript-rendered element post-scroll, a re-capture at scroll_y=800 would confirm.",
+    "The PayPal Pay Later widget (e16) at y=442 provides meaningful payment-option signaling within the above-fold buy zone — a positive trust signal that partially offsets the missing risk-reversal microcopy finding."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "cta-design-and-placement.md",
+      "color-psychology.md",
+      "eye-tracking-and-scan-patterns.md",
+      "hero-section-psychology.md",
+      "headline-copywriting.md",
+      "page-length-strategy.md",
+      "evidence-tiers.md"
+    ]
+  }
+}

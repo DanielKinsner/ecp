@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-04-28-1909a7d0",
+  "cluster": "product-media",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-04-28T19:09:00.000Z",
+  "completed_at": "2026-04-28T19:22:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Hover Image Swap on Featured Collection Cards",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e10",
+        "text_content": "VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 989,
+          "viewport": "desktop",
+          "context": "Five product cards visible in the first featured-collection row. Each card shows a single static image with no secondary image, no hover overlay, no quick-add button, and no color swatch. No hover state cues are present — the grid is purely static on first render."
+        },
+        {
+          "type": "dom",
+          "reference": "e10"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 2: Hover Image Swap (Packshot → Lifestyle) Increases Click-Through on Desktop",
+          "tier": "Gold"
+        },
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 1: Product Listings Need Minimum 3 Accessible Thumbnails; 5–15 for Apparel",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The featured collection grid on awdmods.com presents every product card with a single static image and no hover interaction. On desktop, mousing over a card (e.g., the VelourTex floor-mat card at scroll position ~989px) produces no image swap, no secondary angle, and no quick-action overlay. 76% of sites fail to implement synchronized hover effects, per Baymard's 50-site benchmark — AWDMods is among them. Products like the Revo Designs rocker stripe decal show a lifestyle shot (decal applied to blue car body) as the primary image; the floor-mat card shows a packshot on a dark background. Neither card exposes a secondary angle, making side-by-side evaluation within the grid impossible without clicking through to a PDP.",
+      "recommendation": "For each product card in the Featured Collection grid, implement a CSS opacity-transition hover swap (150–200ms ease) that replaces the primary product image with a secondary angle or lifestyle image on `mouseenter`. Preload the secondary image for the above-fold cards using `<link rel=\"preload\" as=\"image\">` in the `<head>` so the swap is instantaneous. For automotive accessory products, the most effective secondary is an installed/in-context shot — packshot-to-lifestyle is the highest-ROI hover pattern for this category. Add a quick-add or 'View Details' CTA button visible on hover to capitalize on engagement when the user is actively evaluating.",
+      "why_this_matters": "Desktop hover interactions drive click-through on category pages without requiring a full PDP navigation. Baymard's benchmark identifies this as the highest single-interaction ROI enhancement for desktop product listings — failing to implement it means every evaluation step costs a full page load, increasing pogo-stick rates and abandonment before add-to-cart.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Product Cards Expose Only One Image — No Multi-Image Access or Count Signal",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e11",
+        "text_content": "Revo Designs Rocker Stripes Decal Kit for the Ford Focus RS / ST (Set of 2)",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 989,
+          "viewport": "desktop",
+          "context": "All product cards in the featured-collection grid display exactly one image each. There are no thumbnail strips beneath or beside the card image, no dot indicators, no 'N of N' counter, and no hover carousel. Users have no visual cue that additional product images exist."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4.jpg",
+          "scroll_y": 1580,
+          "viewport": "desktop",
+          "context": "Second row of featured collection cards confirms the pattern: Tufskinz mirror flag accent, Magnaflow exhaust, VelourTex trunk mat, and Foamskinz cup holder insert each show a single card image with no secondary access mechanism."
+        },
+        {
+          "type": "dom",
+          "reference": "e11"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "image-quantity-types.md",
+          "section": "Finding 6: Category Page Thumbnails Require Minimum 3 Accessible Images Per Product",
+          "tier": "Gold"
+        },
+        {
+          "source": "gallery-ux.md",
+          "section": "Finding 3: Without Image Count Indication, Users Swipe Repeatedly Past the Last Image",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Across both rows of the Featured Collection (sections 3 and 4), every product card presents exactly one image with no mechanism to access additional angles. The Revo Designs decal card (e11, 271×271px) shows the decal applied to a car's rocker panel — there is no packshot, no additional angle, and no indicator that more images exist at click-through. Baymard benchmarks require a minimum of 3 accessible images per listing card; absence of this access mechanism forces full PDP navigation for even basic product evaluation. For automotive accessories where correct fitment and finish are critical purchase signals, this single-image constraint is a material gap.",
+      "recommendation": "Add a hover carousel to each product card that reveals at least 2 additional images (3 total accessible including the primary) on desktop. For cards where photography allows it, the sequence should be: (1) primary packshot or hero image, (2) installed/lifestyle context shot, (3) detail close-up showing finish or material. Display a persistent 'N of N' counter or thumbnail dots above or below the card image to signal that additional images exist even before hover engagement. As a lower-lift intermediate step, an installed-view image visible at hover is significantly better than the current single static image.",
+      "why_this_matters": "Shoppers evaluating automotive accessories need to see installation context, fitment evidence, and product detail before committing to a click. When all of that requires navigating to a PDP, a meaningful share of category-page visitors will not make the additional click — especially for lower-urgency browse sessions. Baymard research finds 50–80% of users overlook truncated gallery images when no count signal is present; the same principle applies to hidden secondary images on listing cards.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Inconsistent Primary Image Style Across Featured Collection Grid",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e10",
+        "text_content": "VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)",
+        "role": "image"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 989,
+          "viewport": "desktop",
+          "context": "In the first featured-collection row: VelourTex floor mats appear as a packshot on a near-black background; Revo Designs decal is a lifestyle/installed shot on a blue car at an angle; Injen cold air intake is an installed close-up inside an engine bay; Borla exhaust is a studio shot on a white/neutral background; Tufskinz carbon fiber gauge kit is an installed interior shot. Five cards, five different primary image treatments and backgrounds — no visual rhythm across the grid."
+        },
+        {
+          "type": "dom",
+          "reference": "e10"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 7: Consistent Aspect Ratio Across All Thumbnails Is Non-Negotiable for Grid Scanability",
+          "tier": "Silver"
+        },
+        {
+          "source": "image-quantity-types.md",
+          "section": "Finding 9: White/Neutral Background Hero Images Convert Better Than Lifestyle-Primary Listings",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The Featured Collection grid shows five distinct primary image treatments across the first row alone: a packshot on dark background (floor mats), a lifestyle installed-on-car angle shot (rocker decal), an engine-bay detail (cold air intake), a neutral-background studio shot (exhaust system), and an interior installed close-up (gauge kit). The result is a visually fragmented grid where each card reads as a standalone image rather than a coherent product listing. Baymard benchmarks identify consistent primary image style — ideally packshot or neutral-background hero — as the baseline for enabling fast product comparison across a grid. Lifestyle-first images, while compelling for individual products, disrupt grid scanning when mixed with packshots and different background tones.",
+      "recommendation": "Standardize the featured collection grid to a consistent primary image treatment: either (a) all packshots on white or very light neutral backgrounds, or (b) all installed/lifestyle shots cropped to the same aspect ratio and visual density. For automotive accessories, the packshot-as-primary approach is more scannable in grid context; lifestyle shots are best as secondary hover images. The 271×271px square format is already consistent — extend that discipline to background treatment. A uniform dark or white background across all primary card images would materially improve grid coherence without requiring re-photography of every product.",
+      "why_this_matters": "Product grid scanning speed is directly impacted by visual rhythm consistency. Mixed backgrounds and mixed image styles slow the eye's ability to move across rows and compare products, reducing the number of products a shopper evaluates per scroll. For a homepage featured collection acting as social proof for the catalog, visual coherence is also a direct signal of brand quality.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Featured Collection Cards Lack Unified Hit Area",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "",
+        "role": "link"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.75,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 989,
+          "viewport": "desktop",
+          "context": "Baton records e10 and e11 as separate `img` elements at y=989, with product title text rendered below as separate elements. The baton does not surface a wrapping anchor element that spans both image and title, consistent with a non-unified hit area pattern. Card titles render as plain text blocks in the screenshot, visually separated from the image above."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 3: Entire Product Card Must Be a Unified Hit Area — Not Split Link Zones",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The baton index captures product card images (e10, e11) as standalone `img` elements and brand/title text as separate elements below, with no wrapping anchor element spanning the full card surface visible in the element tree. This is consistent with a split hit-area pattern where the image links to the PDP but the product title and price are either plain text or a separate link — a pattern that Baymard identifies at 76% of sites and characterizes as a consistent source of misclicks and confusion. On a 1920×1080 desktop viewport, users moving from the title text toward an adjacent card frequently misclick when the title area is not part of the card's clickable region.",
+      "recommendation": "Wrap each product card's full surface — image, brand name, product title, price, badge, and rating — in a single `<a>` element pointing to the PDP. Position any interactive elements that must remain separate (e.g., a wishlist icon or quick-add button) using absolute positioning and a higher z-index above the card link layer, so they remain individually actionable without breaking the unified hit area. Test with keyboard navigation to confirm Tab reaches each card and Enter navigates correctly.",
+      "why_this_matters": "Split hit areas on product cards cause misclicks that interrupt the browse flow and create a perception of a broken or low-quality storefront. For a homepage featured collection that serves as the first product-evaluation touchpoint for many visitors, clickability friction at this stage directly suppresses downstream click-through and add-to-cart rates.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "product-media",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Product Card Images Use Consistent Square Aspect Ratio",
+      "surface": "featured-collection-top",
+      "element": {
+        "baton_index": "e10",
+        "text_content": "VelourTex Fitted Carpet Floor Mats for the Ford Focus RS / ST (Set of 4)",
+        "role": "image"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 989,
+          "viewport": "desktop",
+          "context": "All five product cards in the first featured-collection row render at 271×271px (confirmed from baton: e10 and e11 both rect height=271, width=271). The grid maintains uniform square containers across both rows visible in sections 3 and 4."
+        },
+        {
+          "type": "dom",
+          "reference": "e10"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "thumbnail-design.md",
+          "section": "Finding 7: Consistent Aspect Ratio Across All Thumbnails Is Non-Negotiable for Grid Scanability",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "All Featured Collection product cards render at a consistent 271×271px square (1:1 aspect ratio), confirmed across both grid rows in sections 3 and 4. The grid maintains visual alignment and row height consistency regardless of source image orientation. This consistent aspect-ratio enforcement is a correctly implemented baseline for product grid scanability.",
+      "recommendation": "Maintain the current 1:1 aspect ratio enforcement. As hover interactions and secondary images are added, ensure the secondary images are also constrained to the same 271×271 container to prevent layout shift during hover state transitions.",
+      "why_this_matters": "Consistent aspect ratios are table stakes for product grid legibility. This is one area of the media implementation that is correctly executed.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "No video content is present anywhere in the product-media surfaces routed to this cluster (sections 3 and 4). Video is not applicable on the homepage featured collection and was not evaluated.",
+    "No AR or 3D visualization elements are present. Given the automotive accessories category (floor mats, decals, exhaust systems, interior trim), AR has low ROI compared to installation photography — not emitted as a finding.",
+    "The 'There's plenty more...' card in the second grid row (section 4, rightmost position) is a navigation CTA, not a product card. It breaks the visual grid rhythm but falls within the visual-cta cluster scope, not product-media.",
+    "Badge count per card: 1 badge maximum observed ('Made to Order' on selected cards). This is within the Baymard ≤2 badge guideline and was not emitted as a finding.",
+    "No swatches visible in the featured collection cards — the products shown (floor mats, decals, exhaust, trim) are largely single-variant, so swatch absence is not a defect.",
+    "Schema audit: page_head schema_jsonld shows OnlineStore and WebSite types only — no ProductCollection or ItemList structured data for the featured collection grid. This falls within the content-seo cluster scope, not product-media, and is noted here for synthesizer integration."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "thumbnail-design.md",
+      "image-quantity-types.md",
+      "gallery-ux.md",
+      "evidence-tiers.md"
+    ],
+    "sections_audited": [
+      "featured-collection-top",
+      "featured-collection-bottom"
+    ],
+    "baton_elements_cited": ["e10", "e11", "e4", "absent"]
+  }
+}
