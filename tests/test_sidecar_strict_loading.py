@@ -238,6 +238,19 @@ class TestLeadPrepCliFailsLoudOnBrokenSidecar:
             "blocked": False, "plans_queue": [], "screenshot_input": None,
         }), encoding="utf-8")
         (eng / "anchor-candidates-desktop.json").write_text("not json", encoding="utf-8")
+        # A cluster emission is required so build_canonical_view actually reaches
+        # the (broken) sidecar. Without it, lead_prep short-circuits with
+        # "no cluster emissions found" before the strict loader runs (this is the
+        # consolidation behavior gap vs the dropped build_canonical_f_refs.py,
+        # which loaded sidecars eagerly).
+        (eng / "cluster-pricing-desktop.json").write_text(json.dumps({
+            "schema_version": 1, "engagement_id": "2026-05-18-deadbeef",
+            "cluster": "pricing", "device": "desktop",
+            "specialist_model": {"family": "sonnet", "version": "4.6"},
+            "started_at": "2026-05-18T00:00:00.000Z",
+            "completed_at": "2026-05-18T00:00:01.000Z",
+            "status": "skipped", "skip_reason": "no findings", "findings": [],
+        }), encoding="utf-8")
 
         result = subprocess.run(
             [sys.executable, str(self.SCRIPT), "build-canonical-frefs",
