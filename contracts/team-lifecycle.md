@@ -36,7 +36,7 @@ Every team-based engagement follows this pattern. Skill-specific steps (which te
 1. **Create** — Call `TeamCreate` at the start of the engagement, **immediately after engagement setup and BEFORE any teammate is spawned**. The first teammate (acquirer for audit/compare, planner for build) requires the team to exist. For `/ecp:audit` this is the hard wall enforced by `<acquisition_must_spawn_teammate>`: no team = `TeamCreate` now, not "no team = give up and do it yourself."
 2. **Populate task list** — `TaskCreate` for every phase task upfront, not just the first phase. Audit: acquirer × devices, cluster × devices, reconcile, plan, review, build. Build: plan → review → build with `blockedBy` dependencies. Compare: paired per-page auditors + reconcile + compare. Upfront creation matters — an empty `audit-*` task slot is a missing teammate commitment, not a "to-do later" note. See skill-specific `<engagement_setup>` for the exact task count formula.
 3. **Spawn teammates** — Use the `Agent` tool with explicit `team_name`, `name`, and `model` parameters. **Model MUST be explicit on every spawn; do NOT inherit from parent.** See `skills/audit/SKILL.md` `<auditor_dispatch_template>` for the canonical dispatch contract and per-role model assignments (sonnet default for mechanical work, opus for synthesis/review, `--deep` flag to upgrade cluster auditors + builder to opus).
-4. **Coordinate** — Teammates self-claim their task via `TaskUpdate` on startup and mark it complete when done. Teammates can `SendMessage` each other for cross-cluster synthesis hints, peer planner negotiation, or Q&A routed through the lead. The legacy nonce relay loop is gone — there are no nonces, no `QUESTION__{nonce}:` regex parsing, no stdout markers. Messages arrive natively through the team mailbox. See `contracts/relay-loop-protocol.md` for the old-vs-new comparison.
+4. **Coordinate** — Teammates self-claim their task via `TaskUpdate` on startup and mark it complete when done. Teammates can `SendMessage` each other for cross-cluster synthesis hints, peer planner negotiation, or Q&A routed through the lead. The legacy nonce relay loop is gone — there are no nonces, no `QUESTION__{nonce}:` regex parsing, no stdout markers. Messages arrive natively through the team mailbox.
 5. **Lead waits** — The team-lead waits for task completion notifications, which arrive automatically through the team mailbox. No polling loop. No stdout watching.
 6. **Validate / Reconcile** — As each cluster file arrives, the lead runs format validation (audit) or paired reconciliation (compare). Non-compliant files bounce back to the teammate via `SendMessage`. See `<finding_reconciliation>` in the audit skill.
 7. **Phase transitions** — For sequential phases (plan → review → build), the lead waits for each phase's task to complete before spawning the next phase's teammate. Phase tasks are created upfront in step 2 with `blockedBy` dependencies, so the lead just watches for the current phase to unblock the next.
@@ -47,18 +47,6 @@ Every team-based engagement follows this pattern. Skill-specific steps (which te
 ### `/ecp:audit`
 
 The audit pipeline is the most complex consumer of teams. Cluster auditors spawn in parallel (up to 12 at once for dual-device 6-cluster runs), reconciliation is file-based with lead-as-validator, and the forensic audit-trace.log assertions make rogue runs detectable in 2 seconds. See `<team_lifecycle>` in `skills/audit/SKILL.md` for the full steps list with every cross-reference to other sections. The assertion counters (`team_spawned_acquirers`, `team_spawned_auditors`, `cluster_files_written`, `ethics_gate_executed`) are the contract — they must be non-zero at audit completion or the run is structurally invalid.
-
-### `/ecp:build`
-
-Build is inherently serial (plan → review → build), so the team's value is consistent state management and a clear task list, not parallelism. Phase tasks are created upfront with `blockedBy` dependencies. For multi-planner mode, the `plan` task expands into parallel `plan-{cluster}` tasks; peer-to-peer negotiation between planner teammates (via SendMessage) handles cross-cluster overlaps during planning. A reconciler teammate is spawned only if peer negotiation deadlocks — see `skills/build/SKILL.md` `<phase_plan>` and `contracts/multi-planner-protocol.md` for the canonical protocol.
-
-### `/ecp:compare`
-
-Compare runs paired audit tasks for two pages inside a single team. Cluster auditors for both pages run in parallel (4 clusters × 2 pages × 1 device = 8 auditor teammates; double for dual-device). Per-cluster synthesis hints can cross page boundaries via `SendMessage`. After both pages' cluster files are reconciled into per-page `audit.md` files, the lead runs the compare workflow against both reconciled audits.
-
-### `/ecp:quick-scan`
-
-Quick-scan intentionally does NOT use teams. It's a single-agent dispatch for a single-cluster 3-5 finding scan — the team setup/teardown overhead would exceed the actual work. Quick-scan is the one ECP v5.0 command that runs without `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` set.
 
 ## Resume (team recreation from filesystem state)
 

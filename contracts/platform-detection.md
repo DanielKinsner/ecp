@@ -1,7 +1,7 @@
 <!-- RESEARCH_DATE: 2026-04-14 -->
 # Platform Detection
 
-Heuristics for detecting the ecommerce platform of a page being audited. Used to load platform-specific reference files for enhanced recommendations.
+Heuristics for detecting the ecommerce platform of a page being audited. The detected platform is recorded as audit context. (Platform-specific build guidance was archived with the build capability — see `product.md`.)
 
 ## Detection Priority
 
@@ -48,19 +48,11 @@ Bare `wp-content/` alone is **insufficient** — it fires on every WordPress sit
 - `generator` meta reading `WordPress ...`
 - `stylesheet-uri` referencing `/wp-content/themes/`
 
-If detection yields <2 signals or only generic signals, classify as **generic** (not `woocommerce`) and do NOT load the WooCommerce platform file. The builder stays generic. Avoiding false positives matters more than catching an edge case — a WC knowledge file loaded onto a non-commerce WordPress site would produce recommendations that cannot be implemented.
+If detection yields <2 signals or only generic signals, classify as **generic** (not `woocommerce`). Avoiding false positives matters more than catching an edge case — a WC misclassification would skew the platform-specific phrasing in findings.
 
-## Platform File Loading
+## Platform As Audit Context
 
-| Platform | File | When Loaded |
-|----------|------|-------------|
-| Shopify | `${CLAUDE_PLUGIN_ROOT}/platforms/shopify.md` | Builder phase only |
-| Next.js | `${CLAUDE_PLUGIN_ROOT}/platforms/nextjs.md` | Builder phase only |
-| OpenCart | `${CLAUDE_PLUGIN_ROOT}/platforms/opencart.md` | Builder phase only |
-| WooCommerce | `${CLAUDE_PLUGIN_ROOT}/platforms/woocommerce.md` | Builder phase only |
-| Generic | No additional file | Default for all other platforms, including WordPress without WC markers |
-
-Platform files enhance the builder's output with platform-specific patterns, anti-patterns, and code examples. They do NOT change audit or review behavior — those remain platform-agnostic.
+The detected platform is recorded in `meta.json` and audit context only. No platform file is loaded — platform-specific build guidance was archived with the build capability (see `product.md`). Detection still matters because it sharpens findings (e.g., naming the real checkout surface) and prevents misclassification, but audit behavior is platform-agnostic.
 
 ## Disambiguation: .liquid Files
 
@@ -80,8 +72,4 @@ If only `.liquid` files with no second signal: ask "I see Liquid templates. Is t
 
 ## Future Platforms
 
-When adding a new platform:
-1. Create `platforms/{platform}.md` following the existing format
-2. Add detection heuristics to this file
-3. Add to the Platform File Loading table above
-4. No changes needed to SKILL.md files — they load platform files dynamically
+When adding detection for a new platform, add its heuristics to this file. (Platform build-guidance files are out of scope in the audit-only build.)

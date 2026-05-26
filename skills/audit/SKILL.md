@@ -1,18 +1,18 @@
 ---
 name: ecp:audit
 description: >-
-  Runs a full e-commerce psychology audit of an existing ecommerce page via
-  four-phase relay (audit, plan, review, build). Covers product pages, checkout
-  flows, carts, pricing, landing pages, category pages, and SEO using
-  research-backed findings across pricing, trust, mobile, content, and visual
-  design.
+  Runs an e-commerce psychology audit of an existing ecommerce page: cited,
+  element-anchored findings, a prioritized Priority Path, and an annotated
+  visual report. Covers product pages, checkout flows, carts, pricing, landing
+  pages, category pages, and SEO using research-backed findings across pricing,
+  trust, mobile, content, and visual design.
 disable-model-invocation: true
-argument-hint: "[url-or-file-path] [--auto] [--force] [--deep] [--min-priority critical|high|medium|low] [--platform shopify|nextjs|opencart] [--device mobile|laptop|desktop] [--focus cluster1,cluster2] [--visual] [--no-visual] [--ab-scaffold] [--ab-tool tool-name] [--engagement-id id]"
+argument-hint: "[url-or-file-path] [--auto] [--deep] [--min-priority critical|high|medium|low] [--platform shopify|nextjs|opencart] [--device mobile|laptop|desktop] [--focus cluster1,cluster2] [--visual] [--no-visual] [--engagement-id id]"
 ---
 
 # ECP Audit Router
 
-This skill is the runtime router for the full ECP audit relay. Keep it lean: load the contracts and workflows named below, run the phases in order, enforce the hard gates, and leave historical rationale in `SKILL.notes.md`.
+This skill is the runtime router for the ECP audit. It produces cited, element-anchored findings, a prioritized Priority Path, and an annotated visual report, then stops — plan, review, and build are out of scope per `product.md` §2.4. Keep it lean: load the contracts and workflows named below, run the phases in order, enforce the hard gates, and leave historical rationale in `SKILL.notes.md`.
 
 ## Priority Key
 
@@ -57,10 +57,7 @@ Then load phase-specific files only when that phase is reached.
 | Ethics | `contracts/ethics-subagent-v2.md`, `references/ethics-gate.md` |
 | Synthesis | `contracts/synthesizer-v2.md`, `contracts/synthesizer-subagent.md`, `contracts/priority-path-synthesis.md` |
 | Assembly and canaries | `contracts/audit-assembly.md`, `contracts/audit-reconciliation.md`, `contracts/trace-assertion-canary.md`, `contracts/progress-comparison.md` |
-| Plan | `workflows/plan.md`, `contracts/multi-planner-protocol.md`, `contracts/conflict-resolution.md` |
-| Review | `workflows/review.md`, `contracts/relay-loop-protocol.md` |
-| Build | `workflows/build.md`, platform file under `platforms/{platform}.md` when detected |
-| Export | `contracts/report-export.md`, `workflows/ab-scaffold.md` when requested |
+| Export | `contracts/report-export.md` |
 
 ## Mode Selection
 
@@ -88,10 +85,9 @@ Run this sequence:
 10. Dispatch ethics v2 after specialist emissions are present.
 11. Dispatch synthesizer v2 after ethics completes or records partial status.
 12. Validate cluster files, assemble audit markdown, and run structural plus substantive canaries.
-13. Present the audit checkpoint unless `--auto`.
-14. Dispatch planner, reviewer, and builder phases as requested or as `--auto` requires.
-15. Export markdown, visual report, or A/B scaffold when requested.
-16. Update `meta.json`, write `lead-reflection.md`, and clean up the team at completion.
+13. Present the audit checkpoint with export options.
+14. Export the audit markdown and the annotated visual report when requested.
+15. Update `meta.json`, write `lead-reflection.md`, and clean up the team at completion.
 
 ## Dispatch Shape
 
@@ -101,10 +97,6 @@ Default to v2 dispatch:
 - Cluster specialists: `Agent` teammates in the audit team.
 - Ethics: `Task` subagent.
 - Synthesizer: `Task` subagent.
-- Single planner: `Task` subagent.
-- Multi-planner peers: `Agent` teammates.
-- Reviewer: `Task` subagent.
-- Builder: `Task` subagent.
 
 Record dispatch counters in `audit-trace.log` using `contracts/trace-assertion-canary.md`. Legacy v1 counter aliases may be accepted only where that contract explicitly says they are accepted.
 
@@ -121,7 +113,7 @@ Write audit artifacts inside `docs/ecp/{engagement-id}/`:
 - audit markdown: `audit-{device}.md` for v2 device output; preserve legacy `audit.md` behavior where the current scripts require it
 - `priority-path-stories.json` when priority path sidecar output is produced
 - `lead-reflection.md`
-- plan, review, build, report, and scaffold outputs for later phases
+- `visual-report.html` when a visual report is requested
 
 Use the path and field names from `contracts/meta-schema.md`, `contracts/audit-state-machine.md`, and the relevant workflow. Do not invent alternate artifact names.
 
@@ -148,11 +140,8 @@ If acquisition fails after the required dispatch and correction attempt, use the
 Use checkpoint wording and options from the loaded workflow:
 
 - Audit checkpoint: summary, key highlights, progress comparison when available, export options.
-- Plan checkpoint: single-planner or multi-planner format.
-- Review checkpoint: verdict and questions.
-- Build checkpoint: build summary, export/scaffold options, done.
 
-`--auto` skips interactive checkpoints where the workflow allows it. `--force` only overrides review BLOCK behavior where `workflows/review.md` and this skill's flags permit it.
+`--auto` runs straight through to the report without pausing at the audit checkpoint.
 
 ## Exit Criteria
 
@@ -166,4 +155,4 @@ An audit phase can move forward only when:
 - structural assertions have passed;
 - substantive canary results and lead reflection are written.
 
-The full relay is complete when audit, plan, review, build or build-skip, exports requested by the user, `meta.json`, `audit-trace.log`, and `lead-reflection.md` all reflect the final state.
+The audit is complete when findings, the Priority Path, any requested exports (audit markdown + visual report), `meta.json`, `audit-trace.log`, and `lead-reflection.md` all reflect the final state.

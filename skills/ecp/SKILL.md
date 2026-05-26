@@ -1,41 +1,36 @@
 ---
 name: ecp
 description: >-
-  E-commerce Psychology toolkit for ecommerce pages. Evidence-backed citations
-  with credibility tiers (Gold/Silver/Bronze) across pricing, trust, SEO, mobile,
-  visual design, content, and checkout domains. Annotated screenshot reports with
-  bidirectional scroll-sync, screenshot-only input mode, component-library-enforced
-  structural consistency, ethics compliance in every report. Use when the user
-  mentions ecommerce optimization, conversion, CRO, or page improvements without
-  specifying audit, build, scan, or compare.
+  E-commerce conversion-psychology audit for a single ecommerce page from a URL.
+  Evidence-tiered findings (Gold/Silver/Bronze citations) across pricing, trust,
+  SEO, mobile, performance, visual design, content, and checkout, a prioritized
+  Priority Path, and an annotated visual report with an editable hotspot tool.
+  Ethics gate in every audit. Use when the user mentions ecommerce optimization,
+  conversion, CRO, or page improvements.
 disable-model-invocation: false
 ---
 
 <objective>
-Present the E-commerce Psychology engine commands and direct the user to the right one.
-For automated callers: skip this router and invoke specific commands directly.
-Never invoke another skill from this router. Only present options.
+Present the ECP audit command and direct the user to it.
+For automated callers: skip this router and invoke /ecp:audit directly.
+Never invoke another skill from this router. Only present the option.
 </objective>
 
 <quick_start>
-Available commands:
+ECP is an audit engine. One command:
 
-/ecp:audit [url-or-path]           Full audit with plan, review, and build phases
-/ecp:build [description]           Build a new ecommerce page from scratch
-/ecp:quick-scan [url-or-desc]      Quick scan — one focus area, 3-5 quick wins
-/ecp:compare [url] [competitor]    1:1 competitor comparison with gap analysis
-/ecp:resume [--engagement-id <id>] List & resume in-progress engagements
+/ecp:audit [url]    Audit an ecommerce page — cited findings + Priority Path + annotated visual report
 
-Output flags: --visual (generate annotated screenshot report), --no-visual (skip visual report prompt)
-Device flags: --device mobile|laptop|desktop or comma pair (e.g., --device mobile,desktop) for two-device mode
-Focus flags: --focus cro|seo|pricing|trust|visual|mobile|content|checkout (comma-separated for multiple, default is full cross-domain audit)
-Common flags: --auto, --force, --min-priority, --platform
+Output flags: --visual (generate annotated visual report), --no-visual (skip the report prompt)
+Device flags: --device mobile|laptop|desktop, or a comma pair (e.g., --device mobile,desktop) for two-device mode
+Focus flags: --focus cro|seo|pricing|trust|visual|mobile|content|checkout (comma-separated; default is full cross-domain audit)
+Common flags: --auto, --deep, --min-priority, --platform, --engagement-id
+
+Build, compare, quick-scan, and resume are out of scope in this build — see product.md.
 </quick_start>
 
 <instructions>
-If $ARGUMENTS contains a URL or file path, suggest: "It looks like you want to audit a page. Run `/ecp:audit $ARGUMENTS` to start."
+If $ARGUMENTS contains a URL, suggest: "Run `/ecp:audit $ARGUMENTS` to start the audit."
 
-If $ARGUMENTS contains a description of something to build, suggest: "It sounds like you want to build something new. Run `/ecp:build $ARGUMENTS` to start."
-
-Otherwise, present the command table above and ask: "What would you like to do?"
+Otherwise, present the command above and ask: "What page would you like to audit? Share a URL."
 </instructions>

@@ -19,9 +19,9 @@ The router keeps the active execution surface small and makes the source of trut
 
 ## v1 To v2 Dispatch Context
 
-The old skill carried a long inline note from Phase H, dated 2026-04-28. The important context is that v2 flipped most roles from teammate dispatch to one-shot subagent dispatch. Cluster specialists and multi-planner peers stayed as teammates because they are the roles that benefit from team context or peer negotiation.
+The old skill carried a long inline note from Phase H, dated 2026-04-28. The important context is that v2 flipped most roles from teammate dispatch to one-shot subagent dispatch. Cluster specialists stayed as teammates because they benefit from the shared engagement workspace.
 
-The runtime rule now lives in `contracts/dispatch-contract.md`. When the old prose says "spawn the X teammate" for acquirer, ethics, synthesizer, single planner, reviewer, or builder, the v2 interpretation is a `Task` subagent. Cluster specialists and multi-planner peers remain `Agent` teammates.
+The runtime rule now lives in `contracts/dispatch-contract.md`. When the old prose says "spawn the X teammate" for acquirer, ethics, or synthesizer, the v2 interpretation is a `Task` subagent. Cluster specialists remain `Agent` teammates.
 
 ## Acquisition And Device Context
 
@@ -99,12 +99,7 @@ Cluster failure has a different recovery model: failed specialist work becomes S
 | phase_synthesize_v2 | `contracts/synthesizer-v2.md` |
 | audit_assembly | `contracts/audit-assembly.md`, `scripts/assemble-audit.py` |
 | progress_comparison | `contracts/progress-comparison.md` |
-| phase_plan and checkpoint_plan | `workflows/plan.md`, `contracts/multi-planner-protocol.md` |
-| phase_review and checkpoint_review | `workflows/review.md`, `contracts/relay-loop-protocol.md` |
-| phase_build and checkpoint_build | `workflows/build.md` |
-| go_back_protocol | `contracts/go-back-protocol.md` |
 | report_export | `contracts/report-export.md` |
-| ab_scaffold | `workflows/ab-scaffold.md` |
 | ethics | `references/ethics-gate.md`, `contracts/ethics-subagent-v2.md` |
 | reference_freshness | reference file `RESEARCH_DATE` watermarks and checkpoint warnings |
 
