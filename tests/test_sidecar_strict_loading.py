@@ -183,39 +183,11 @@ class TestTestSpecialistCliFailsLoudOnBrokenSidecar:
 # ---------------------------------------------------------------------------
 
 
-class TestBuildCanonicalFRefsCliFailsLoudOnBrokenSidecar:
-    """scripts/build_canonical_f_refs.py CLI must exit non-zero when an
-    anchor-candidates-{device}.json sidecar is present but broken."""
-
-    SCRIPT = REPO_ROOT / "scripts" / "build_canonical_f_refs.py"
-
-    def test_broken_sidecar_in_engagement_dir_fails_loud(self, tmp_path: Path):
-        eng = tmp_path / "engagement"
-        eng.mkdir()
-        # Required for the script to run: meta.json + one cluster emission
-        (eng / "meta.json").write_text(json.dumps({
-            "schema_version": 3, "id": "2026-05-18-deadbeef",
-            "created": "2026-05-18T00:00:00.000Z", "updated": "2026-05-18T00:00:00.000Z",
-            "type": "audit", "phase": "audit", "engagement_status": "complete",
-            "reconciled": True,
-            "page": {"url": "x", "url_normalized": "x", "file_path": None, "type": "product"},
-            "platform": "shopify", "source_mode": "url-dual",
-            "devices_requested": ["desktop"], "devices_scanned": ["desktop"],
-            "clusters_used": ["pricing"], "scope": "focused",
-            "min_priority": None, "compare_target": None, "quick_scan": False,
-            "blocked": False, "plans_queue": [], "screenshot_input": None,
-        }), encoding="utf-8")
-        # Broken sidecar — file exists but is unparseable
-        (eng / "anchor-candidates-desktop.json").write_text("not json", encoding="utf-8")
-
-        result = subprocess.run(
-            [sys.executable, str(self.SCRIPT), "--engagement-dir", str(eng)],
-            capture_output=True, text=True, cwd=str(REPO_ROOT),
-        )
-        assert result.returncode != 0, (
-            f"Broken sidecar must fail the script. stderr={result.stderr!r}"
-        )
-        assert "anchor-candidates sidecar at" in result.stderr
+# NOTE: the former TestBuildCanonicalFRefsCliFailsLoudOnBrokenSidecar was removed
+# when build_canonical_f_refs.py was consolidated into
+# `lead_prep.py build-canonical-frefs` (the single canonical-f-refs builder, which
+# now writes canonical-f-refs.json). TestLeadPrepCliFailsLoudOnBrokenSidecar below
+# covers the same fail-loud-on-broken-sidecar intent against the surviving builder.
 
 
 class TestLoaderBuildCanonicalViewRaisesOnBrokenSidecar:

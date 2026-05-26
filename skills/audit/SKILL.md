@@ -131,19 +131,19 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
    ```powershell
    python scripts/lead_prep.py build-canonical-frefs --engagement docs/ecp/{id}
    ```
-   Writes `canonical-f-refs-manifest.json` + `.md`. It calls `report/v2_loader.build_canonical_view`, so the manifest is exactly the renderer's allowlist and cannot drift. These are the canonical f_refs the synthesizer must cite.
+   Writes `canonical-f-refs.json` (`{valid_refs, by_canonical_ref}` — the shape steps 4-5 consume) plus `canonical-f-refs-manifest.json` + `.md` (tooling + the markdown the synthesizer prompt inlines). All three are serialized from one `report/v2_loader.build_canonical_view` call, so they are exactly the renderer's allowlist and cannot drift. These are the canonical f_refs the synthesizer must cite.
 
 3. **Trim each device baton to referenced elements** before synthesizer dispatch (mandatory — prevents 1M-context overflow). Use `scripts/assembly/synth_input.trim_baton_file`, which writes a trimmed baton plus a `baton-{device}-trimmed-summary.json` sidecar. The synthesizer prompt points at the trimmed batons.
 
 4. **Prepare and dispatch the synthesizer** (Task subagent) per `contracts/synthesizer-subagent.md`, feeding it the cluster emissions, ethics findings, the trimmed batons (step 3), and the canonical f_refs (step 2):
    ```powershell
-   python scripts/test-specialist.py prepare-synthesizer --engagement-id {id} --cluster-emission docs/ecp/{id}/cluster-{cluster}-{device}.json --ethics-findings-path docs/ecp/{id}/ethics-findings.json --desktop-baton-path <trimmed-desktop-baton> --mobile-baton-path <trimmed-mobile-baton> --canonical-f-refs-path <canonical-f-refs> --out docs/ecp/{id}/.prompts/synthesizer.txt
+   python scripts/test-specialist.py prepare-synthesizer --engagement-id {id} --cluster-emission docs/ecp/{id}/cluster-{cluster}-{device}.json --ethics-findings-path docs/ecp/{id}/ethics-findings.json --desktop-baton-path <trimmed-desktop-baton> --mobile-baton-path <trimmed-mobile-baton> --canonical-f-refs-path docs/ecp/{id}/canonical-f-refs.json --out docs/ecp/{id}/.prompts/synthesizer.txt
    ```
    (`--cluster-emission` is repeated once per emission.) The synthesizer emits `synthesizer-emission-v1.json` plus `audit-desktop.md` / `audit-mobile.md`.
 
 5. **Validate the synthesizer emission** (Phase F.4) against the canonical f_refs allowlist:
    ```powershell
-   python scripts/test-specialist.py validate --emission-path docs/ecp/{id}/synthesizer-emission-v1.json --schema synthesizer-emission --finalized-findings <canonical-f-refs>
+   python scripts/test-specialist.py validate --emission-path docs/ecp/{id}/synthesizer-emission-v1.json --schema synthesizer-emission --finalized-findings docs/ecp/{id}/canonical-f-refs.json
    ```
 
 6. **Run the cross-device drift gate** (Phase F.3):

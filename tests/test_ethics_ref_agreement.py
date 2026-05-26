@@ -1,6 +1,6 @@
 """End-to-end agreement on ethics f_refs across pipeline surfaces.
 
-This test invokes the real ``scripts/build_canonical_f_refs.py`` as a
+This test invokes the real ``scripts/lead_prep.py build-canonical-frefs`` as a
 subprocess against the synthetic v2 fixture, then asserts:
 
 1. The generated ``canonical-f-refs.json`` includes every ADJACENT/BLOCK
@@ -39,7 +39,7 @@ from report.v2_loader import (
 )
 
 FIXTURE_SOURCE = REPO_ROOT / "tests" / "fixtures" / "v2_engagement_with_adjacent_ethics"
-SCRIPT = REPO_ROOT / "scripts" / "build_canonical_f_refs.py"
+SCRIPT = REPO_ROOT / "scripts" / "lead_prep.py"
 
 
 @pytest.fixture
@@ -65,7 +65,7 @@ def test_build_canonical_f_refs_includes_adjacent_ethics(fixture_engagement: Pat
     ethics finding present in ethics-findings.json. Closes the 2026-05-18
     namespace-drift bug."""
     result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--engagement-dir", str(fixture_engagement)],
+        [sys.executable, str(SCRIPT), "build-canonical-frefs", "--engagement", str(fixture_engagement)],
         capture_output=True,
         text=True,
         cwd=str(REPO_ROOT),
@@ -103,7 +103,7 @@ def test_canonical_and_loader_assign_same_f_n_to_ethics(fixture_engagement: Path
     finalized output (in-process)."""
     # Build canonical-f-refs via subprocess (real builder)
     subprocess.run(
-        [sys.executable, str(SCRIPT), "--engagement-dir", str(fixture_engagement)],
+        [sys.executable, str(SCRIPT), "build-canonical-frefs", "--engagement", str(fixture_engagement)],
         check=True,
         capture_output=True,
         text=True,
@@ -162,7 +162,7 @@ def test_real_v2_loader_canonical_view_includes_adjacent_ethics(
     """
     # 1. Build canonical-f-refs.json via the real script subprocess
     subprocess.run(
-        [sys.executable, str(SCRIPT), "--engagement-dir", str(fixture_engagement)],
+        [sys.executable, str(SCRIPT), "build-canonical-frefs", "--engagement", str(fixture_engagement)],
         check=True,
         capture_output=True,
         text=True,

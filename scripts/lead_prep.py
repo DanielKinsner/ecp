@@ -22,8 +22,10 @@ gaps that surfaced during 2026-05-02 (engagement 9cd2a2ac) post-mortem:
    diverges from priority_path's ``visual-cta F-01..F-06``, and the
    render-time filter (``v2_loader.load_v2_priority_path``, line ~691)
    drops every Priority Path story for falling below the 2-actionable-
-   ref threshold. Writes ``canonical-f-refs-manifest.json`` and a
-   markdown ``canonical-f-refs-manifest.md`` for prompt inlining.
+   ref threshold. Writes ``canonical-f-refs.json`` ({valid_refs,
+   by_canonical_ref} — the shape the synthesizer dispatch consumes),
+   ``canonical-f-refs-manifest.json``, and a markdown
+   ``canonical-f-refs-manifest.md`` for prompt inlining.
 
 Usage::
 
@@ -172,7 +174,12 @@ def build_canonical_frefs(engagement: Path) -> int:
     integers because the renderer re-derives them at parse time and
     rejects mismatched refs as out-of-allowlist.
 
-    Writes two files:
+    Writes three files:
+    - ``canonical-f-refs.json`` — {valid_refs, by_canonical_ref}, the shape
+      ``test-specialist.py prepare-synthesizer`` (--canonical-f-refs-path) and
+      ``validate`` (--finalized-findings) consume. Serialized from the SAME
+      by_ref the manifest is built from, so the two artifacts cannot drift.
+      This replaces the dropped ``build_canonical_f_refs.py``.
     - ``canonical-f-refs-manifest.json`` — structured for tooling
     - ``canonical-f-refs-manifest.md`` — for inlining into the
       synthesizer prompt under the ``{{canonical_f_refs_manifest}}``
@@ -273,7 +280,22 @@ def build_canonical_frefs(engagement: Path) -> int:
     md_path = engagement / "canonical-f-refs-manifest.md"
     md_path.write_text("\n".join(md_lines), encoding="utf-8")
 
-    print(f"[ok] wrote {json_path.name} and {md_path.name}")
+    # Consumer-shape canonical-f-refs.json: the synthesizer dispatch
+    # (test-specialist.py prepare-synthesizer --canonical-f-refs-path) and
+    # synthesizer-emission validation (--finalized-findings) read
+    # {valid_refs, by_canonical_ref}. Serialize the SAME by_ref the manifest
+    # is built from so the two artifacts cannot drift (single source of truth
+    # = build_canonical_view). Replaces the dropped build_canonical_f_refs.py.
+    consumer_path = engagement / "canonical-f-refs.json"
+    consumer_path.write_text(
+        json.dumps(
+            {"valid_refs": sorted(by_ref.keys()), "by_canonical_ref": by_ref},
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    print(f"[ok] wrote {consumer_path.name}, {json_path.name}, and {md_path.name}")
     print(f"     {len(manifest_entries)} canonical f_refs across {len(by_cluster)} cluster(s)")
     return 0
 
