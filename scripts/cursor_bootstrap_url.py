@@ -33,7 +33,6 @@ import hashlib
 import importlib.util
 import json
 import math
-import shlex
 import shutil
 import struct
 import subprocess
@@ -1304,20 +1303,6 @@ def main() -> int:
             f"PRE_HYDRATION_WARNING: {str(r.pre_hydration_warning).lower()}\n"
             f"HYBRID_RECOVERY: {str(r.recovery_pass).lower()}"
         )
-    print("next_steps:")
-    print("  1) write quick-scan.md (or audit.md) with fenced FINDING blocks + **Viewport:** line; see skills/quick-scan-cursor/SKILL.md")
-    print("  2) python .cursor-plugin/scripts/validate_meta.py " + shlex.quote(str(eng_dir / "meta.json")))
-    print(
-        "  3) python .cursor-plugin/scripts/ecp_run_visual_reports.py --engagement "
-        + shlex.quote(str(eng_dir))
-        + " --all-devices --audit quick-scan.md"
-        if len(results) > 1
-        else (
-            "  3) python .cursor-plugin/scripts/ecp_run_visual_reports.py --engagement "
-            + shlex.quote(str(eng_dir))
-            + f" --device {results[0].device} --audit quick-scan.md"
-        )
-    )
     return 0
 
 

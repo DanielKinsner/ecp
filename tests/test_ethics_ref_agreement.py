@@ -71,7 +71,7 @@ def test_build_canonical_f_refs_includes_adjacent_ethics(fixture_engagement: Pat
         cwd=str(REPO_ROOT),
     )
     assert result.returncode == 0, (
-        f"build_canonical_f_refs.py exited {result.returncode}\n"
+        f"lead_prep build-canonical-frefs exited {result.returncode}\n"
         f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
     )
 
@@ -91,7 +91,7 @@ def test_build_canonical_f_refs_includes_adjacent_ethics(fixture_engagement: Pat
     assert not missing, (
         f"canonical-f-refs.json is missing ADJACENT/BLOCK ethics findings: "
         f"{sorted(missing)}\n"
-        f"This is the 2026-05-18 bug. Confirm build_canonical_f_refs.py uses "
+        f"This is the 2026-05-18 bug. Confirm lead_prep build-canonical-frefs uses "
         f"deduped.all_actionable() (not deduped.kept) when calling "
         f"FinalizedFindings.build."
     )
@@ -203,7 +203,7 @@ def test_real_v2_loader_canonical_view_includes_adjacent_ethics(
     # 4. The two real consumers must agree on the (cluster, F-N) keys for
     #    those findings — same content_hash → same display_index.
     assert canon_ethics_fail_refs == loader_ethics_fail_refs, (
-        f"build_canonical_f_refs.py (subprocess) and "
+        f"lead_prep build-canonical-frefs (subprocess) and "
         f"scripts.report.v2_loader.build_canonical_view (in-process) "
         f"disagree on ethics-FAIL (cluster, F-N) keys.\n"
         f"  canon only:  {sorted(canon_ethics_fail_refs - loader_ethics_fail_refs)}\n"

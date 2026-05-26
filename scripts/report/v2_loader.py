@@ -13,7 +13,7 @@ v2 engagement input contract:
 - ethics-findings.json       single page-scope ethics emission
 - baton.json / baton-mobile.json  v1-format baton (engagement dir; has screenshots[])
 - canonical-f-refs.json (optional) cross-device-merged manifest from
-                                    .phase-b-tmp/build_canonical_f_refs.py.
+                                    lead_prep.py build-canonical-frefs.
                                     If absent, loader re-derives the merge
                                     inline via _normalize_title heuristic.
 
@@ -293,7 +293,8 @@ def build_canonical_view(
 ) -> tuple[dict, dict]:
     """Produce the canonical-merged view via the full assembly pipeline.
 
-    Mirrors .phase-b-tmp/build_canonical_f_refs.py exactly:
+    Runs the canonical assembly pipeline (the same path lead_prep.py
+    build-canonical-frefs serializes to canonical-f-refs.json):
 
         parse (json_parser.parse_emission_file)
         → deduplicate_v2 (dedup.deduplicate_v2)
@@ -326,8 +327,8 @@ def build_canonical_view(
     # Phase 4a hardening (2026-05-18) — load anchor-candidates sidecars
     # from the parent engagement dir if present so candidate_id resolution
     # happens at parse time. The renderer must agree with
-    # build_canonical_f_refs.py on canonical ID assignment, which means
-    # both consumers must pass the same sidecar into parse_emission_file.
+    # lead_prep.py build-canonical-frefs on canonical ID assignment, which
+    # means both consumers must pass the same sidecar into parse_emission_file.
     sidecar_by_device: dict[str, dict | None] = {
         "desktop": None, "mobile": None, "laptop": None, "page": None,
     }
@@ -429,7 +430,7 @@ def build_canonical_view(
     # DedupeResult.all_actionable() docstring + tests/test_dedup_consumer_parity.py).
     # Pre-fix, ethics_findings was dropped here, leaving the Ethics tab empty
     # while CLEAR-ish ethics rows leaked into the cluster panel. Post-fix, this
-    # consumer and build_canonical_f_refs.py share the same input universe.
+    # consumer and lead_prep.py build-canonical-frefs share the same input universe.
     finalized = FinalizedFindings.build(deduped.all_actionable(), clusters_used)
 
     raw_by_ref: dict[str, dict] = {}
@@ -505,7 +506,7 @@ def build_canonical_view(
     # Layer-2.5 cross-device duplicate merge: delegated to the shared
     # implementation in scripts/assembly/pipeline.py (Phase H promotion,
     # 2026-04-28). The same algo is also called by
-    # .phase-b-tmp/build_canonical_f_refs.py — keeping one source of
+    # lead_prep.py build-canonical-frefs — keeping one source of
     # truth eliminates the divergence risk flagged in the Phase G handoff.
     from assembly.pipeline import cross_device_title_merge
     return cross_device_title_merge(raw_by_ref)

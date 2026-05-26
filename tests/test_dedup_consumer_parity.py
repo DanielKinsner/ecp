@@ -4,7 +4,7 @@ The 2026-05-18 ethics namespace drift bug was caused by two consumers of
 ``deduplicate_v2()`` disagreeing on which buckets to feed into
 ``FinalizedFindings.build``:
 
-  * ``scripts/build_canonical_f_refs.py`` used ``deduped.kept`` only
+  * the canonical-f-refs builder used ``deduped.kept`` only
   * ``scripts/report/v2_loader.py`` used ``deduped.kept + deduped.ethics_findings``
 
 Result: canonical-f-refs.json dropped the 3 ADJACENT ethics findings while
@@ -97,7 +97,7 @@ def test_canonical_refs_builder_includes_adjacent_ethics() -> None:
     """Regression test for the 2026-05-18 drift bug.
 
     Run the canonical-refs build path (as exercised by
-    ``scripts/build_canonical_f_refs.py``) against the fixture and assert
+    ``lead_prep.py build-canonical-frefs``) against the fixture and assert
     that ADJACENT ethics findings appear in the finalized output. Pre-fix,
     only CLEAR ethics findings made it through because the builder called
     ``FinalizedFindings.build(deduped.kept, ...)`` instead of using
@@ -106,7 +106,7 @@ def test_canonical_refs_builder_includes_adjacent_ethics() -> None:
     findings, clusters = _load_fixture_findings()
     deduped = deduplicate_v2(findings)
 
-    # Mirror scripts/build_canonical_f_refs.py
+    # Mirror lead_prep build-canonical-frefs
     finalized = FinalizedFindings.build(deduped.all_actionable(), clusters)
 
     ethics_in_final = [f for f in finalized.findings if f.cluster == "ethics"]
@@ -115,7 +115,7 @@ def test_canonical_refs_builder_includes_adjacent_ethics() -> None:
     assert fail_ethics, (
         "Canonical-refs builder dropped FAIL (ADJACENT/BLOCK) ethics "
         "findings — this is the 2026-05-18 bug. Verify "
-        "build_canonical_f_refs.py uses deduped.all_actionable(), not "
+        "the canonical-f-refs builder uses deduped.all_actionable(), not "
         "deduped.kept."
     )
 
@@ -134,7 +134,7 @@ def test_renderer_loader_includes_adjacent_ethics() -> None:
     # Mirror scripts/report/v2_loader.py (post-fix)
     loader_finalized = FinalizedFindings.build(deduped.all_actionable(), clusters)
 
-    # Mirror scripts/build_canonical_f_refs.py (post-fix)
+    # Mirror lead_prep build-canonical-frefs (post-fix)
     canon_finalized = FinalizedFindings.build(deduped.all_actionable(), clusters)
 
     loader_refs = {(f.cluster, f.display_index) for f in loader_finalized.findings}

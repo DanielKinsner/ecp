@@ -471,8 +471,8 @@ class SidecarLoadError(Exception):
 
     Phase 4b hardening 2 (2026-05-18): fail-loud on present-but-broken
     sidecars closes the silent-bypass class Codex caught — every sidecar
-    loader (test-specialist.py, build_canonical_f_refs.py, v2_loader.py,
-    lead_prep.py, build_synthesizer_emission_fallback.py) used to swallow
+    loader (test-specialist.py, v2_loader.py, lead_prep.py,
+    build_synthesizer_emission_fallback.py) used to swallow
     OSError + JSONDecodeError and treat the result as "no sidecar," which
     silently disabled the mandatory candidate-registry rule.
 
@@ -503,8 +503,8 @@ def load_anchor_candidates_sidecar_strict(path: "Path") -> dict | None:
     cannot be parsed.
 
     This is the canonical sidecar loader for every consumer in the
-    pipeline (test-specialist.py, build_canonical_f_refs.py,
-    v2_loader.py, lead_prep.py, build_synthesizer_emission_fallback.py).
+    pipeline (test-specialist.py, v2_loader.py, lead_prep.py,
+    build_synthesizer_emission_fallback.py).
     Centralizing the "missing vs broken" decision in one helper prevents
     the fail-open class Codex caught from re-emerging in a new caller.
     """

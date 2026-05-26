@@ -1,8 +1,8 @@
 """Phase 4b hardening 2 — every anchor-candidates sidecar consumer must
 fail loud on present-but-broken sidecars (Codex 2026-05-18 review of 64ce7f2).
 
-Pre-fix, every consumer (test-specialist.py, build_canonical_f_refs.py,
-v2_loader.py, lead_prep.py, build_synthesizer_emission_fallback.py)
+Pre-fix, every consumer (test-specialist.py, v2_loader.py, lead_prep.py,
+build_synthesizer_emission_fallback.py)
 swallowed OSError + JSONDecodeError and silently treated a broken sidecar
 as "no sidecar" — which disabled the Phase 4b mandatory candidate-registry
 rule without any visible signal.
@@ -177,8 +177,8 @@ class TestTestSpecialistCliFailsLoudOnBrokenSidecar:
 
 
 # ---------------------------------------------------------------------------
-# Library consumers: build_canonical_f_refs._load_sidecar, v2_loader
-# build_canonical_view, lead_prep.build_canonical_frefs,
+# Library consumers: v2_loader.build_canonical_view,
+# lead_prep.build_canonical_frefs,
 # build_synthesizer_emission_fallback.collect_findings
 # ---------------------------------------------------------------------------
 

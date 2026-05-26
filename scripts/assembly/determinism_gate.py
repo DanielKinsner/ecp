@@ -367,8 +367,8 @@ def aggregate_findings_from_engagement(engagement_dir: Path) -> list[dict]:
     (cluster-by-cluster, then ethics) for deterministic indexing across runs.
 
     Mirrors the file-discovery pattern from
-    ``scripts/build_canonical_f_refs.py`` — same source-of-truth as the
-    canonical f_refs builder uses, so determinism comparison aligns with
+    ``scripts/lead_prep.py build-canonical-frefs`` — same source-of-truth as
+    the canonical f_refs builder uses, so determinism comparison aligns with
     what the dedup engine sees.
 
     Args:
