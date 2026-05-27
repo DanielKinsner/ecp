@@ -290,7 +290,7 @@ def _normalize_title(t: str) -> str:
 def build_canonical_view(
     cluster_emission_paths: list[Path],
     ethics_findings_path: Path | None,
-) -> tuple[dict, dict]:
+) -> tuple[dict, dict, list[dict]]:
     """Produce the canonical-merged view via the full assembly pipeline.
 
     Runs the canonical assembly pipeline (the same path lead_prep.py
@@ -306,9 +306,20 @@ def build_canonical_view(
     and the renderer parses those same headings. Diverging algos produce
     f_ref mismatches between markdown and renderer.
 
-    Returns (by_canonical_ref, merge_aliases). Same shape as the prior
-    (now-removed) inline-build implementation, but built from the assembly
-    Finding dataclasses rather than raw dicts.
+    Returns ``(by_canonical_ref, merge_aliases, dropped_emissions)``.
+
+    ``dropped_emissions`` is a list of dicts
+    ``{"path", "error_type", "error_message"}`` for every cluster emission
+    (and the ethics emission) that ``parse_emission_file`` rejected as
+    schema-invalid and was therefore excluded from the canonical view.
+    Empty list = clean run; the caller may ignore. Non-empty = cluster
+    coverage silently shrank and the caller MUST treat this as a phase-
+    blocking signal. Pre-G16 these failures were swallowed by a bare
+    ``except Exception: continue``, which caused engagement
+    ``docs/ecp/2026-05-27-52f53a53`` to lose 6 of 12 cluster files
+    (~25 high-severity FAIL findings vanished) with all structural and
+    substantive canaries still PASS — exactly the §0 untraceable-
+    misleading failure mode this surfacing prevents.
     """
     # Lazy-import scripts/assembly so v2_loader stays usable for callers
     # that just want the markdown parser without pulling jsonschema deps.
@@ -323,6 +334,11 @@ def build_canonical_view(
     findings_assembly = []
     clusters_used: list[str] = []
     raw_extras_by_local: dict[tuple, dict] = {}  # only for fields the dataclass doesn't carry
+    # G16 (2026-05-27): record every emission that fails parse_emission_file
+    # so the caller can surface it. Pre-G16 these were silently dropped via
+    # `except Exception: continue` — see function docstring for the failure
+    # case this surfacing is built to prevent.
+    dropped_emissions: list[dict] = []
 
     # Phase 4a hardening (2026-05-18) — load anchor-candidates sidecars
     # from the parent engagement dir if present so candidate_id resolution
@@ -361,7 +377,18 @@ def build_canonical_view(
         )
         try:
             res = parse_emission_file(p, anchor_candidates_sidecar=sc)
-        except Exception:
+        except Exception as exc:
+            # G16: was a bare `continue` that silently dropped the whole
+            # cluster file. Record (path, error) instead so lead_prep.py
+            # build-canonical-frefs can phase-block the audit when drops
+            # occur. The cluster's findings are still excluded from this
+            # build (we cannot trust partially-parsed emissions), but the
+            # operator now sees what was lost.
+            dropped_emissions.append({
+                "path": p.name,
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+            })
             continue
         findings_assembly.extend(res.findings)
         if res.cluster not in clusters_used:
@@ -421,8 +448,15 @@ def build_canonical_view(
                     "source_url": rf.get("source_url"),
                     "proposed_anchor": rf.get("proposed_anchor"),
                 }
-        except Exception:
-            pass
+        except Exception as exc:
+            # G16: ethics drops are equally invisible pre-fix. Match the
+            # cluster-emission contract — record the drop, exclude the
+            # ethics findings from this build, let the caller decide.
+            dropped_emissions.append({
+                "path": ethics_findings_path.name,
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+            })
 
     deduped = deduplicate_v2(findings_assembly)
     # Include BLOCK/ADJACENT ethics findings alongside cluster findings via the
@@ -509,7 +543,8 @@ def build_canonical_view(
     # lead_prep.py build-canonical-frefs — keeping one source of
     # truth eliminates the divergence risk flagged in the Phase G handoff.
     from assembly.pipeline import cross_device_title_merge
-    return cross_device_title_merge(raw_by_ref)
+    by_canonical_ref, merge_aliases = cross_device_title_merge(raw_by_ref)
+    return by_canonical_ref, merge_aliases, dropped_emissions
 
 
 # ---------------------------------------------------------------------------
@@ -551,7 +586,7 @@ def load_v2_findings(
     if ethics_findings_path is None:
         ethics_findings_path = _engagement_ethics_findings_path(engagement_dir)
 
-    by_canonical_ref, _aliases = build_canonical_view(
+    by_canonical_ref, _aliases, _drops = build_canonical_view(
         cluster_emission_paths, ethics_findings_path
     )
 
@@ -1113,7 +1148,7 @@ def load_v2_engagement(
         ethics_findings_path=resolved_ethics_path,
     )
     actionable_refs = {f["f_ref"] for f in findings if f.get("f_ref")}
-    _, ref_aliases = build_canonical_view(resolved_cluster_paths, resolved_ethics_path)
+    _, ref_aliases, _drops = build_canonical_view(resolved_cluster_paths, resolved_ethics_path)
     priority_path_stories = load_v2_priority_path(
         engagement_dir,
         actionable_refs,

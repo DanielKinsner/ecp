@@ -49,7 +49,7 @@ class TestCanonicalFrefsParity(unittest.TestCase):
         self.assertTrue(manifest_refs, "manifest must not be empty")
 
         # The renderer's true allowlist, computed independently from the same inputs.
-        by_ref, _aliases = build_canonical_view(
+        by_ref, _aliases, _drops = build_canonical_view(
             _engagement_cluster_emission_paths(self.eng),
             _engagement_ethics_findings_path(self.eng),
         )

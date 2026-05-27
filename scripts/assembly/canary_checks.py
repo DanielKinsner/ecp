@@ -514,7 +514,7 @@ def check_priority_path_count_parity(
                 load_v2_priority_path,
             )
             actionable_refs = {f["f_ref"] for f in load_v2_findings(engagement_dir, device)}
-            _, aliases = build_canonical_view(
+            _, aliases, _drops = build_canonical_view(
                 _engagement_cluster_emission_paths(engagement_dir),
                 _engagement_ethics_findings_path(engagement_dir),
             )
@@ -571,6 +571,135 @@ def _ethics_refs_in(audit_path: Path) -> list[str]:
         if cluster == "ethics":
             refs.append(f"ethics F-{idx:02d}")
     return refs
+
+
+# ---------------------------------------------------------------------------
+# Canary 5 — clusters_represented (G16, 2026-05-27)
+# ---------------------------------------------------------------------------
+
+
+def check_clusters_represented(
+    engagement_dir: Path,
+) -> CanaryResult:
+    """G16: every requested CRO cluster must have at least one canonical f_ref.
+
+    Catches the silent-drop failure mode where ``build_canonical_view`` 's
+    pre-G16 bare ``except Exception: continue`` swallowed schema-invalid
+    cluster emissions wholesale. Run ``docs/ecp/2026-05-27-52f53a53`` lost
+    6 of 12 cluster files (trust-credibility and content-seo entirely,
+    plus the desktop halves of performance-ux and product-media) and the
+    operator received an audit billed as "comprehensive (6 clusters)"
+    that in fact rendered findings from only 2 CRO clusters on desktop —
+    with all other canaries still reporting PASS. Exactly the §0
+    untraceable-misleading failure mode the trust contract forbids.
+
+    Pass criteria:
+    - Every cluster in ``meta.json["clusters_used"]`` (with ``ethics``
+      excluded — it's page-scope, not CRO) appears at least once in
+      ``canonical-f-refs.json["valid_refs"]``.
+    - ``canonical-frefs-dropped.json["dropped_count"] == 0`` (or the
+      file is absent, e.g. for pre-G16 legacy engagement fixtures).
+
+    Either condition failing fails the canary. The drops-file check
+    matters as well as the missing-cluster check because a partial-drop
+    that still leaves ≥1 finding per cluster surviving (e.g. one device
+    of a cluster fails but the other passes) would slip past a pure
+    cluster-presence check — but every drop is itself a trust violation
+    that the operator must address before phase advance.
+
+    Returns ``CanaryResult`` with detail keys:
+        - ``expected_clusters``: sorted list from ``meta.json``
+          (minus ``ethics``).
+        - ``represented_clusters``: sorted list parsed from
+          ``canonical-f-refs.json`` valid_refs (minus ``ethics``).
+        - ``missing_clusters``: sorted ``expected - represented``.
+        - ``dropped_count``: int from ``canonical-frefs-dropped.json``,
+          0 if file absent.
+        - ``dropped``: the per-emission drop records, if any.
+    """
+    meta_path = engagement_dir / "meta.json"
+    canonical_path = engagement_dir / "canonical-f-refs.json"
+    dropped_path = engagement_dir / "canonical-frefs-dropped.json"
+
+    if not meta_path.exists() or not canonical_path.exists():
+        # Pre-canonical-stage engagement (e.g., a test fixture that stops
+        # before lead_prep runs). Skip with a PASS verdict so this canary
+        # doesn't false-positive on partial fixtures.
+        return CanaryResult(
+            name="clusters_represented",
+            passed=True,
+            summary="clusters_represented: skipped (meta.json or canonical-f-refs.json absent)",
+            detail={"reason": "pre-canonical-stage engagement"},
+        )
+
+    try:
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        canon = json.loads(canonical_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        return CanaryResult(
+            name="clusters_represented",
+            passed=False,
+            summary=f"clusters_represented: FAIL -- unreadable artifacts: {e}",
+            detail={"error": str(e)},
+        )
+
+    expected = set(meta.get("clusters_used") or []) - {"ethics"}
+    valid_refs = canon.get("valid_refs") or []
+    represented = {
+        ref.split(" F-", 1)[0]
+        for ref in valid_refs
+        if isinstance(ref, str) and " F-" in ref
+    } - {"ethics"}
+    missing = expected - represented
+
+    dropped: list[dict] = []
+    dropped_count = 0
+    if dropped_path.exists():
+        try:
+            dropped_doc = json.loads(dropped_path.read_text(encoding="utf-8"))
+            dropped = list(dropped_doc.get("dropped") or [])
+            raw_count = dropped_doc.get("dropped_count")
+            dropped_count = int(raw_count) if raw_count is not None else len(dropped)
+        except (OSError, json.JSONDecodeError, TypeError, ValueError):
+            # Corrupted drops file: treat as zero drops here but the file
+            # itself becoming unreadable is a separate operator concern;
+            # don't conflate with the cluster-coverage signal.
+            pass
+
+    passed = not missing and dropped_count == 0
+    if missing and dropped_count:
+        summary = (
+            f"clusters_represented: FAIL -- {len(missing)} cluster(s) missing "
+            f"({sorted(missing)}) AND {dropped_count} emission(s) dropped"
+        )
+    elif missing:
+        summary = (
+            f"clusters_represented: FAIL -- {len(missing)} requested CRO "
+            f"cluster(s) have zero canonical f_refs: {sorted(missing)}"
+        )
+    elif dropped_count:
+        summary = (
+            f"clusters_represented: FAIL -- {dropped_count} emission(s) dropped "
+            f"by canonical view (see canonical-frefs-dropped.json)"
+        )
+    else:
+        summary = (
+            f"clusters_represented: PASS ({len(represented)}/{len(expected)} "
+            f"requested CRO clusters represented; 0 emissions dropped)"
+        )
+
+    return CanaryResult(
+        name="clusters_represented",
+        passed=passed,
+        summary=summary,
+        detail={
+            "expected_clusters": sorted(expected),
+            "represented_clusters": sorted(represented),
+            "missing_clusters": sorted(missing),
+            "dropped_count": dropped_count,
+            "dropped": dropped,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -657,8 +786,13 @@ def run_all_canaries(
     r4 = check_priority_path_count_parity(
         engagement_dir / "synthesizer-emission-v1.json", engagement_dir,
     )
+    # G16 (2026-05-27) — cluster-coverage parity. Catches engagements
+    # where build_canonical_view silently swallowed schema-invalid cluster
+    # emissions (the failure that left Run 2026-05-27-52f53a53 with 2 of
+    # 6 CRO clusters rendered on desktop while every other canary passed).
+    r5 = check_clusters_represented(engagement_dir)
 
-    results = [r1, r2, r3, r4]
+    results = [r1, r2, r3, r4, r5]
 
     visual_quality_block: dict | None = None
     if include_visual_quality:

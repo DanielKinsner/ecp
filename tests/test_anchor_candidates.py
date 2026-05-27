@@ -815,7 +815,7 @@ class TestPublicLoaderPreservesVisualEvidence:
 
         eng = self._engagement(tmp_path)
         cluster_paths = sorted(eng.glob("cluster-*.json"))
-        by_canon, _aliases = build_canonical_view(cluster_paths, None)
+        by_canon, _aliases, _drops = build_canonical_view(cluster_paths, None)
 
         # At least one canonical ref must carry visual_evidence with the
         # producer-authored type and the resolved baton_index.
@@ -992,7 +992,7 @@ class TestCrossDeviceVisualEvidence:
 
         eng = self._engagement_with_different_e_indexes(tmp_path)
         cluster_paths = sorted(eng.glob("cluster-*.json"))
-        by_canon, _aliases = build_canonical_view(cluster_paths, None)
+        by_canon, _aliases, _drops = build_canonical_view(cluster_paths, None)
 
         # The merged finding's canonical meta carries per-device VE
         merged = next(iter(by_canon.values()))

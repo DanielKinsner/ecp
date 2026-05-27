@@ -491,10 +491,12 @@ class TestRunAllCanaries(unittest.TestCase):
         out = run_all_canaries(self.engagement_dir, audited_domain="slingmods.com")
         self.assertTrue(out["all_passed"])
         # Phase 6 (2026-05-18) added priority_path_count_parity as the
-        # fourth canary; older runs expected 3. visual_quality block adds
-        # zero results when no review-state files are present (Phase 3
-        # default-on path).
-        self.assertEqual(len(out["results"]), 4)
+        # fourth canary; older runs expected 3. G16 (2026-05-27) added
+        # clusters_represented as the fifth — it skips with PASS on
+        # fixtures that don't have canonical-f-refs.json. visual_quality
+        # block adds zero results when no review-state files are present
+        # (Phase 3 default-on path).
+        self.assertEqual(len(out["results"]), 5)
 
     def test_aggregates_failure(self):
         # Ethics — block without source_url fails

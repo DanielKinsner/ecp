@@ -4,6 +4,39 @@ This repo begins at **1.0.0** as a clean prune-and-re-root. Governance and scope
 defined by `product.md`; spec-level changes are logged in its §10 Spec Change Log.
 The full pre-1.0 history lives in the archived `ecommerce-conversion-psychology` repo.
 
+## Post-1.0.0 conformance — 2026-05-27 (session 4)
+
+Three live runs on the same URL (`docs/ecp/2026-05-27-b0051311`,
+`2026-05-27-af72a2ae`, `2026-05-27-52f53a53`) exposed a §0 trust-integrity failure: the
+canonical-view builder silently dropped schema-invalid cluster emissions, leaving Run C
+with 2 of 6 CRO clusters rendered on desktop and all canaries still PASS. Closed with
+G16 — see `docs/conformance-gaps.md` for the full diagnosis.
+
+- **G16 Layer 1** (this branch): `scripts/report/v2_loader.build_canonical_view` now
+  returns a 3-tuple `(by_canonical_ref, merge_aliases, dropped_emissions)`. The bare
+  `except Exception: continue` that swallowed schema-validation failures pre-G16 now
+  records `{path, error_type, error_message}` per drop. `scripts/lead_prep.py
+  build-canonical-frefs` writes `canonical-frefs-dropped.json` on every run (empty list
+  when clean so downstream canaries have a stable file) and exits code **4** when any
+  emission was dropped — phase-blocks the audit. All four production callers + four
+  test callers updated to the new return shape.
+- **G16 Layer 2** (this branch): new `check_clusters_represented` canary in
+  `scripts/assembly/canary_checks.py`. Hard-fails when any requested CRO cluster has zero
+  canonical refs OR when `canonical-frefs-dropped.json` records any drops. Wired into
+  `run_all_canaries` as canary #5. Would have caught Run C's coverage collapse on the
+  first run instead of three runs in.
+- **Regression coverage**: `tests/test_g16_canonical_view_surfaces_drops.py` +
+  `tests/test_g16_clusters_represented_canary.py`. 13 unittest-style tests; both
+  runners green.
+- **Test runners**: `pytest tests/` and `python -m unittest discover -s tests` both
+  pass green. The new G16 tests cover the 3-tuple contract, the clean-run empty-drops
+  file, the dropped-run exit-4 + stderr surface, the canary's missing-cluster fail
+  mode, the canary's drops-recorded fail mode, and the skip-on-pre-canonical-stage
+  fixture cases.
+- **Layer 3 deferred**: reconcile the specialist validator schema with the canonical-view
+  validator schema so this drift class can't recur. Non-urgent now that the failure is
+  loud — the operator sees it instantly and phase-block stops the audit.
+
 ## Post-1.0.0 conformance — 2026-05-26 (session 3)
 
 The remaining P1 gaps: the two *behavioral* gaps backing the §4.2 and §6 trust

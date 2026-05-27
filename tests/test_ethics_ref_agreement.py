@@ -178,7 +178,7 @@ def test_real_v2_loader_canonical_view_includes_adjacent_ethics(
     # 2. Invoke the REAL renderer canonical-view function — not a re-implementation
     cluster_paths = _engagement_cluster_emission_paths(fixture_engagement)
     ethics_path = _engagement_ethics_findings_path(fixture_engagement)
-    loader_by_canonical_ref, _aliases = build_canonical_view(cluster_paths, ethics_path)
+    loader_by_canonical_ref, _aliases, _drops = build_canonical_view(cluster_paths, ethics_path)
 
     # 3. Loader's canonical view must contain every ADJACENT ethics finding
     loader_ethics_fail_refs = {

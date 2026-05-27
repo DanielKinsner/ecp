@@ -215,7 +215,9 @@ def build_canonical_frefs(engagement: Path) -> int:
         return 3
 
     try:
-        by_ref, _merge_aliases = build_canonical_view(cluster_paths, ethics_path)
+        by_ref, _merge_aliases, dropped_emissions = build_canonical_view(
+            cluster_paths, ethics_path
+        )
     except Exception as e:
         print(f"[error] canonical view build failed: {e}", file=sys.stderr)
         return 1
@@ -295,8 +297,60 @@ def build_canonical_frefs(engagement: Path) -> int:
         encoding="utf-8",
     )
 
+    # G16 (2026-05-27): surface schema-validation drops that pre-G16 were
+    # silently swallowed inside build_canonical_view. Always write the
+    # dropped-emissions manifest (empty list on a clean run) so downstream
+    # tooling (the clusters_represented canary, the operator's
+    # audit-trace.log) has a stable file to read; non-empty drops list =
+    # phase block, force the lead to either re-dispatch the failing
+    # specialists or reconcile the canonical-view schema before continuing.
+    # Run 2026-05-27-52f53a53 lost 6 of 12 cluster files this way with all
+    # canaries still PASS — see contracts/trace-assertion-canary.md.
+    dropped_path = engagement / "canonical-frefs-dropped.json"
+    dropped_path.write_text(
+        json.dumps(
+            {
+                "engagement": str(engagement),
+                "dropped_count": len(dropped_emissions),
+                "dropped": dropped_emissions,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
     print(f"[ok] wrote {consumer_path.name}, {json_path.name}, and {md_path.name}")
     print(f"     {len(manifest_entries)} canonical f_refs across {len(by_cluster)} cluster(s)")
+
+    if dropped_emissions:
+        # Loud stderr so the lead's CLI invocation sees the failure; non-zero
+        # exit so phase progression blocks. The audit lead's SKILL treats a
+        # non-zero exit from build-canonical-frefs as a phase failure that
+        # MUST be addressed (re-dispatch failing specialists or, after a
+        # Layer-3 schema reconciliation lands, relax the canonical-view
+        # validator) before the synthesizer dispatch can run.
+        print(
+            f"[G16] {len(dropped_emissions)} cluster emission(s) failed schema "
+            f"validation in build_canonical_view and were excluded from the "
+            f"canonical view:",
+            file=sys.stderr,
+        )
+        for d in dropped_emissions:
+            msg = (d.get("error_message") or "")[:160]
+            print(
+                f"       {d.get('path')}  --  {d.get('error_type')}: {msg}",
+                file=sys.stderr,
+            )
+        print(
+            f"[G16] details written to {dropped_path.name}. Re-dispatch the "
+            f"failing specialists (or reconcile the canonical-view schema in "
+            f"scripts/assembly/json_parser.py) before continuing the audit.",
+            file=sys.stderr,
+        )
+        # Distinct exit code so a wrapping script can branch on G16 specifically
+        # (vs the generic exit-1 used for arg/path errors elsewhere in this CLI).
+        return 4
+
     return 0
 
 

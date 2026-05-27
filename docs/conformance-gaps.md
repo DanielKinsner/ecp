@@ -227,6 +227,50 @@ rest, verified against current `HEAD`:
 
 ---
 
+## Trust integrity (2026-05-27 session 4) — canonical-view silent drops
+
+### G16 · P1 · ✓ DONE (this branch) · `build_canonical_view` silently swallows schema-validation drops
+- **Spec:** §0 ("never untraceable, never silently misleading") · §4.1 (every finding cited
+  and anchored — but only if it's *in* the canonical view at all).
+- **Was:** [scripts/report/v2_loader.py](scripts/report/v2_loader.py) `build_canonical_view`
+  wrapped every `parse_emission_file` call in a bare `except Exception: continue`. Any
+  cluster emission that failed the canonical-view validator was dropped from the canonical
+  set with **zero observability** — no log, no canary, no trace counter. The specialist
+  validator (`test-specialist.py validate --schema cluster-emission`) and the canonical-view
+  validator (`assembly.json_parser.validate_emission_payload`) had drifted apart: specialists
+  pass the first, fail the second, and the lead's "all 12 emissions VALID" claim was true
+  for one validator while the downstream pipeline silently dropped 6 of those 12 files.
+- **Evidence:** Run `docs/ecp/2026-05-27-52f53a53` (same URL as Runs A/B for n=3):
+  31 raw FAIL findings emitted desktop → only 8 rendered. Two entire clusters
+  (`trust-credibility`, `content-seo`) plus the desktop halves of `performance-ux` and
+  `product-media` vanished. The operator received an audit billed as "comprehensive (6
+  clusters)" that actually rendered findings from only 2 CRO clusters on desktop. **All
+  structural assertions PASS; all substantive canaries PASS.** Exact §0 untraceable-misleading
+  failure mode.
+- **Done (Layer 1 — surface the drops):** `build_canonical_view` now returns a 3-tuple
+  `(by_canonical_ref, merge_aliases, dropped_emissions)`. Each dropped emission carries
+  `{path, error_type, error_message}`. `lead_prep.py build-canonical-frefs` always writes
+  `canonical-frefs-dropped.json` (empty list on a clean run so downstream tooling has a
+  stable file) and exits code **4** when drops occurred — phase-blocks the audit. All four
+  production callers + four test callers updated to the new return shape.
+- **Done (Layer 2 — clusters_represented canary):** New
+  `assembly.canary_checks.check_clusters_represented` reads `meta.json["clusters_used"]`
+  and `canonical-f-refs.json["valid_refs"]`; hard-fails if any requested CRO cluster has
+  zero canonical refs OR if `canonical-frefs-dropped.json["dropped_count"] > 0`. Wired into
+  `run_all_canaries` as canary #5. Catches both the strong signal (cluster missing) and
+  the weaker-but-real signal (drop file non-empty even when surviving emissions cover all
+  clusters).
+- **Regression:** `tests/test_g19_canonical_view_surfaces_drops.py` (5 tests: 3-tuple
+  contract, clean-run-empty-drops, invalid-cluster-recorded, CLI clean exit, CLI dropped
+  exit-4). `tests/test_g19_clusters_represented_canary.py` (8 tests: pass + fail + skip
+  cases including the headline Run C shape). Both unittest-style for `unittest discover`
+  runner.
+- **Layer 3 (deferred):** schema reconciliation — make the specialist validator and the
+  canonical-view validator share a single source of truth so this drift can't recur. Tracked
+  separately; Layers 1+2 make Layer 3 non-urgent because the failure is no longer silent.
+
+---
+
 ## Post-migration completeness (2026-05-26 session 2) · ✓ DONE
 
 Migrating from the larger plugin dropped several referenced scripts/fixtures that
@@ -269,3 +313,7 @@ pytest-style tests). Swept systematically + cross-checked vs the archive; all re
 7. ~~**G5** (editor UX)~~ — ✓ DONE (`0194e90`); taken out of order (Dan's call). The
    manual-placement queue now drains as you place.
 8. **G3 / G9 / G10** — low-priority hardening + cosmetics.
+9. ~~**G16** (canonical-view silent drops + clusters_represented canary)~~ — ✓ DONE
+   (this branch); a P1 trust-integrity fix surfaced by Run `2026-05-27-52f53a53`. Layer 3
+   (schema reconciliation between specialist + canonical-view validators) remains, but is
+   non-urgent now that the failure is loud.
