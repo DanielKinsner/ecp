@@ -31,7 +31,6 @@ gap with four modes:
 
 Authored 2026-04-27 as Phase B.3 deliverable; Phase F.4 added synthesizer
 support. See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase B + Phase F
 - contracts/specialist-prompt-v2.md (specialist template)
 - contracts/synthesizer-v2.md (synthesizer template)
 - contracts/specialists/pricing.md (per-cluster parameter file)

@@ -38,9 +38,6 @@ upstream fix; Phase K does not block on it.
 - D6: TARr@N + TARa@N reporting per arXiv 2410.03492 + 2502.20747
 
 Authored Phase K (2026-04-29). See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase K
-- docs/plans/2026-04-27-phase-k-handoff.md (operator entry doc)
-- docs/plans/2026-04-27-phase-k-runbook.md (operator execution guide)
 - scripts/assembly/finding_stability.py — pairwise stability primitive
 - scripts/assembly/canary_checks.py — Phase I substantive canaries
 - contracts/trace-assertion-canary.md — structural counter contract

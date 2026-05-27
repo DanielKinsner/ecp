@@ -57,8 +57,7 @@ Markers loader merge (deliverable 3): ``merge_markers`` takes the auto-
 mapped output and an operator overrides JSON. Operator entries WIN on
 matching f_ref or finding_index; auto-mapped entries fill any gap.
 
-Authored Phase G (2026-04-28); fix B added 2026-04-30 (architectural fix B
-in docs/plans/2026-04-30-evening-handoff.md).
+Authored Phase G (2026-04-28); architectural fix B added 2026-04-30.
 """
 from __future__ import annotations
 

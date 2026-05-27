@@ -26,7 +26,6 @@ module provides the three deterministic helpers that gate the dispatch:
    lead-reflection.md.
 
 Authored 2026-04-27 as Phase F.3 deliverable. See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase F.3
 - contracts/synthesizer-v2.md (cross-device synchronization rule)
 - schema/synthesizer-emission-v1.json (failed_synthesis_drift status)
 """

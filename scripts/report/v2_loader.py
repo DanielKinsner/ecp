@@ -216,9 +216,8 @@ def _finding_dict(cluster: str, device: str, raw: dict) -> dict:
     """Normalize a raw cluster-emission finding into a flat dict.
 
     This is a whitelist normalizer — fields not listed here silently drop on
-    their way to the renderer. New schema fields require an entry here. See
-    the field-threading callout in docs/plans/2026-04-30-evening-handoff.md
-    'Architectural fix B'.
+    their way to the renderer. New schema fields require an entry here.
+    Architectural fix B (2026-04-30): field-threading invariant.
     """
     element = raw.get("element") or {}
     proposed_anchor = raw.get("proposed_anchor")
@@ -625,9 +624,10 @@ def load_v2_findings(
         if verdict not in ("FAIL", "PARTIAL"):
             continue
 
-        # Ethics filtering: per the operator mission doc
-        # (docs/plans/2026-04-30-mission-and-direction.md), only BLOCK and
-        # ADJACENT ethics findings render in the customer deliverable.
+        # Ethics filtering: per `product.md` §4.1 (Adjacent ethics
+        # findings as a feature) + §6 (operator manual verification),
+        # only BLOCK and ADJACENT ethics findings render in the
+        # customer deliverable.
         # CLEAR is telemetry-only — not surfaced to the buyer, since
         # "mention of dark patterns is never a thing unless it's in violation."
         # Pre-fix, all ethics findings were force-rendered regardless of state.

@@ -112,7 +112,7 @@
       }
     },
     "proposed_anchor": {
-      "description": "Placement hint for findings whose target element does not exist on the page (element.baton_index = 'absent'). Tells the renderer where the missing thing should appear if it existed. Discriminated union on `kind`: 'element' anchors near a real baton element, 'section' anchors inside a baton section, 'viewport' anchors at a page-global viewport position (sticky bars, above-fold persistence). Section-bound behaviors (e.g. trust badges entering the purchase zone) MUST use kind='section' with placement='section-bottom-overlay', NOT kind='viewport' with a section-bound trigger — that keeps kind='viewport' truly page-global. The `reason` field is operator-tooltip prose ONLY; the renderer MUST NEVER parse it for placement logic. Architectural fix B (2026-04-30): replaces brittle surface-string matching for absent findings. See docs/plans/2026-04-30-evening-handoff.md 'Architectural fix B'.",
+      "description": "Placement hint for findings whose target element does not exist on the page (element.baton_index = 'absent'). Tells the renderer where the missing thing should appear if it existed. Discriminated union on `kind`: 'element' anchors near a real baton element, 'section' anchors inside a baton section, 'viewport' anchors at a page-global viewport position (sticky bars, above-fold persistence). Section-bound behaviors (e.g. trust badges entering the purchase zone) MUST use kind='section' with placement='section-bottom-overlay', NOT kind='viewport' with a section-bound trigger — that keeps kind='viewport' truly page-global. The `reason` field is operator-tooltip prose ONLY; the renderer MUST NEVER parse it for placement logic. Architectural fix B (2026-04-30): replaces brittle surface-string matching for absent findings.",
       "type": "object",
       "additionalProperties": false,
       "required": ["kind", "placement", "viewport"],
@@ -583,7 +583,7 @@
       }
     },
     {
-      "description": "Findings whose element.baton_index is 'absent' MUST emit proposed_anchor. Without it the renderer falls back to a generic top-of-page banner indicator that visually flattens every absent finding to the same point on the page. Architectural fix B (2026-04-30) — see docs/plans/2026-04-30-evening-handoff.md.",
+      "description": "Findings whose element.baton_index is 'absent' MUST emit proposed_anchor. Without it the renderer falls back to a generic top-of-page banner indicator that visually flattens every absent finding to the same point on the page. Architectural fix B (2026-04-30).",
       "if": {
         "properties": {
           "element": {

@@ -33,8 +33,6 @@ Exit codes:
     2 — input error (missing fixture, unreadable JSON, etc.)
 
 Authored Phase J (2026-04-28). See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase J.4
-- docs/plans/2026-04-27-phase-j-handoff.md "Deliverable 4"
 - scripts/assembly/finding_stability.py — diff_engagements lives here
 """
 from __future__ import annotations

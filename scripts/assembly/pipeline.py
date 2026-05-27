@@ -83,7 +83,7 @@ def _content_hash_for_finding(f: Finding) -> int:
     Maps (surface, baton_index, verdict) to an integer in [1, 99]. The same
     conceptual finding (same tuple) gets the same F-NN across runs, which is
     the point — order-based numbering produced positional coincidence that
-    inflated TARr metrics. See docs/plans/2026-04-29-canonical-id-spike-outcome.md.
+    inflated TARr metrics.
 
     Title is deliberately excluded from the hash because specialists rephrase
     titles creatively per run; including title would defeat content stability.

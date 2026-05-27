@@ -153,9 +153,17 @@ Severity: **P1** = spec'd invariant unimplemented or a notable divergence ·
 
 ## Cosmetic
 
-### G10 · P3 · Inert `# docs/plans/…` provenance comments
-- ~23 files in `scripts/`, `tests/`, `schema/` carry comments pointing at archived
-  plan docs. Never loaded into agent context; harmless. Scrub opportunistically.
+### G10 · P3 · ✓ DONE (this branch) · Inert `# docs/plans/…` provenance comments
+- **Was:** ~23 lines across `scripts/`, `tests/`, `schema/` pointed at archived
+  `docs/plans/…` files that don't exist in the pruned repo. Harmless (never loaded
+  into agent context) but stale.
+- **Done:** surgical scrub of every dead pointer while preserving the design-intent
+  prose that surrounded it. Bullet-list provenance entries dropped; inline references
+  rewritten (e.g., `v2_loader.py` ethics-filter comment now cites `product.md` §4.1/§6
+  instead of the dead operator-mission doc; schema descriptions keep "Architectural
+  fix B (2026-04-30)" labels but drop the dead `see docs/plans/…` pointers). Verified
+  zero remaining `docs/plans/` refs in scripts/, tests/, schema/, contracts/,
+  workflows/, skills/. 17 files touched.
 
 ---
 
@@ -348,3 +356,6 @@ pytest-style tests). Swept systematically + cross-checked vs the archive; all re
     same fix. P2 mechanical, browser-free testable. Eliminates the false-positive
     drift class where a per-device methodology section bled into the last finding's
     why-slice.
+11. ~~**G10** (inert `docs/plans/...` provenance scrub)~~ — ✓ DONE (this branch);
+    cosmetic P3; 17 files, surgical removal of dead pointers, design-intent prose
+    preserved.

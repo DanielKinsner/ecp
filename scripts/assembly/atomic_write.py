@@ -10,8 +10,7 @@ half-written.
 Closes Kieran's filesystem-race / partial-write concern from the technical-review
 pass. Documented in contracts/lead-discipline.md write-atomicity rule.
 
-Authored 2026-04-27 as Phase A.3b deliverable of the v2 redesign. See
-docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md.
+Authored 2026-04-27 as Phase A.3b deliverable of the v2 redesign.
 """
 from __future__ import annotations
 

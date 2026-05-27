@@ -29,7 +29,7 @@ v2 migration (Phase E, 2026-04-27):
   the dedup tie-breaker and Priority Path Severity-mode sort. Bronze=1,
   Silver=2, Gold=3 — higher is stronger.
 
-See docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase E.2a.
+Authored 2026-04-27 as Phase E.2a deliverable.
 """
 
 from __future__ import annotations

@@ -22,7 +22,6 @@ Design notes:
     - ``status='skipped'`` with ``skip_reason`` and empty ``findings``
 
 Authored 2026-04-27 as Phase E.2 deliverable. See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase E
 - schema/cluster-emission-v1.json
 - schema/finding-v1.json
 """

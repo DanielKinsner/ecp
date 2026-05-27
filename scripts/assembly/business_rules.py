@@ -43,8 +43,6 @@ Failure path matches schema-validation failures (Phase E plan §6):
 
 Authored 2026-04-27 as Phase E.6 deliverable. Phase L additions 2026-04-29.
 See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase E
-- docs/plans/2026-04-29-feat-phase-l-specialist-tightening-plan.md Phase L
 - scripts/assembly/json_parser.py (sibling: schema validation)
 """
 from __future__ import annotations

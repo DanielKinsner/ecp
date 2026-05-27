@@ -6,8 +6,8 @@ files produced by dispatching the SAME specialist prompt as a subagent
 byte-identical (modulo irreducible-variance fields like timestamps and
 telemetry), v2.1 can flip cluster specialists to subagent dispatch.
 
-See `docs/plans/2026-04-27-cluster-specialist-parity-test.md` for the
-test procedure, hypothesis, pass/fail criteria, and run log.
+Phase H deliverable 5: see contracts/dispatch-contract.md for the
+specialist dispatch shape that v2.1 may flip from teammate to subagent.
 
 Usage:
     python scripts/test-cluster-specialist-parity.py \\
@@ -208,8 +208,8 @@ def render_report(
     if classification == "PASS":
         lines.append("Output is byte-equal after normalization. Cluster specialist dispatch shape (subagent vs teammate) does not affect emission for this run.")
         lines.append("")
-        lines.append("Recommendation: log this run to `docs/plans/2026-04-27-cluster-specialist-parity-test.md` "
-                     "as PASS evidence. Need 5 runs of each shape per cluster before declaring v2.1-ready.")
+        lines.append("Recommendation: log this run as PASS evidence in the engagement's "
+                     "lead-reflection.md. Need 5 runs of each shape per cluster before declaring v2.1-ready.")
     elif classification == "PARTIAL":
         lines.append(f"Reason: {detail.get('reason')}")
         lines.append("")

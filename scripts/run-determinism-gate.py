@@ -81,9 +81,6 @@ session BETWEEN ``prep-run`` and ``validate-run`` invocations.
 The aggregate exit code is the gate verdict (0 pass / 1 fail).
 
 Authored Phase K (2026-04-29). See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase K
-- docs/plans/2026-04-27-phase-k-handoff.md (operator entry doc)
-- docs/plans/2026-04-27-phase-k-runbook.md (operator execution guide)
 - scripts/assembly/determinism_gate.py — helpers
 """
 from __future__ import annotations

@@ -21,7 +21,6 @@ embeddings via ``include_embeddings=False`` where applicable.
 
 Authored Phase K (2026-04-29). See:
 - scripts/assembly/determinism_gate.py — module under test
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase K
 """
 from __future__ import annotations
 

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecp.local/schema/synthesizer-emission-v1.json",
   "title": "ECP Synthesizer Emission v1",
-  "description": "Canonical structured emission of the v2 Layer-3 synthesizer. Pairs with audit-desktop.md and audit-mobile.md (the human-facing prose) and is the structured surface Phase G renderer, Phase I canaries, and Phase K parity test consume. The synthesizer reads all cluster emissions + ethics findings + screenshots + page-type context and emits one Priority Path (3-5 curated stories) plus deterministic Quick Wins and Severity manifests. The JSON-derived allowlist (every priority_path[].f_refs entry must resolve to a real (cluster, display_index) pair from the cluster emissions) prevents hallucinated finding references. Authored 2026-04-27 as Phase F.1 deliverable. See docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase F and contracts/synthesizer-v2.md.",
+  "description": "Canonical structured emission of the v2 Layer-3 synthesizer. Pairs with audit-desktop.md and audit-mobile.md (the human-facing prose) and is the structured surface Phase G renderer, Phase I canaries, and Phase K parity test consume. The synthesizer reads all cluster emissions + ethics findings + screenshots + page-type context and emits one Priority Path (3-5 curated stories) plus deterministic Quick Wins and Severity manifests. The JSON-derived allowlist (every priority_path[].f_refs entry must resolve to a real (cluster, display_index) pair from the cluster emissions) prevents hallucinated finding references. Authored 2026-04-27 as Phase F.1 deliverable. See contracts/synthesizer-v2.md.",
   "type": "object",
   "additionalProperties": false,
   "required": [

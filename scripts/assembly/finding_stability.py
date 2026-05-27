@@ -36,8 +36,6 @@ lazy-import ``sentence-transformers``; the model
 under ``~/.cache/huggingface/``.
 
 Authored Phase J (2026-04-28). See:
-- docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase J.3
-- docs/plans/2026-04-27-phase-j-handoff.md "Deliverable 3"
 - schema/finding-v1.json (golden/candidate input shape)
 """
 from __future__ import annotations
