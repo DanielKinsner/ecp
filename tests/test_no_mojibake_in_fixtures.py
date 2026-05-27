@@ -67,6 +67,16 @@ KNOWN_BROKEN_EVIDENCE_DIRS = {
     # workaround. The sister-run at 5ff7a91f-fixed/ is the cleaned copy
     # that other tests load from.
     REPO_ROOT / "docs" / "ecp" / "2026-05-18-5ff7a91f",
+    # 2026-05-27 Amazon engagement: a live run whose specialists hit
+    # multiple UTF-8 issues during the audit. The lead re-saved
+    # pricing-mobile.json (per lead-reflection §Deviations) but
+    # ethics-findings.json kept its mojibake bytes. Quarantined here
+    # rather than hand-edited because the engagement is a real artifact
+    # — the operator can re-run the audit if a clean ethics emission is
+    # needed. Removing this entry should fail the test (intended), at
+    # which point either re-run the engagement or repair the file with
+    # Phase 7's `encoding='utf-8' + ensure_ascii=False` re-write recipe.
+    REPO_ROOT / "docs" / "ecp" / "2026-05-27-0669899d",
 }
 
 

@@ -280,7 +280,27 @@ rest, verified against current `HEAD`:
 
 ## Concurrent-audit robustness (2026-05-27 session 5)
 
-### G19 · P2 · ✓ DONE (this branch) · `baton_precedence_verbatim_anchor` false-positives on attribute literals + short generic words
+### G20 · P3 · ✓ DONE (this branch) · `element_index_match_rate` canary produced impossible rate > 1.0
+- **Spec:** §0 — canaries must be reliable signals; a rate that violates its own math
+  (matched > present possible because absent-line "at eN" tokens leaked into the
+  numerator) erodes operator confidence in the gate.
+- **Was:** `check_element_index_match_rate` in `scripts/assembly/canary_checks.py`
+  counted `matched = sum(1 for line in elements if _ELEMENT_INDEX_RE.search(line))`
+  across **all** element lines, while `present = total - absent` excluded absent
+  lines. Absent findings often phrase their `proposed_anchor` prose as
+  `(absent — proposed location: ... at e3)`, so `at eN` tokens appeared on lines
+  the denominator dropped → numerator could exceed denominator → rate > 1.0.
+  Live evidence: `docs/ecp/2026-05-27-625832a6` lead-reflection reported
+  `element_index_match_rate=1.23` (mathematically impossible for a rate).
+- **Done:** `matched` is now `sum(1 for line in elements if _ELEMENT_INDEX_RE.search(line)
+  and not _ELEMENT_ABSENT_RE.search(line))` — counts only non-absent lines, so the
+  numerator and denominator share the same line set and the rate is bounded by [0, 1.0].
+  Regression: `tests/test_v2_canary_checks.py::TestElementIndexMatchRateCanary::
+  test_g20_absent_lines_with_at_eN_in_proposed_anchor_do_not_inflate_rate`
+  reproduces the Run B shape (4 present `at eN` + 3 absent lines whose proposed-anchor
+  prose contains `at eN`) and asserts `rate ≤ 1.0` and `rate == 1.0` exactly.
+
+### G19 · P2 · ✓ DONE (`8e764f4`) · `baton_precedence_verbatim_anchor` false-positives on attribute literals + short generic words
 - **Spec:** §4.1 — the validator must surface real mismatches, not false-positive on
   common-token substring matches that incorrectly bounce correctly-anchored findings.
 - **Was:** the `_check_baton_precedence` rule in `scripts/assembly/business_rules.py`

@@ -334,7 +334,20 @@ def check_element_index_match_rate(
         total = len(elements)
         absent = sum(1 for line in elements if _ELEMENT_ABSENT_RE.search(line))
         present = total - absent
-        matched = sum(1 for line in elements if _ELEMENT_INDEX_RE.search(line))
+        # G20 (2026-05-27): matched must count from PRESENT lines only.
+        # Pre-fix, matched scanned the whole element list — but absent
+        # findings often phrase their `proposed_anchor` prose as
+        # `(absent — proposed location: ... at e3)`, so the `at eN`
+        # token appears on lines the denominator (`present`) excludes.
+        # Result: `matched / present` could exceed 1.0. Live evidence:
+        # `docs/ecp/2026-05-27-625832a6` lead-reflection reported
+        # `element_index_match_rate=1.23`, an impossible value for a
+        # rate, because three absent-finding `at eN` mentions were
+        # counted into the numerator but not the denominator.
+        matched = sum(
+            1 for line in elements
+            if _ELEMENT_INDEX_RE.search(line) and not _ELEMENT_ABSENT_RE.search(line)
+        )
         rate = matched / present if present else 0.0
         per_file.append({
             "path": str(path),

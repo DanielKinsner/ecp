@@ -12,7 +12,23 @@ rate-limit at 8+ concurrent specialist spawns (G17, fixed), and (c) two
 reproducible `baton_precedence_verbatim_anchor` false-positive classes that bounced
 correctly-anchored findings into retry rounds (G19, fixed).
 
-- **G19** (this commit): `_check_baton_precedence` in
+- **G20** (this commit): `check_element_index_match_rate` no longer produces
+  impossible rate > 1.0. The pre-fix numerator counted `at eN` matches across
+  ALL element lines, but the denominator excluded absent lines — and absent
+  findings' `(absent — proposed location: ... at e3)` prose leaks `at eN` into
+  the numerator. Live evidence: `docs/ecp/2026-05-27-625832a6` lead-reflection
+  recorded `element_index_match_rate=1.23`. Fix: numerator now also excludes
+  absent lines, so the rate is bounded by [0, 1.0]. Regression test
+  `test_g20_absent_lines_with_at_eN_in_proposed_anchor_do_not_inflate_rate`.
+- **Mojibake quarantine** (this commit, hygiene): the Amazon engagement
+  `docs/ecp/2026-05-27-0669899d` has UTF-8 mojibake in `ethics-findings.json`
+  that survived the lead's other UTF-8 repairs. Quarantined via
+  `tests/test_no_mojibake_in_fixtures.py:KNOWN_BROKEN_EVIDENCE_DIRS` (same
+  pattern the `2026-05-18-5ff7a91f` engagement uses) so the lint test stops
+  failing on it. The quarantine entry's comment names the repair path for
+  whoever wants to either re-run the engagement or hand-fix the file with
+  Phase 7's `encoding='utf-8'` + `ensure_ascii=False` recipe.
+- **G19** (commit `8e764f4`): `_check_baton_precedence` in
   `scripts/assembly/business_rules.py` no longer false-fires on HTML-attribute
   literals or short generic English words. New `_strip_html_attributes` pre-pass
   removes `name="value"` / `name='value'` patterns from prose before quote

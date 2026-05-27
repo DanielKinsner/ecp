@@ -286,6 +286,44 @@ class TestElementIndexMatchRateCanary(unittest.TestCase):
         self.assertEqual(result["detail"]["absent"], 3)
         self.assertEqual(result["detail"]["present_elements"], 8)
 
+    def test_g20_absent_lines_with_at_eN_in_proposed_anchor_do_not_inflate_rate(self):
+        """G20 (2026-05-27): pre-fix, the canary counted `at eN` matches
+        across the WHOLE element-line list but only excluded absent lines
+        from the denominator. Absent findings often phrase their
+        proposed-anchor prose as `(absent — proposed location: ... at e3)`,
+        so the `at eN` token appeared on lines the denominator dropped —
+        making the numerator exceed the denominator and producing
+        impossible rate values like 1.23.
+
+        Live evidence: docs/ecp/2026-05-27-625832a6 lead-reflection
+        reported `element_index_match_rate=1.23`, which is mathematically
+        impossible for a rate. Post-fix: `matched` only counts non-absent
+        lines, so rate is bounded by [0, 1.0]."""
+        # 4 present-element lines with at eN + 3 absent lines whose
+        # proposed-anchor prose ALSO contains `at eN`. Pre-fix:
+        # matched=7, present=4, rate=1.75. Post-fix: matched=4,
+        # present=4, rate=1.0.
+        lines = [f"**ELEMENT:** `tag` at e{i} (y=0)" for i in range(4)]
+        lines += [
+            "**ELEMENT:** (absent — proposed location: near header at e10)",
+            "**ELEMENT:** absent — proposed location: section-bottom at e22",
+            "**ELEMENT:** (absent — proposed location: viewport-sticky at e99)",
+        ]
+        path = self._write_audit("audit-desktop.md", "\n".join(lines))
+        result = check_element_index_match_rate([path], threshold=0.8)
+        self.assertTrue(result["passed"], result["summary"])
+        self.assertLessEqual(
+            result["detail"]["rate"],
+            1.0,
+            f"G20: rate must be bounded by [0, 1.0]; absent-line `at eN` "
+            f"mentions must not leak into the numerator. "
+            f"Got rate={result['detail']['rate']!r}, summary={result['summary']!r}",
+        )
+        self.assertEqual(result["detail"]["rate"], 1.0)
+        self.assertEqual(result["detail"]["present_elements"], 4)
+        self.assertEqual(result["detail"]["matched"], 4)
+        self.assertEqual(result["detail"]["absent"], 3)
+
     def test_present_element_without_baton_fails(self):
         # The regression case: synthesizer emits an element description
         # without an "at eN" reference and without an explicit absent
