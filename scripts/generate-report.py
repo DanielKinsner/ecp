@@ -72,6 +72,15 @@ def main() -> int:
         help="List imported assets referenced by a review-state JSON file.",
     )
     parser.add_argument(
+        "--mark-client-verified",
+        action="store_true",
+        help=(
+            "Promote the engagement's report from DRAFT to CLIENT-VERIFIED "
+            "(product.md §6 manual verification pass). Operator action only — "
+            "refuses to run under --auto."
+        ),
+    )
+    parser.add_argument(
         "--skip-editor",
         action="store_true",
         help="With --v2, skip editor.html and review-state generation.",
@@ -90,6 +99,13 @@ def main() -> int:
         help="Force v1 renderer even when v2 inputs are present.",
     )
     parser.add_argument(
+        "--auto", action="store_true",
+        help=(
+            "Signal automated/unattended execution. A report can never be "
+            "promoted to client-verified under --auto (product.md §6)."
+        ),
+    )
+    parser.add_argument(
         "--alt-format",
         choices=["html", "markdown-mirror", "bulleted", "plain-prose"],
         default="html",
@@ -99,6 +115,21 @@ def main() -> int:
     args = parser.parse_args()
 
     engagement_path = Path(args.engagement)
+
+    if args.mark_client_verified:
+        from assembly.report_state import AutoPromotionError, set_client_verified
+
+        meta_path = engagement_path / "meta.json"
+        if not meta_path.exists():
+            print(f"meta.json not found: {meta_path}", file=sys.stderr)
+            return 1
+        try:
+            set_client_verified(meta_path, auto=args.auto)
+        except AutoPromotionError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 2
+        print(f"report_state set to client-verified: {meta_path}")
+        return 0
 
     if args.validate_review_state:
         import json

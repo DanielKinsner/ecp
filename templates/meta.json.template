@@ -24,7 +24,8 @@
   "blocked": false,
   "plans_queue": [],
   "reconciled": false,
-  "screenshot_input": null
+  "screenshot_input": null,
+  "report_state": "draft"
 }
 
 <!--
@@ -95,4 +96,15 @@
 
   When source_mode is NOT "screenshot", screenshot_input is null.
   Backward compatible: existing meta.json files without screenshot_input are valid.
+
+  report_state (product.md §6 draft -> client-ready gate):
+    "draft"           — every generated report starts here. ALL --auto /
+                        automated runs MUST leave it "draft". Rendering a
+                        report never promotes it.
+    "client-verified" — set ONLY by the operator's manual verification pass
+                        (re-check live site, follow every legal/ethics citation
+                        link, finalize hotspot placement per §4.2). Promote via
+                        `generate-report.py --engagement <dir> --mark-client-verified`.
+                        Automated/--auto execution can NEVER set this.
+    Missing/blank reads as "draft" (back-compat with pre-§6 engagements).
 -->

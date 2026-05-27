@@ -71,6 +71,7 @@ Valid if present, ignored if absent:
 | `reconciled` | boolean | `true` after finding reconciliation step |
 | `screenshot_input` | object \| null | Set when `source_mode = "screenshot"` |
 | `scope` | string \| null | Audit scope selected by user. See enum below. Missing on legacy engagements → treat as `"comprehensive"` on resume. |
+| `report_state` | string \| null | `draft` or `client-verified` (product.md §6). Missing/null → treat as `draft`. See below. |
 
 ### Valid `scope` values
 
@@ -83,6 +84,17 @@ Valid if present, ignored if absent:
 | `everything` | Every cluster regardless of page type — all 10 clusters dispatched (scope option e, equivalent to `--focus all`). Added 2026-04-27 from §24.4 #3 to remove the prior "all clusters"/`comprehensive` ambiguity. |
 
 On resume: if `scope` is missing (legacy v5.0 engagement created before the scope selector existed), treat as `"comprehensive"` for backward compatibility — legacy runs dispatched all default clusters.
+
+### Valid `report_state` values (product.md §6 draft → client-ready gate)
+
+| Value | Meaning |
+|---|---|
+| `draft` | Default. Every generated report is a DRAFT. **All `--auto` / automated runs MUST leave `report_state` at `draft`.** Rendering a report never promotes it. |
+| `client-verified` | Set **only** by the operator's manual verification pass: re-check the live site, follow every legal/ethics citation link and confirm relevancy, and finalize hotspot placement (§4.2). |
+
+**The load-bearing invariant: automated / `--auto` execution can NEVER mark a report `client-verified`.** Promotion is a deliberate, explicit operator action — run `python ${CLAUDE_PLUGIN_ROOT}/scripts/generate-report.py --engagement <dir> --mark-client-verified`. That verb refuses (`AutoPromotionError`, non-zero exit) when invoked with `--auto`; the same guard lives in `scripts/assembly/report_state.py:set_client_verified(auto=...)`.
+
+On resume / when missing: treat absent, null, or blank `report_state` as `draft` (back-compat with engagements created before §6 tracking existed). `read_report_state()` in `report_state.py` is the canonical reader.
 
 ### Valid `source_mode` values
 
@@ -137,7 +149,8 @@ Only present when `source_mode = "screenshot"`. Otherwise `null` or absent.
   "blocked": false,
   "plans_queue": [],
   "reconciled": false,
-  "screenshot_input": null
+  "screenshot_input": null,
+  "report_state": "draft"
 }
 ```
 

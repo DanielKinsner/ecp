@@ -128,6 +128,14 @@ def validate_meta_json(meta_path: Path) -> List[str]:
                 f"{type(data[field]).__name__}"
             )
 
+    # report_state enum check (product.md §6 draft -> client-ready gate).
+    # Only warn if present; missing is treated as "draft" by readers.
+    if "report_state" in data and data["report_state"] not in ("draft", "client-verified"):
+        warnings.append(
+            f'meta.json field "report_state" must be "draft" or '
+            f'"client-verified", got {data["report_state"]!r} (product.md §6)'
+        )
+
     # Invariant: completed phases must have at least one device scanned.
     phase = data.get("phase")
     devices_scanned = data.get("devices_scanned") if isinstance(data.get("devices_scanned"), list) else None

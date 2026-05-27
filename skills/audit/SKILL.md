@@ -183,3 +183,5 @@ An audit phase can move forward only when:
 - substantive canary results and lead reflection are written.
 
 The audit is complete when findings, the Priority Path, any requested exports (audit markdown + visual report), `meta.json`, `audit-trace.log`, and `lead-reflection.md` all reflect the final state.
+
+The generated report always ships as a **DRAFT** (`meta.json` `report_state: "draft"`, per `contracts/meta-schema.md` / product.md §6). Never write `report_state: "client-verified"` from the audit flow — and never under `--auto`. Client-ready promotion is the operator's manual verification pass (re-check the live site, follow every legal/ethics citation link, finalize hotspot placement), run separately via `generate-report.py --engagement <dir> --mark-client-verified`.
