@@ -44,6 +44,24 @@ G16 — see `docs/conformance-gaps.md` for the full diagnosis.
   applied. `_slice_section` also gains a defensive `\n##` terminator. 3 new regression
   tests in `tests/test_v2_synth_input.py::TestG18WhySliceTerminatorHardening` cover the
   Run-B/C reproducer, obs/rec/why isolation, and the intermediate-section case.
+- **G10** (this commit): inert `docs/plans/…` provenance refs scrubbed across 17 files
+  (scripts/, tests/, schema/). Bullet-list "See: - docs/plans/…" entries dropped from
+  docstrings; sibling bullets pointing at live code/contracts retained. Inline
+  references rewritten — e.g., `v2_loader.py` ethics-filter comment now cites
+  `product.md` §4.1/§6 instead of the dead operator-mission doc; schema descriptions
+  keep "Architectural fix B (2026-04-30)" labels but drop the trailing dead pointers.
+- **G15 P1-3 — autofix landed** (this commit, live-run validation remaining): new
+  `scripts/assembly/emission_autofix.py` applies four semantically-conservative repairs
+  catalogued from the n=3 of live runs: (1) strip `references/` prefix from
+  `telemetry.reference_files_read`, (2) dedup `(surface, baton_index, verdict)`
+  duplicate findings (keep first), (3) cap `proposed_anchor.reason` at 200 chars
+  (truncate at word boundary), (4) inject default `proposed_anchor` on absent findings
+  missing one (with auto-inject marker for operator visibility). New
+  `test-specialist.py autofix` CLI subcommand; `skills/audit/SKILL.md` Validation
+  step 1 now runs autofix before retry-dispatch. 17 unittest-style regression tests
+  (`tests/test_g15_emission_autofix.py`) covering each repair's fire + no-op cases
+  plus idempotency, immutability, and combined-cases. Bounce-rate reduction will
+  measure on the next live `/ecp:audit` run.
 
 ## Post-1.0.0 conformance — 2026-05-26 (session 3)
 

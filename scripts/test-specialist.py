@@ -652,6 +652,86 @@ def validate_synthesizer_emission_file(
     return 0
 
 
+def run_autofix(
+    *,
+    emission_path: Path,
+    out_path: Path | None,
+    repairs_out_path: Path | None,
+    in_place: bool,
+) -> int:
+    """G15 P1-3 (2026-05-27) — pre-validation autofix CLI entry.
+
+    Reads ``emission_path``, applies the conservative repairs in
+    ``scripts/assembly/emission_autofix.autofix_emission``, and writes:
+    - the repaired emission (atomic) to ``out_path`` or in place
+    - the repairs JSON log to ``repairs_out_path``
+
+    Always returns 0 (the autofix is non-destructive; missing/unreadable
+    inputs return 3, write failures propagate as exceptions). The lead's
+    validate-then-retry loop calls this BEFORE re-dispatching a
+    specialist so known-safe shape traps don't bounce the retry.
+    """
+    if not emission_path.is_file():
+        print(f"emission file not found: {emission_path}", file=sys.stderr)
+        return 3
+    try:
+        emission = json.loads(emission_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        print(f"emission is not valid JSON: {e}", file=sys.stderr)
+        return 1
+
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    from assembly.emission_autofix import autofix_emission
+
+    fixed, repairs = autofix_emission(emission)
+
+    # Resolve output paths.
+    if in_place:
+        emission_out = emission_path
+    elif out_path is not None:
+        emission_out = out_path
+    else:
+        emission_out = emission_path.parent / f"{emission_path.stem}.autofixed.json"
+    repairs_out = repairs_out_path or (
+        emission_path.parent / f"{emission_path.stem}.repairs.json"
+    )
+
+    atomic_write_text(
+        emission_out, json.dumps(fixed, indent=2) + "\n",
+    )
+    atomic_write_text(
+        repairs_out,
+        json.dumps(
+            {
+                "engagement": str(emission_path.parent),
+                "source_emission": str(emission_path),
+                "repairs_count": len(repairs),
+                "repairs": repairs,
+            },
+            indent=2,
+        ) + "\n",
+    )
+
+    # Summary to stdout (machine-parseable line) + stderr (operator detail).
+    print(
+        f"[autofix] emission={emission_out.name} "
+        f"repairs={len(repairs)} log={repairs_out.name}"
+    )
+    if repairs:
+        print(
+            f"[G15 autofix] applied {len(repairs)} repair(s) to {emission_path.name}:",
+            file=sys.stderr,
+        )
+        for r in repairs:
+            local_id = r.get("finding_local_id")
+            scope = f"local_id={local_id}" if local_id is not None else "<global>"
+            print(
+                f"       {scope}  {r.get('field')}  --  {r.get('why')[:140]}",
+                file=sys.stderr,
+            )
+    return 0
+
+
 def run_drift_check(
     *,
     desktop_md_path: Path,
@@ -1095,6 +1175,49 @@ def main(argv: list[str] | None = None) -> int:
     p_drift.add_argument("--mobile-md", type=Path, required=True)
     p_drift.add_argument("--synthesizer-emission", type=Path, required=True)
 
+    # G15 P1-3 (2026-05-27) — pre-validation autofix. The lead runs this
+    # BEFORE `validate` when a specialist emission fails on known-safe
+    # shape traps catalogued from live runs (path-form telemetry, duplicate
+    # finding tuples, overlong proposed_anchor.reason, missing
+    # proposed_anchor on absent findings). Repairs are semantically
+    # conservative — see scripts/assembly/emission_autofix.py for the
+    # full contract.
+    p_autofix = sub.add_parser(
+        "autofix",
+        help=(
+            "Apply pre-validation autofix repairs to a cluster/ethics "
+            "emission. Writes repaired emission + repairs report; "
+            "designed to run BEFORE `validate`."
+        ),
+    )
+    p_autofix.add_argument(
+        "--emission-path", type=Path, required=True,
+        help="Cluster or ethics emission JSON to autofix.",
+    )
+    p_autofix.add_argument(
+        "--out", type=Path,
+        help=(
+            "Where to write the repaired emission. Defaults to "
+            "<emission>.autofixed.json next to the input."
+        ),
+    )
+    p_autofix.add_argument(
+        "--repairs-out", type=Path,
+        help=(
+            "Where to write the repairs JSON log. Defaults to "
+            "<emission>.repairs.json next to the input."
+        ),
+    )
+    p_autofix.add_argument(
+        "--in-place", action="store_true",
+        help=(
+            "Overwrite the original emission file with the repaired "
+            "version. Useful in the lead's validate-then-retry loop; "
+            "the repairs log still writes to --repairs-out (defaults "
+            "next to the input)."
+        ),
+    )
+
     args = parser.parse_args(argv)
 
     if args.mode == "prepare":
@@ -1180,6 +1303,14 @@ def main(argv: list[str] | None = None) -> int:
             desktop_md_path=args.desktop_md,
             mobile_md_path=args.mobile_md,
             synthesizer_emission_path=args.synthesizer_emission,
+        )
+
+    if args.mode == "autofix":
+        return run_autofix(
+            emission_path=args.emission_path,
+            out_path=args.out,
+            repairs_out_path=args.repairs_out,
+            in_place=args.in_place,
         )
 
     parser.error(f"unknown mode {args.mode!r}")

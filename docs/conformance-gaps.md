@@ -218,20 +218,30 @@ rest, verified against current `HEAD`:
 - **Fix:** clamp negative `x/y` to 0 at the source (acquirer extraction step) —
   cleaner than relaxing the schema.
 
-### G15 · P1/P2 · ◐ PARTIAL (`cec2794`) · Emission-bounce friction, ethics jurisdiction, screenshot note
+### G15 · P1/P2 · ◐ PARTIAL (`cec2794` + this branch) · Emission-bounce friction, ethics jurisdiction, screenshot note
 - **P1-4 (ethics jurisdiction) — ✓ DONE (`cec2794`):** added a "Jurisdiction matching"
   rule to `contracts/ethics-subagent-v2.md` (US→FTC/CCPA, EU→GDPR/ePrivacy/DSA gated
   on hreflang/footer; prefer CLEAR/ADJACENT when targeting is ambiguous; GDPR-on-US
   page = misapplied-law §4.1 error). Fixes the observed GDPR-on-US-page drift.
 - **P2-3 — ✓ DONE (`cec2794`):** `workflows/acquire.md` now notes `--screenshot-quality`
   /`set screenshot-quality` is session-global — set before the first capture.
-- **P1-3 (bounce rate, 5/13 retries) — REMAINING, needs live run:** the
-  `proposed_anchor.reason` ≤200-char cap is already surfaced at
-  `specialist-prompt-v2.md` field rules (line ~359). Still open: anchor-candidate
-  registry friction (specialist cites a real `eN` not in the candidate registry) and
-  ethics-emission shape traps (path-form telemetry, missing `proposed_anchor` on
-  absent findings) → add a small ethics-emission autofix and re-measure bounce rate
-  against a live run.
+- **P1-3 (bounce rate, 5/13 retries) — ◐ autofix LANDED (this branch), live-run validation
+  remaining:** new `scripts/assembly/emission_autofix.py` applies four
+  semantically-conservative pre-validation repairs catalogued from n=3 of live runs
+  (`docs/ecp/2026-05-27-{b0051311,af72a2ae,52f53a53}`): (1) strip `references/`
+  prefix from `telemetry.reference_files_read`, (2) dedup
+  `(surface, baton_index, verdict)` duplicate findings (keep first), (3) cap
+  `proposed_anchor.reason` at the 200-char schema limit (truncate at word boundary
+  with ellipsis), (4) inject a default `viewport`/`above-fold-banner` `proposed_anchor`
+  on absent findings missing one (with auto-inject marker so operator sees it in
+  the editor's "Place manually" queue). New `test-specialist.py autofix` CLI
+  subcommand; SKILL updated to run autofix before retry-dispatch (`skills/audit/
+  SKILL.md` Validation step 1). Regression: 17 unittest-style tests in
+  `tests/test_g15_emission_autofix.py` covering each repair's fire + no-op cases
+  plus idempotency + immutability + combined-cases. Remaining: anchor-candidate
+  registry friction (specialist cites real `eN` not in candidate registry) needs
+  baton + sidecar inputs to the autofix — separate commit; and re-measure the
+  bounce rate on the next live `/ecp:audit` run against this autofix.
 
 ---
 

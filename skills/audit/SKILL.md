@@ -125,7 +125,11 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
    ```powershell
    python scripts/test-specialist.py validate --emission-path docs/ecp/{id}/cluster-{cluster}-{device}.json --schema cluster-emission --baton-path docs/ecp/{id}/baton.json
    ```
-   Validate the ethics emission against both batons (`--schema cluster-emission --desktop-baton-path ... --mobile-baton-path ...`). On failure, pass `--write-retry-prompt <path>` and re-dispatch the specialist; never hand-edit an emission.
+   Validate the ethics emission against both batons (`--schema cluster-emission --desktop-baton-path ... --mobile-baton-path ...`). On failure, **first try autofix** (G15 P1-3) for known-safe shape traps catalogued from live runs (path-form telemetry, duplicate finding tuples, overlong `proposed_anchor.reason`, missing `proposed_anchor` on absent findings):
+   ```powershell
+   python scripts/test-specialist.py autofix --emission-path docs/ecp/{id}/cluster-{cluster}-{device}.json --in-place
+   ```
+   Re-run `validate` against the autofixed emission. If validation now passes, proceed (the `--in-place` repairs were semantically conservative and the repairs log is at `<emission>.repairs.json`). If validation still fails, pass `--write-retry-prompt <path>` and re-dispatch the specialist; never hand-edit an emission beyond what autofix repaired.
 
 2. **Build the canonical f_refs manifest** (after all specialists + ethics validate):
    ```powershell
