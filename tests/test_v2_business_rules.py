@@ -326,6 +326,141 @@ class TestBatonPrecedenceRule(unittest.TestCase):
         self.assertEqual(len(precedence_violations), 0)
 
 
+class TestG19BatonPrecedenceFalsePositiveFixes(unittest.TestCase):
+    """G19 (2026-05-27): two specific false-positive classes the
+    baton_precedence_verbatim_anchor rule had been bouncing
+    correctly-anchored findings on. Each test reproduces the exact
+    scenario from a 2026-05-27 live-run lead-reflection."""
+
+    def test_html_attribute_token_does_not_false_match(self):
+        """docs/ecp/2026-05-27-0669899d (Amazon): a performance-ux
+        finding correctly anchored to the hero LCP image (e3) cited
+        ``fetchpriority="high"`` in prose. The pre-G19 extractor pulled
+        bare "high" out of the attribute and substring-matched it
+        against an unrelated "Amazon's Choice — highly rated" badge
+        element (e60), bouncing the finding. Post-G19 the attribute
+        gets stripped before quote extraction."""
+        f = _finding(
+            element={"baton_index": "e3"},
+            observation=(
+                'The hero LCP image is served without fetchpriority="high", '
+                'delaying the Largest Contentful Paint metric — ' + "x" * 25
+            ),
+        )
+        baton = {
+            "elements": [
+                {"e_index": "e3", "text_content": "Nordic Naturals Ultimate Omega"},
+                {"e_index": "e60", "text_content": "Amazon's Choice — highly rated"},
+            ]
+        }
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        precedence_violations = [
+            v for v in violations if v.rule.startswith("baton_precedence")
+        ]
+        self.assertEqual(
+            precedence_violations,
+            [],
+            f"G19: fetchpriority=\"high\" must not false-match elements "
+            f"whose text contains the substring 'high'. Got: {precedence_violations}",
+        )
+
+    def test_short_generic_word_does_not_false_match(self):
+        """docs/ecp/2026-05-27-4a0721e9 (slingmods): a category-navigation
+        finding correctly anchored to the search submit button (e2, empty
+        text) cited the word "Search" in prose. The pre-G19 extractor
+        treated bare "Search" as authoritative element text and
+        substring-matched it against a large header element (e1) whose
+        text blob contained "Search" → bounced the finding."""
+        f = _finding(
+            element={"baton_index": "e2"},
+            observation=(
+                'The "Search" button has no aria-label for screen readers — '
+                + "x" * 25
+            ),
+        )
+        baton = {
+            "elements": [
+                {
+                    "e_index": "e1",
+                    "text_content": "Home | Shop | Search this site | Cart | Account | Help",
+                },
+                {"e_index": "e2", "text_content": ""},  # the search submit control
+            ]
+        }
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        precedence_violations = [
+            v for v in violations if v.rule.startswith("baton_precedence")
+        ]
+        self.assertEqual(
+            precedence_violations,
+            [],
+            f"G19: short generic word 'Search' must not false-match an "
+            f"element whose text blob contains it. Got: {precedence_violations}",
+        )
+
+    def test_price_token_still_triggers_real_mismatch(self):
+        """Guard against over-correction: short tokens that contain a
+        digit or identifier-marker char ARE substantive ("$59.95", "30%",
+        "SKU123"). The original test_verbatim_quote_matches_other_element_violates
+        already covers $59.95; this test adds % and # variants."""
+        # Each quote must be ≥4 chars (the substantive-quote min) AND
+        # contain a digit or identifier char — both conditions are real
+        # specialist patterns we want to keep catching.
+        for quoted_text, other_text in (
+            ('"100%"', "100% guaranteed"),  # 4-char percentage
+            ('"SKU123"', "SKU123 in stock"),  # identifier with digits
+            ('"$33.99"', "Now $33.99 sale"),  # price with $ and digits
+        ):
+            with self.subTest(quote=quoted_text):
+                f = _finding(
+                    element={"baton_index": "e8"},
+                    observation=(
+                        f'The page mentions {quoted_text} but the cite '
+                        f'points to a different element — ' + "x" * 25
+                    ),
+                )
+                baton = {
+                    "elements": [
+                        {"e_index": "e7", "text_content": other_text},
+                        {"e_index": "e8", "text_content": "Add to Cart"},
+                    ]
+                }
+                violations = validate_business_rules(_emission([f]), baton=baton)
+                rules = [v.rule for v in violations]
+                self.assertIn(
+                    "baton_precedence_verbatim_anchor",
+                    rules,
+                    f"G19: short tokens with digits/identifier chars "
+                    f"({quoted_text}) must still trigger the rule on real "
+                    f"mismatches. Got rules: {rules}",
+                )
+
+    def test_multi_word_quote_still_triggers_real_mismatch(self):
+        """Multi-word phrases like "Read More" remain substantive and
+        the rule still fires on legitimate mismatches."""
+        f = _finding(
+            element={"baton_index": "e8"},
+            observation=(
+                'The page has a "Read More" link but the cite points '
+                'to an unrelated CTA — ' + "x" * 25
+            ),
+        )
+        baton = {
+            "elements": [
+                {"e_index": "e7", "text_content": "Read More about shipping"},
+                {"e_index": "e8", "text_content": "Add to Cart"},
+            ]
+        }
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        rules = [v.rule for v in violations]
+        self.assertIn(
+            "baton_precedence_verbatim_anchor",
+            rules,
+            "G19: multi-word phrase quotes must still trigger the rule on "
+            "real mismatches (Read More cited but anchored to Add to Cart).",
+        )
+
+
 class TestWithinEmissionUniquenessRule(unittest.TestCase):
     def test_unique_tuples_pass(self):
         f1 = _finding(local_id=1, surface="price-block", element={"baton_index": "e7"}, verdict="FAIL")

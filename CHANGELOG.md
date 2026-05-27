@@ -7,10 +7,25 @@ The full pre-1.0 history lives in the archived `ecommerce-conversion-psychology`
 ## Post-1.0.0 conformance — 2026-05-27 (session 5)
 
 Four concurrent live audits revealed (a) a real cross-engagement session-isolation
-bug at the `agent-browser` layer (the headless browser session leaks across
-concurrent acquirers, so one engagement's `goto` can drift another engagement's
-in-flight element extraction to a different URL) and (b) a reproducible
-thundering-herd rate-limit at 8+ concurrent specialist spawns. G17 closes both.
+bug at the `agent-browser` layer (G17, fixed), (b) a reproducible thundering-herd
+rate-limit at 8+ concurrent specialist spawns (G17, fixed), and (c) two
+reproducible `baton_precedence_verbatim_anchor` false-positive classes that bounced
+correctly-anchored findings into retry rounds (G19, fixed).
+
+- **G19** (this commit): `_check_baton_precedence` in
+  `scripts/assembly/business_rules.py` no longer false-fires on HTML-attribute
+  literals or short generic English words. New `_strip_html_attributes` pre-pass
+  removes `name="value"` / `name='value'` patterns from prose before quote
+  extraction, so `fetchpriority="high"` no longer leaks bare "high" into the
+  matcher. New `_is_substantive_quote` predicate requires quotes to be ≥4 chars
+  AND (multi-word OR ≥10 chars OR contain a digit OR contain an identifier-marker
+  char `$ % & + < > = / # @`), so short alphabetic tokens like "Search" /
+  "high" / "Cart" don't substring-match unrelated element text blobs. Specific
+  identifiers ("$59.95", "SKU123", "100%", "Read More", "recommendations") remain
+  substantive. 4 new regression tests in
+  `tests/test_v2_business_rules.py::TestG19BatonPrecedenceFalsePositiveFixes`
+  reproducing both Amazon and slingmods false-positive cases plus the
+  preserved-behavior counterparts. All 37 prior business-rules tests pass.
 
 - **G17 Layer A — contamination guard** (this commit): `scripts/cursor_bootstrap_url.py`
   replaces the module-level `_ELEMENTS_JS` constant with a `_build_elements_js(

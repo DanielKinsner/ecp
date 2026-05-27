@@ -63,6 +63,70 @@ _ABSENT_FINDING_JACCARD_THRESHOLD: float = 0.7
 _MAX_VIOLATIONS_IN_RETRY_PROMPT: int = 24
 # Verbatim-quoted strings in finding prose: 2-80 chars, plain or curly quotes
 _VERBATIM_QUOTE_PATTERN = re.compile(r'["“”]([^"“”]{2,80})["“”]')
+
+# HTML-attribute pattern (`name="value"`, `data-x='y'`, etc.). The quoted
+# token inside an attribute is the attribute *literal* — NOT authoritative
+# element text — so it must be stripped from the prose before the verbatim-
+# quote extractor runs. Pre-G19 the extractor pulled "high" out of
+# `fetchpriority="high"` and then false-matched it against any element
+# whose text_content happened to contain the substring (e.g.
+# "Amazon's Choice — highly rated"), bouncing correctly-anchored findings.
+# See docs/ecp/2026-05-27-0669899d lead-reflection §Anomalies.
+_HTML_ATTRIBUTE_PATTERN = re.compile(
+    r'''[a-zA-Z][a-zA-Z0-9_-]*=("|')[^"']{1,80}\1'''
+)
+
+
+def _strip_html_attributes(prose: str) -> str:
+    """Remove ``attr="value"`` / ``attr='value'`` patterns from prose so
+    the verbatim-quote extractor doesn't treat HTML attribute literals
+    as authoritative element-text references."""
+    return _HTML_ATTRIBUTE_PATTERN.sub("", prose)
+
+
+def _is_substantive_quote(q: str) -> bool:
+    """A verbatim quote is substantive — likely a real element-text
+    identifier rather than a generic short English word.
+
+    Substantive when ANY of:
+    - Contains whitespace (multi-word phrase, e.g. "Read More", "Add to Cart").
+    - Length ≥ 10 chars (long single word, e.g. "recommendations").
+    - Contains a digit (specific identifier, e.g. "$59.95", "SKU123", "30%").
+    - Contains a non-alphabetic-or-hyphen punctuation char that's a
+      common identifier marker (``$ % & + < > = / # @``) — these denote
+      prices, percentages, formulas, or markup, not English words.
+
+    NOT substantive (excluded): short all-alphabetic tokens like "high",
+    "low", "Search", "Cart", "both", which generate false-positive
+    substring matches against unrelated element text that happens to
+    contain the same English word.
+
+    Live-run evidence (2026-05-27 batch):
+    - ``docs/ecp/2026-05-27-0669899d`` (Amazon): prose quoting
+      ``fetchpriority="high"`` extracted bare "high" → substring-matched
+      "Amazon's Choice — highly rated" → bounced an LCP-image finding
+      anchored to the correct image element.
+    - ``docs/ecp/2026-05-27-4a0721e9`` (slingmods): prose quoting
+      "Search" (referring to a search button) substring-matched a header
+      text blob that contained "Search" → bounced a category-navigation
+      finding correctly anchored to the search submit control.
+
+    The strip-html-attributes pre-pass handles (1); this substantive-
+    quote filter handles (2). Both must hold for the rule to fire on
+    only meaningful mismatches.
+    """
+    ql = q.strip()
+    if len(ql) < 4:
+        return False
+    if any(c.isspace() for c in ql):
+        return True
+    if len(ql) >= 10:
+        return True
+    if any(c.isdigit() for c in ql):
+        return True
+    if any(c in "$%&+<>=/#@" for c in ql):
+        return True
+    return False
 # Stopwords removed before computing title Jaccard
 _TITLE_STOPWORDS = frozenset({
     "a", "an", "the", "of", "for", "to", "in", "on", "at", "with",
@@ -795,7 +859,22 @@ def _check_baton_precedence(
     rec = finding.get("recommendation", "") or ""
     prose = f"{obs}\n{rec}"
 
-    quotes = _VERBATIM_QUOTE_PATTERN.findall(prose)
+    # G19 (2026-05-27): strip HTML-attribute patterns and require
+    # substantive quotes before matching. Two reproducible false-positive
+    # classes from the 2026-05-27 audit batch:
+    #   1. fetchpriority="high" → bare "high" matched "Amazon's Choice...
+    #      highly rated" → bounced a correctly-anchored LCP-image finding.
+    #   2. "Search" (referring to the search button) matched a header
+    #      element whose text blob also contained "Search" → bounced a
+    #      correctly-anchored category-navigation finding.
+    # _strip_html_attributes addresses (1) by removing attr="value"
+    # expressions before quote extraction. _is_substantive_quote addresses
+    # (2) by requiring quoted strings to be multi-word OR ≥10 chars.
+    prose = _strip_html_attributes(prose)
+    quotes = [
+        q for q in _VERBATIM_QUOTE_PATTERN.findall(prose)
+        if _is_substantive_quote(q)
+    ]
     if not quotes:
         return []
 

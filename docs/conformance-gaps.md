@@ -280,7 +280,39 @@ rest, verified against current `HEAD`:
 
 ## Concurrent-audit robustness (2026-05-27 session 5)
 
-### G17 · P1 · ✓ DONE (this branch) · Cross-engagement session contamination + thundering-herd rate-limit
+### G19 · P2 · ✓ DONE (this branch) · `baton_precedence_verbatim_anchor` false-positives on attribute literals + short generic words
+- **Spec:** §4.1 — the validator must surface real mismatches, not false-positive on
+  common-token substring matches that incorrectly bounce correctly-anchored findings.
+- **Was:** the `_check_baton_precedence` rule in `scripts/assembly/business_rules.py`
+  pulled any quoted string ≥2 chars out of a finding's prose and substring-matched it
+  against every baton element's `text_content`. Two false-positive classes reproduced
+  across the 2026-05-27 batch:
+  - **HTML attribute literals.** Prose quoting `fetchpriority="high"` extracted the
+    bare token `"high"`, which substring-matched an unrelated "Amazon's Choice —
+    highly rated" element → bounced a correctly-anchored LCP-image finding
+    (`docs/ecp/2026-05-27-0669899d` lead-reflection §Anomalies).
+  - **Short generic English words.** Prose quoting `"Search"` (referring to a search
+    button) substring-matched a header element whose text blob also contained
+    "Search" → bounced a correctly-anchored category-navigation finding
+    (`docs/ecp/2026-05-27-4a0721e9` lead-reflection §Anomalies).
+- **Done:**
+  - New `_strip_html_attributes` pre-pass removes `name="value"` /
+    `name='value'` patterns from prose before quote extraction so the attribute
+    literal can't be mistaken for authoritative element text.
+  - New `_is_substantive_quote` predicate: a quote is substantive only when ≥4 chars
+    AND (contains whitespace OR ≥10 chars OR contains a digit OR contains an
+    identifier-marker char `$ % & + < > = / # @`). Short alphabetic-only tokens like
+    "high", "low", "Search", "Cart" are excluded; specific identifiers like "$59.95",
+    "SKU123", "100%", "Read More", "recommendations" remain substantive.
+  - Both new rules layer cleanly: the attribute strip handles class 1; the
+    substantive-quote filter handles class 2.
+- **Regression:** 4 new tests in `tests/test_v2_business_rules.py::
+  TestG19BatonPrecedenceFalsePositiveFixes` reproducing both false-positive cases
+  exactly + confirming that legitimate mismatches (substantive multi-word phrases
+  like "Read More"; identifier tokens like "$33.99" / "SKU123" / "100%") still
+  trigger the rule. All 37 prior business-rules tests preserved.
+
+### G17 · P1 · ✓ DONE (`75fd5e0`) · Cross-engagement session contamination + thundering-herd rate-limit
 - **Spec:** §0 ("never untraceable, never silently misleading") · §2.2 (acquirer captures
   the *rendered* page state — but only if that state is the one we asked for).
 - **Was:** the headless browser session (`agent-browser`'s Playwright instance) is
