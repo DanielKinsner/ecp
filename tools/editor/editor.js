@@ -225,6 +225,7 @@
   function queueFindings(s = state(), mode = app.findingMode) {
     const findings = sortedFindings(s);
     if (mode === "selected") return findings.filter(f => !isHiddenFinding(f) && isPickedForEdit(f) && f.status !== "approved");
+    if (mode === "place") return findings.filter(f => !isHiddenFinding(f) && f.status !== "approved" && needsMarkerPlacement(f, s));
     if (mode === "fix") return findings.filter(needsHumanPlacementFix);
     if (mode === "ok") return findings.filter(f => !isHiddenFinding(f) && isLikelyOkFinding(f));
     if (mode === "approved") return findings.filter(f => !isHiddenFinding(f) && f.status === "approved");
@@ -273,6 +274,15 @@
   function activeFinding() { return state().findings.find(f => f.f_ref === app.activeFindingRef); }
   function markerFor(finding) { return state().markers.find(m => m.marker_id === finding?.marker_id); }
   function isMarkerPlaced(marker) { return Boolean(marker && marker.hidden !== true); }
+  function needsMarkerPlacement(f, s = state()) {
+    // A finding needs manual placement when its marker is unplaced (hidden /
+    // coord-less, e.g. a G4 "unplaced" absence finding) or it still carries the
+    // needs-manual-marker confidence. This is the worklist the "Place" queue and
+    // the stage placement hint surface.
+    if (!f) return false;
+    const marker = (s.markers || []).find(m => m.marker_id === f.marker_id);
+    return f.hotspot_confidence === "needs-manual-marker" || !isMarkerPlaced(marker);
+  }
   function slideById(slideId) {
     return state().slides.find(slide => slide.slide_id === slideId) || null;
   }
@@ -461,6 +471,7 @@
     const host = document.getElementById("findingList");
     const counts = {
       selected: queueFindings(state(), "selected").length,
+      place: queueFindings(state(), "place").length,
       all: queueFindings(state(), "all").length,
       approved: queueFindings(state(), "approved").length,
       hidden: queueFindings(state(), "hidden").length
@@ -474,11 +485,13 @@
     host.innerHTML = `
       <div class="queue-switch" aria-label="Finding queue">
         <button data-queue-mode="all" class="${app.findingMode === "all" ? "is-active" : ""}"><span>${counts.all}</span>All Findings</button>
+        <button data-queue-mode="place" class="${app.findingMode === "place" ? "is-active" : ""}"><span>${counts.place}</span>Place</button>
         <button data-queue-mode="selected" class="${app.findingMode === "selected" ? "is-active" : ""}"><span>${counts.selected}</span>Edit Set</button>
         <button data-queue-mode="approved" class="${app.findingMode === "approved" ? "is-active" : ""}"><span>${counts.approved}</span>Approved</button>
         <button data-queue-mode="hidden" class="${app.findingMode === "hidden" ? "is-active" : ""}"><span>${counts.hidden}</span>Hidden</button>
       </div>
       ${app.findingMode === "selected" && !queued.length ? `<div class="queue-note">No findings are in the edit set yet. Switch to All Findings and mark Edit on the cards you want to touch.</div>` : ""}
+      ${app.findingMode === "place" && !queued.length ? `<div class="queue-note">Nothing left to place — every finding has a hotspot. Absence findings and low-confidence guesses show up here until you draw a box for them.</div>` : ""}
       ${queued.length ? Object.values(groups).map(group => {
         return `
         <div class="group-label tone-${group.group.tone}">${escapeHtml(group.group.label)} (${group.findings.length})</div>
@@ -588,11 +601,13 @@
     stage.classList.toggle("is-before-preview", beforeMode);
     stage.style.setProperty("--stage-width", `${displayWidth(slide) * scale}px`);
     stage.style.transform = `translate(${Number(transform.translate_x_pct || 0)}%, ${Number(transform.translate_y_pct || 0)}%)`;
+    const needsPlacement = !beforeMode && finding && !isMarkerPlaced(editedMarker);
     stage.innerHTML = `
       <div class="stage-hud">
         <span>${beforeMode ? "AI Draft View" : escapeHtml(toolLabel(app.activeTool))}</span>
         <strong>${markers.length} visible / ${queueFindings(s).length} ${escapeHtml(findingModeLabel(app.findingMode))}</strong>
       </div>
+      ${needsPlacement ? `<div class="stage-place-hint">No hotspot yet — draw a <b>${escapeHtml(toolLabel(app.activeTool))}</b> on the screenshot to place <b>${escapeHtml(displayTitle(finding))}</b>.</div>` : ""}
       <img style="${cropStyle}" src="${img}" alt="${escapeAttr(slide.section_label || slide.slide_id)}">
       ${effects}${crop}
       <svg class="marker-layer" viewBox="0 0 100 100" preserveAspectRatio="none">${connectors}${markers.map(m => markerSvg(m, m.marker_id === activeMarker?.marker_id)).join("")}${overlay}</svg>
@@ -956,6 +971,15 @@
       stroke_width: preservedWidth,
       hidden: false,
     });
+    // A deliberate hand-placement is the highest-trust placement signal
+    // (product.md §4.2: manual placement is a designed step). Clear any
+    // risky/needs-placement confidence so the finding drains out of the
+    // Place / fix queues and reads as resolved — without this, a finding the
+    // operator just placed stays flagged "Place manually" forever. Mirrors
+    // snapToNearestBaton, which also promotes confidence on placement.
+    if (f && riskyConfidence.includes(f.hotspot_confidence)) {
+      f.hotspot_confidence = "exact-selector";
+    }
     if (f && (!f.callout_slide_id || f.callout_slide_id === previousSlideId)) {
       f.callout_slide_id = nextSlideId;
     }
@@ -1691,6 +1715,7 @@
   function findingModeLabel(mode) {
     return {
       all: "all findings",
+      place: "to place",
       selected: "in edit set",
       approved: "approved",
       hidden: "hidden",

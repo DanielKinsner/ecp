@@ -129,6 +129,23 @@ async function main() {
     await page.waitForTimeout(100);
     assert(await page.getByText("not placed").count() >= 1, "Delete did not clear the hotspot independently");
 
+    // G5: a "Place" queue surfaces findings awaiting a hotspot, and hand-placing
+    // one must clear its "Place manually" state so the queue actually drains.
+    assert(await page.locator('.queue-switch [data-queue-mode="place"]').count() === 1, "Editor lacks the Place queue");
+    const verdictBefore = await page.locator(".finding-card.is-active .badge").first().textContent();
+    assert(/place manually/i.test(verdictBefore || ""), `Cleared finding should read "Place manually", got: ${verdictBefore}`);
+    await page.locator('[data-tool="rect"]').click();
+    const placeBox = await page.locator(".marker-layer").boundingBox();
+    assert(placeBox, "Marker layer has no bounding box for placement");
+    await page.mouse.move(placeBox.x + placeBox.width * 0.30, placeBox.y + placeBox.height * 0.30);
+    await page.mouse.down();
+    await page.mouse.move(placeBox.x + placeBox.width * 0.52, placeBox.y + placeBox.height * 0.48);
+    await page.mouse.up();
+    await page.waitForTimeout(100);
+    assert(await page.getByText("not placed").count() === 0, "Hand-drawn hotspot did not register as placed");
+    const verdictAfter = await page.locator(".finding-card.is-active .badge").first().textContent();
+    assert(!/place manually/i.test(verdictAfter || ""), `Hand-placing must clear "Place manually" (queue must drain), got: ${verdictAfter}`);
+
     await page.locator('[data-tool="dim"]').click();
     const layer = page.locator(".marker-layer");
     const box = await layer.boundingBox();

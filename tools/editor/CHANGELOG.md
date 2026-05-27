@@ -1,5 +1,12 @@
 # ECP Review Editor Changelog
 
+## v1.0.3 - 2026-05-26 (Manual-placement ergonomics — conformance G5, §4.2)
+
+- Fixed the core manual-placement gap: hand-drawing a hotspot (`setMarker`) now promotes a finding off `needs-manual-marker`/risky confidence to `exact-selector`, mirroring `snapToNearestBaton`. Before this, a finding the operator just placed by hand stayed flagged "Place manually" forever and the queue never drained. This completes the conformance-G4 flow, which routes every unplaced/absence finding into the manual-placement queue with no marker.
+- Added a **Place** queue to the finding-list switch: one click surfaces every finding still awaiting a hotspot (unplaced marker or `needs-manual-marker` confidence), with an empty-state note when nothing is left to place.
+- Added a stage placement hint: when the active finding has no hotspot yet, the stage shows "draw a {tool} to place {finding}" so the next action is obvious.
+- Smoke test (`tests/editor-smoke.mjs`) now covers the round-trip: clear a hotspot → "Place manually" → hand-draw a box → state clears and the marker registers.
+
 ## v1.0.2 - 2026-05-03 (Manual report-to-editor correction workflow)
 
 - Added visual-report buttons to Queue edit or Open editor for the selected finding, so the operator chooses what needs correction from the report instead of relying on AI confidence.
