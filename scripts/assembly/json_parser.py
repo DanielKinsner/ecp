@@ -75,6 +75,21 @@ def _build_validator() -> Draft202012Validator:
 _VALIDATOR = _build_validator()
 
 
+def get_validator() -> Draft202012Validator:
+    """Return the module-level Draft202012Validator built against
+    ``schema/cluster-emission-v1.json`` + ``schema/finding-v1.json``.
+
+    G16 Layer 3 (2026-05-27): exposed as the single source of truth
+    for cluster/ethics emission validation so ``test-specialist.py
+    validate`` and ``build_canonical_view`` agree by construction.
+    Pre-G16-Layer-3, ``scripts/test-specialist.py:_load_schemas`` built
+    a duplicate validator instance from the same schema files — the
+    code was byte-equivalent but two copies risk drifting under future
+    edits. Both callers now share this one instance.
+    """
+    return _VALIDATOR
+
+
 # ---------------------------------------------------------------------------
 # Result types
 # ---------------------------------------------------------------------------

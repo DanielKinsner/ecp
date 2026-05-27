@@ -309,9 +309,15 @@ rest, verified against current `HEAD`:
   exit-4). `tests/test_g19_clusters_represented_canary.py` (8 tests: pass + fail + skip
   cases including the headline Run C shape). Both unittest-style for `unittest discover`
   runner.
-- **Layer 3 (deferred):** schema reconciliation — make the specialist validator and the
-  canonical-view validator share a single source of truth so this drift can't recur. Tracked
-  separately; Layers 1+2 make Layer 3 non-urgent because the failure is no longer silent.
+- **Layer 3 (this branch — ✓ DONE) — single shared validator instance:** investigation
+  showed the "two validators" risk was actually one validator implementation duplicated
+  across `scripts/test-specialist.py` and `scripts/assembly/json_parser.py` — code was
+  byte-equivalent but a future edit to one and not the other could have re-introduced
+  drift. Consolidated: new `assembly.json_parser.get_validator()` is the single source
+  of truth; `test-specialist.py:_load_schemas()` now delegates to it. Regression
+  (`tests/test_g16_layer3_single_validator.py`) asserts the two paths return the
+  same Python instance via `assertIs`, so a future re-introduction of a duplicate
+  validator (even an equivalent one) fails the gate.
 
 ---
 

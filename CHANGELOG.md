@@ -33,9 +33,16 @@ G16 — see `docs/conformance-gaps.md` for the full diagnosis.
   file, the dropped-run exit-4 + stderr surface, the canary's missing-cluster fail
   mode, the canary's drops-recorded fail mode, and the skip-on-pre-canonical-stage
   fixture cases.
-- **Layer 3 deferred**: reconcile the specialist validator schema with the canonical-view
-  validator schema so this drift class can't recur. Non-urgent now that the failure is
-  loud — the operator sees it instantly and phase-block stops the audit.
+- **G16 Layer 3** (this commit) — single shared validator instance: investigation
+  showed the "two validators" risk was actually one validator implementation
+  duplicated across `scripts/test-specialist.py` and
+  `scripts/assembly/json_parser.py`. The duplicated code was byte-equivalent, but
+  two copies could drift under future edits to one and not the other. New
+  `assembly.json_parser.get_validator()` is the single source of truth;
+  `test-specialist.py:_load_schemas()` now delegates to it. Regression test
+  (`tests/test_g16_layer3_single_validator.py`) uses `assertIs` (not just
+  equivalence) so any future re-introduction of a duplicate validator fails the
+  gate immediately.
 - **G18** (this commit): drift-gate why-slice terminator hardened. Pre-fix,
   `extract_finding_prose` in `scripts/assembly/synth_input.py` only terminated the body
   slice at the next *finding* heading; the LAST finding's slice ran to EOF and absorbed

@@ -494,15 +494,22 @@ def render_synthesizer_prompt(
 
 
 def _load_schemas() -> tuple[Any, Any]:
-    """Load and compile the validators with a referencing.Registry.
+    """Return ``(validator, finding_schema_dict)``.
 
-    Returns (validator, finding_schema_dict). Lazy-imports jsonschema +
-    referencing so prepare mode runs without the dep installed.
+    G16 Layer 3 (2026-05-27): now delegates to
+    ``assembly.json_parser.get_validator`` so test-specialist.py's
+    ``validate`` mode and ``build_canonical_view`` share a single
+    validator instance from the same module. Pre-Layer-3 this function
+    built its own duplicate Draft202012Validator from the same schema
+    files; the code was byte-equivalent but two copies risked drifting
+    under future edits to one but not the other. Consolidating
+    eliminates that whole failure-mode class. ``finding_schema_dict``
+    is still loaded locally because some downstream business-rule
+    checks read it (Phase L target_band, evidence_anchor type union).
     """
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
     try:
-        from jsonschema import Draft202012Validator
-        from referencing import Registry, Resource
-        from referencing.jsonschema import DRAFT202012
+        from assembly.json_parser import get_validator
     except ImportError as e:
         raise ImportError(
             "jsonschema and referencing are required for validate mode.\n"
@@ -510,25 +517,8 @@ def _load_schemas() -> tuple[Any, Any]:
         ) from e
 
     finding_path = REPO_ROOT / "schema" / "finding-v1.json"
-    cluster_path = REPO_ROOT / "schema" / "cluster-emission-v1.json"
     finding_schema = json.loads(finding_path.read_text(encoding="utf-8"))
-    cluster_schema = json.loads(cluster_path.read_text(encoding="utf-8"))
-
-    finding_resource = Resource.from_contents(finding_schema, default_specification=DRAFT202012)
-    cluster_resource = Resource.from_contents(cluster_schema, default_specification=DRAFT202012)
-    registry = Registry().with_resources(
-        [
-            ("https://ecp.local/schema/finding-v1.json", finding_resource),
-            ("https://ecp.local/schema/cluster-emission-v1.json", cluster_resource),
-        ]
-    )
-    Draft202012Validator.check_schema(cluster_schema)
-    validator = Draft202012Validator(
-        cluster_schema,
-        registry=registry,
-        format_checker=Draft202012Validator.FORMAT_CHECKER,
-    )
-    return validator, finding_schema
+    return get_validator(), finding_schema
 
 
 def _run_business_rules(
