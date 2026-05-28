@@ -30,6 +30,32 @@ engagements/
 .tmp_synth/
 .phase-b-tmp/
 
+# Per-engagement lead-recovery scratch (added 2026-05-27 session 5).
+# The audit lead occasionally needs to hand-write or convert one-off
+# recovery scripts during a live run (e.g. when a specialist emission
+# needs structural repair, or an acquirer output needs an engagement-
+# specific converter). These live in scripts/ during the run but are
+# NOT durable repo content — each is tied to one engagement's specific
+# failure mode and would be re-written for any future recovery.
+# Distinct from scripts/one_off/ which IS the canonical home for
+# genuinely-shared one-off scripts (and IS tracked).
+scripts/_write_*.py
+scripts/write_*.py
+scripts/temp_*.py
+scripts/run_*.py
+scripts/assembly/_write_*.py
+scripts/assembly/write_*.py
+scripts/assembly/temp_*.py
+
+# Stray agent-browser eval base64 temp output at the repo root.
+# Occasionally a redirect like `agent-browser eval -b <b64> > <path>`
+# lands the output AT the repo root with the path-as-filename when the
+# shell doesn't interpret the path the way agent-browser expects. The
+# leaked filenames always end in `_b64.txt` (the operator's chosen
+# extension for these intermediates). Narrower than `/*.txt` so legit
+# root-level files like requirements.txt stay tracked.
+/*_b64.txt
+
 # Python build + cache
 __pycache__/
 *.py[cod]
