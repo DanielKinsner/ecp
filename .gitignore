@@ -47,6 +47,17 @@ scripts/assembly/_write_*.py
 scripts/assembly/write_*.py
 scripts/assembly/temp_*.py
 
+# Per-engagement baton converters/trimmers are the same scratch class: one per
+# engagement, *adapted* (not shared) each run — e.g. convert_<eng>_batons.py,
+# trim_batons_phase5.py. They sometimes get saved under scripts/one_off/ (the
+# tracked dir), but they fail that dir's "genuinely-shared" test, so keep them
+# untracked in place. The durable fix is a single parameterized v1->v2 converter
+# (roadmap); until that lands these stay scratch. Root-scoped + the specific
+# one_off/ converter glob — does NOT touch tracked scripts/one_off/trim_r03_batons.py.
+scripts/convert_*.py
+scripts/trim_*.py
+scripts/one_off/convert_*_batons.py
+
 # Stray agent-browser eval base64 temp output at the repo root.
 # Occasionally a redirect like `agent-browser eval -b <b64> > <path>`
 # lands the output AT the repo root with the path-as-filename when the
@@ -55,6 +66,13 @@ scripts/assembly/temp_*.py
 # extension for these intermediates). Narrower than `/*.txt` so legit
 # root-level files like requirements.txt stay tracked.
 /*_b64.txt
+
+# Same failure mode for screenshot output: a wrong flag such as
+# `agent-browser screenshot --quality 80 <url>` (correct: --screenshot-quality)
+# makes the tool treat the flag token as the output PATH, landing a PNG at the
+# repo root named `--quality`. Ignore any root-level file whose name starts with
+# a dash so a future mis-flagged capture can't be committed again.
+/--*
 
 # Python build + cache
 __pycache__/
