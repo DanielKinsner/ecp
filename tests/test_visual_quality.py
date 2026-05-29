@@ -691,3 +691,79 @@ class TestCanaryIntegration:
         assert "visual_evidence_giant_exact_rectangles" in names
         giant_result = next(r for r in result["results"] if r["name"] == "visual_evidence_giant_exact_rectangles")
         assert not giant_result["passed"]
+
+
+# ---------------------------------------------------------------------------
+# Backlog #6 regression guard — visual_quality on the REAL v2 review-state shape
+# ---------------------------------------------------------------------------
+
+
+class TestRealV2ShapeRegression:
+    """Guards Backlog #6 (2026-05-29). visual_quality showed all-zeros on older v2
+    review-states because their findings carried NO ``visual_evidence`` (e.g. the
+    2026-05-02-9cd2a2ac fixture: 0/12 + 0/14). The current pipeline derives a
+    ``visual_evidence`` block per finding (verified against the live
+    docs/ecp/2026-05-29-3e7bd452 review-states: 26/26 + 25/25 populated). These
+    tests lock both halves so the silently-misleading all-zeros can't quietly
+    return: (1) when ``visual_evidence`` is present in the real {type, confidence,
+    reason} shape, the summary counts non-zero across all five types; (2) when it
+    is ABSENT, the all-zero summary is *correct* — the historical symptom was
+    upstream data, not a counting bug. A regression in ve population or an
+    ALL_TYPES/ALL_CONFIDENCES enum drift re-breaks (1).
+    """
+
+    def _ve_finding(self, f_ref: str, type_: str, confidence: str) -> dict:
+        # Mirrors the real shape observed in 3e7bd452 review-state findings,
+        # including the derivation `reason` the builder writes.
+        return {
+            "f_ref": f_ref,
+            "cluster": "pricing",
+            "verdict": "FAIL",
+            "visual_evidence": {
+                "type": type_,
+                "confidence": confidence,
+                "reason": "Derived from match_method=e_index_lookup",
+            },
+        }
+
+    def test_summary_counts_real_v2_shape_nonzero(self):
+        findings = [
+            self._ve_finding("a F-1", "exact_element", "high"),
+            self._ve_finding("a F-2", "exact_element", "high"),
+            self._ve_finding("b F-3", "proxy_element", "medium"),
+            self._ve_finding("c F-4", "generated_expected_zone", "high"),
+            self._ve_finding("d F-5", "section_absence", "low"),
+            self._ve_finding("e F-6", "page_level", "needs_review"),
+        ]
+        summary = compute_visual_evidence_summary(findings)
+        assert summary["_total"] == {"high": 3, "medium": 1, "low": 1, "needs_review": 1}
+        assert summary["exact_element"]["high"] == 2
+        assert summary["proxy_element"]["medium"] == 1
+        assert summary["generated_expected_zone"]["high"] == 1
+        assert summary["section_absence"]["low"] == 1
+        assert summary["page_level"]["needs_review"] == 1
+
+    def test_summary_all_zero_when_visual_evidence_absent(self):
+        # The historical all-zeros root cause: findings with no visual_evidence.
+        # The summary is correctly all-zero — the zeros were upstream data, not a bug.
+        findings = [{"f_ref": f"a F-{i}", "cluster": "pricing", "verdict": "FAIL"} for i in range(5)]
+        summary = compute_visual_evidence_summary(findings)
+        assert summary["_total"] == {"high": 0, "medium": 0, "low": 0, "needs_review": 0}
+
+    def test_gates_summary_table_nonzero_on_real_shape(self, tmp_path):
+        findings = [
+            self._ve_finding("a F-1", "exact_element", "high"),
+            self._ve_finding("b F-2", "proxy_element", "medium"),
+            self._ve_finding("c F-3", "section_absence", "low"),
+        ]
+        rs = {
+            "review_state_schema_version": 1,
+            "engagement_id": "2026-05-29-deadbeef",
+            "device": "desktop",
+            "findings": findings,
+            "markers": [],
+        }
+        p = tmp_path / "review-state-desktop.json"
+        p.write_text(json.dumps(rs), encoding="utf-8")
+        out = run_visual_quality_gates(p)
+        assert out["summary_table"]["_total"] == {"high": 1, "medium": 1, "low": 1, "needs_review": 0}

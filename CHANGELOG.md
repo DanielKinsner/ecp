@@ -69,6 +69,20 @@ acquirer SyntaxError fix, and a specialist file-ownership check (prompt prohibit
   gitignored the per-engagement baton converter/trimmer scratch
   (`scripts/{convert,trim}_*.py`, `scripts/one_off/convert_*_batons.py`).
 
+- **Backlog #6** (`visual_quality` all-zeros on v2 — investigated, no code change):
+  diagnosed with the systematic-debugging discipline against the live
+  `2026-05-29-3e7bd452` review-states. Root cause: older v2 review-states (e.g. the
+  `tests/fixtures/2026-05-02-9cd2a2ac` fixture — 0/12 + 0/14 findings) carried no
+  `visual_evidence`, so `compute_visual_evidence_summary` correctly summed to
+  all-zeros; the current pipeline derives `visual_evidence` per finding
+  (`3e7bd452`: 26/26 + 25/25, `reason: "Derived from match_method=e_index_lookup"`),
+  so the summary is non-zero and correct. The symptom was upstream data, already
+  resolved — `visual_quality` itself was never wrong. Added a regression guard
+  (`TestRealV2ShapeRegression` in `tests/test_visual_quality.py`) locking both
+  halves: non-zero counts across all five ve types when populated, and the correct
+  all-zero when absent — so a future ve-population regression or an
+  `ALL_TYPES`/`ALL_CONFIDENCES` enum drift is caught.
+
 ## Post-1.0.0 conformance — 2026-05-28 (session 7)
 
 - **G21** (this commit): frozen Cursor agents no longer leak into Claude Code's
