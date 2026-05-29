@@ -281,6 +281,35 @@ rest, verified against current `HEAD`:
 
 ## Tooling + reflection canary (2026-05-29 session 8)
 
+### G28 · P2 · ✓ DONE (`3cc04c0`,`63d389a`) · A specialist could write lead-owned files (e.g. lead-reflection.md)
+- **Spec:** `contracts/lead-discipline.md` ownership model — the LEAD writes
+  `lead-reflection.md`, `lead-state.json`, `meta.json`, `audit-*.md`,
+  `synthesizer-emission-v1.json`; SPECIALISTS write only their
+  `cluster-{cluster}-{device}.json`. §0 — a non-lead authoring the operator's
+  postmortem is "silently misleading."
+- **Was:** the specialist prompt only said "you do not write prose, markdown, or
+  analysis outside the JSON" — it never enumerated the lead-owned files, and
+  `docs/ecp/2026-05-28-e4050c0e` had a `specialist-content-seo-desktop` subagent
+  write `lead-reflection.md` at specialist-phase time. The operator read it as an
+  authoritative "we failed" narrative against an actually-clean deliverable. No
+  prompt prohibition and no canary detected the non-lead author.
+- **Done:** two-part fix (prevention + detection). (1) An explicit "Write scope —
+  your emission file ONLY" rule in `contracts/specialist-prompt-v2.md`: a specialist
+  creates/modifies EXACTLY ONE file and MUST NOT touch the enumerated
+  lead/synthesizer/acquirer/ethics/peer files; run-level observations go in
+  `notes[]`. (2) `check_lead_reflection_well_formed` (8th `run_all_canaries` check):
+  when `lead-reflection.md` is present it must match the lead's canonical format
+  (`# Lead Reflection — engagement <id>` header + `**Pipeline:**` + `**Phase
+  reached:**`); a specialist's content dump won't. The pipeline has no
+  write-attribution, so the canary is a structural PROXY, not direct authorship
+  detection. Skips with PASS when the file is absent; fixture-safe (slingmods/
+  awdmods/9cd2a2ac reflections all conform).
+- **Regression:** `tests/test_specialist_write_scope.py` (source guard on the
+  prohibition + enumerated filenames) and
+  `tests/test_lead_reflection_ownership_canary.py` (9 tests). Canary-count
+  assertions updated: `test_v2_canary_checks` 7→8, `test_v2_determinism_gate` 8→9,
+  `test_visual_quality` 7→8 (×2).
+
 ### G25 · P1 · ✓ DONE (`26db34c`) · `reflection_state` machine (G23) had no consumer-side staleness gate
 - **Spec:** §0 — *"never untraceable, never silently misleading."* G23 added the
   `reflection_state: draft|complete` machine and the `--mark-reflection-complete`

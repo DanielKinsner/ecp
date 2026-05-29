@@ -8,8 +8,25 @@ The full pre-1.0 history lives in the archived `ecommerce-conversion-psychology`
 
 Roadmap continuation off the 2026-05-28 Cursor-migration handoff: repo hygiene, a
 durable v1→v2 baton converter retiring the per-engagement scratch class, a
-consumer-side reflection-staleness canary completing G23, and a concurrent-session
-acquirer SyntaxError fix — all on `main`, both runners green (852 passed / 554 ran).
+consumer-side reflection-staleness canary completing G23, a concurrent-session
+acquirer SyntaxError fix, and a specialist file-ownership check (prompt prohibition
++ canary) — all on `main`, both runners green (862 passed / 564 ran).
+
+- **G28** (`3cc04c0`, `63d389a`): file-ownership — a specialist could write
+  lead-owned files. `contracts/lead-discipline.md` makes the lead the owner of
+  `lead-reflection.md` (and `meta.json`, `audit-*.md`, etc.); specialists write only
+  their `cluster-{cluster}-{device}.json`. But the specialist prompt only said "no
+  prose outside JSON," and `docs/ecp/2026-05-28-e4050c0e` had a content-seo
+  specialist write the lead's reflection prematurely — read by the operator as an
+  authoritative "we failed" narrative against a clean deliverable. Two-part fix:
+  (1) an explicit "Write scope — your emission file ONLY" prohibition in
+  `specialist-prompt-v2.md` enumerating the forbidden lead/synthesizer/acquirer/
+  ethics/peer files (prevention; source-guarded by `test_specialist_write_scope.py`),
+  and (2) `check_lead_reflection_well_formed` — the 8th `run_all_canaries` check —
+  which flags a present-but-non-lead-shaped `lead-reflection.md` (detection; 9 tests
+  in `test_lead_reflection_ownership_canary.py`). The pipeline has no
+  write-attribution, so the canary is a structural proxy on the lead's required
+  format. Fixture-safe (slingmods/awdmods/9cd2a2ac reflections all conform).
 
 - **G27** (`90030d0`): `acquire_url.py` element-extraction eval threw
   `SyntaxError: Unexpected end of input` on Windows. `_build_elements_js()` is
