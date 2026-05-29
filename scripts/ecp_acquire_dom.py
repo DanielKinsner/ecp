@@ -1,5 +1,7 @@
-"""Tiered HTML preprocessing for Cursor `acquire.md`-style URL capture (Python).
+"""Tiered HTML preprocessing for `workflows/acquire.md` URL capture.
 
+Canonical helper for the Claude `/ecp:audit` acquire path (the "Cursor" lineage of
+the `ecp_*` acquisition helpers is historical; they serve the Claude runtime now).
 Mirrors the mandatory steps in `workflows/acquire.md` "Step 4: Extract and Preprocess DOM"
 as closely as practical without adding third-party HTML tree libraries.
 

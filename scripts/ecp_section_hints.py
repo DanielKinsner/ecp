@@ -1,4 +1,4 @@
-"""Heuristic section labels + cluster slugs for URL acquisition batons (Cursor).
+"""Heuristic section labels + cluster slugs for URL acquisition batons.
 
 Implements `workflows/acquire.md`-style **descriptive** section names (not cluster slugs) via
 in-viewport landmarks + visible headings, plus a keyword → cluster map for routing. Labels are

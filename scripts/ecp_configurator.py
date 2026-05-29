@@ -1,4 +1,4 @@
-"""acquire.md Step 1d — configurator / fitment dual-state capture (Cursor URL bootstrap).
+"""acquire.md Step 1d — configurator / fitment dual-state capture (canonical acquire helper).
 
 When at least two required ``<select>`` elements exist and the primary CTA is disabled,
 selects the first valid option in each, waits for dynamic updates, and captures one

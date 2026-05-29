@@ -1,7 +1,7 @@
 {
-  "name": "ecommerce-conversion-psychology",
+  "name": "ecp",
   "version": "1.0.0",
-  "description": "![v1.4.1](https://img.shields.io/badge/version-1.4.1-blue) ![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-7c3aed) ![Codex](https://img.shields.io/badge/Codex-skill-10b981) ![Platforms](https://img.shields.io/badge/platforms-Shopify_%7C_Next.js_%7C_OpenCart_%7C_WooCommerce_%7C_any-green)",
+  "description": "E-commerce conversion-psychology audit engine (Claude Code plugin). Node tooling for the editable hotspot tool and report-render smoke tests; the audit itself is the /ecp:audit plugin command. Canonical scope: product.md.",
   "main": "index.js",
   "directories": {
     "doc": "docs",
@@ -17,16 +17,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dannytownkins/ecommerce-conversion-psychology.git"
+    "url": "git+https://github.com/Dannytownkins/ecp.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Daniel Kinsner",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/Dannytownkins/ecommerce-conversion-psychology/issues"
+    "url": "https://github.com/Dannytownkins/ecp/issues"
   },
-  "homepage": "https://github.com/Dannytownkins/ecommerce-conversion-psychology#readme",
+  "homepage": "https://github.com/Dannytownkins/ecp#readme",
   "devDependencies": {
     "playwright": "^1.59.1"
   }
