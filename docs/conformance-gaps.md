@@ -79,13 +79,19 @@ Severity: **P1** = spec'd invariant unimplemented or a notable divergence ·
     interpretation is arguably Silver). Not worth re-tiering without operator
     input; flagging for the next references audit.
 
-### G3 · P3 · "DOM-present-but-not-displayed" not formally gated
+### G3 · P3 · ✓ COVERED (no action — schema + acquirer) · "DOM-present-but-not-displayed" not formally gated
 - **Spec:** §4.1 — a visibility claim must reflect the *rendered* page, not raw markup.
-- **Now:** mitigated (acquirer captures rendered state + screenshots; specialist
-  evidence-anchor gate requires a page anchor) but there's no explicit check that a
-  visibility claim matches rendered state.
-- **Fix:** optional — add a canary that flags findings asserting absence/visibility
-  without a screenshot-region or rendered-style anchor.
+- **Now:** covered structurally without a new canary. The acquirer captures rendered
+  state + screenshots, and `schema/finding-v1.json` enforces the claim→evidence link:
+  its `allOf` "visual position findings" rule REQUIRES at least one `evidence_anchors[]`
+  entry with `type` ∈ {visual, both} AND a `scroll_y` integer for any
+  above-fold/below-fold/sticky claim (`finding-v1.json` ~line 603). Specialists also
+  copy `text_content`/`role` verbatim from the cited baton element (Phase M cross-check
+  in `business_rules.py`).
+- **Resolution (2026-05-29):** a text-heuristic canary scanning observation prose for
+  "hidden / not displayed" would be redundant with the schema rule and fragile (false
+  positives on prose), so it is deliberately declined. Reopen only if a real
+  visibility-claim escape is observed on a live run.
 
 ---
 
@@ -174,13 +180,21 @@ Severity: **P1** = spec'd invariant unimplemented or a notable divergence ·
 
 ## §3 — ISN'T boundaries (framing spot-check)
 
-### G9 · P3 · Verify output copy honors the ISN'T list
+### G9 · P3 · ✓ DONE (this commit) · Verify output copy honors the ISN'T list
 - **Spec:** §3 — not a measurement/testing tool; not an exhaustive technical auditor;
   not legal/compliance advice; not a crawler/auto-fixer.
-- **Now:** mostly holds (single URL; ethics caught a GDPR→CCPA overreach at runtime).
-- **Fix:** spot-check report templates + `references/ethics-gate.md` copy for any
-  "we measure conversion / guarantee lift / certify compliance" phrasing; add the
-  "informational, not legal advice" disclaimer to legal/ethics findings if absent.
+- **Was:** mostly held, but the rendered report carried no "not legal advice" disclaimer.
+  A repo-wide spot-check (`references/`, `scripts/report/`, `contracts/`) found no
+  report-voice claims to "measure conversion / guarantee lift / certify compliance" —
+  the "guarantee/certify/measure" hits are reference-file domain content + careful legal
+  framing in `references/ethics-gate.md` (e.g. "best practice, not a compliance
+  requirement"; "not legally required for US private ecommerce").
+- **Done:** added a footer disclaimer to the v2 report (`scripts/report/templates/
+  html_structure.py` + `.bottom-disclaimer` in `css.py`): "Informational
+  conversion-psychology analysis — not a measurement or testing service, not a
+  compliance certification, and not legal advice. Validate any legal or regulatory
+  findings with qualified counsel before acting." Source-guarded by
+  `tests/test_report_disclaimer.py`.
 
 ---
 

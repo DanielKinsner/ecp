@@ -1455,6 +1455,15 @@ a:hover {{ text-decoration: underline; }}
   overflow: hidden;
   text-overflow: ellipsis;
 }}
+.bottom-disclaimer {{
+  font-size: 10px;
+  font-style: italic;
+  color: var(--text-muted);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}}
 .bottom-actions {{
   display: flex;
   gap: 8px;

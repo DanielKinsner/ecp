@@ -255,6 +255,7 @@ def assemble_html(ctx):
         <strong id="briefCountBottom">0</strong> findings in brief
       </span>
       <span class="bottom-meta">{escape_html(device_label)} · {escape_html(page_type)} · {escape_html(platform)} · {escape_html(source_mode)} · {escape_html(date_str)} · engagement {escape_html(engagement_id)} · generated {generated_date}</span>
+      <span class="bottom-disclaimer">Informational conversion-psychology analysis — not a measurement or testing service, not a compliance certification, and not legal advice. Validate any legal or regulatory findings with qualified counsel before acting.</span>
     </div>
     <div class="bottom-actions">
       <button class="btn btn-ghost" onclick="toggleSelectAllHigh()" title="Add every CRITICAL and HIGH finding to your brief (toggle)">Select HIGH</button>

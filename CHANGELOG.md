@@ -83,6 +83,16 @@ acquirer SyntaxError fix, and a specialist file-ownership check (prompt prohibit
   all-zero when absent — so a future ve-population regression or an
   `ALL_TYPES`/`ALL_CONFIDENCES` enum drift is caught.
 
+- **G3 / G9** (P3 polish): **G3** (DOM-present-but-not-displayed visibility gating)
+  documented as COVERED — `schema/finding-v1.json`'s visual-position `allOf` already
+  requires a visual+`scroll_y` anchor for above-fold/below-fold/sticky claims, plus the
+  acquirer captures rendered state; a text-heuristic canary would be redundant/fragile,
+  so it's declined. **G9** (ISN'T-list copy): a spot-check found the report voice clean
+  (no measure/guarantee/certify claims — the hits are reference-file domain content +
+  careful `ethics-gate.md` legal framing), but no "not legal advice" disclaimer was
+  rendered — added one to the report footer (`html_structure.py` + `css.py`
+  `.bottom-disclaimer`), source-guarded by `tests/test_report_disclaimer.py`.
+
 ## Post-1.0.0 conformance — 2026-05-28 (session 7)
 
 - **G21** (this commit): frozen Cursor agents no longer leak into Claude Code's
