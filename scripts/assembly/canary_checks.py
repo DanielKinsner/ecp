@@ -1016,6 +1016,67 @@ def check_lead_reflection_not_stale(engagement_dir: Path) -> CanaryResult:
     return CanaryResult(name=name, passed=True, summary=summary, detail=detail)
 
 
+def check_lead_reflection_well_formed(engagement_dir: Path) -> CanaryResult:
+    """G25 follow-up (2026-05-29): the lead's reflection must look like the lead wrote it.
+
+    `lead-reflection.md` is a lead-owned artifact (`contracts/lead-discipline.md`).
+    In `docs/ecp/2026-05-28-e4050c0e` a `specialist-content-seo-desktop` subagent
+    wrote it instead — a file-ownership violation. The pipeline has no
+    write-attribution, so this canary is a structural PROXY: when the file is
+    present it MUST conform to the lead's required format — the canonical
+    `# Lead Reflection — engagement <id>` header plus the `**Pipeline:**` and
+    `**Phase reached:**` metadata markers. A specialist's content dump won't carry
+    those, so a malformed reflection flags the most likely signature of a non-lead
+    author (or a lead writing off-format). Presence itself is a separate soft-gate;
+    this canary fires only when the file exists, and skips pre-format engagements
+    cleanly (absent file → PASS).
+    """
+    name = "lead_reflection_well_formed"
+    path = engagement_dir / "lead-reflection.md"
+    if not path.exists():
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (lead-reflection.md absent)",
+            detail={"reason": "no lead-reflection.md"},
+        )
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as e:
+        return CanaryResult(
+            name=name,
+            passed=False,
+            summary=f"{name}: FAIL -- unreadable lead-reflection.md: {e}",
+            detail={"error": str(e)},
+        )
+
+    missing: list[str] = []
+    if not re.search(r"(?m)^#\s+Lead Reflection\b.*\bengagement\b", text):
+        missing.append("'# Lead Reflection — engagement <id>' header")
+    if "**Pipeline:**" not in text:
+        missing.append("'**Pipeline:**' marker")
+    if "**Phase reached:**" not in text:
+        missing.append("'**Phase reached:**' marker")
+
+    if missing:
+        return CanaryResult(
+            name=name,
+            passed=False,
+            summary=(
+                f"{name}: FAIL -- lead-reflection.md is not in the lead's required "
+                f"format (missing {', '.join(missing)}); a lead-owned file may have "
+                f"been written by a non-lead — see contracts/lead-discipline.md"
+            ),
+            detail={"missing": missing},
+        )
+    return CanaryResult(
+        name=name,
+        passed=True,
+        summary=f"{name}: PASS (lead-reflection.md conforms to the lead format)",
+        detail={"missing": []},
+    )
+
+
 # ---------------------------------------------------------------------------
 # Top-level — run all canaries against an engagement directory
 # ---------------------------------------------------------------------------
@@ -1117,8 +1178,12 @@ def run_all_canaries(
     # relative to the finished pipeline (the docs/ecp/2026-05-28-e4050c0e
     # premature-reflection class). Skips pre-G23 engagements (absent field).
     r7 = check_lead_reflection_not_stale(engagement_dir)
+    # G25-followup (2026-05-29) — file-ownership proxy: lead-reflection.md, when
+    # present, must conform to the lead's required format. Catches the
+    # docs/ecp/2026-05-28-e4050c0e class where a specialist wrote the lead's file.
+    r8 = check_lead_reflection_well_formed(engagement_dir)
 
-    results = [r1, r2, r3, r4, r5, r6, r7]
+    results = [r1, r2, r3, r4, r5, r6, r7, r8]
 
     visual_quality_block: dict | None = None
     if include_visual_quality:

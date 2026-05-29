@@ -536,10 +536,12 @@ class TestRunAllCanaries(unittest.TestCase):
         # as the sixth — it skips with PASS on fixtures without
         # audit-trace.log. G23-followup (2026-05-29) added
         # lead_reflection_not_stale as the seventh — it skips with PASS when
-        # meta.json is absent (this fixture writes none). visual_quality block
+        # meta.json is absent (this fixture writes none). G25-followup
+        # (2026-05-29) added lead_reflection_well_formed as the eighth, skipping
+        # with PASS when lead-reflection.md is absent. visual_quality block
         # adds zero results when no review-state files are present (Phase 3
         # default-on path).
-        self.assertEqual(len(out["results"]), 7)
+        self.assertEqual(len(out["results"]), 8)
 
     def test_aggregates_failure(self):
         # Ethics — block without source_url fails
