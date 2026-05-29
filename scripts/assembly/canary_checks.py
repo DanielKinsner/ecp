@@ -37,6 +37,8 @@ from pathlib import Path
 from typing import TypedDict
 from urllib.parse import urlparse
 
+from .reflection_state import REFLECTION_STATE_COMPLETE, VALID_REFLECTION_STATES
+
 
 # Canonical pattern for a baton element index reference in an ELEMENT line.
 # Matches "at e0", "at e23", "at e9999"; case-sensitive; word-boundary anchored
@@ -934,6 +936,86 @@ def check_trace_counters_reconcile_with_artifacts(
     )
 
 
+def check_lead_reflection_not_stale(engagement_dir: Path) -> CanaryResult:
+    """G23 follow-up (2026-05-29): flag a stale lead-reflection narrative.
+
+    When an engagement is marked complete (``phase: complete`` OR
+    ``engagement_status: complete``) but the lead never flipped
+    ``reflection_state`` from ``draft`` to ``complete`` (the
+    ``--mark-reflection-complete`` attestation), ``lead-reflection.md`` is
+    stale relative to the finished pipeline. That is the
+    ``docs/ecp/2026-05-28-e4050c0e`` failure class: a reflection written at
+    specialist-phase time describing a "we failed" state that the pipeline
+    then completed cleanly past, never refreshed.
+
+    Back-compat (mirrors ``test_g23_reflection_state_gate``): an ABSENT
+    ``reflection_state`` field is a pre-G23 engagement and is NOT flagged —
+    only an *explicitly* ``draft`` field on a completed engagement. This keeps
+    pre-G23 / Phase-J fixtures (``phase: complete`` with no ``reflection_state``)
+    green. G23 built the draft->complete state machine; this canary is the
+    consumer-side gate that surfaces leads who skipped the attestation.
+    """
+    name = "lead_reflection_not_stale"
+    meta_path = engagement_dir / "meta.json"
+    if not meta_path.exists():
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (meta.json absent)",
+            detail={"reason": "no meta.json"},
+        )
+    try:
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        return CanaryResult(
+            name=name,
+            passed=False,
+            summary=f"{name}: FAIL -- unreadable meta.json: {e}",
+            detail={"error": str(e)},
+        )
+
+    phase = meta.get("phase")
+    engagement_status = meta.get("engagement_status")
+    is_complete = phase == "complete" or engagement_status == "complete"
+    reflection_raw = meta.get("reflection_state")
+    # Only enforce on engagements that EXPLICITLY track reflection_state. An
+    # absent field is pre-G23 back-compat: read_reflection_state defaults it to
+    # "draft", but that default must not be read as a skipped attestation.
+    tracks_reflection = reflection_raw in VALID_REFLECTION_STATES
+
+    detail = {
+        "phase": phase,
+        "engagement_status": engagement_status,
+        "reflection_state": reflection_raw,
+        "complete": is_complete,
+    }
+
+    if is_complete and tracks_reflection and reflection_raw != REFLECTION_STATE_COMPLETE:
+        signal = "phase" if phase == "complete" else "engagement_status"
+        return CanaryResult(
+            name=name,
+            passed=False,
+            summary=(
+                f"{name}: FAIL -- {signal}=complete but "
+                f"reflection_state={reflection_raw!r}: the lead skipped the "
+                f"--mark-reflection-complete attestation, so lead-reflection.md "
+                f"may be stale relative to the finished pipeline (G23)"
+            ),
+            detail={**detail, "complete_signal": signal},
+        )
+
+    if is_complete and reflection_raw == REFLECTION_STATE_COMPLETE:
+        summary = f"{name}: PASS (engagement complete, reflection_state=complete)"
+    elif is_complete:
+        summary = (
+            f"{name}: PASS (engagement complete; reflection_state field absent "
+            f"— pre-G23 back-compat, not enforced)"
+        )
+    else:
+        summary = f"{name}: PASS (engagement not yet complete; reflection_state not required)"
+    return CanaryResult(name=name, passed=True, summary=summary, detail=detail)
+
+
 # ---------------------------------------------------------------------------
 # Top-level — run all canaries against an engagement directory
 # ---------------------------------------------------------------------------
@@ -1029,8 +1111,14 @@ def run_all_canaries(
     # reading all spawn counters at 0 despite 12 specialists + 1 ethics
     # + 1 synth + 2 acquirers landing as artifacts.
     r6 = check_trace_counters_reconcile_with_artifacts(engagement_dir)
+    # G23-followup (2026-05-29) — consumer-side staleness gate: if the
+    # engagement is marked complete (phase or engagement_status) but the lead
+    # never flipped reflection_state to complete, lead-reflection.md is stale
+    # relative to the finished pipeline (the docs/ecp/2026-05-28-e4050c0e
+    # premature-reflection class). Skips pre-G23 engagements (absent field).
+    r7 = check_lead_reflection_not_stale(engagement_dir)
 
-    results = [r1, r2, r3, r4, r5, r6]
+    results = [r1, r2, r3, r4, r5, r6, r7]
 
     visual_quality_block: dict | None = None
     if include_visual_quality:

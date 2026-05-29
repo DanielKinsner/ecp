@@ -590,11 +590,15 @@ class TestValidateRun(unittest.TestCase):
         # 5 canaries: 4 substantive + 1 structural. G16 (2026-05-27)
         # added clusters_represented → 6: 5 substantive + 1 structural.
         # G22+G24 (2026-05-28) added trace_counters_reconcile_with_artifacts
-        # → 7: 6 substantive + 1 structural.
-        self.assertEqual(len(report["canaries"]), 7)
+        # → 7: 6 substantive + 1 structural. G23-followup (2026-05-29) added
+        # lead_reflection_not_stale → 8: 7 substantive + 1 structural. It
+        # PASSES here because the slingmods fixture has no reflection_state
+        # field (pre-G23 back-compat — absent is not flagged).
+        self.assertEqual(len(report["canaries"]), 8)
         canary_names = [c["name"] for c in report["canaries"]]
         self.assertIn("ethics_findings_have_source_urls", canary_names)
         self.assertIn("element_index_match_rate", canary_names)
+        self.assertIn("lead_reflection_not_stale", canary_names)
         self.assertIn("cross_device_ethics_diff", canary_names)
         self.assertIn("priority_path_count_parity", canary_names)
         self.assertIn("clusters_represented", canary_names)

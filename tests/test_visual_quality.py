@@ -626,7 +626,10 @@ class TestCanaryIntegration:
         PASS on fixtures without audit-trace.log)."""
         eng = REPO_ROOT / "tests" / "fixtures" / "v2_engagement_with_adjacent_ethics"
         result = run_all_canaries(eng, audited_domain="example.test")
-        assert len(result["results"]) == 6
+        # G23-followup (2026-05-29) added lead_reflection_not_stale as the
+        # seventh baseline canary (PASSes here — fixture has no completed-but-
+        # draft reflection_state).
+        assert len(result["results"]) == 7
         assert "visual_quality" in result  # Block present even when empty
         assert result["visual_quality"]["per_device"] == {}
 
@@ -640,7 +643,8 @@ class TestCanaryIntegration:
         trace_counters_reconcile_with_artifacts as the sixth."""
         eng = REPO_ROOT / "tests" / "fixtures" / "v2_engagement_with_adjacent_ethics"
         result = run_all_canaries(eng, audited_domain="example.test", include_visual_quality=False)
-        assert len(result["results"]) == 6
+        # G23-followup (2026-05-29) added lead_reflection_not_stale → 7 baseline.
+        assert len(result["results"]) == 7
         assert "visual_quality" not in result
 
     def test_run_all_canaries_with_visual_quality_runs_when_review_state_present(self, tmp_path):
