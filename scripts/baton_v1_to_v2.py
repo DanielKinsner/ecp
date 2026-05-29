@@ -18,7 +18,9 @@ I/O wrapper and CLI live alongside it.
 """
 from __future__ import annotations
 
+import json
 import re
+import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -29,6 +31,7 @@ if str(REPO / "scripts") not in sys.path:
     sys.path.insert(0, str(REPO / "scripts"))
 
 import ecp_section_hints as sec_hints  # noqa: E402
+from assembly.atomic_write import atomic_write_json  # noqa: E402
 from jsonschema import Draft202012Validator  # noqa: E402
 
 _SCHEMA_PATH = REPO / "schema" / "baton-v1.json"
@@ -51,7 +54,6 @@ class BatonConversionError(ValueError):
 def _validator() -> Draft202012Validator:
     global _validator_cache
     if _validator_cache is None:
-        import json
         schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
         _validator_cache = Draft202012Validator(schema)
     return _validator_cache
@@ -249,3 +251,103 @@ def convert_baton(
     }
     _validate(v2)
     return v2
+
+
+def convert_engagement(
+    engagement_dir: str | Path,
+    *,
+    devices: tuple[str, ...] = ("desktop", "mobile"),
+    out_dir: str | Path | None = None,
+    engagement_id: str | None = None,
+    captured_at: str | None = None,
+) -> dict[str, dict]:
+    """Convert the v1 batons in an engagement dir to v2, in place (or to out_dir).
+
+    In-place mode is non-destructive: each device's original v1 baton is preserved
+    as ``baton{,-mobile}.v1raw.json`` and the conversion always reads from that
+    immutable raw, so re-running is idempotent and never clobbers the v1 with a v2.
+    With ``out_dir`` set, the source dir is left entirely untouched (no backup).
+    """
+    engagement_dir = Path(engagement_dir)
+    eid = engagement_id or engagement_dir.name
+    dest_dir = Path(out_dir) if out_dir is not None else engagement_dir
+    results: dict[str, dict] = {}
+
+    for device in devices:
+        suffix = "" if device == "desktop" else "-mobile"
+        baton_path = engagement_dir / f"baton{suffix}.json"
+        dom_path = engagement_dir / f"dom{suffix}.html"
+        v1raw_path = engagement_dir / f"baton{suffix}.v1raw.json"
+
+        if not baton_path.exists():
+            print(f"[{device}] skip - {baton_path.name} not found", file=sys.stderr)
+            results[device] = {"status": "skipped", "reason": f"{baton_path.name} not found",
+                               "output": None, "v1raw": None, "warnings": []}
+            continue
+
+        if out_dir is None:
+            # Preserve the original v1 once; thereafter always convert from it.
+            if not v1raw_path.exists():
+                shutil.copy2(baton_path, v1raw_path)
+            source_path = v1raw_path
+        else:
+            source_path = baton_path  # never mutate the source dir
+
+        v1 = json.loads(source_path.read_text(encoding="utf-8"))
+        warnings: list[str] = []
+        if dom_path.exists():
+            dom_html = dom_path.read_text(encoding="utf-8", errors="ignore")
+        else:
+            dom_html = ""
+            warnings.append(f"{dom_path.name} not found - page_head fields will be null")
+
+        v2 = convert_baton(v1, dom_html, device=device, engagement_id=eid, captured_at=captured_at)
+
+        for s in v2["sections"]:
+            if not (engagement_dir / s["screenshot_ref"]).exists():
+                warnings.append(f"referenced screenshot missing: {s['screenshot_ref']}")
+
+        out_path = dest_dir / f"baton{suffix}.json"
+        atomic_write_json(out_path, v2)
+        note = f" [{len(warnings)} warning(s)]" if warnings else ""
+        print(f"[{device}] wrote {out_path.name} "
+              f"({len(v2['elements'])} elements, {len(v2['sections'])} sections){note}",
+              file=sys.stderr)
+        results[device] = {
+            "status": "written",
+            "output": out_path,
+            "v1raw": v1raw_path if out_dir is None else None,
+            "warnings": warnings,
+        }
+
+    return results
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    p = argparse.ArgumentParser(
+        description="Convert acquire_url.py-shape v1 batons to the v2 schema in an engagement dir.")
+    p.add_argument("engagement_dir", type=Path,
+                   help="Engagement directory (named YYYY-MM-DD-<8 hex>) holding baton{,-mobile}.json + dom{,-mobile}.html")
+    p.add_argument("--device", choices=["both", "desktop", "mobile"], default="both")
+    p.add_argument("--out-dir", type=Path, default=None,
+                   help="Write converted batons here instead of in place (source dir untouched, no .v1raw backup)")
+    p.add_argument("--engagement-id", default=None,
+                   help="Override the engagement_id (defaults to the directory name)")
+    args = p.parse_args(argv)
+
+    devices = ("desktop", "mobile") if args.device == "both" else (args.device,)
+    try:
+        results = convert_engagement(
+            args.engagement_dir, devices=devices, out_dir=args.out_dir,
+            engagement_id=args.engagement_id)
+    except BatonConversionError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+
+    return 0 if any(r["status"] == "written" for r in results.values()) else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

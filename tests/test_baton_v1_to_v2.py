@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -202,6 +203,97 @@ class TestEngagementId(unittest.TestCase):
 
     def test_engagement_id_propagates(self):
         self.assertEqual(_convert()["engagement_id"], _EID)
+
+
+def _make_engagement(root: str, devices=("desktop", "mobile"), with_shots: bool = True) -> Path:
+    d = Path(root) / _EID
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "baton.json").write_text(json.dumps(_v1("desktop")), encoding="utf-8")
+    (d / "dom.html").write_text(_DOM, encoding="utf-8")
+    if "mobile" in devices:
+        (d / "baton-mobile.json").write_text(json.dumps(_v1("mobile")), encoding="utf-8")
+        (d / "dom-mobile.html").write_text(_DOM, encoding="utf-8")
+    if with_shots:
+        for i in (1, 2):
+            (d / f"section-{i}.jpg").write_bytes(b"x")
+            (d / f"section-{i}-mobile.jpg").write_bytes(b"x")
+    return d
+
+
+class TestConvertEngagement(unittest.TestCase):
+    def test_writes_both_devices_schema_valid(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp)
+            res = conv.convert_engagement(d, captured_at=_CAPTURED)
+            self.assertEqual(res["desktop"]["status"], "written")
+            self.assertEqual(res["mobile"]["status"], "written")
+            for name in ("baton.json", "baton-mobile.json"):
+                v2 = json.loads((d / name).read_text(encoding="utf-8"))
+                self.assertEqual(v2["schema_version"], 1)
+                self.assertEqual(list(Draft202012Validator(_SCHEMA).iter_errors(v2)), [])
+
+    def test_v1raw_backup_created(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp)
+            original = json.loads((d / "baton.json").read_text(encoding="utf-8"))
+            conv.convert_engagement(d, captured_at=_CAPTURED)
+            raw = json.loads((d / "baton.v1raw.json").read_text(encoding="utf-8"))
+            self.assertEqual(raw, original)
+            self.assertNotIn("schema_version", raw)  # the preserved v1
+
+    def test_idempotent_backup_preserves_v1raw(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp)
+            original = json.loads((d / "baton.json").read_text(encoding="utf-8"))
+            conv.convert_engagement(d, captured_at=_CAPTURED)
+            conv.convert_engagement(d, captured_at=_CAPTURED)  # re-run
+            raw = json.loads((d / "baton.v1raw.json").read_text(encoding="utf-8"))
+            self.assertEqual(raw, original, "re-run must not clobber v1raw with the v2")
+            self.assertEqual(json.loads((d / "baton.json").read_text(encoding="utf-8"))["schema_version"], 1)
+
+    def test_missing_device_skipped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp, devices=("desktop",))
+            res = conv.convert_engagement(d, captured_at=_CAPTURED)
+            self.assertEqual(res["mobile"]["status"], "skipped")
+            self.assertFalse((d / "baton-mobile.json").exists())
+
+    def test_missing_screenshot_warns_but_writes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp, with_shots=False)
+            res = conv.convert_engagement(d, captured_at=_CAPTURED)
+            self.assertTrue(any("section-1.jpg" in w for w in res["desktop"]["warnings"]))
+            self.assertTrue((d / "baton.json").exists())
+
+    def test_out_dir_leaves_source_untouched(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as out:
+            d = _make_engagement(tmp)
+            src_before = (d / "baton.json").read_text(encoding="utf-8")
+            conv.convert_engagement(d, out_dir=out, captured_at=_CAPTURED)
+            self.assertEqual((d / "baton.json").read_text(encoding="utf-8"), src_before)
+            self.assertFalse((d / "baton.v1raw.json").exists())
+            self.assertEqual(json.loads((Path(out) / "baton.json").read_text(encoding="utf-8"))["schema_version"], 1)
+
+    def test_engagement_id_from_dir_name(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp)
+            conv.convert_engagement(d, captured_at=_CAPTURED)
+            self.assertEqual(json.loads((d / "baton.json").read_text(encoding="utf-8"))["engagement_id"], _EID)
+
+
+class TestCli(unittest.TestCase):
+    def test_main_returns_zero_and_writes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp)
+            self.assertEqual(conv.main([str(d)]), 0)
+            self.assertEqual(json.loads((d / "baton.json").read_text(encoding="utf-8"))["schema_version"], 1)
+
+    def test_main_device_flag_only_converts_one(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp)
+            conv.main([str(d), "--device", "desktop"])
+            mobile = json.loads((d / "baton-mobile.json").read_text(encoding="utf-8"))
+            self.assertNotIn("schema_version", mobile)  # mobile left as v1
 
 
 if __name__ == "__main__":
