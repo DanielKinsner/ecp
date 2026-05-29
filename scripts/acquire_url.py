@@ -91,8 +91,8 @@ def _build_elements_js(expected_hostname: str) -> str:
     return (
         r"""
 (function(){
-  // G16-followup (2026-05-27): cross-engagement contamination guard.
-  // Aborts and reports if the session drifted off the validated origin.
+  /* G16-followup (2026-05-27): cross-engagement contamination guard.
+     Aborts and reports if the session drifted off the validated origin. */
   var __expected = """ + expected_literal + r""";
   var __actual = (window.location && window.location.hostname) || '';
   if (__actual !== __expected) {
