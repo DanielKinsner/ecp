@@ -27,6 +27,14 @@ too. B0 fixed the *read-failure* retries; the *validation* re-dispatches are
 expected and auto-resolve. Reducing their frequency is a quality-of-life
 improvement (§4), not a bug.
 
+**DECISION (2026-06-01, committed):** cluster specialists will be **migrated OFF
+Agent Teams.** B0 fixed the path-resolution *symptom* inside teams, but Agent Teams is
+a never-graduated experimental feature (its shutdown behavior is a documented known
+limitation — see §5b) that may not be maintained against the current **Opus 4.8**
+architecture. A failing, unmaintained experimental dependency is a standing reliability
++ cost liability, so it goes. This is committed, not optional — the fresh session's job
+is to EXECUTE the migration (§5b), not re-decide it.
+
 ## 2. Evidence: the 749a3c3d live audit
 
 - **B0 held:** rendered specialist prompt → absolute reference paths, zero literal vars.
@@ -98,10 +106,13 @@ Status update against it:
 - **B1 (renderer honoring `_drops`)** from that plan is NOT done and is still worth
   doing (make finding-loss loud at render time, not just at `lead_prep`).
 
-## 5b. Vendor-backed: migrate specialists OFF Agent Teams (highest-leverage)
+## 5b. DECISION + EXECUTION: migrate cluster specialists OFF Agent Teams
 
-Research (2026-06-01) against current `code.claude.com/docs` confirms + extends this
-session's findings:
+**This is a decision, not a menu.** Agent Teams is going for cluster specialists; the
+fresh session EXECUTES the migration (pick a path below) — it does not re-litigate
+whether. The evidence — 2026-06-01 research against current `code.claude.com/docs`,
+three independent cross-checks this session (empirical probe, claude-code-guide agent,
+Dan's post-audit research agent), and the live-audit failure — all agree:
 
 - **Agent Teams is still experimental** (disabled by default; needs
   `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`; min v2.1.32; no GA). Docs ship it under a
@@ -114,9 +125,12 @@ session's findings:
   messaging" workers (= v2 cluster specialists) should be **parallel one-shot
   subagents, NOT Agent Teams.** Teams are for teammates that share findings / challenge
   / coordinate — which v2 specialists never do.
-- **B0 fixed the path-resolution symptom *inside* teams; this removes the fragility.**
+- **B0 fixed the path-resolution symptom *inside* teams — the feature itself stays fragile.**
+- **Experimental since Feb 2026 (Opus 4.6), never GA.** A long-lived experimental feature
+  that may not be kept current with the **Opus 4.8** architecture is a standing liability —
+  the shutdown hang + idle-stream cost we hit are the price of depending on it. It goes.
 
-**Options (ranked for ECP):**
+**Execution paths (the decision is made — choose HOW, recommend #1):**
 1. **Parallel one-shot subagents** — `Agent` tool (renamed from `Task` in v2.1.63), GA/stable; fresh context each; `background: true` for concurrency; ~3× cheaper than teams; no teardown, no idle stream. **Minimal change** (swap the cluster-specialist dispatch shape; keep the lead's wave-of-≤5 + validate→autofix→re-dispatch logic). Removes the shutdown bug + idle noise directly.
 2. **Dynamic Workflow** (v2.1.154+) — best *structural* fit: a `pipeline()` fans out specialists and runs validate→autofix→re-dispatch as stages with the concurrency cap, result caching, and **resume** built in; deletes the idle-notification interpretation + manual `ls cluster-*.json` polling. Maps ~1:1 onto the current dispatch contract. Research-preview.
 3. **Multiagent Sessions** (Claude Agent SDK, beta) — only relevant if ECP moves off the CLI.
@@ -125,13 +139,16 @@ session's findings:
 the one thing only teams provide (this is why the P1 restoration kept multi-planner as
 the sole teammate role).
 
-Two concrete entry points when picking this up: (a) **low-effort** — a focused diff to
-`contracts/dispatch-contract.md` + the `skills/audit/SKILL.md` dispatch step swapping the
-cluster-specialist row from `Agent`-teammate to parallel one-shot subagent; or
-(b) **high-leverage** — a prototype `pipeline()` workflow running the
-specialist→validate→re-dispatch loop end-to-end. Either is a **spec-change-log** entry
-(touches the dispatch contract). Sources: `code.claude.com/docs` sub-agents, workflows,
-agent-sdk/subagents, changelog.
+**Recommended path: #1 (GA parallel subagents).** The whole point of this decision is to
+*escape the experimental-feature class* — and the Dynamic Workflow (#2), while the better
+structural fit, is itself still research-preview, so it does NOT fully de-risk (same
+"may-not-track-Opus-4.8" exposure). Go GA first to get specialists onto a stable footing;
+a workflow can wrap the GA subagents later, once it graduates. Concrete entry point: a
+focused diff to `contracts/dispatch-contract.md` + the `skills/audit/SKILL.md` dispatch
+step swapping the cluster-specialist row from `Agent`-teammate to parallel one-shot
+subagent, keeping the lead's wave-of-≤5 + validate→autofix→re-dispatch logic. This is a
+**spec-change-log** entry (touches the dispatch contract). Sources: `code.claude.com/docs`
+sub-agents, workflows, agent-sdk/subagents, changelog.
 
 ## 6. Key reference docs
 
