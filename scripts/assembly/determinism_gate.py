@@ -66,7 +66,8 @@ _TRACE_COUNTER_RE = re.compile(
 # Counter name aliases (v2 → v1 fallback). The audit-trace contract accepts
 # either naming style; this map normalizes to v2 names internally.
 _TRACE_COUNTER_ALIASES = {
-    "team_spawned_auditors": "team_spawned_specialists",
+    "team_spawned_auditors": "subagent_spawned_specialists",
+    "team_spawned_specialists": "subagent_spawned_specialists",
     "team_spawned_acquirers": "subagent_spawned_acquirers",
     "expected_auditor_count": "expected_specialist_count",
     "model_cluster_auditors": "model_cluster_specialists",
@@ -77,7 +78,7 @@ _INT_COUNTERS = {
     "tasks_created_total",
     "expected_specialist_count",
     "subagent_spawned_acquirers",
-    "team_spawned_specialists",
+    "subagent_spawned_specialists",
     "subagent_spawned_ethics",
     "subagent_spawned_synthesizer",
     "subagent_spawned_planner",
