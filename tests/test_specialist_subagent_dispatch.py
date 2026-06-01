@@ -337,5 +337,20 @@ def test_lead_discipline_terminology_and_preserved_sections():
     assert "## Concurrent-audit isolation" in content
 
 
+# ---------------------------------------------------------------------------
+# Task 9 — ethics-subagent-v2.md + synthesizer-v2.md one-shot dispatch (no name/team_name)
+# ---------------------------------------------------------------------------
+def test_ethics_and_synthesizer_dispatch_have_no_name_or_team_name():
+    """Both template line-16 dispatch sentences drop name:/team_name: and carry prompt=."""
+    for fname in ("contracts/ethics-subagent-v2.md", "contracts/synthesizer-v2.md"):
+        line_16 = _read_repo_file(fname).split("\n")[15]
+        assert "name:" not in line_16, f"{fname} line 16 must not carry a name: parameter"
+        assert "team_name" not in line_16, f"{fname} line 16 must not carry team_name"
+        assert "prompt=" in line_16, f"{fname} line 16 must carry prompt="
+        assert "subagent" in line_16.lower() or "Agent tool" in line_16, (
+            f"{fname} line 16 should describe a one-shot subagent dispatch"
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

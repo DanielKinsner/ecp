@@ -13,7 +13,7 @@ The lead constructs a final dispatch prompt by combining:
 1. **The shared template body** below (sections "Role" through "Failure modes") — same for every engagement.
 2. **Per-engagement variables** — engagement_id, paths to all cluster-emission JSON files, ethics findings path, both batons (pre-trimmed), section screenshots for both devices, page-type context, page summary, and (in degraded mode only) the Layer-2 phrasing seeds for `scope='page'` findings.
 
-The result is a single user-turn prompt string. The lead dispatches via the Agent tool (`subagent_type: "general-purpose"`, `model: "opus"`, `name: "synthesizer-{engagement-id}"`). Opus 4.6 with 1M context is the v2 default per [`contracts/dispatch-contract.md`](dispatch-contract.md). The synthesizer is the role Opus is reserved for.
+The result is a single user-turn prompt string. The lead dispatches via the Agent tool (`subagent_type: "general-purpose"`, `model: "opus"`, `prompt=<rendered synthesizer template with canonical_f_refs_manifest>`) as a one-shot subagent dispatch (no teammate registration). Opus 4.6 with 1M context is the v2 default per [`contracts/dispatch-contract.md`](dispatch-contract.md). The synthesizer is the role Opus is reserved for.
 
 **No assistant-prefill.** The Agent tool only takes a single user-turn `prompt` string. Pattern-match the JSON-only emission via the embedded one-shot example.
 

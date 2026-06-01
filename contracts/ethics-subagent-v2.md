@@ -13,7 +13,7 @@ The lead constructs a final dispatch prompt by combining:
 1. **The shared template body** below (4-backtick fenced block).
 2. **Per-engagement variables** — both device DOMs, both screenshot sets, the union baton paths, page-type context.
 
-The result is a single user-turn prompt string. The lead dispatches via the Agent tool (`subagent_type: "general-purpose"`, `model: "sonnet"`, `name: "ethics-page"`). Sonnet 4.6 is the v2 default for ethics per [`contracts/dispatch-contract.md`](dispatch-contract.md) — ethics judgment fits within the cluster-auditor model tier (focused reading, schema-validated emission, no synthesis).
+The result is a single user-turn prompt string. The lead dispatches via the Agent tool (`subagent_type: "general-purpose"`, `model: "sonnet"`, `prompt=<rendered ethics template>`) as a one-shot subagent dispatch (no teammate registration). Sonnet 4.6 is the v2 default for ethics per [`contracts/dispatch-contract.md`](dispatch-contract.md) — ethics judgment fits within the cluster-auditor model tier (focused reading, schema-validated emission, no synthesis).
 
 The ethics subagent runs **concurrently** with the specialist fanout (Layer 1 + Layer 1.5 are parallel). Per [`contracts/audit-state-machine.md`](audit-state-machine.md), the lead writes `ethics_dispatched` and `specialists_dispatched` in the same lead turn; both must complete (`ethics_complete` + `specialists_complete`) before structuring (Layer 2) begins.
 
