@@ -54,6 +54,13 @@ user-side, opt-in primitive. Because you are the sole operator, the viable shape
 a **saved script in `.claude/workflows/` inside this repo** (project-scoped, version
 controlled), invoked with the opt-in path. Details + sources in §3.4.
 
+> **Addendum §7 (added 2026-06-01, on follow-up):** there is a *second*, product-facing
+> use of workflows that is orthogonal to determinism and arguably higher direct value —
+> an **agentic report-QA / verification workflow** that automates `product.md` §6's
+> draft→client-ready trust gate (verify hotspots, citations, and claims; loop until
+> clean). A PoC run tonight caught a **materially false finding** and a **mis-cited
+> claim** in the slingmods fixture. See §7.
+
 ---
 
 ## 2. Diagnosis — why the reports/findings are non-deterministic
@@ -311,3 +318,113 @@ python scripts/run-determinism-gate.py dry-run --fixture fixtures/slingmods-pdp 
 - I changed **no** pipeline code — only added `scripts/diagnostics/determinism_probe.py`.
   The B-series fixes are left for the next agent so they can be reviewed as deliberate,
   logged changes per `product.md` §9.
+
+---
+
+## 7. Addendum (2026-06-01) — Agentic report-QA / verification workflow
+
+Added in response to the follow-up: *"what about fixing the poor output of the reports?
+A workflow that sends out subagents, verifies URLs, verifies hotspots, verifies the
+website… and doesn't stop until the goal is achieved and tests confirm it's true."*
+
+**This is a different — and for the product, stronger — use of dynamic workflows than
+§1–§6.** §1–§6 are about *determinism* (same input → same output). This is about
+*correctness of a single report* (are the findings / hotspots / citations actually
+right). They are orthogonal: a report can be perfectly stable and still ship a false
+claim. Per `product.md` §0 ("Untrustworthy = unusable") that second failure is the more
+fatal one — so this is high leverage, and the answer is **yes, it makes strong sense.**
+
+### 7.1 Why it fits (and why "don't stop until verified" is the crux)
+ECP already *defines* this gate but runs it by hand: `product.md` §6 (draft→client-ready:
+re-check the live site, follow every citation link, finalize hotspots) and the §4.1/§4.2
+trust invariants (no fabrication, no hallucinated reference, no wrong hotspot). A workflow
+automates the *checking*:
+- Verification is independent per finding / citation / hotspot → ideal `parallel()` /
+  `pipeline()` fan-out.
+- "Keep going until verified" is the **loop-until-clean + adversarial-verify** pattern the
+  Workflow tool is built for: spawn skeptics that try to *refute* each finding, repair the
+  failures, re-verify, and stop only when a quality bar is met (e.g. zero refuted findings
+  on the Priority Path, or N consecutive clean passes).
+
+### 7.2 Proof — a real PoC run, not theory
+I ran `.claude/workflows/ecp-report-qa.js` (committed) against the frozen slingmods
+fixture: sample 6 FAIL/PARTIAL findings → for each, fan out 3 verifiers in parallel
+(anchor / citation / claim) → aggregate. **20 agents, ~700K tokens, ~144s.**
+
+| Finding | Anchor | Citation | Claim |
+|---|---|---|---|
+| visual-cta F-01 | valid ✓ | supported ✓ | holds ✓ |
+| visual-cta F-02 | absent_ok ✓ | supported ✓ | holds ✓ |
+| pricing F-01 | valid ✓ | supported ✓ | holds ✓ |
+| pricing F-02 | valid ✓ | supported ✓ | holds ✓ |
+| **pricing F-05** | **not_found ⚠** | supported ✓ | **refuted ⚠** |
+| **trust-credibility F-01** | valid ✓ | **weak_support ⚠** | holds ✓ |
+
+Two real, client-blocking defects surfaced that determinism work would never catch:
+- **pricing F-05 is materially false.** The finding claims no price-match guarantee
+  appears above the fold ("buried in footer"). The claim-verifier found "PRICE MATCH
+  GUARANTEE" in the top promo bar *directly above* the price and Add-to-Cart, and that the
+  footer does **not** contain it. The anchor-verifier *independently* flagged the finding's
+  `baton_index="absent"` as wrong (it should have anchored to the real promo element). Two
+  verifiers, same finding — the adversarial-multi-lens payoff. A §4.1 fabrication-class
+  defect that would have shipped.
+- **trust-credibility F-01 is mis-cited.** The cited reference (Finding 1, missing alt text
+  on `<img>`) does not substantiate the actual claim (star-rating icon-font `<i>` elements
+  needing accessible names). A §4.1 over-applied-reference defect.
+
+4 of 6 were clean — so the pass discriminates; it is not a rubber stamp.
+
+### 7.3 The production shape (verify → repair → re-verify, loop until clean)
+The PoC stops at "report." The full version adds the repair loop you described:
+```
+dirty = all_findings
+while dirty and rounds < MAX:
+  verdicts = parallel(verify(f) for f in dirty)   # anchor + citation + claim, N-of-M adversarial
+  dirty = [f for f in dirty if verdicts[f].failed]
+  if not dirty: break
+  parallel(repair(f) for f in dirty)              # re-dispatch the OWNING specialist with the verifier's evidence
+  rounds += 1
+emit(verified_report + qa_checklist)              # the checklist IS the §6 evidence; a human still promotes
+```
+- **Deterministic checks first; LLM only for the irreducible part.** URL liveness (200 +
+  content), `e_index`-exists-in-baton, hotspot-rect geometry, citation-file-exists,
+  section-heading-present — all deterministic and **already in the repo**
+  (`scripts/report/geometry_validator.py`, `scripts/reference_link_check.py` /
+  `scripts/check-reference-links.py`, `scripts/assembly/canary_checks.py`). The workflow
+  should run those as cheap stages and reserve LLM verifiers (with N-of-M voting) for the
+  one thing code can't judge: "does this claim hold against the screenshot / DOM."
+- **Verify against the frozen evidence** (the baton / DOM / screenshots the finding was made
+  from) for reproducibility; re-hit the **live** site only for the §6 "did it change / is
+  the URL alive" checks. Don't conflate — a live re-fetch reintroduces the L0 page-drift
+  problem from §2.
+
+### 7.4 Honest caveats
+1. **§6 reserves client-ready for the human** ("automated/`--auto` execution can never mark
+   a report client-ready"). The workflow yields a *verified draft + a pass/fail checklist*;
+   the operator still signs off — unless you relax §6 via a §9 Spec Change Log entry. Keep
+   the human gate for legal/ethics findings regardless (§3.3).
+2. **Verifiers are LLMs and can be wrong** (rubber-stamp or false-refute). Mitigate with
+   deterministic-first + N-of-M adversarial voting on the semantic checks; treat a single
+   verifier as a signal, not ground truth.
+3. **Cost is real.** The 6-finding PoC was ~700K tokens / 20 agents. A full 76-finding
+   report at 3 verifiers each ≈ 228 agents and several M tokens — fine on Max-plan runtime,
+   not free: budget it (verify the Priority Path + all CRITICAL/HIGH fully, sample the
+   rest) and cap the repair loop.
+4. **Repair can oscillate.** A re-dispatched specialist might "fix" a finding into a new
+   defect; cap rounds and require the repaired finding to pass the *same* verifiers that
+   failed it.
+
+### 7.5 Where this sits in the plan
+This is arguably the **highest direct-product-value** of the three workflow candidates,
+because it improves the trustworthiness of *every* report (§0/§6) rather than measuring
+infrastructure. Revision to §4: treat it as **Workflow #1 (product)** alongside the
+determinism gate as **Workflow #1 (infra)** — both are independent of the audit-spine
+re-platform (§3.3) and can land right after the B-series bug fixes. Note the synergy with
+**B1**: a render-time drop-check (B1) stops findings *vanishing*; this QA loop stops wrong
+findings *shipping*. Together they cover both halves of the §4.1 trust contract.
+
+**Where the next agent looks:** `.claude/workflows/ecp-report-qa.js` (run it via
+`Workflow({scriptPath, args:{root, engagement}})`, or save/`/ecp-report-qa` once opted in);
+the deterministic checks to fold in as stages — `scripts/report/geometry_validator.py`,
+`scripts/reference_link_check.py`, `scripts/assembly/canary_checks.py`; and `product.md`
+§4.1 / §4.2 / §6 for the quality contract the loop enforces.
