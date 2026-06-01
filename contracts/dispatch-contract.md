@@ -34,7 +34,7 @@ The lead MUST ensure teammates receive **absolute paths** in their dispatched pr
 | Role | Default model | With `--deep` | v2 Dispatch shape | Rationale |
 |------|--------------|---------------|-------------------|-----------|
 | Acquirer | `sonnet` | `sonnet` (unchanged) | **subagent** (Task tool, no team_name) | Mechanical task — navigate, screenshot, extract DOM, write baton. No synthesis needed. No peer coordination. Subagent eliminates an idle-notification stream the lead never reads. |
-| Cluster specialist (a.k.a. cluster auditor) | `sonnet` | `opus` | **teammate** (Agent tool with `team_name`) | Mechanical coverage work — read reference files, apply principles to page, emit JSON-only emission. Stays teammate ONLY because cluster specialists share the engagement output workspace and the lead merges by deterministic file-naming convention. v2 specialists do NOT peer-coordinate (no SendMessage, no huddles) — see `contracts/specialist-prompt-v2.md` "## No coordination" section. |
+| Cluster specialist (a.k.a. cluster auditor) | `sonnet` | `opus` | **subagent** (Agent tool, no team_name) | Mechanical coverage work — read reference files, apply principles to page, emit JSON-only emission. One-shot dispatch (no team_name); file-presence glob determines missing clusters at resume. v2 specialists do NOT peer-coordinate (no SendMessage, no huddles) — see `contracts/specialist-prompt-v2.md` "## No coordination" section. |
 | Ethics subagent | `sonnet` | `opus` | **subagent** (Task tool, no team_name) | Layer 1.5 in v2 — runs after specialists, before synthesizer. Single-pass page-scope emission. No peer coordination, no shared workspace need beyond writing one JSON file. See `contracts/ethics-subagent-v2.md`. |
 | Lead (coordinator) | `opus` | `opus` (unchanged) | n/a — IS the lead | Reconciliation, dedup, Priority Path synthesis, ethics gate processing. The synthesis brain stays on opus. |
 | Synthesizer | `opus` | `opus` (unchanged) | **subagent** (Task tool, no team_name) | Layer 3 prose writer. Runs once per engagement, single dispatch with the full canonical-f_refs manifest + cluster emissions trimmed. No peer coordination. See `contracts/synthesizer-v2.md`. |
@@ -76,26 +76,26 @@ See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md` "Cost trace heur
 
 ## v2 Dispatch shape policy (Phase H — 2026-04-28)
 
-v2 flips the v1 default. **Most roles dispatch as one-shot subagents (Task tool, no team_name); only cluster specialists and multi-planner peers remain teammates** (Agent tool with team_name).
+v2 flips the v1 default. **Most roles dispatch as one-shot subagents (Agent tool, no team_name); only multi-planner peers remain teammates** (Agent tool with team_name). Cluster specialists are one-shot subagents (no team_name).
 
 ### What changes for the lead
 
 | Concern | v1 (teammate everywhere) | v2 (subagent default + teammate exceptions) |
 |---|---|---|
-| `idle_notification` stream | One per teammate per layer (~70 across acquire → specialists → ethics → synthesize → render) | One per remaining teammate (cluster specialists only); **~5-10 total** |
+| `idle_notification` stream | One per teammate per layer (~70 across acquire → specialists → ethics → synthesize → render) | One per remaining teammate (multi-planner peers only, and only during planning); **~0 in a standard audit** |
 | Lead context tokens spent on idle pings | Significant — each idle ping is a context entry the lead reads through | Order-of-magnitude smaller |
 | Peer coordination via SendMessage | Used in v1 cluster huddles + handoff broadcasts (now unused) | Used only by multi-planner peers per `contracts/multi-planner-protocol.md` |
-| TaskCreate/TaskUpdate ledger | Every teammate claims + completes a task | Cluster specialists + multi-planners only |
+| TaskCreate/TaskUpdate ledger | Every teammate claims + completes a task | Multi-planner peers only |
 | Failure recovery | Lead re-spawns failed teammate via `SendMessage` retry, OR creates a new teammate name | Lead re-dispatches subagent via fresh Task call (no shared task state to clean up) |
-| Output workspace | Cluster specialists share `docs/ecp/{engagement_id}/` and rely on deterministic `cluster-{cluster}-{device}.json` naming | Same — cluster specialists keep teammate status precisely BECAUSE of shared workspace |
+| Output workspace | Cluster specialists share `docs/ecp/{engagement_id}/` and rely on deterministic `cluster-{cluster}-{device}.json` naming | Same — cluster specialists are one-shot subagents that still write to the shared engagement directory; the lead merges by deterministic file name |
 
-### Why cluster specialists keep teammate status
+### Why specialists are one-shot subagents
 
-Cluster specialists share an engagement directory (`docs/ecp/{engagement_id}/`) and the lead merges their outputs by deterministic file name (`cluster-{cluster}-{device}.json`). The teammate dispatch shape gives:
+Cluster specialists share an engagement directory (`docs/ecp/{engagement_id}/`) and the lead merges their outputs by deterministic file name (`cluster-{cluster}-{device}.json`). One-shot subagent dispatch (no team_name) provides:
 
-1. **Atomicity-friendly fanout** (in **waves of ≤5 concurrent spawns**, added 2026-05-27): the lead collects via filesystem glob. A subagent fanout would also work but the existing teammate template handles it cleanly today. **Concurrency cap:** spawn no more than 5 specialists concurrently per wave. The 2026-05-27 batch repeatedly hit transient server-side rate limits ("not your usage limit") at 8+ concurrent spawns — Amazon engagement `0669899d` saw 7 of 8 spawns fail at 0 tokens; slingmods `4a0721e9` lost the entire first 20-way fanout and recovered via waves of ~5. A comprehensive 10-cluster × 2-device run therefore needs ~4 waves of 5 (acquirers count toward the cap; ethics+synthesizer are sequential pinch-points and don't). The 5-cap is operational, not architectural — if a future runtime removes the rate limit, raise it.
-2. **Restart-friendly file-presence model.** If the lead resumes mid-run, it reads which `cluster-*-{device}.json` files are already on disk and re-dispatches only the missing ones. The teammate task list is a parallel record but file presence is the truth.
-3. **No coordination ceremony.** v2 specialists do NOT SendMessage anyone, do NOT broadcast intent, do NOT propagate SYNTHESIS_HINT. See `contracts/specialist-prompt-v2.md` "## No coordination" section. The teammate dispatch shape is a transport choice, not a coordination requirement.
+1. **Full-parallel fanout with concurrency control** (default = unlimited, fallback `--max-concurrent N` flag): the lead collects via filesystem glob and dispatches all missing clusters in one message. **Default behavior:** dispatch all requested cluster specialists in parallel (no artificial waves). **Rate-limit fallback:** if the dispatcher hits transient server-side rate limits ("not your usage limit"), the lead can re-dispatch in waves via `--max-concurrent N` (e.g., `--max-concurrent 5` to batch in waves of 5). The 2026-05-27 batch discovered this limit at 8+ concurrent spawns — Amazon engagement `0669899d` saw 7 of 8 spawns fail at 0 tokens; slingmods `4a0721e9` lost the entire first 20-way fanout and recovered via waves of ~5. Full-parallel is the default; the `--max-concurrent` flag exists for rate-limit recovery, not routine use. See `contracts/flags.md` for the `--max-concurrent` contract.
+2. **Restart-friendly file-presence model.** If the lead resumes mid-run, it reads which `cluster-*-{device}.json` files are already on disk and re-dispatches only the missing ones. File presence is the truth; the subagent does not rely on a task-list record.
+3. **No coordination ceremony.** v2 specialists do NOT SendMessage anyone, do NOT broadcast intent, do NOT propagate SYNTHESIS_HINT. See `contracts/specialist-prompt-v2.md` "## No coordination" section. One-shot subagent shape eliminates the idle-notification stream.
 
 ### Why multi-planner peers keep teammate status
 
@@ -106,10 +106,12 @@ Multi-planner is the one role where SendMessage peer negotiation is the WHOLE PO
 | Role | Template / prompt source | Tool call |
 |---|---|---|
 | Acquirer | `workflows/acquire.md` | `Task(subagent_type="general-purpose", model="sonnet", prompt=<acquire workflow>)` |
-| Cluster specialist | `contracts/specialist-prompt-v2.md` (with per-cluster params from `contracts/specialists/{cluster}.md`) | `Agent(subagent_type="general-purpose", team_name="audit-{engagement_id}", name="specialist-{cluster}-{device}", model="sonnet", prompt=<rendered template>)` |
+| Cluster specialist | `contracts/specialist-prompt-v2.md` (with per-cluster params from `contracts/specialists/{cluster}.md`) | `Agent(subagent_type="general-purpose", description="Audit {cluster} cluster", model="sonnet", prompt=<rendered template>)` |
 | Ethics subagent | `contracts/ethics-subagent-v2.md` | `Task(subagent_type="general-purpose", model="sonnet", prompt=<rendered ethics template>)` |
 | Synthesizer | `contracts/synthesizer-v2.md` | `Task(subagent_type="general-purpose", model="opus", prompt=<rendered synthesizer template with canonical_f_refs_manifest>)` |
 | Multi-planner peer | `contracts/multi-planner-protocol.md` | `Agent(subagent_type="general-purpose", team_name="audit-{engagement_id}", name="planner-{cluster}", model="opus", prompt=<plan scope + multi-planner-protocol>)` |
+
+> **Tool-name note (`Task` vs `Agent`):** `Task` is the v2.1.63 **legacy alias** for the unified `Agent` spawn tool — both names work and dispatch identically. This contract uses `Agent` as the canonical name. The broad cosmetic `Task`→`Agent` rename across the *other* one-shot roles' contract text (acquirer / ethics / synthesizer / planner / reviewer / builder) is **OUT OF SCOPE** for this migration; only the cluster-specialist rows and the intro line above are normalized here.
 
 > **Single-planner / reviewer / builder note:** In this audit-only repo those roles dispatch as one-shot subagents per the per-role table and the "Subagent dispatch contract (v2 default)" section below. Their workflow prompt sources (`workflows/plan.md`, `workflows/review.md`, `workflows/build.md`) and the `/ecp:build` · `/ecp:compare` · `/ecp:quick-scan` sibling skills are not part of this repo, so they are intentionally omitted from this dispatch table.
 
@@ -282,7 +284,7 @@ The v2 dispatch flip introduces `subagent_spawned_*` counters alongside the exis
 | Role | Dispatch shape | Counter name to increment |
 |---|---|---|
 | Acquirer | subagent | `subagent_spawned_acquirers` |
-| Cluster specialist | teammate | `team_spawned_specialists` (renamed from `team_spawned_auditors` in v2; v1 backwards-compat alias accepted) |
+| Cluster specialist | subagent | `subagent_spawned_specialists` (v1 backwards-compat alias `team_spawned_auditors` still accepted) |
 | Ethics subagent | subagent | `subagent_spawned_ethics` |
 | Synthesizer | subagent | `subagent_spawned_synthesizer` |
 | Planner (single) | subagent | `subagent_spawned_planner` |

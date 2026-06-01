@@ -166,5 +166,59 @@ def test_max_concurrent_flag_in_flags_md():
     )
 
 
+# ---------------------------------------------------------------------------
+# Task 4 — dispatch-contract.md: specialist is a one-shot subagent
+# ---------------------------------------------------------------------------
+def test_specialist_dispatch_shape_is_subagent():
+    """Cluster specialists dispatch as one-shot subagents, not teammates."""
+    content = _read_repo_file("contracts/dispatch-contract.md")
+
+    assert "| Cluster specialist (a.k.a. cluster auditor)" in content
+    specialist_row = re.search(
+        r"\| Cluster specialist.*?\| \*\*subagent\*\* \(Agent tool, no team_name\)",
+        content,
+        re.DOTALL,
+    )
+    assert specialist_row, "Cluster specialist should be listed as subagent dispatch shape"
+
+    # The "How to dispatch each role in v2" table is 3-column
+    # (Role | Template/prompt source | Tool call). Consume column 2 with [^|]*
+    # so group(1) captures column 3 (the Tool call); a bare lazy `.*?` would
+    # capture column 2 and the dispatch-call assertions could never hold.
+    dispatch_table = re.search(
+        r"\| Cluster specialist \| [^|]*\| (.*?) \|",
+        content,
+    )
+    assert dispatch_table, "Cluster specialist dispatch table row exists"
+    dispatch_call = dispatch_table.group(1)
+    assert "team_name=" not in dispatch_call, "Specialist dispatch must NOT include team_name"
+    assert "name=" not in dispatch_call, "Specialist dispatch must NOT include name"
+    assert "description=" in dispatch_call, "Specialist dispatch MUST include description"
+    assert 'subagent_type="general-purpose"' in dispatch_call, "Specialist uses Agent subagent_type"
+
+    counter_row = re.search(
+        r"\| Cluster specialist \| subagent \| `([^`]+)`", content
+    )
+    assert counter_row, "Counter row for cluster specialist exists"
+    assert counter_row.group(1).startswith("subagent_spawned_specialists"), (
+        f"Counter should be subagent_spawned_specialists, got {counter_row.group(1)}"
+    )
+
+    assert "### Why specialists are one-shot subagents" in content
+    assert "### Why cluster specialists keep teammate status" not in content
+
+    assert "--max-concurrent" in content
+    assert "full-parallel" in content.lower() or "full parallel" in content.lower()
+    assert "unlimited" in content
+
+    waves_hardcoded = re.search(
+        r"waves of ≤5 concurrent spawns.*?operational", content, re.DOTALL
+    )
+    assert waves_hardcoded is None, "Hardcoded waves-of-5 policy should be replaced"
+
+    # Task/Agent alias note present (Task is the v2.1.63 legacy alias for Agent)
+    assert "Task" in content and "alias" in content.lower()
+
+
 if __name__ == "__main__":
     unittest.main()
