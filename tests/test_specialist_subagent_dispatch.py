@@ -139,5 +139,18 @@ class TestSubagentSpecialistsCounterAlias(unittest.TestCase):
             self.assertEqual(c["subagent_spawned_specialists"], 20)
 
 
+# ---------------------------------------------------------------------------
+# Task 2 — test-specialist.py --write-retry-prompt flag + Agent-dispatch wording
+# ---------------------------------------------------------------------------
+def test_test_specialist_supports_write_retry_prompt_and_agent_wording():
+    """test-specialist.py must expose --write-retry-prompt on the `validate`
+    subcommand and describe itself as an 'Agent' dispatch harness."""
+    src = _read_repo_file("scripts/test-specialist.py")
+    assert "--write-retry-prompt" in src, "validate must accept --write-retry-prompt"
+    assert "specialist Agent dispatch" in src or "specialist Agent + synthesizer dispatch" in src, (
+        "module/parser docstring should reference 'Agent' dispatch wording"
+    )
+
+
 if __name__ == "__main__":
     unittest.main()

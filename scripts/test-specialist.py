@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""test-specialist.py — Split-mode harness for v2 specialist + synthesizer dispatch.
+"""test-specialist.py — Split-mode harness for v2 specialist Agent + synthesizer dispatch.
 
 The Anthropic API isn't reachable from Claude Code Max plan, and Python scripts
 can't directly invoke Claude Code's Agent/Task primitive. This harness fills the
@@ -1006,7 +1006,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="test-specialist.py",
         description=(
-            "Split-mode harness for v2 specialist dispatch."
+            "Split-mode harness for v2 specialist Agent dispatch."
             " 'prepare' renders the dispatch prompt; 'validate' checks an emission."
         ),
     )
@@ -1104,7 +1104,7 @@ def main(argv: list[str] | None = None) -> int:
     p_validate.add_argument(
         "--write-retry-prompt",
         type=Path,
-        help="If set and validation fails, write the retry prompt to this path.",
+        help="If set and validation fails, write a retry prompt to this path. For specialist (cluster-emission) validates, contains business-rule violations and schema errors. For synthesizer (synthesizer-emission) validates, contains hallucinated refs and schema errors.",
     )
 
     p_prep_synth = sub.add_parser(
