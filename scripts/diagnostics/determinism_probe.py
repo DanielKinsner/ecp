@@ -288,7 +288,7 @@ def cmd_probe(args) -> int:
             "reason": "all emissions dropped (see Probe 1); run with --repair-absent-anchors",
         }
         print("\n[Probe 3] input-sensitivity: INCONCLUSIVE "
-              "(every emission dropped — see Probe 1).")
+              "(every emission dropped -- see Probe 1).")
     else:
         base_set = set(refs0)
         title_refs, title_fp, title_note = _perturb_copy(work, "title")
