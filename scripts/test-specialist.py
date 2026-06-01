@@ -328,6 +328,9 @@ def render_prompt(
     )
 
     substitutions = {
+        # ${CLAUDE_PLUGIN_ROOT} is NOT expanded by Claude Code in spawned-teammate
+        # prompts (B0); expand it at render time so teammates get absolute paths.
+        "${CLAUDE_PLUGIN_ROOT}": str(REPO_ROOT),
         "{{cluster}}": cluster,
         "{{device}}": device,
         "{{engagement_id}}": engagement_id,
@@ -461,6 +464,9 @@ def render_synthesizer_prompt(
     )
 
     substitutions = {
+        # ${CLAUDE_PLUGIN_ROOT} is NOT expanded by Claude Code in spawned-teammate
+        # prompts (B0); expand it at render time so teammates get absolute paths.
+        "${CLAUDE_PLUGIN_ROOT}": str(REPO_ROOT),
         "{{engagement_id}}": engagement_id,
         "{{cluster_emission_paths}}": cluster_block,
         "{{ethics_findings_path}}": ethics_findings_path,

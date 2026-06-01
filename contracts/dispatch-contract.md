@@ -23,6 +23,12 @@ You MUST pass the `model` parameter explicitly on every single `Agent` tool call
 
 ---
 
+## Path resolution contract (MANDATORY)
+
+The lead MUST ensure teammates receive **absolute paths** in their dispatched prompts. Claude Code does **NOT** expand `${CLAUDE_PLUGIN_ROOT}` inside spawned-teammate (Agent/Task) prompts — a teammate `Read` of a literal `${CLAUDE_PLUGIN_ROOT}/...` path returns "File does not exist" (B0). The variable is therefore expanded **at render time** by `scripts/test-specialist.py` (`render_prompt` / `render_synthesizer_prompt` substitute `${CLAUDE_PLUGIN_ROOT}` → repo root), so the rendered `docs/ecp/{id}/.prompts/specialist-*.txt` and `synthesizer.txt` carry real absolute paths. The lead dispatches that rendered `.txt` verbatim as the Agent/Task `prompt` and MUST NOT reintroduce the literal variable into a dispatched prompt.
+
+---
+
 ## Per-role model + dispatch-shape assignments (canonical, Phase H 2026-04-28)
 
 | Role | Default model | With `--deep` | v2 Dispatch shape | Rationale |
