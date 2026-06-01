@@ -82,45 +82,21 @@ The remaining fields (`TITLE:`, `SECTION:`, `ELEMENT:`, etc.) are required by th
    - Two or more findings in the cluster file sharing an identical TITLE (case-insensitive, whitespace-normalized) → REJECT
    - All findings code-fenced AND each starts with `FINDING: FAIL` or `FINDING: PARTIAL` AND TITLE rules above satisfied → ACCEPT
 
-4. **If REJECTED, send the auditor back via SendMessage:**
+4. **If REJECTED, dispatch a fresh one-shot subagent:**
+   Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the validation error (e.g., "block-format violation: findings use ### Finding N headings instead of code fences"). This generates a retry prompt that embeds the error.
    ```
-   SendMessage to "auditor-{cluster}-{device}":
-   "Your cluster file at docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md
-    does not use the required format. Findings MUST be wrapped in triple-backtick
-    code fences with `FINDING: FAIL` or `FINDING: PARTIAL` as the first line of
-    each block. Your file currently uses [describe what they did wrong].
-    Please rewrite the file in the canonical format documented in
-    workflows/audit.md Step 4a 'Worked Examples' and Step 4d 'TITLE field rules'.
-    The reconciler depends on this format, and the visual report generator
-    parses code-fenced blocks via regex.
-    Reformatting in place is acceptable — keep your observations and
-    recommendations verbatim, only change the wrapper structure.
-    Mark your task in_progress again while you rewrite, then back to completed
-    when done."
+   Agent(subagent_type="general-purpose", description="format-rewrite: cluster-{cluster}-{device}",
+         model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
    ```
+   One re-dispatch per validation failure. The subagent has no context of the original attempt — it receives only the cluster file content + the specific validation error. On success, validate the returned file again. On second failure, the lead reformats in place AND logs the failure in `audit-trace.log` for follow-up. Do NOT silently reformat without going through re-dispatch first.
 
-   **For TITLE-specific rejections, use this tailored message instead:**
+   **For TITLE-specific rejections, dispatch a fresh one-shot subagent:**
+   Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the validation error details (e.g., "TITLE validation: Finding #3 missing TITLE line; Findings #2 and #5 both have 'Value Proposition' — must be unique"). This generates a retry prompt embedding the specific violations.
    ```
-   SendMessage to "auditor-{cluster}-{device}":
-   "Your cluster file at docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md
-    cleared the block-format check but failed TITLE validation. Specific issues:
-
-    - [List each offending finding by its current TITLE or block position, e.g.,
-      'Finding #3 is missing a TITLE: line entirely',
-      'Findings #2 and #5 both have TITLE: Value Proposition — must be unique within this cluster',
-      'Finding #7 has TITLE: Trust Badges which matches its SECTION slug trust-badges — too generic',
-      'Finding #4 TITLE is 74 chars — must be ≤60'].
-
-    Please re-read workflows/audit.md Step 4d 'TITLE field rules' and rewrite the
-    offending TITLE lines only. Keep every other field (SECTION, ELEMENT, OBSERVATION,
-    RECOMMENDATION, PRIORITY, REFERENCE, citation) verbatim. Rename titles to name
-    the specific element or sub-issue (e.g., 'Homepage Hero Lacks Value Prop',
-    'Product Cards Generic Copy'). Two findings in the same cluster cannot share an
-    identical TITLE.
-
-    Mark your task in_progress again while you rewrite, then back to completed
-    when done."
+   Agent(subagent_type="general-purpose", description="title-rewrite: cluster-{cluster}-{device}",
+         model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
    ```
+   One re-dispatch per validation failure. The subagent receives cluster content + the specific TITLE violations (missing lines, duplicates, length/slug-match failures) and rewrites only TITLE fields, keeping SECTION, ELEMENT, OBSERVATION, RECOMMENDATION, PRIORITY, REFERENCE, and citations verbatim. On success, re-validate. On second failure, the lead corrects TITLEs in place AND logs the failure in `audit-trace.log` for follow-up.
 5. Wait for the corrected file (the teammate will message you when done) and re-validate. **Two corrections max** — if the teammate still produces wrong format on the second attempt, the lead reformats in place AND logs the failure in `audit-trace.log` for follow-up. Do NOT silently reformat without going through this two-attempt loop first.
 
 **Why the format check matters:** A live test on awdmods.com (April 7, 2026) showed 5 of 10 cluster auditors writing in the wrong format. Previous behavior was for the reconciler to silently reformat them during audit.md assembly, which "worked" but hid the problem and added unaccounted reconciler work. The new lead-as-validator pattern fails fast at the right layer, gives the auditor a chance to fix its own output, and only falls back to silent rewriting if the teammate genuinely can't produce the right format. This is exactly the kind of mid-flight coordination that subagents couldn't do but teammates can.
@@ -141,31 +117,13 @@ After the format check accepts a cluster file, the lead runs a voice check again
 6. **Internal pipeline terminology:** References to ECP pipeline artifacts that expose the multi-agent architecture to the client. Reject if the OBSERVATION or RECOMMENDATION contains: `baton`, `dispatch`, `dispatch brief`, `coordinator`, `teammate`, `cluster file`, `cluster context`, `engagement directory`, `acquirer`, `trace log`, `reconciliation`, `auditor-`, `team-lead`, `SendMessage`, `TaskUpdate`. The client should not know the audit was produced by a multi-agent pipeline — write as if you examined the page directly.
 7. **Soft jargon that passes the acronym check but fails the grandmother test:** `proximate` (use "near" or "next to"), `at the point of [noun]` (use "when [verb]"), `price evaluation` (use "looking at prices"), `render-blocking` (use "slows down the page"), `viewport` without context (use "screen" or "what visitors see"), `above-fold` without explanation (use "the part of the page visitors see before scrolling"), `DOM` in non-CODE findings (use "the page" or "the page source"), `element` when referring to visible things (use the actual name — "the button", "the banner", "the price tag"). These terms are common in developer documentation but opaque to business owners.
 
-**If REJECTED on voice check, send the auditor back via SendMessage:**
+**If REJECTED on voice check, dispatch a fresh one-shot subagent:**
+Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the voice violation details (e.g., "voice check failed: Finding at SECTION pricing uses 'render-blocking' without plain-English equivalent; Finding at SECTION trust uses 'compliance' framing — rewrite using outcome framing; Finding at SECTION benefits has citation-only 'Why this matters'"). This generates a retry prompt embedding the specific violations.
 ```
-SendMessage to "auditor-{cluster}-{device}":
-"Your cluster file at docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md
- passed format validation but failed the voice check. The following findings
- use jargon or framing that won't translate for a client reader:
-
- - Finding at SECTION [slug]: uses [specific jargon term] without plain-English
-   equivalent.
- - Finding at SECTION [slug]: uses 'violation'/'compliance' framing instead
-   of 'what we found / what to do'.
- - Finding at SECTION [slug]: 'Why this matters' is citation-only without
-   business outcome translation.
-
- Please rewrite these findings using the voice guide in
- workflows/audit.md Step 4b and the cluster-specific worked examples
- in Step 4c. Keep the SECTION, ELEMENT, PRIORITY, SOURCE, and REFERENCE
- fields exactly as you had them — only rewrite OBSERVATION, RECOMMENDATION,
- and **Why this matters** in plain English. The grandmother test applies:
- if a small business owner or a store manager wouldn't understand what
- you wrote in one read, simplify.
-
- Mark your task in_progress again while you rewrite, then back to completed
- when done."
+Agent(subagent_type="general-purpose", description="voice-rewrite: cluster-{cluster}-{device}",
+      model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
 ```
+One re-dispatch per validation failure. The subagent receives cluster content + the specific jargon/framing violations and rewrites only OBSERVATION, RECOMMENDATION, and **Why this matters** fields, keeping SECTION, ELEMENT, PRIORITY, SOURCE, and REFERENCE verbatim. On success, re-validate using the same blocklist gate. On second failure, the lead rewrites in place using the voice guide's translation patterns AND logs the voice failure in `audit-trace.log` for follow-up. Do NOT silently pass jargon-laden findings through to the client.
 
 Same two-attempt loop as the format check. On third failure, the lead rewrites in place using the voice guide's translation patterns AND logs the voice failure in `audit-trace.log` for follow-up. Do NOT silently pass jargon-laden findings through to the client.
 
@@ -192,30 +150,13 @@ After format and voice checks both pass, the lead runs an evidence-anchor check 
 - OBSERVATION contains any forbidden framing listed in contracts/dispatch-contract.md ("consider adding", "best practice suggests", "typical stores benefit from", "industry standard is", "users often expect", "research shows that") AND no quoted copy or measured value appears elsewhere in the block.
 - RECOMMENDATION describes an abstract pattern ("strengthen the CTA", "improve trust signals", "add urgency") without naming a specific page element or location to apply the change.
 
-**If REJECTED on evidence-anchor gate, send the auditor back via SendMessage:**
+**If REJECTED on evidence-anchor gate, dispatch a fresh one-shot subagent:**
+Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the evidence-anchor violations (e.g., "evidence-anchor gate failed: Finding at SECTION pricing ELEMENT blank, uses generic framing 'best practice suggests' — anchor to a DOM selector or quote; Finding at SECTION trust RECOMMENDATION abstract 'strengthen the CTA' — name the specific button/link and describe the change"). This generates a retry prompt embedding the specific failures.
 ```
-SendMessage to "auditor-{cluster}-{device}":
-"Your cluster file at docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md
- passed format and voice checks but failed the evidence-anchor gate. The
- following findings read as generic CRO advice — they could be pasted into
- any audit of any store because they don't reference THIS page:
-
- - Finding at SECTION [slug]: no DOM element named; OBSERVATION uses
-   [specific forbidden framing]. Add a CSS selector or data attribute
-   from the cluster-context JSON, OR quote the specific copy you observed,
-   OR describe a screenshot coordinate.
- - Finding at SECTION [slug]: RECOMMENDATION is abstract ('strengthen the
-   CTA'). Name the actual button/link on the page and describe the specific
-   change (color, copy, placement).
-
- Please rewrite with a concrete evidence anchor — see contracts/dispatch-contract.md
- 'Evidence requirement' section and the 'acceptable' worked example. If you
- genuinely can't identify an anchor for a finding after examining the
- cluster-context JSON and the screenshots, drop the finding rather than
- emit it generic.
-
- Mark your task in_progress again, rewrite, then back to completed."
+Agent(subagent_type="general-purpose", description="evidence-anchor-rewrite: cluster-{cluster}-{device}",
+      model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
 ```
+One re-dispatch per validation failure. The subagent receives cluster content + the specific evidence-anchor failures (missing ELEMENT, abstract framing, missing citations, vague recommendations) and rewrites to ground findings in concrete page evidence: DOM selectors, screenshot coordinates, or quoted copy from the cluster-context JSON. On success, re-validate. On second failure, the lead **drops the finding silently** (no special marker, no placeholder) — a cluster that lands with zero surviving findings after Step 0c is rendered in the audit as an empty cluster. Generic advice never reaches the client.
 
 Same two-attempt loop as format and voice checks. On third failure, the lead **drops the finding silently** (no special marker, no placeholder) — a cluster that lands with zero surviving findings after Step 0c is rendered in the audit as an empty cluster. Generic advice never reaches the client.
 

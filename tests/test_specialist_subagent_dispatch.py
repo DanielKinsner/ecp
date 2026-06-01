@@ -283,5 +283,37 @@ def test_skill_md_specialist_recovery_is_fresh_redispatch():
     assert "--max-concurrent" in skill_md
 
 
+# ---------------------------------------------------------------------------
+# Task 7 — audit-reconciliation.md Steps 0/0b/0c: fresh re-dispatch, not SendMessage
+# ---------------------------------------------------------------------------
+def test_validation_failure_triggers_subagent_not_sendmessage():
+    """Steps 0/0b/0c rejections dispatch fresh one-shot subagents, not SendMessage."""
+    content = _read_repo_file("contracts/audit-reconciliation.md")
+
+    step_0 = content[content.find("## Step 0 — Format validation"):content.find("## Step 0b")]
+    step_0b = content[content.find("## Step 0b — Voice check"):content.find("## Step 0c")]
+    step_0c = content[content.find("## Step 0c — Evidence-anchor"):content.find("## Step 1")]
+
+    for section, name in [(step_0, "Step 0"), (step_0b, "Step 0b"), (step_0c, "Step 0c")]:
+        assert "Mark your task in_progress again while you rewrite" not in section, (
+            f"{name}: still contains in-place SendMessage correction instruction"
+        )
+        assert 'Agent(subagent_type="general-purpose"' in section, f"{name}: missing Agent() dispatch"
+        assert "test-specialist.py --write-retry-prompt" in section, (
+            f"{name}: missing test-specialist.py --write-retry-prompt"
+        )
+        assert "team_name=" not in section, f"{name}: Agent() must not include team_name"
+        assert 'model="sonnet"' in section, f'{name}: Agent() must specify model="sonnet"'
+
+    # Validation logic preserved (delivery changes only)
+    assert "code-fenced" in step_0
+    assert "FINDING: FAIL" in step_0
+    assert "identical TITLE" in step_0
+    assert "voice check" in step_0b
+    assert "jargon" in step_0b
+    assert "evidence anchor" in step_0c
+    assert "DOM selector" in step_0c
+
+
 if __name__ == "__main__":
     unittest.main()
