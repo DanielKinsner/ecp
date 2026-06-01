@@ -346,6 +346,26 @@ def device_profile(device: str) -> Viewport:
     raise SystemExit(f"Unknown device: {device}")
 
 
+def section_screenshot_name(index: int, device: str) -> str:
+    """Canonical per-section screenshot filename.
+
+    Contract (single source of truth, shared with the validator and the
+    converter):
+      - desktop / laptop -> ``section-{index}.jpg``
+      - mobile           -> ``section-{index}-mobile.jpg``
+
+    This MUST match scripts/assembly/business_rules.py ``_SCREENSHOT_PATTERN``
+    (``^section-[0-9]+(-mobile)?\\.jpg$``) and scripts/baton_v1_to_v2.py's
+    ``screenshot_ref`` derivation. The name MUST NOT vary with single- vs
+    multi-device runs: mobile-vs-non-mobile is the only axis, mirroring
+    baton{,-mobile}.json and dom{,-mobile}.html. The historic ``{device}-``
+    prefix in multi-device runs emitted e.g. ``desktop-section-1.jpg``, which
+    the validator/converter rejected.
+    """
+    suffix = "-mobile" if str(device).lower() == "mobile" else ""
+    return f"section-{int(index)}{suffix}.jpg"
+
+
 def _resolve_agent_browser() -> str:
     ab = shutil.which("agent-browser")
     if not ab:
@@ -928,7 +948,7 @@ def _run_one_device(
             scene = str(v.get("scene") or "").strip()
         else:
             ht, scene = "", ""
-        rel_name = f"{file_prefix}section-{i}.jpg" if file_prefix else f"section-{i}.jpg"
+        rel_name = section_screenshot_name(i, device)
         out_path = eng_dir / rel_name
         label_guess = sec_hints.section_label(
             index=i,
