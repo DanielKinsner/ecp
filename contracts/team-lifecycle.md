@@ -4,6 +4,23 @@ Canonical lifecycle contract for every ECP v5.0 skill that uses Claude Code's ex
 
 Prior to ECP v5.0.x this lifecycle prose was duplicated across four skill files with the hard-requirement env var check, the `TeamCreate` naming convention, and the create/populate/spawn/coordinate/cleanup step list all copy-pasted. This reference is the single source of truth.
 
+---
+
+## MIGRATION NOTICE (v2.1.63+): Cluster specialists moved to subagent dispatch
+
+**For `/ecp:audit` cluster-specialist auditors:** As of v2.1.63, the hard-requirement env-var gate (§ "Hard requirement" below) and Resume team-recreation (§ "Resume" below) are DEAD for the audit path. Cluster specialists now dispatch as one-shot subagents via the `Agent(subagent_type="general-purpose")` tool, not teammates. The env-var check, team creation, and task-list coordination no longer apply to cluster auditors.
+
+**Retained sections below** are annotated but NOT deleted. They remain as:
+- **Historical documentation** for how v5.0–v2.1.62 worked.
+- **Foundation for future multi-planner resume** (if a future phase restores multi-planner team coordination, Resume team-recreation logic will return; the prose is ready).
+
+**What changed:**
+- Lead no longer calls `TeamCreate` at engagement start.
+- Cluster auditors dispatch via fresh `Agent(description="...", prompt=<specialist.txt>, model="sonnet"|"opus")` (see `contracts/dispatch-contract.md`).
+- On specialist validation failure, lead re-dispatches a FRESH subagent with error embedded (via `scripts/test-specialist.py --write-retry-prompt`).
+- Trace counter `subagent_spawned_specialists` tracks dispatches; `team_spawned_auditors` is a legacy alias (kept for backwards compat).
+- Concurrency controlled via `--max-concurrent` flag (default=all/unlimited); see `contracts/flags.md`.
+
 ## Hard requirement
 
 Every skill that uses teams MUST check for the experimental env var at the start of every engagement:

@@ -1,4 +1,6 @@
-"""Cluster-specialist subagent-vs-teammate parity diff harness.
+"""Cluster-specialist subagent-vs-teammate parity diff harness (ARCHIVED).
+
+[ARCHIVED — Phase H parity evidence, retained for audit trail. Not run in the gate.]
 
 Phase H deliverable 5 (2026-04-28). Compares two `cluster-emission-v1.json`
 files produced by dispatching the SAME specialist prompt as a subagent
@@ -6,10 +8,11 @@ files produced by dispatching the SAME specialist prompt as a subagent
 byte-identical (modulo irreducible-variance fields like timestamps and
 telemetry), v2.1 can flip cluster specialists to subagent dispatch.
 
-Phase H deliverable 5: see contracts/dispatch-contract.md for the
-specialist dispatch shape that v2.1 may flip from teammate to subagent.
+As of v2.1.63, cluster specialists HAVE been flipped to subagent dispatch
+(Agent tool, no team_name). This harness was the validation evidence. Retained
+for audit trail; not executed in the standard test gate.
 
-Usage:
+Usage (historical; not run in CI):
     python scripts/test-cluster-specialist-parity.py \\
         --subagent parity-test-pricing-desktop.subagent.json \\
         --teammate parity-test-pricing-desktop.teammate.json \\

@@ -372,5 +372,22 @@ def test_trace_header_accepts_subagent_spawned_specialists():
     )
 
 
+# ---------------------------------------------------------------------------
+# Task 11 — team-lifecycle.md annotated dead-for-audit; parity harness archived
+# ---------------------------------------------------------------------------
+def test_team_lifecycle_annotated_and_parity_archived():
+    """team-lifecycle.md marks audit-path dead (retained for multi-planner); parity harness archived."""
+    lifecycle = _read_repo_file("contracts/team-lifecycle.md")
+    assert "MIGRATION NOTICE" in lifecycle
+    assert "DEAD for the audit path" in lifecycle
+    assert "multi-planner" in lifecycle.lower()
+    # Not deleted: the canonical lifecycle prose still present
+    assert "# Agent Teams lifecycle" in lifecycle
+
+    parity = _read_repo_file("scripts/test-cluster-specialist-parity.py")
+    assert "ARCHIVED" in parity
+    assert "not" in parity.lower() and "gate" in parity.lower()
+
+
 if __name__ == "__main__":
     unittest.main()
