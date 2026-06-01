@@ -26,6 +26,7 @@ resume on the markdown-emission path. v2 engagements call ``deduplicate_v2``.
 
 from __future__ import annotations
 
+import hashlib
 from collections import defaultdict
 from dataclasses import replace
 from typing import Dict, List, Tuple
@@ -497,6 +498,30 @@ def _v2_layer_device_scope(
     return kept, merged
 
 
+def _absent_content_key(f: Finding) -> str:
+    """Stable, content-derived identity for an 'absent' finding.
+
+    Replaces the old ``id(f)`` grouping key, which was process-dependent and
+    non-deterministic across runs. ``(cluster, device, local_index)`` uniquely
+    identifies a finding within an engagement; ``surface`` + ``title`` + a hash
+    of the observation are folded in so the key stays unique (and identical
+    across in-process builds of the same input) even on exact identity ties.
+    """
+    content = "\x1f".join(
+        (
+            f.cluster,
+            f.device,
+            str(f.local_index),
+            f.surface,
+            f.title,
+            f.verdict,
+            f.observation,
+        )
+    )
+    digest = hashlib.sha1(content.encode("utf-8")).hexdigest()[:16]
+    return f"{f.cluster}\x1f{f.device}\x1f{f.local_index:08d}\x1f{f.surface}\x1f{digest}"
+
+
 def _v2_layer_cross_cluster_structural(
     findings: List[Finding],
 ) -> Tuple[List[Finding], List[dict]]:
@@ -515,7 +540,7 @@ def _v2_layer_cross_cluster_structural(
     for f in sorted(findings, key=lambda f: (f.baton_index, f.surface, f.verdict, f.device, f.cluster, f.local_index)):
         if not f.baton_index or f.baton_index == "absent":
             # 'absent' baton_index findings can't dedup structurally — preserve all
-            groups[(f"_absent_{id(f)}", "", "", "")].append(f)
+            groups[(f"_absent_{_absent_content_key(f)}", "", "", "")].append(f)
             continue
         key = (f.baton_index, f.surface, f.verdict, f.device)
         groups[key].append(f)
