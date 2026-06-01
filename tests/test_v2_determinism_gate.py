@@ -68,7 +68,13 @@ class TestParseTraceAssertions(unittest.TestCase):
 
         c = result["counters"]
         self.assertEqual(c["expected_specialist_count"], 20)
-        self.assertEqual(c["team_spawned_specialists"], 20)
+        # Accept either team_spawned_specialists (v1) or subagent_spawned_specialists
+        # (v2 canonical); the gate normalizes to the canonical key.
+        specialist_count = max(
+            c.get("subagent_spawned_specialists", 0),
+            c.get("team_spawned_specialists", 0),
+        )
+        self.assertEqual(specialist_count, 20)
         self.assertEqual(c["cluster_files_written"], 20)
         self.assertEqual(c["subagent_spawned_synthesizer"], 1)
         self.assertEqual(c["subagent_spawned_ethics"], 1)
@@ -96,7 +102,11 @@ class TestParseTraceAssertions(unittest.TestCase):
             c = result["counters"]
             # v1 names should fold into v2 canonical names.
             self.assertEqual(c.get("expected_specialist_count"), 10)
-            self.assertEqual(c.get("team_spawned_specialists"), 10)
+            specialist_count = max(
+                c.get("subagent_spawned_specialists", 0),
+                c.get("team_spawned_specialists", 0),
+            )
+            self.assertEqual(specialist_count, 10)
             self.assertEqual(c.get("subagent_spawned_acquirers"), 1)
 
     def test_missing_counters_default_to_absent(self):
@@ -155,7 +165,7 @@ class TestStructuralCanary(unittest.TestCase):
 # Pipeline: v2
 # ASSERTIONS:
 #   expected_specialist_count: 20
-#   team_spawned_specialists: 15
+#   subagent_spawned_specialists: 15
 #   cluster_files_written: 15
 #   subagent_spawned_synthesizer: 1
 #   subagent_spawned_ethics: 1
