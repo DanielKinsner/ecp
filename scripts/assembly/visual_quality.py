@@ -322,7 +322,7 @@ def compute_visual_evidence_summary(findings: Iterable[dict]) -> dict[str, dict[
           "_total": {"high": N, "medium": N, ...}
         }
     """
-    from scripts.report.visual_evidence import ALL_CONFIDENCES, ALL_TYPES  # local import
+    from report.visual_evidence import ALL_CONFIDENCES, ALL_TYPES  # local import
 
     table: dict[str, dict[str, int]] = {
         t: {c: 0 for c in ALL_CONFIDENCES} for t in ALL_TYPES
