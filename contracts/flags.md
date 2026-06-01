@@ -17,6 +17,7 @@ Canonical documentation for every ECP CLI flag. Skills reference this file inste
 | `--device` | string / comma-pair | prompt | ✓ | — | ✓ | ✓ | — |
 | `--focus` | cluster-slug / domain / comma-list | page-type default | ✓ | ✓ | ✓ | ✓ (single) | — |
 | `--deep` | boolean | false | ✓ | ✓ | ✓ | ✓ | — |
+| `--max-concurrent` | integer | all (unlimited) | ✓ | ✓ | — | — | — |
 | `--min-priority` | `critical` / `high` / `medium` / `low` | — (audit/build) / `high` (quick-scan) | ✓ | ✓ | — | ✓ | — |
 | `--platform` | `shopify` / `nextjs` / `opencart` / `woocommerce` / `generic` | auto-detect | ✓ | ✓ | — | ✓ | — |
 | `--visual` | boolean | prompt | ✓ | ✓ | ✓ | ✓ | — |
@@ -134,6 +135,25 @@ Route cluster auditors and builder to `opus` instead of the default `sonnet`. Us
 These are the synthesis brain and quality gate — downgrading them would degrade audit quality. See `contracts/dispatch-contract.md` for the full per-role model assignment table.
 
 **Quick-scan note:** `--deep` is rarely needed for quick-scan (the value prop is speed), but available for client-facing quick-scan runs.
+
+---
+
+## `--max-concurrent`
+
+**Type:** integer.
+**Default:** all (unlimited; dispatch all requested clusters in one wave).
+**Supported by:** `/ecp:audit`, `/ecp:build`.
+
+Batch specialist subagent dispatch into concurrent waves of up to N agents. Use when:
+- Resource-constrained environments (e.g., rate-limited API, shared compute quota, avoiding fork-bomb spike load).
+- Network conditions favor fewer parallel streams over many.
+- Observability/debugging requires serialization (though wave batching is orthogonal to that; use `--auto` for automated runs).
+
+**Default behavior (no `--max-concurrent`):** Dispatch all cluster auditors and builder in one wave (full parallelism). Fastest wall-clock time.
+
+**Example:** `--max-concurrent 5` for audit of 12 clusters (6 clusters × 2 devices) will dispatch in three waves: (1) auditors 1-5, (2) auditors 6-10, (3) auditor 11-12, then builder. Wave boundaries are transparent to the user — the lead waits for the entire batch to complete before the next phase.
+
+**Fallback for throttling:** This flag is the lead's escape hatch when token/rate limits, fork-bomb concerns, or queue saturation would otherwise cause failures. Before adding hardcoded wave-batching logic, the lead tries `--max-concurrent` first.
 
 ---
 

@@ -152,5 +152,19 @@ def test_test_specialist_supports_write_retry_prompt_and_agent_wording():
     )
 
 
+# ---------------------------------------------------------------------------
+# Task 3 — --max-concurrent documented in contracts/flags.md
+# ---------------------------------------------------------------------------
+def test_max_concurrent_flag_in_flags_md():
+    """--max-concurrent must be documented in contracts/flags.md and supported by audit."""
+    flags_md = _read_repo_file("contracts/flags.md")
+    assert "--max-concurrent" in flags_md, (
+        "--max-concurrent flag must be documented in contracts/flags.md per shared convention"
+    )
+    assert re.search(r"--max-concurrent.*?audit", flags_md, re.IGNORECASE | re.DOTALL), (
+        "--max-concurrent must be listed as supported by /ecp:audit"
+    )
+
+
 if __name__ == "__main__":
     unittest.main()
