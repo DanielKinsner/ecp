@@ -2353,3 +2353,11 @@ Resolved where the SPEC + CONSISTENCY RULES win over fragment draft text:
 4. **`canary_checks._SPECIALIST_COUNTERS` test (folded into Task 12 context).** The fragment for the existing-test files contributed a guard test asserting `scripts/assembly/canary_checks.py` defines a `_SPECIALIST_COUNTERS` tuple containing both a legacy name and `subagent_spawned_specialists`. The drafting pass itself flagged that this constant lives in a "parallel scripts-layer fragment" that does not exist, and may not be present in the live file. Editing repo files is out of scope for this assembly, and the plan must not invent new product code. **Resolution:** Task 12 instructs the implementer to READ `canary_checks.py` first and, if `_SPECIALIST_COUNTERS` does not exist, OMIT that single merged test function (noting the omission in the commit body) rather than introduce a new interface. The determinism-gate alias normalization (Task 1) is the real mechanism that makes the canary accept both counters. This is a fragment-internal inconsistency rather than a spec conflict, recorded here for transparency.
 
 No conflicts altered the SCOPE or task order; all §3 sections and the §4 inventory are covered.
+
+
+## Execution log
+
+- **Task 1 — DONE** (commit `5ba73bd`): `determinism_gate.py` canonical counter → `subagent_spawned_specialists` (legacy `team_spawned_specialists`/`team_spawned_auditors` retained as aliases); created `tests/test_specialist_subagent_dispatch.py` with 4 passing guard tests.
+- **Coupled fix — DONE** (commit `4585602`): brought forward Task 12 Edits 1–3 to `tests/test_v2_determinism_gate.py` because Task 1's counter rename broke two assertions there. **LEARNING:** a counter rename in `determinism_gate.py` is coupled to every test asserting the old key — keep them in one logical change. **Task 12 remaining:** the `tests/test_g24_trace_counters_reconcile.py` edits (fragment Edits 4–5) and the `canary_checks._SPECIALIST_COUNTERS` read-first-then-omit check.
+- Full suite GREEN at this point.
+- **NEXT: Task 2** — `scripts/test-specialist.py` `--write-retry-prompt` + docstring fix.
