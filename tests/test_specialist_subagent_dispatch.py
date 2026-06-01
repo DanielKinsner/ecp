@@ -220,5 +220,20 @@ def test_specialist_dispatch_shape_is_subagent():
     assert "Task" in content and "alias" in content.lower()
 
 
+# ---------------------------------------------------------------------------
+# Task 5 — specialist-prompt-v2.md dispatch line drops team_name/name
+# ---------------------------------------------------------------------------
+def test_specialist_prompt_dispatch_line_has_no_team_name_or_name():
+    """The dispatch instruction must not carry team_name / name=; No coordination preserved."""
+    content = _read_repo_file("contracts/specialist-prompt-v2.md")
+    dispatch_line = next(
+        ln for ln in content.split("\n") if "The lead dispatches it via the Agent tool" in ln
+    )
+    assert "team_name" not in dispatch_line, "dispatch line must not include team_name"
+    assert "name:" not in dispatch_line, "dispatch line must not include a name: parameter"
+    assert "## No coordination" in content, "No coordination section must be preserved"
+    assert "You do not SendMessage anyone." in content
+
+
 if __name__ == "__main__":
     unittest.main()

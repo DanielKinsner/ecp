@@ -16,7 +16,7 @@ The lead constructs a final dispatch prompt by combining:
 2. **Per-cluster parameters** from `contracts/specialists/{cluster}.md` — reference file list, cluster-specific guidance, optional surface notes.
 3. **Per-engagement variables** — cluster-context path, baton path, screenshot paths, device, viewport, page type.
 
-The result is a single user-turn prompt string. The lead dispatches it via the Agent tool (`subagent_type: "general-purpose"`, `team_name: "audit-{engagement-id}"`, `model: "sonnet"`, `name: "specialist-{cluster}-{device}"`). Sonnet 4.6 is the v2 default per [`contracts/dispatch-contract.md`](dispatch-contract.md). Opus is reserved for the synthesizer (Layer 3) and the lead.
+The result is a single user-turn prompt string. The lead dispatches it via the Agent tool (`subagent_type: "general-purpose"`, `model: "sonnet"`). Sonnet 4.6 is the v2 default per [`contracts/dispatch-contract.md`](dispatch-contract.md). Opus is reserved for the synthesizer (Layer 3) and the lead.
 
 **No assistant-prefill.** The Agent tool only takes a single user-turn `prompt` string — there is no `messages[]` with role='assistant' to seed `{`. Pattern-match the JSON-only emission via the embedded one-shot example instead.
 
