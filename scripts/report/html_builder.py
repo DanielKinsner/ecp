@@ -4,7 +4,6 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
 from pathlib import Path
 
 from .utils import (
@@ -670,7 +669,20 @@ def _load_metadata(engagement_path, baton, meta, device, plugin_path):
     page_type = (page.get("type") or meta.get("page_type") or "Unknown").title()
     platform = (meta.get("platform") or "Unknown").title()
     source_mode = meta.get("source_mode", "Unknown")
-    generated_date = datetime.now().strftime("%Y-%m-%d")
+    # B4 determinism fix: the report footer's "generated {date}" must be bound to
+    # engagement inputs, not the wall clock — otherwise identical inputs produce
+    # different report bytes on different days. Derive it from the acquisition
+    # timestamp the engagement already carries (`created` per the original schema,
+    # or `created_at`/`updated_at` per the live meta.json writer), mirroring how
+    # `date_str` is sourced. Fall back to "Unknown" rather than datetime.now() so
+    # the surface is never wall-clock-derived.
+    generated_ts = (
+        meta.get("created")
+        or meta.get("created_at")
+        or meta.get("updated_at")
+        or ""
+    )
+    generated_date = generated_ts[:10] if generated_ts else "Unknown"
 
     return {
         "font_css": font_css,
