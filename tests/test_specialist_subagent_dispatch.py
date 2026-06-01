@@ -352,5 +352,25 @@ def test_ethics_and_synthesizer_dispatch_have_no_name_or_team_name():
         )
 
 
+# ---------------------------------------------------------------------------
+# Task 10 — trace-assertion-canary.md canonical counter + retained aliases
+# ---------------------------------------------------------------------------
+def test_trace_header_accepts_subagent_spawned_specialists():
+    """audit-trace.log header documents subagent_spawned_specialists; aliases retained."""
+    contract = _read_repo_file("contracts/trace-assertion-canary.md")
+    assert "subagent_spawned_specialists" in contract, (
+        "subagent_spawned_specialists counter not found in v2 header definition"
+    )
+    assert "subagent_spawned_specialists >= expected_specialist_count" in contract, (
+        "Alias rule missing: subagent_spawned_specialists primary assertion"
+    )
+    assert "team_spawned_specialists" in contract and "legacy" in contract.lower(), (
+        "Legacy team_spawned_specialists path not documented as backwards-compatible"
+    )
+    assert "subagent_spawned_specialists" in contract and "team_spawned_specialists" in contract, (
+        "Self-check must accept both one-shot and legacy specialist dispatch patterns"
+    )
+
+
 if __name__ == "__main__":
     unittest.main()

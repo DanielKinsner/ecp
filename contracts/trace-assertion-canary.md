@@ -42,7 +42,8 @@ Write this as the FIRST ~30 lines of `docs/ecp/{engagement-id}/audit-trace.log` 
 #   tasks_created_total: {N}              ← v1 only; v2 sets to the count of TaskCreate calls (specialists + multi-planners)
 #   expected_specialist_count: {N}        ← set at dispatch time after scope resolution + empty-slice pruning (v2 alias of v1 expected_auditor_count)
 #   subagent_spawned_acquirers: 0         ← v2: incremented after each Task call dispatching an acquirer
-#   team_spawned_specialists: 0           ← v2: incremented after each Agent call dispatching a cluster specialist (teammate dispatch retained)
+#   subagent_spawned_specialists: 0       ← v2: incremented after each Agent call dispatching a cluster specialist (one-shot subagent dispatch)
+#   team_spawned_specialists: 0           ← v2: legacy teammate dispatch; retained for backwards compatibility (see alias rules below)
 #   subagent_spawned_ethics: 0            ← v2: incremented after the Layer 1.5 ethics subagent dispatch
 #   subagent_spawned_synthesizer: 0       ← v2: incremented after the Layer 3 synthesizer subagent dispatch
 #   subagent_spawned_planner: 0           ← v2: single-planner subagent (multi-planner peers count via team_spawned_planners instead)
@@ -101,8 +102,8 @@ The audit-completion self-check accepts either naming style for backwards compat
 | Assertion | v1 counter | v2 counter |
 |---|---|---|
 | Acquirer ran | `team_spawned_acquirers >= D` | `subagent_spawned_acquirers >= D` |
-| Cluster specialists ran | `team_spawned_auditors >= expected_auditor_count` | `team_spawned_specialists >= expected_specialist_count` |
-| Cluster files on disk | `cluster_files_written == team_spawned_auditors` | `cluster_files_written == team_spawned_specialists` |
+| Cluster specialists ran | `team_spawned_auditors >= expected_auditor_count` | `subagent_spawned_specialists >= expected_specialist_count` (one-shot) OR `team_spawned_specialists >= expected_specialist_count` (legacy teammate) |
+| Cluster files on disk | `cluster_files_written == team_spawned_auditors` | `cluster_files_written == (subagent_spawned_specialists + team_spawned_specialists)` |
 | Ethics gate executed | `ethics_gate_executed == true` | same (v2 also implies `subagent_spawned_ethics >= 1`) |
 
 **v2-only assertions (no v1 equivalent):**
@@ -280,8 +281,8 @@ Before writing `phase: complete` to `meta.json`, the lead reads its own `audit-t
 
 **v2 path (Pipeline: v2 — Phase H 2026-04-28):**
 - `subagent_spawned_acquirers >= 1` (or `>= 2` for dual-device) — OR v1 alias `team_spawned_acquirers`
-- `team_spawned_specialists >= expected_specialist_count` — OR v1 alias `team_spawned_auditors`
-- `cluster_files_written == team_spawned_specialists` (cluster specialists keep teammate dispatch in v2)
+- `(subagent_spawned_specialists + team_spawned_specialists) >= expected_specialist_count` — one-shot subagent dispatch (primary) or legacy teammate dispatch (both counted toward the expected total); OR v1 alias `team_spawned_auditors`
+- `cluster_files_written == (subagent_spawned_specialists + team_spawned_specialists)` (every spawned specialist produced a file; one-shot subagent or legacy teammate counter)
 - `subagent_spawned_ethics >= 1` AND `ethics_gate_executed == true` (Layer 1.5 fired and produced valid ethics-findings.json)
 - `subagent_spawned_synthesizer >= 1` (Layer 3 fired and produced audit-{device}.md + synthesizer-emission-v1.json)
 - `idle_notification_total` from non-specialist roles SHOULD be <= 10 (soft warning if exceeded — possible teammate dispatch leak)
