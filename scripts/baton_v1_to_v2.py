@@ -216,7 +216,15 @@ def convert_baton(
         "meta_description": head["meta_description"],
         "viewport_meta": head["viewport_meta"],
         "og_image": head["og_image"],
-        "schema_jsonld": v1.get("structured_data") or [],
+        # Coerce single-object JSON-LD to a list: schema_jsonld MUST be an array,
+        # but a v1 baton may store one Product dict in structured_data (2026-06-01
+        # 749a3c3d run hit this and needed a manual normalize). dict -> [dict];
+        # list -> list; anything else -> [].
+        "schema_jsonld": (
+            [sd]
+            if isinstance((sd := v1.get("structured_data")), dict)
+            else (sd if isinstance(sd, list) else [])
+        ),
         "hreflang": head["hreflang"],
     }
     if page_title:
