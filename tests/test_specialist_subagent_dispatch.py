@@ -235,5 +235,53 @@ def test_specialist_prompt_dispatch_line_has_no_team_name_or_name():
     assert "You do not SendMessage anyone." in content
 
 
+# ---------------------------------------------------------------------------
+# Task 6 — skills/audit/SKILL.md: one-shot specialists, no team creation
+# ---------------------------------------------------------------------------
+def test_cluster_specialists_no_team_name_in_dispatch_contract():
+    """Cluster specialist dispatch template in dispatch-contract.md has no team_name."""
+    dispatch_contract = _read_repo_file("contracts/dispatch-contract.md")
+    # Capture column 3 (the Tool call) of the cluster-specialist dispatch-table row.
+    # A broad `Cluster specialist.*?Agent(...)` span (DOTALL) would also sweep the
+    # per-role table's "no team_name" prose and false-fail; anchor to the row and
+    # grab the backticked Agent(...) call directly.
+    agent_call = re.search(
+        r"\| Cluster specialist \| [^|]*\| `(Agent\(subagent_type=.*?\))`",
+        dispatch_contract,
+    )
+    assert agent_call is not None, "Cluster specialist dispatch template missing"
+    assert "team_name" not in agent_call.group(1), (
+        "Cluster specialist Agent call must NOT contain team_name in v2"
+    )
+
+
+def test_skill_md_no_team_create_for_audit():
+    """Audit SKILL.md Phase Order must NOT create the audit team."""
+    skill_md = _read_repo_file("skills/audit/SKILL.md")
+    assert "Create the audit team" not in skill_md, (
+        "Phase Order must NOT create audit team in v2 (specialists are one-shot subagents)"
+    )
+
+
+def test_skill_md_dispatch_shape_line():
+    """Dispatch Shape section describes cluster specialists as one-shot subagents."""
+    skill_md = _read_repo_file("skills/audit/SKILL.md")
+    assert "one-shot subagent" in skill_md or "no `team_name`" in skill_md, (
+        "Dispatch Shape must state cluster specialists are one-shot subagents"
+    )
+    assert "Agent` teammates in the audit team" not in skill_md, (
+        "Cluster specialists must not be described as team teammates in v2"
+    )
+
+
+def test_skill_md_specialist_recovery_is_fresh_redispatch():
+    """Specialist validation-failure recovery re-dispatches a fresh subagent, not SendMessage."""
+    skill_md = _read_repo_file("skills/audit/SKILL.md")
+    assert "--write-retry-prompt" in skill_md
+    assert "fresh one-shot subagent" in skill_md
+    assert "full-parallel" in skill_md.lower()
+    assert "--max-concurrent" in skill_md
+
+
 if __name__ == "__main__":
     unittest.main()

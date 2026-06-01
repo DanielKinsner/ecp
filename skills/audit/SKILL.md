@@ -76,25 +76,24 @@ Run this sequence:
 1. Parse flags and choose mode.
 2. Select device(s) per `contracts/device-semantics.md`.
 3. Create or resume `docs/ecp/{engagement-id}` and write/update `meta.json`.
-4. Create the audit team per `contracts/team-lifecycle.md`.
-5. Detect platform, page type, page pattern, and cluster scope.
-6. Dispatch acquisition for each requested device.
-7. Verify acquisition artifacts on disk.
-8. Preprocess DOM per device when DOM exists.
-9. Dispatch cluster specialists for each selected cluster and device — **in waves of ≤5 concurrent spawns** (G-fanout cap, 2026-05-27). The 2026-05-27 concurrent-audits batch hit transient server-side rate limits at 8+ concurrent spawns; a comprehensive 10-cluster × 2-device run takes ~4 waves of 5 to land cleanly. Wait for each wave's file-presence signal before launching the next. See `contracts/dispatch-contract.md` §"Why cluster specialists keep teammate status" point 1 for the rationale.
-10. Dispatch ethics v2 after specialist emissions are present.
-11. Validate every specialist + ethics emission, build the canonical f_refs manifest, and trim each device baton, then dispatch synthesizer v2 (after ethics completes or records partial status).
-12. Validate the synthesizer emission, run the cross-device drift gate, and run structural plus substantive canaries (see "Validation, Synthesis, and Rendering").
-13. Present the audit checkpoint with export options.
-14. Export the audit markdown and the annotated visual report when requested.
-15. Update `meta.json`, write `lead-reflection.md`, run `generate-report.py --mark-reflection-complete` to flip `meta.json` `reflection_state` from `draft` to `complete` (G23, 2026-05-28), and clean up the team at completion.
+4. Detect platform, page type, page pattern, and cluster scope.
+5. Dispatch acquisition for each requested device.
+6. Verify acquisition artifacts on disk.
+7. Preprocess DOM per device when DOM exists.
+8. Dispatch cluster specialists for each selected cluster and device — **full-parallel by default** (spawn all requested clusters in one message). Concurrency is capped server-side; if transient rate limits appear, use the `--max-concurrent N` flag to batch spawns into waves (documented in `contracts/flags.md`). The flag defaults to unlimited (all clusters at once). Wait for each batch's file-presence signal (via glob `cluster-{cluster}-{device}.json`) before proceeding to the next phase layer. See `contracts/dispatch-contract.md` §"Why specialists are one-shot subagents" point 1 for the transport-shape rationale.
+9. Dispatch ethics v2 after specialist emissions are present.
+10. Validate every specialist + ethics emission, build the canonical f_refs manifest, and trim each device baton, then dispatch synthesizer v2 (after ethics completes or records partial status).
+11. Validate the synthesizer emission, run the cross-device drift gate, and run structural plus substantive canaries (see "Validation, Synthesis, and Rendering").
+12. Present the audit checkpoint with export options.
+13. Export the audit markdown and the annotated visual report when requested.
+14. Update `meta.json`, write `lead-reflection.md`, run `generate-report.py --mark-reflection-complete` to flip `meta.json` `reflection_state` from `draft` to `complete` (G23, 2026-05-28). Do NOT clean up any team at completion (no team was created in audit v2 flow).
 
 ## Dispatch Shape
 
 Default to v2 dispatch:
 
 - Acquirer: `Task` subagent, one per device.
-- Cluster specialists: `Agent` teammates in the audit team.
+- Cluster specialists: one-shot subagent (`Agent` tool, no `team_name`).
 - Ethics: `Task` subagent.
 - Synthesizer: `Task` subagent.
 
@@ -131,7 +130,7 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
    ```powershell
    python scripts/test-specialist.py autofix --emission-path docs/ecp/{id}/cluster-{cluster}-{device}.json --in-place
    ```
-   Re-run `validate` against the autofixed emission. If validation now passes, proceed (the `--in-place` repairs were semantically conservative and the repairs log is at `<emission>.repairs.json`). If validation still fails, pass `--write-retry-prompt <path>` and re-dispatch the specialist; never hand-edit an emission beyond what autofix repaired.
+   Re-run `validate` against the autofixed emission. If validation now passes, proceed (the `--in-place` repairs were semantically conservative and the repairs log is at `<emission>.repairs.json`). If validation still fails, use `scripts/test-specialist.py --write-retry-prompt <path>` to generate a fresh-dispatch prompt with the validation error embedded, then re-dispatch a **fresh one-shot subagent** via `Agent(subagent_type="general-purpose", description="...", model="sonnet", prompt=<retry-prompt>)`. On second validation failure, mark the cluster "partial" and continue; never hand-edit an emission beyond what autofix repaired.
 
 2. **Build the canonical f_refs manifest** (after all specialists + ethics validate):
    ```powershell
