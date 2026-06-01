@@ -315,5 +315,27 @@ def test_validation_failure_triggers_subagent_not_sendmessage():
     assert "DOM selector" in step_0c
 
 
+# ---------------------------------------------------------------------------
+# Task 8 — lead-discipline.md terminology + preserved cancel.flag
+# ---------------------------------------------------------------------------
+def test_lead_discipline_terminology_and_preserved_sections():
+    """teammate->subagent + SendMessage-retry->fresh re-dispatch; cancel.flag preserved."""
+    content = _read_repo_file("contracts/lead-discipline.md")
+    # Migrated section headings
+    assert "## Acquisition must spawn subagent (binding rule)" in content
+    assert "## Acquisition must spawn teammate (binding rule)" not in content
+    assert "spawning the subagent" in content
+    # Recovery via fresh one-shot subagent with embedded error (not SendMessage retry)
+    assert "fresh one-shot subagent" in content
+    assert "--write-retry-prompt" in content
+    # Canonical counter wired into the self-check prose, aliases retained
+    assert "subagent_spawned_specialists" in content
+    assert "team_spawned_auditors" in content  # alias retained
+    # Preserved sections intact
+    assert "## Cancellation sentinel (cancel.flag)" in content
+    assert "at EVERY layer boundary" in content
+    assert "## Concurrent-audit isolation" in content
+
+
 if __name__ == "__main__":
     unittest.main()

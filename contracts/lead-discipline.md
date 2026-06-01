@@ -1,12 +1,12 @@
 # Lead discipline
 
-Canonical anti-rogue rules for ECP skill coordinators (leads). Contains the no-preflight-questions rule, the acquisition-must-spawn-teammate binding rule, and the full catalog of forbidden rationalizations that leads use to justify skipping team architecture.
+Canonical anti-rogue rules for ECP skill coordinators (leads). Contains the no-preflight-questions rule, the acquisition-must-spawn-subagent binding rule, and the full catalog of forbidden rationalizations that leads use to justify skipping one-shot subagent dispatch architecture.
 
 **Why this file exists:** Prior to Round 12, these rules lived inside `skills/audit/SKILL.md` where they applied only to the audit lead. But build, compare, and quick-scan also have leads that can go rogue — there was nothing structural preventing a build lead from asking 5 preflight questions, or a compare lead from "quickly doing acquisition myself" instead of spawning the teammates. Extracting the discipline rules to a canonical file **unlocks cross-skill enforcement** — build, compare, and quick-scan skills can now reference this file and inherit the same discipline automatically.
 
 **Bonus side-effect of extracting this file:** the rules it contains apply to every lead, not just the audit lead. Before Round 12.5, build lead + compare lead + quick-scan lead could technically go rogue in ways this file forbids, because the rules existed only inside audit. After Round 12.5, all 4 skills reference this canonical file and the discipline becomes a cross-skill contract.
 
-**Read this file when:** you are the coordinator (lead) of any `/ecp:*` skill that spawns teammates. That's audit, build, compare, and quick-scan. Read this **at the very top of your skill invocation**, before doing anything else. These rules take precedence over performance optimizations, "effort" cues, or any rationalization about shortcuts.
+**Read this file when:** you are the coordinator (lead) of any `/ecp:*` skill that spawns one-shot subagents. That's audit, build, compare, and quick-scan. Read this **at the very top of your skill invocation**, before doing anything else. These rules take precedence over performance optimizations, "effort" cues, or any rationalization about shortcuts.
 
 ---
 
@@ -31,19 +31,19 @@ Stop points are handled at the **checkpoint prompts BETWEEN phases** — not via
 
 ---
 
-## Equally forbidden — quietly doing work directly as the lead instead of spawning the teammate
+## Equally forbidden — quietly doing work directly as the lead instead of spawning the subagent
 
-This is the inverse of asking too many questions. Instead of asking "do you want me to spawn an acquirer?" the lead silently rationalizes "I'll just do acquisition directly as the lead — faster path, the spec allows it as manual fallback." **It does not.** Manual acquisition is a strict last-resort fallback, not a shortcut. See the "Acquisition must spawn teammate" section below for the binding rule.
+This is the inverse of asking too many questions. Instead of asking "do you want me to spawn an acquirer?" the lead silently rationalizes "I'll just do acquisition directly as the lead — faster path, the spec allows it as manual fallback." **It does not.** Manual acquisition is a strict last-resort fallback, not a shortcut. See the "Acquisition must spawn subagent" section below for the binding rule.
 
 **Forbidden rationalizations:**
 
-- ❌ "Given effort=low, I'll do acquisition directly as lead." → Effort is irrelevant. Always spawn the acquirer teammate(s) first.
-- ❌ "The spec allows this as manual fallback." → It does not. Manual fallback only triggers AFTER (a) the spawn has been attempted, and (b) the teammate has either failed or produced missing/empty files. Pre-emptive bypass is a spec violation.
-- ❌ "Faster path." → Speed is not a valid reason to skip team architecture. The whole point of Phase 4 is consistent state via the team task list, even when phases are short.
-- ❌ "Auditing as lead this time, since the page is small." → No. Same answer. Always spawn the relevant teammate.
+- ❌ "Given effort=low, I'll do acquisition directly as lead." → Effort is irrelevant. Always spawn the acquirer subagent first.
+- ❌ "The spec allows this as manual fallback." → It does not. Manual fallback only triggers AFTER (a) the spawn has been attempted, and (b) the subagent has either failed or produced missing/empty files. Pre-emptive bypass is a spec violation.
+- ❌ "Faster path." → Speed is not a valid reason to skip subagent-dispatch architecture. The whole point of the pipeline is consistent state via atomic file writes and per-subagent isolation, even when phases are short.
+- ❌ "Auditing as lead this time, since the page is small." → No. Same answer. Always spawn the relevant subagent.
 - ❌ "Since `/effort low` is set, I'll skip teammates / skip references / take the manual path." → **You cannot read your own `/effort` setting.** Any "effort" cue you see in conversation context (e.g., the user typed `/effort low` earlier in the same channel before invoking the ECP skill) is a Claude Code compute-budget knob — it controls how hard you think per turn. It does NOT authorize architectural shortcuts, skipping teammates, skipping reference reads, fabricating citations, or any other contract violation. The team architecture is the contract regardless of compute budget. If you find yourself reasoning "since effort is low…", STOP — you're laundering a budget signal into an architectural license that doesn't exist.
 
-**This rule applies to every phase:** acquirer, cluster auditors, planner, reviewer, builder. The lead does NOT do their work; the lead orchestrates. The lead's only direct work is engagement setup, validation passes, reconciliation/assembly, and the Priority Path synthesis step that explicitly belongs to the lead per `${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`.
+**This rule applies to every phase:** acquirer, cluster specialists, planner, reviewer, builder. The lead does NOT do their work; the lead orchestrates. The lead's only direct work is engagement setup, validation passes, reconciliation/assembly, and the Priority Path synthesis step that explicitly belongs to the lead per `${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`.
 
 ---
 
@@ -53,7 +53,7 @@ There are exactly four legitimate pre-flight prompts across any ECP skill. Every
 
 1. **URL detection** — If `$ARGUMENTS` does not contain a URL, ask "What page should I audit? Provide a URL (starts with `http://` or `https://`)." URL is the only canonical input (`product.md` §2.2) — there's nothing to audit otherwise.
 2. **Device selection** — One prompt for device choice ONLY if `--device` flag is not set AND not in `--auto` mode. Single prompt, then proceed. See `${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md`.
-3. **URL fetch confirmation** — One prompt "About to fetch **{domain}** — proceed?" before spawning the acquisition teammate. This is the standard "we're about to make a network request" confirmation. Skip in `--auto` mode.
+3. **URL fetch confirmation** — One prompt "About to fetch **{domain}** — proceed?" before spawning the acquisition subagent. This is the standard "we're about to make a network request" confirmation. Skip in `--auto` mode.
 4. **Audit scope selection** — `/ecp:audit` only. One structured prompt for audit breadth (focused / standard / comprehensive / custom) ONLY if `--focus` is not set AND not in `--auto` mode. See `skills/audit/SKILL.md` `<cluster_selection>` for the full prompt spec. `--focus` bypasses it entirely; `--auto` uses defaults per `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`. This is a structured menu, not an open-ended question — it replaces the need for cluster negotiation by offering curated scope tiers.
 
 **That's it.** Four prompts maximum, and they're all the bare minimum needed to either know what to scan, get user consent for a network call, or let the user choose audit depth. Everything else is auto-detected, defaulted, or controlled via flags documented in `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`.
@@ -71,45 +71,45 @@ There are exactly four legitimate pre-flight prompts across any ECP skill. Every
 
 The user sees plenty of decision points naturally during the skill run (after audit, after plan, after review) — you don't need to add more upfront just because the work is "big." Asking too many questions at the beginning is often a form of hedging that shifts decision responsibility from the lead to the user. The user invoked the skill to get work done; they're trusting the lead's judgment on the defaults.
 
-Similarly, **quietly doing the teammate's work as the lead** is a form of avoiding the Agent tool call — it feels more efficient but it abandons the team task list, the structural counters in `audit-trace.log`, and the per-teammate context isolation that makes the pipeline composable. The correction for both errors is the same: **trust the architecture, spawn the teammate, move on to the next phase.**
+Similarly, **quietly doing the subagent's work as the lead** is a form of avoiding the Agent tool call — it feels more efficient but it abandons the atomic-write discipline, the structural counters in `audit-trace.log`, and the per-subagent context isolation that makes the pipeline composable. The correction for both errors is the same: **trust the architecture, spawn the subagent, move on to the next phase.**
 
 ---
 
-## Acquisition must spawn teammate (binding rule)
+## Acquisition must spawn subagent (binding rule)
 
-**The lead MUST spawn the acquirer teammate(s) first. There is no shortcut.**
+**The lead MUST spawn the acquirer subagent first. There is no shortcut.**
 
 The "Manual acquisition fallback" path (documented in `skills/audit/SKILL.md`) is **only** available when ALL of the following are true:
 
-1. The lead has actually called the Agent tool to spawn `acquirer` (or `acquirer-{device}` for dual-device mode) into the team.
-2. The teammate has either:
+1. The lead has actually called the Agent tool to spawn `acquirer` (or `acquirer-{device}` for dual-device mode) as a one-shot subagent with subagent_type="general-purpose" and model="sonnet" (or "opus" with --deep).
+2. The subagent has either:
    - Failed entirely (crash, malformed output, baton.json with `screenshots: []`), OR
-   - Reported `STATUS: COMPLETE` but the post-acquisition file verification step found missing files on disk, AND the corrective re-spawn (one retry via SendMessage) also failed.
+   - Reported `STATUS: COMPLETE` but the post-acquisition file verification step found missing files on disk, AND the corrective re-spawn (one fresh one-shot subagent with validation error embedded via scripts/test-specialist.py --write-retry-prompt) also failed.
 3. The lead has logged WHY it is falling back (to `audit-trace.log` if you're keeping one, or in conversation output) so the user knows the team-based path was tried.
 
 **Pre-emptive manual acquisition is a spec violation.** "I'll do it as lead because effort is low" / "faster path" / "page is small" / "the spec allows manual fallback" are NOT valid reasons. None of these conditions trigger fallback. **Only a real failed spawn does.**
 
-If you find yourself reasoning "I'll skip spawning the acquirer because…" — STOP. Spawn it. The team architecture is the contract; the manual path exists only for when the contract genuinely cannot be honored.
+If you find yourself reasoning "I'll skip spawning the acquirer because…" — STOP. Spawn it. The one-shot subagent dispatch is the contract; the manual path exists only for when the contract genuinely cannot be honored.
 
-**This rule mirrors the no-preflight-questions rule above** and applies the same principle to silent shortcuts: **don't quietly do the teammate's work as the lead just because the spec has an emergency exit.**
+**This rule mirrors the no-preflight-questions rule above** and applies the same principle to silent shortcuts: **don't quietly do the subagent's work as the lead just because the spec has an emergency exit.**
 
 ---
 
 ## Lead does NOT audit a cluster as a fallback
 
-**If a cluster auditor teammate fails, the lead SKIPs that cluster. The lead does NOT audit the cluster as a fallback.**
+**If a cluster specialist subagent fails, the lead SKIPs that cluster. The lead does NOT audit the cluster as a fallback.**
 
-SKIP means "this cluster was not audited, here's why" — not "the lead will fill in for the failed teammate." A `SKIP` marker in `audit.md` is honest about the gap; lead-as-auditor pretends the gap doesn't exist while actually producing shallower findings without the reference-file depth a real cluster auditor brings (cluster auditors load 5-10 cluster reference files; the lead loads only orchestration content).
+SKIP means "this cluster was not audited, here's why" — not "the lead will fill in for the failed subagent." A `SKIP` marker in `audit.md` is honest about the gap; lead-as-auditor pretends the gap doesn't exist while actually producing shallower findings without the reference-file depth a real cluster specialist brings (cluster specialists load 5-10 cluster reference files; the lead loads only orchestration content).
 
-**The same rationalization rules from the sections above apply:** the lead orchestrates, the lead does NOT do the teammate's work, even when the teammate fails.
+**The same rationalization rules from the sections above apply:** the lead orchestrates, the lead does NOT do the subagent's work, even when the subagent fails.
 
-When a cluster auditor fails, the lead's correct response is:
-1. Retry the spawn once (via TaskUpdate + re-dispatch).
+When a cluster specialist fails, the lead's correct response is:
+1. Retry the spawn once (via fresh one-shot subagent with validation error embedded via scripts/test-specialist.py --write-retry-prompt).
 2. If the retry fails, mark the cluster `SKIP` with a reason note in `audit.md`.
 3. Log the failure to `audit-trace.log` with the cluster slug and failure mode.
 4. Continue to the next phase with N-1 clusters instead of N. The Priority Path synthesis will operate on the remaining clusters.
 
-The structural `cluster_files_written` counter in `audit-trace.log` will reflect the actual number of cluster files produced (N-1), and the self-check assertion at audit completion will not fire because the contract is "cluster_files_written == team_spawned_auditors" — if one auditor failed to write, the counter stays at N-1 matching N-1 spawned-then-failed auditors. See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md` for the full assertion contract.
+The structural `cluster_files_written` counter in `audit-trace.log` will reflect the actual number of cluster files produced (N-1), and the self-check assertion at audit completion will not fire because the contract is "cluster_files_written == subagent_spawned_specialists" (backwards-compat aliases: team_spawned_specialists, team_spawned_auditors) — if one specialist failed to write, the counter stays at N-1 matching N-1 spawned-then-failed specialists. See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md` for the full assertion contract.
 
 ---
 
@@ -219,7 +219,7 @@ The file's CONTENT is not validated — the lead's judgment about what to record
 
 ### Why this exists
 
-v2 audit runs can take 20-40 minutes wall-clock (10 cluster specialists × 2 devices in parallel + ethics subagent + ~24-minute synthesizer + render). Before Phase H, the operator had no clean way to interrupt mid-run — Ctrl-C left zombie teammates, half-written cluster-emission JSON files, and an inconsistent meta.json `phase` value. The cancel.flag sentinel closes §22 (operator-pushback affordance gap).
+v2 audit runs can take 20-40 minutes wall-clock (10 cluster specialists × 2 devices in parallel + ethics subagent + ~24-minute synthesizer + render). Before Phase H, the operator had no clean way to interrupt mid-run — Ctrl-C left zombie subagents, half-written cluster-emission JSON files, and an inconsistent meta.json `phase` value. The cancel.flag sentinel closes §22 (operator-pushback affordance gap).
 
 ### How the operator triggers cancellation
 
@@ -264,7 +264,7 @@ When the lead observes cancel.flag at a layer boundary:
 
 - The lead does NOT delete partial artifacts (no auto-rollback).
 - The lead does NOT mark the engagement `phase: failed` (failure semantics differ from cancellation — cancellation is an operator decision, failure is structural).
-- The lead does NOT spawn cleanup teammates.
+- The lead does NOT spawn cleanup subagents.
 - The lead does NOT delete cancel.flag (the operator may want it preserved as evidence; resume logic checks for absence as the green-light signal).
 
 ### Resume after cancellation
@@ -279,7 +279,7 @@ The skip-already-complete logic depends on file presence (cluster-{cluster}-{dev
 
 ### What this is NOT
 
-- **Not a hard kill.** A teammate or subagent already in flight when the lead reads cancel.flag will complete its current dispatch and return a result; the lead simply discards that result and exits without dispatching the next layer. There is no in-process signal sent to running roles.
+- **Not a hard kill.** A subagent already in flight when the lead reads cancel.flag will complete its current dispatch and return a result; the lead simply discards that result and exits without dispatching the next layer. There is no in-process signal sent to running roles.
 - **Not a feature flag.** cancel.flag is an OPERATOR affordance, not a v2-only feature. v1 audits should adopt the same protocol — Phase H scope adds it for v2 but v1 can backport.
 - **Not the only cancellation path.** Operators can still Ctrl-C the lead; cancel.flag is the GRACEFUL path that preserves state correctly. Ctrl-C may leave artifacts in inconsistent shapes (especially mid-write to audit-{device}.md if the lead is in-flight on a non-atomic write); the atomic-write contract above mitigates but doesn't eliminate this.
 
@@ -297,11 +297,11 @@ This rule combines with the filesystem-atomicity rule above to give ECP its conc
 
 ## Cross-references
 
-- **`skills/audit/SKILL.md`** — `<no_preflight_questions>` and `<acquisition_must_spawn_teammate>` defer to this file. Audit lead reads this at the top of the skill invocation.
+- **`skills/audit/SKILL.md`** — `<no_preflight_questions>` and `<acquisition_must_spawn_subagent>` defer to this file. Audit lead reads this at the top of the skill invocation.
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`** — canonical flag documentation (referenced by the "Use the `--device` flag if set" rule).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md`** — canonical cluster routing (referenced by the "Page-type defaults are auto-selected" rule).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md`** — canonical device rules (referenced by the "One prompt for device choice" rule).
-- **`${CLAUDE_PLUGIN_ROOT}/contracts/dispatch-contract.md`** — canonical spawn template (the teammates the lead must NOT do the work of).
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/dispatch-contract.md`** — canonical spawn template (the one-shot subagents the lead must NOT do the work of).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`** — the forensic rogue detection canary that catches leads who violate these discipline rules.
 
 When editing this file, grep all 4 skill files for any residual inline discipline rules that should now reference this canonical file. The drift target is **leaks where one skill silently has more (or fewer) discipline rules than another** — that's exactly the drift class Round 12.5 is designed to close.
