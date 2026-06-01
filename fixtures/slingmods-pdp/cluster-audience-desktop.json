@@ -100,7 +100,13 @@
       "observation": "Neither captured section includes a product recommendation block framed with social proof language — there is no 'Customers who bought this also bought,' 'Popular with Spyder owners,' or 'Frequently paired with' widget anywhere on the page. The page ends with a description, fitment guide, and direct footer. A visitor who adds this product to their cart or scrolls to evaluate the purchase has no visible prompt connecting this item to complementary Spyder parts from EvolutionR or other brands on the site.",
       "recommendation": "If this page's platform (OpenCart/PrestaShop architecture visible in the URL scheme) supports cross-sell widgets, add a 'Customers who bought the EvolutionR End Caps also bought' block using social-proof framing rather than algorithmic framing — 'Popular with Spyder F3 & RT owners' outperforms 'Recommended for you' because it anchors authority in peer behavior, not in the store's algorithm. Place this block between the product description and the footer, above scroll_y ~1200 so it lands in the read zone for engaged visitors who've consumed the description.",
       "why_this_matters": "Products with visible social-proof-framed cross-sells show up to 270% higher attachment rates than products without recommendations. For a niche accessory product targeting a specific vehicle (Can-Am Spyder F3/RT 2024+), the audience is self-selected and already invested — they are high-intent for complementary products in the same fitment group. Missing this surface leaves revenue on the table from every engaged visitor.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "audience",
@@ -209,7 +215,18 @@
       "social-commerce-psychology.md",
       "evidence-tiers.md"
     ],
-    "baton_elements_checked": ["e0", "e1", "e6", "e7", "e13", "e16", "e18"],
-    "screenshots_reviewed": ["section-1.jpg", "section-2.jpg"]
+    "baton_elements_checked": [
+      "e0",
+      "e1",
+      "e6",
+      "e7",
+      "e13",
+      "e16",
+      "e18"
+    ],
+    "screenshots_reviewed": [
+      "section-1.jpg",
+      "section-2.jpg"
+    ]
   }
 }

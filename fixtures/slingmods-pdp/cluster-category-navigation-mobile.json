@@ -59,7 +59,13 @@
       "observation": "The page's JSON-LD payload (verified in the captured structured data) contains one schema object of type Product — covering price, availability, brand, and aggregate rating. No BreadcrumbList object exists. Google requires BreadcrumbList JSON-LD with at least two ListItems to display the breadcrumb path in search snippets. Without it, Google's SERP snippet for this PDP shows a raw URL rather than a readable category path such as 'slingmods.com > Spyder > Handlebar Accessories,' which reduces the relevance signal available to searchers evaluating results for 'Can-Am Spyder handlebar end weights.' A SearchPilot controlled test found breadcrumb removal caused a statistically significant 5.5% drop in organic traffic, and a second SearchPilot test found a 7% loss on category-level pages after breadcrumb schema was removed.",
       "recommendation": "Add a BreadcrumbList JSON-LD block to this page template alongside the existing Product schema. Include at minimum three ListItems: (1) homepage at position 1, (2) the canonical parent category (e.g., Spyder > Handlebar Accessories) at positions 2–3, and (3) the current product page as the final item. Align the ListItem names and URLs to the visible HTML breadcrumb trail — Google validates consistency between markup and rendered content and flags mismatches. Test with Google's Rich Results Test before deploying to the full catalog.",
       "why_this_matters": "BreadcrumbList schema enables Google to replace the raw domain URL in search snippets with a human-readable category path. For a niche powersports accessory with a specific vehicle compatibility, a snippet showing 'Spyder > Handlebar Accessories' signals relevance faster than a URL string and improves click-through rate from organic search. Every product page in the catalog that lacks this markup is leaving an organic traffic lever unpulled.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "category-navigation",
@@ -104,7 +110,13 @@
       "observation": "The visible breadcrumb trail on this product page has two levels only: a home icon link and the product title as plain text. There is no intermediate category link — no 'Spyder,' 'Handlebar Parts,' or 'Comfort / Touring' level between home and the product name. Nielsen Norman Group's breadcrumb guidelines require all intermediate hierarchy levels to be present as clickable links. Baymard Institute benchmarking finds 68% of ecommerce sites fail to implement both hierarchy and history breadcrumb types; this page omits the intermediate hierarchy level entirely. A customer who arrived via a Google search for 'Can-Am Spyder handlebar end weights' has no breadcrumb path to discover what other handlebar accessories or Spyder parts the store carries — the breadcrumb provides no 'you are here' context within the site taxonomy.",
       "recommendation": "Extend the breadcrumb to at least three levels: Home > [Parent Category] > [Product Name]. If the product belongs to a subcategory (e.g., Home > Spyder Parts > Handlebar Accessories > [Product]), include that intermediate level as a linked element. Only the final product-name element should be non-linked plain text. Each intermediate link must point to the corresponding category page. This change also creates the internal link anchor text needed to support the BreadcrumbList schema fix (F-1) and passes topical context to the parent category pages in Google's crawl.",
       "why_this_matters": "Shoppers landing on this page from external search — with no prior browsing context — rely on the breadcrumb to understand where the product sits in the catalog and whether the store carries related items. A two-level trail gives them no path into the category hierarchy. Without an intermediate category link, there is also no internal link passing PageRank authority toward the category pages that drive the site's broadest organic traffic.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "category-navigation",
@@ -144,7 +156,13 @@
       "observation": "On the 390px mobile viewport, the breadcrumb's current-page label — the product name — is clipped at the right edge of the screen, reading 'EvolutionR Stainless Steel Weighted Handlebar End Caps for t' with no ellipsis and no text wrap. The full product name (81 characters) overflows the breadcrumb container width without any overflow handling. Nielsen Norman Group's mobile breadcrumb research recommends either a single '← [Immediate Parent]' link pattern or a scrollable trail — both of which would eliminate this overflow problem. The current implementation attempts a desktop-style breadcrumb trail on a narrow viewport without responsive overflow handling.",
       "recommendation": "On mobile (max-width: 480px), replace the current full-text breadcrumb with a single '← [Immediate Parent Category]' link — for example, '← Handlebar Accessories' — rather than showing the product name as the final breadcrumb level. The product name is already in the H1 immediately below; repeating it as a truncated breadcrumb item adds no navigation value and produces a broken text display. If the full trail is required, apply CSS `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` to the final breadcrumb item and cap its `max-width` so truncation is clean with a visible ellipsis.",
       "why_this_matters": "A visibly truncated breadcrumb item reduces the perceived quality of the page header on mobile — the first visible content area below the navigation. While low-severity in isolation, it contributes to a first-impression signal that the site's mobile experience is not fully optimized, which can affect bounce rate from mobile organic visitors.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "category-navigation",

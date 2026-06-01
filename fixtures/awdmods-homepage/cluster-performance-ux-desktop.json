@@ -156,7 +156,13 @@
       "observation": "The AWDMods logo is served as a PNG with a srcset of multiple PNG-format variants (no WebP or AVIF alternatives). The DOM contains zero <picture> elements across all sections captured in this engagement. Shopify's CDN supports automatic WebP format negotiation when images are served using the image_url Liquid filter with the format parameter, but this capability is not being leveraged — the logo src URL ends in .png rather than using Shopify's automatic format negotiation. AVIF is now supported by ~94.9% of browsers and reduces file size 50% vs JPEG; WebP ~96.4% support at 25–34% reduction. Both are available at no additional cost on Shopify's CDN.",
       "recommendation": "For the logo and all product images, switch to Shopify's Liquid image_url filter with format: 'webp' (or use the image_tag helper which handles format negotiation automatically). For maximum compression, configure Shopify CDN to serve AVIF via the format: 'avif' parameter where supported. The ideal implementation wraps product images in <picture> elements with <source type=\"image/avif\"> and <source type=\"image/webp\"> before the JPEG/PNG fallback. For a Shopify Dawn/Ignite theme, this is a template-level change to the image rendering partials.",
       "why_this_matters": "Serving PNG instead of WebP or AVIF for all page images wastes 25–50% of image bandwidth on every page load. For a homepage with a large hero image and product card grid, the difference between JPEG and AVIF can exceed 500KB in total page image weight — directly contributing to slower LCP and lower conversion rates. The Deloitte/Google study found every 0.1s improvement in page load speed yields 8.4% higher retail conversion.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "performance-ux",
@@ -271,7 +277,13 @@
       "observation": "The page head and all captured DOM slices contain no <script type=\"speculationrules\"> element. The AWDMods homepage presents five high-confidence next-navigation candidates (the five category CTAs) and a Featured Collection product grid with 9 product links visible. Prerendering these destinations would make category pages and product pages appear to load instantly for the significant portion of visitors who click through from the homepage. The Ray-Ban A/B test found the Speculation Rules API produced +156% desktop PDP conversion and +101% mobile PDP conversion on their collection-to-PDP navigation.",
       "recommendation": "If Chrome's ~65%+ desktop market share is representative of AWDMods' audience, implement Speculation Rules on the homepage targeting the five category collection URLs and the Featured Collection product URLs. Use eagerness: 'moderate' to trigger prerendering on link hover rather than page load, limiting bandwidth cost. Chrome-only caveat applies — Firefox and Safari users see no change, positive or negative.",
       "why_this_matters": "The Speculation Rules API is the highest single-change conversion upside available for collection-to-PDP navigation — it eliminates perceived navigation latency entirely for Chrome users by rendering the next page in the background before the click. For a homepage that functions primarily as a navigation layer to category and product pages, this is an exceptionally well-matched pattern.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     }
   ],
   "notes": [

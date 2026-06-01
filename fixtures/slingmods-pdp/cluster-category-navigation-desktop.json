@@ -59,7 +59,13 @@
       "observation": "The product page displays a single hierarchy breadcrumb — a home icon linking to the root, followed by the full product title as plain text. There is no 'Back to [Category]' or 'Back to results' link. A customer who arrived at this page by browsing 'Comfort / Touring' accessories, applying vehicle-year filters, and clicking through from a category listing has no navigational shortcut back to their filtered results. Clicking the home icon returns them to the homepage; the hierarchy breadcrumb's category tier is absent entirely — there is no 'Comfort / Touring' or 'Handlebar Accessories' intermediate link. Baymard Institute benchmarking finds 68% of ecommerce sites fail to implement both hierarchy and history breadcrumbs; this page omits both the subcategory hierarchy level and the history type.",
       "recommendation": "Add two breadcrumb elements above the product title. First, complete the hierarchy trail to at minimum three levels: Home > [Parent Category] > [Product Name] — use the canonical category path (e.g., 'Comfort / Touring' or the subcategory this product belongs to in the site taxonomy). Second, when a customer navigates to this page from a category listing or search results page, render a session-state-preserved 'Back to [Category Name]' link directly above or below the hierarchy trail — serialize filter and scroll state into a returnTo URL parameter at the moment of click-through from the listing page, then reconstruct it on this link. Both can coexist in the same breadcrumb row.",
       "why_this_matters": "Shoppers who apply vehicle-year or category filters and then click through to a product page expect to return to their filtered list in one action. Without a history breadcrumb they must use the browser back button — which on this site's pagination may reset scroll position and loaded products — or navigate the entire category hierarchy from scratch. Abandonment at the PDP-to-category-return moment is a measurable conversion cost: Baymard usability testing identifies this as among the most frustrating ecommerce navigation failures.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "category-navigation",
@@ -108,7 +114,13 @@
       "observation": "The page's structured data (verified in the captured JSON-LD payload) contains one schema object of type Product. No BreadcrumbList object is present. Google requires BreadcrumbList JSON-LD with at least two ListItems to display the breadcrumb path in search result snippets. Without it, Google's SERP snippet for this page will display a raw URL rather than a readable category path — reducing the click-signal that a category-contextual breadcrumb trail provides to prospective buyers scanning results for 'Can-Am Spyder handlebar end weights'. Separately, SearchPilot controlled tests found that removing breadcrumbs caused a statistically significant 5.5% organic traffic loss and that breadcrumb schema removal cost 7% organic traffic on category-level pages; the same risk applies to PDPs without schema.",
       "recommendation": "Add a BreadcrumbList JSON-LD block to this page template alongside the existing Product schema. The list must include at minimum two ListItems: the homepage (position 1) and at least one intermediate category (position 2), with the product page as the final item (position 3). Match the breadcrumb levels to the visible HTML breadcrumb trail so Google does not flag a mismatch between markup and rendered content. Validate with Google's Rich Results Test before publishing.",
       "why_this_matters": "BreadcrumbList schema enables Google to replace the raw URL in search snippets with a human-readable category path. For a niche accessory product in a specific vehicle compatibility, showing 'slingmods.com > Comfort / Touring > Handlebar Accessories' in SERPs signals relevance to searchers faster than a URL string and improves click-through rate. The absence of this markup leaves an organic traffic lever unpulled on every product page in the catalog.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "category-navigation",

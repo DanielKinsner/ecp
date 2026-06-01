@@ -57,7 +57,13 @@
       "observation": "The HTML title tag reads \"AWDMods - AWDMods\" — 18 characters total, with the brand name repeated on both sides of the separator. Zyppy's Q1 2025 analysis of 81,000 titles found that titles under 30 characters are rewritten by Google more than 95% of the time. At 18 characters this title is well inside that failure zone. The title also contains zero product-category or keyword content: no mention of Ford Focus RS, Focus ST, WRX/STI, performance parts, or automotive accessories. For a shopper searching \"Ford Focus RS performance parts\" or \"WRX STI exhaust\", this title provides no signal that AWDMods is relevant.",
       "recommendation": "Rewrite the homepage title to the formula [Primary Category] - [Key Differentiator] | [Brand], targeting 51–60 characters. An example that reflects the actual catalog: \"Performance Parts for Ford Focus RS, ST & WRX | AWDMods\" (54 characters). Front-load the product category since AWDMods is not yet a brand-dominant name for its target queries. Align the H1 text on the page to use the same primary noun phrase to reduce Google rewrite risk.",
       "why_this_matters": "A title rewritten by Google to something generic eliminates AWDMods' control over its first-impression messaging in search results. For a brand at this stage of growth, every transactional query where the title fails to signal relevance is a lost click to better-titled competitors.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -100,7 +106,13 @@
       "observation": "The homepage has no meta description tag. When a meta description is absent, Google auto-generates snippet text by extracting sentences from the page body — typically resulting in navigation labels, footer link text, or newsletter copy rather than a persuasive value proposition. For awdmods.com, Google is likely generating something from the category tile labels (\"Performance Intakes Exhaust Cooling Drivetrain upgrades Shop Performance\") or the newsletter paragraph, neither of which communicates the store's value proposition to a search user.",
       "recommendation": "Add a meta description between 140–155 characters that leads with the primary customer benefit and names the key vehicle fitments: for example, \"Shop performance parts, exhaust systems, and exterior upgrades for the Ford Focus RS, Focus ST, WRX, and STI. Free shipping on most orders over $75.\" This gives Google a quality candidate description and directly communicates shipping value to the shopper before they click.",
       "why_this_matters": "The homepage meta description controls first-impression copy for all branded and category queries where the site ranks. Auto-generated snippets drawn from navigation or footer text consistently underperform hand-written descriptions — this is uncontrolled messaging on the most-crawled page of the site.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -145,7 +157,13 @@
       "observation": "The page has no og:image meta tag. When the homepage URL is shared on social platforms (Facebook, LinkedIn, iMessage link previews) or surfaced by AI shopping agents that use Open Graph data for thumbnail rendering, no image is provided. The platform either shows a blank thumbnail or attempts to scrape the first available image on the page, which is unpredictable. The site has a high-quality hero image of a Subaru WRX STI in a cinematic low-light setting (visible at scroll_y 0) that would make an effective og:image.",
       "recommendation": "Add og:image, og:title, og:description, and og:url meta tags to the homepage. Use the existing hero vehicle lifestyle image (resized to at least 1200×630px per Open Graph specification) as the og:image. The og:title and og:description should mirror the recommended page title and meta description copy. This is a one-time Shopify theme edit to the layout/theme.liquid or snippets/head-tags.liquid file.",
       "why_this_matters": "Unbranded or missing social thumbnails reduce link-share click-through and present an unpolished appearance when the store URL surfaces in Slack, Discord, social posts, or AI-summarized shopping recommendations — channels that drive a growing share of enthusiast automotive community traffic.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -205,7 +223,13 @@
       "observation": "The page's structured data consists of two schema blocks: @type OnlineStore (with name, logo, sameAs social links, and url) and @type WebSite (with SearchAction for site search). Neither block contains Product, Offer, AggregateRating, MerchantReturnPolicy, or any product identifier (GTIN, MPN, SKU). The featured collection carousel (sections featured-collection-top and featured-collection-bottom, visible in section-3.jpg and section-4.jpg) displays ten products with prices and two products with visible star ratings — element e21 shows \"5.0 / 5.0 (2) 2 total reviews\" and element e22 shows star imagery. This review data exists in the page DOM but is invisible to Google's structured data parser. SearchPilot's controlled split test found that adding AggregateRating schema alone produces approximately 20% organic traffic uplift. That uplift is unreachable while no Product or AggregateRating schema exists. Additionally, without GTIN fields in schema, AWDMods products cannot be matched in Google Shopping's knowledge graph or in ChatGPT Instant Checkout (launched September 29, 2025).",
       "recommendation": "For the homepage featured collection cards: implement JSON-LD Product schema blocks for each featured product, including at minimum: name, url, offers (price, priceCurrency, availability), aggregateRating (ratingValue, ratingCount) for products with reviews, and gtin or mpn for each product. For products like the VelourTex floor mats (e10) and Revo Designs decal kit (e11) that carry accessible names with full product titles, those names are the correct schema name values. If the homepage schema cannot list all featured products, prioritize adding it at the product-page (PDP) level first — that is where the deeper structured data impact lands. At the store level, add MerchantReturnPolicy to the OnlineStore block using Option B (merchantReturnLink pointing to the existing return policy page).",
       "why_this_matters": "Missing AggregateRating schema is a direct forfeit of the star-rating display that drives 20% organic traffic uplift in controlled testing. Missing GTIN data blocks AWDMods products from appearing in Google Shopping rich results and ChatGPT Instant Checkout product matching — both channels that route high-intent buyers who have already pre-qualified their intent before clicking.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -255,7 +279,13 @@
       "observation": "The homepage has no H1 element. All heading elements in the baton are H2 (\"Featured Collection\", \"Join Our Newsletter!\") or H3 (category labels: Performance, Exterior, Interior, Handling and Brakes). Zyppy's Q1 2025 analysis found that H1/title alignment is the single highest-leverage action against Google title rewrites — pages where H1 and title share the same primary noun phrase see rewrite rates drop from 76% to approximately 20.6%. Without an H1, this alignment is structurally impossible: Google has no heading signal to validate against the title, and combined with the already-problematic 18-character title (finding F-1), the rewrite probability is near-certain.",
       "recommendation": "Add an H1 to the homepage hero section whose primary noun phrase matches the recommended title. If the title becomes \"Performance Parts for Ford Focus RS, ST & WRX | AWDMods\", an appropriate H1 could be \"Performance Parts for the Ford Focus RS, Focus ST, WRX & STI\" — visually prominent over or near the vehicle selector widget. The H1 can be styled to integrate with the hero design; its presence in the HTML source is what matters for Google's heading-to-title alignment check.",
       "why_this_matters": "The absence of an H1, combined with the current 18-character brand-only title, means Google is generating its own title for this page in search results with near certainty. An auto-generated title may surface copy from the navigation bar or category labels instead of a keyword-relevant headline, permanently ceding SERP messaging control.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -358,7 +388,13 @@
       "observation": "The homepage canonical tag reads \"https://www.awdmods.com/\" — absolute URL with HTTPS scheme, www subdomain, lowercase path, and trailing slash consistent with the site's root URL format. This self-referencing canonical correctly signals to Google that the homepage is the preferred URL for its content. The baton captures the server-rendered canonical (not a JavaScript-injected value), so it is reliably seen by Googlebot at first parse. The Shopify platform's default theme behavior is correctly outputting the /products/ canonical pattern (the homepage has no product-path duplication risk at the root URL level).",
       "recommendation": "No action required. Monitor canonical output after any theme modification — Shopify custom theme changes are the most common vector for canonical regressions on Shopify stores.",
       "why_this_matters": "A correct canonical at the homepage level prevents any www/non-www or trailing-slash variant from competing with the primary URL for link equity consolidation.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -396,7 +432,13 @@
       "observation": "The homepage URL is the root domain with no path segments, parameters, or structural issues. No URL-level findings apply at the homepage root. URL audit work for this store is more relevant at the product and collection page level where slug quality, hyphen usage, and depth matter.",
       "recommendation": "No action required at the homepage level. Prioritize URL audit work at the /products/ and /collections/ path levels where slug descriptiveness and hyphen-vs-underscore compliance are actionable.",
       "why_this_matters": "A clean root URL ensures all homepage link equity consolidates correctly and no indexable duplicates exist at the domain root level.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     }
   ],
   "notes": [
@@ -419,7 +461,17 @@
       "evidence-tiers.md"
     ],
     "baton_elements_reviewed": 41,
-    "sections_routed_to_cluster": ["newsletter-footer"],
-    "page_head_fields_reviewed": ["title", "canonical", "meta_description", "og_image", "schema_jsonld", "hreflang", "viewport_meta"]
+    "sections_routed_to_cluster": [
+      "newsletter-footer"
+    ],
+    "page_head_fields_reviewed": [
+      "title",
+      "canonical",
+      "meta_description",
+      "og_image",
+      "schema_jsonld",
+      "hreflang",
+      "viewport_meta"
+    ]
   }
 }

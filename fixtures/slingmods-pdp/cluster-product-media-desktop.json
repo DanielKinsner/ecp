@@ -60,7 +60,13 @@
       "observation": "A YouTube video for the EvolutionR handlebar end weights is embedded on the product page, but the page's structured data block contains only a Product schema — no VideoObject JSON-LD is present. Google requires name, thumbnailUrl, and uploadDate at minimum to generate video rich results. Without this markup, the video cannot appear in Google's Video tab, cannot generate a video thumbnail in search results, and cannot contribute to click-through rate improvements from video-enriched SERP listings.",
       "recommendation": "Add a VideoObject JSON-LD block to the page's <head> alongside the existing Product schema. Required fields: name (e.g., 'Can-Am Spyder F3 & RT Handlebar End Weights — Product Overview'), thumbnailUrl (a public JPEG of the video poster frame), and uploadDate in ISO 8601 format. Strongly recommended additions: embedUrl pointing to the YouTube embed URL, description matching the product's use case, and duration in ISO 8601 format (e.g., PT1M30S). Use a @graph array to co-locate both schema types in a single script block. Validate with Google's Rich Results Test before deploying.",
       "why_this_matters": "VideoObject markup enables video carousels and thumbnail previews in Google Search — pages with valid video schema see 25–40% higher click-through rates on the affected listings. For a specialty motorcycle accessory where demonstration video shows the product being installed and used, those incremental clicks come from high-intent buyers who want to see the product in action before purchasing.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "product-media",
@@ -105,7 +111,13 @@
       "observation": "The 'Can-Am Spyder Handlebar End Weights' YouTube video is displayed as a standalone panel in the right-hand product information column, separate from the image gallery on the left. Baymard Institute's usability testing found that 35% of major e-commerce sites implement video placement this way — and that users frequently miss videos placed outside the main gallery flow. The video does not appear as a clickable gallery thumbnail alongside the 8 product images; it exists in a distinct layout region that users may scroll past after reviewing the gallery.",
       "recommendation": "Integrate the product video as a gallery item — place it at position 2 or 3 in the main image thumbnail strip, after the hero packshot. Give it a custom video thumbnail still (not a black frame or YouTube default) with a visible play button overlay of at least 48px. When the thumbnail is clicked, the video should play inline within the main gallery viewport, not redirect to YouTube. If the current template architecture separates gallery from product info, this is a component-level change but has an outsized discovery impact.",
       "why_this_matters": "Users who scan the product gallery sequentially will encounter and engage with a gallery-integrated video naturally. When the video sits in a separate layout region, Baymard testing shows the majority of visitors never interact with it — a well-produced product demonstration video effectively becomes invisible, wasting its persuasive value on a high-consideration fitment-sensitive accessory where demonstrating installation and appearance is the primary purchase confidence lever.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "product-media",
@@ -150,7 +162,13 @@
       "observation": "The gallery for the EvolutionR Stainless Steel Weighted Handlebar End Caps contains approximately 8 product images — all appear to be packshots against dark or gradient backgrounds showing the end caps from multiple angles. None of the visible thumbnails include a scale reference: no hand holding the part, no comparison against the handlebar it replaces, no ruler or coin. For a handlebar accessory with fitment specifics tied to the 2024+ Can-Am Spyder F3 and RT, buyers need to verify physical size before purchasing — the existing images leave this question unanswered.",
       "recommendation": "Add at least one image showing the end caps installed on an actual handlebar end, or held in hand against the bar they replace. A side-by-side comparison of stock OEM end cap vs. the EvolutionR part would directly answer the size and fitment question for hesitant buyers. The product weights 0.85 lbs. per pair — the mass difference vs. stock is a key selling point that a size-comparison image could reinforce visually.",
       "why_this_matters": "Baymard Institute found 42% of users actively attempt to judge product scale from images, and 28% of major e-commerce sites still provide no in-scale reference. For fitment-specific motorcycle accessories, a buyer who can't assess the physical dimensions may either abandon the purchase or order and return when the part doesn't match their expectation — both outcomes are directly preventable with one additional photograph.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "product-media",
@@ -211,9 +229,29 @@
       "evidence-tiers.md"
     ],
     "baton_elements_checked": [
-      "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9",
-      "e10", "e11", "e12", "e13", "e14", "e15", "e16", "e17", "e18"
+      "e0",
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5",
+      "e6",
+      "e7",
+      "e8",
+      "e9",
+      "e10",
+      "e11",
+      "e12",
+      "e13",
+      "e14",
+      "e15",
+      "e16",
+      "e17",
+      "e18"
     ],
-    "screenshots_reviewed": ["section-1.jpg", "section-2.jpg"]
+    "screenshots_reviewed": [
+      "section-1.jpg",
+      "section-2.jpg"
+    ]
   }
 }

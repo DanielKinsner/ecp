@@ -94,7 +94,13 @@
       "observation": "The page's JSON-LD Product schema includes name, image, brand, aggregateRating, and offers, but contains no gtin, mpn, or sku field. The product page displays a part number SM-22409 in the description copy (visible in section-1.jpg), yet this identifier is not surfaced in structured data. Without an mpn or sku in schema, Google cannot cross-reference this product against its Shopping Graph knowledge base, and the OpenAI ChatGPT Shopping feed cannot reliably match this product across data sources.",
       "recommendation": "Add the manufacturer part number as mpn in the JSON-LD: add '\"mpn\": \"SM-22409\"' to the Product object. If a manufacturer-assigned GTIN (UPC/EAN barcode) exists for this EvolutionR product, populate the gtin field instead or in addition. For aftermarket automotive accessories without a manufacturer GTIN, mpn plus brand (already present) is the documented Google Merchant Center fallback and satisfies the OpenAI Product Feed specification.",
       "why_this_matters": "Products without identifiers cannot appear in Google Shopping's product graph matching features, are ineligible for ChatGPT Shopping Research cross-platform matching, and may be excluded from enriched Shopping programs. For a niche fitment-specific accessory like this one, appearing in AI-assisted shopping comparisons is a growing discovery channel that competitors with populated identifiers will capture first.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -130,7 +136,13 @@
       "observation": "The JSON-LD Product schema on this page includes an Offer block with price ($59.95), availability (InStock), and priceValidUntil, but contains no MerchantReturnPolicy object. The footer links to a Terms & Conditions page, suggesting a return policy exists on-site, but it is not surfaced in machine-readable structured data. Google's return policy rich result display and AI commerce agents (ChatGPT Shopping Research, Google's AI shopping) use MerchantReturnPolicy data to compare merchants when products are otherwise equivalent.",
       "recommendation": "Add a MerchantReturnPolicy object to the Product schema. If the return policy is stated on a linked page, Option B (minimal implementation) is sufficient: add '\"hasMerchantReturnPolicy\": {\"@type\": \"MerchantReturnPolicy\", \"merchantReturnLink\": \"https://www.slingmods.com/terms\"}' to the Product object. For richer eligibility, use Option A inline: add applicableCountry ('US'), returnPolicyCategory, and merchantReturnDays. Confirm the correct return policy URL is the terms page or a dedicated returns page.",
       "why_this_matters": "AI shopping assistants actively compare return policies when recommending products to buyers researching accessory purchases. A competitor with return policy in schema has a measurable advantage in AI-mediated comparison shopping for a product at this price point, where return confidence directly influences purchase decisions.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",
@@ -171,7 +183,13 @@
       "observation": "The JSON-LD Offer block carries 'priceValidUntil': '2026-04-29'. This audit was captured on 2026-04-28, meaning the price validity expiration is tomorrow. Once 2026-04-29 passes, Google's structured data validator will see an expired priceValidUntil date, which can cause the rich result to be flagged as stale and trigger re-evaluation or suppression of the Shopping rich result. This pattern suggests priceValidUntil is either set to a hard-coded near-term date or generated with a one-day rolling window without adequate buffer.",
       "recommendation": "Set priceValidUntil to a date at least 30–90 days in the future, updated by your platform's price management system whenever the price is modified. If this is a static product with a stable price, set priceValidUntil to one year from the current date and automate renewal. Never hardcode a near-term date — the consequence of expiration is rich result loss, not just a cosmetic data issue.",
       "why_this_matters": "An expired priceValidUntil is a known trigger for Google to suppress Shopping rich results on the affected product URL. For a $59.95 product competing in niche fitment searches, losing the price-and-stars rich result reduces SERP visibility at exactly the moment a buyer is comparing products.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "content-seo",

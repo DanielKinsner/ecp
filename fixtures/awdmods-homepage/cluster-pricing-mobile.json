@@ -78,7 +78,7 @@
         "change_type": "component",
         "change_scope": "component"
       },
-      "confidence": 0.90,
+      "confidence": 0.9,
       "evidence_anchors": [
         {
           "type": "visual",
@@ -114,7 +114,13 @@
       "observation": "BNPL (Klarna, Afterpay, Affirm, or Shop Pay Installments) is absent throughout the site. The footer payment icons list eight payment methods and none of them is a BNPL provider. The featured $135.99 floor mat falls squarely within the $50–$500 range where BNPL generates its largest purchase-incidence and basket-size lift (Maesen & Ang 2025: ~9% purchase incidence increase, ~10% basket size increase). A 'Made to Order' product requiring upfront commitment is precisely the scenario where installment framing reduces perceived affordability barriers.",
       "recommendation": "Add Shopify's native Shop Pay Installments (available at no extra merchant cost on eligible orders) or connect a third-party BNPL provider such as Afterpay. Once enabled, surface the installment price — e.g., '4 interest-free payments of $34.00' — directly beneath the selling price on product cards and PDPs. The installment amount, not the total, should be the psychologically salient figure while the full price remains visible for regulatory compliance.",
       "why_this_matters": "Mid-ticket automotive accessories in the $100–$500 range are exactly where BNPL generates measurable conversion lift; leaving a $135 featured product without an installment option cedes that lift to competitors who display one.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "pricing",
@@ -225,7 +231,18 @@
       "free-shipping.md",
       "evidence-tiers.md"
     ],
-    "baton_elements_checked": ["e14", "e26", "e27", "e28", "e32"],
-    "screenshots_reviewed": ["section-1-mobile.jpg", "section-2-mobile.jpg", "section-3-mobile.jpg", "section-4-mobile.jpg"]
+    "baton_elements_checked": [
+      "e14",
+      "e26",
+      "e27",
+      "e28",
+      "e32"
+    ],
+    "screenshots_reviewed": [
+      "section-1-mobile.jpg",
+      "section-2-mobile.jpg",
+      "section-3-mobile.jpg",
+      "section-4-mobile.jpg"
+    ]
   }
 }

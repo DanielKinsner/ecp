@@ -104,7 +104,13 @@
       "observation": "Review content is gated behind a 'Reviews (15)' tab that requires a tap interaction to reveal. SearchPilot's controlled split test found that revealing previously hidden tab content produced a 7.5% organic session increase on mobile. Review text that is not present in the initial HTML is indexed less reliably by Google, reducing the long-tail keyword and E-E-A-T Experience signal value of all 15 customer reviews. On mobile, users who do not tap the tab never encounter the review content at all.",
       "recommendation": "Render at least the first 3–5 reviews in the initial page HTML so they are present without a tab interaction. The tab UI can remain for browsing the full review set, but the top reviews should be visible at page load. Verify the change by using 'view-source:' on the product URL after deployment and searching for actual review text — if it appears in source, Google can index it without JavaScript execution.",
       "why_this_matters": "Reviews hidden behind a tab are invisible to shoppers who never tap it and invisible to Google's initial HTML crawl. This means the trust and SEO value of 15 existing reviews is partially wasted — a straightforward rendering change recovers both conversion trust signals and organic search traffic from long-tail buyer queries.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "trust-credibility",
@@ -149,7 +155,13 @@
       "observation": "The Photos tab shows exactly one customer image, and that image is not surfaced in the main product gallery. Handlebar end weights are an installation modification where shoppers need real-world context — seeing the product installed on an actual Can-Am Spyder handgrip answers fitment confidence questions that studio photography cannot. With only one customer photo, the 'Photos (1)' tab count reads as a negative signal rather than a trust amplifier.",
       "recommendation": "Launch a post-purchase photo collection campaign for this product: add a photo-upload prompt to the 7–14 day post-delivery review request email with a loyalty-point bonus for photo submissions ('earn 100 points for a photo review vs 50 for text only'). Once 3+ quality customer photos exist, integrate 1–2 into main gallery positions 4–5 labeled 'Customer Photo' so all visitors see real-world installation context before they reach the tab section. Keep the Photos tab as the full collection archive.",
       "why_this_matters": "For a powersport modification product, buyer hesitation often centers on 'will this actually fit and look right on my bike?' — a question only a real customer photo can answer convincingly. A single hidden customer photo provides almost none of that trust lift, whereas 4–6 gallery-integrated UGC photos from verified buyers can meaningfully reduce purchase hesitation for this category.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "trust-credibility",
@@ -194,7 +206,13 @@
       "observation": "The product's structured data confirms a 90-day return window (merchantReturnDays: '90') and the Terms & Conditions are linked in the footer, but no return policy signal appears anywhere near the Add to Cart button. Google's E-E-A-T Trustworthiness guidelines identify a clearly-stated return policy linked from the product page as a required element for high-Trust page ratings. The footer Terms & Conditions link exists but is buried below the fold and requires the shopper to know it contains return information.",
       "recommendation": "Add a one-line return assurance near the Add to Cart button — for example, a small badge or line of copy reading '90-Day Returns' with a link to the returns section of the Terms page. This requires no backend change: it is a single template edit adding a trust badge element below the CTA. The 90-day policy is already in place; surfacing it at the point of purchase is the only gap.",
       "why_this_matters": "Shoppers deciding whether to buy a $59.95 powersport accessory from a specialty retailer factor return policy confidence into the purchase decision. A visible return assurance near the CTA addresses this anxiety at exactly the right moment; its absence means that anxiety goes unresolved at the checkout decision point.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "trust-credibility",
@@ -336,6 +354,10 @@
       "description-reviews-tabs",
       "footer-trust-links"
     ],
-    "baton_elements_verified": ["e8", "e9", "e19"]
+    "baton_elements_verified": [
+      "e8",
+      "e9",
+      "e19"
+    ]
   }
 }

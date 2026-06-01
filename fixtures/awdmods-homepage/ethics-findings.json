@@ -78,8 +78,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "copy",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.98,
@@ -101,7 +101,13 @@
       "observation": "No countdown timers, fabricated scarcity claims, live-viewer counters, or artificial urgency framing detected on either device. The baton timers field is absent on both desktop and mobile acquisitions. FTC Section 5 urgency/scarcity BLOCK conditions are not present.",
       "recommendation": "Maintain current approach. If flash sales are introduced in future, tie any countdown timer to a real, fixed end timestamp verified server-side rather than a client-side reset.",
       "why_this_matters": "Fabricated urgency is a top FTC enforcement priority and an active BLOCK-class finding when present. Clean pass here eliminates a significant regulatory exposure class.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "ethics",
@@ -118,8 +124,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "copy",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.95,
@@ -164,8 +170,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "copy",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.9,
@@ -210,8 +216,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "copy",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.97,
@@ -241,7 +247,13 @@
       "observation": "The site displays a persistent announcement bar ('FREE SHIPPING on most orders $75+') visible above the fold on both desktop and mobile at page load. CA SB-478 explicitly excludes carrier-calculated shipping from mandatory-fee disclosure requirements. The FTC Junk Fees Rule (16 CFR Part 464) is narrowly scoped to live-event ticketing and short-term lodging and does not apply here. No mandatory product-seller-imposed fees (processing fees, service charges, convenience fees) were identified in the homepage DOM. The displayed price format ('From $135.99', '$49.00', '$405.48') is consistent with pre-mandatory-fee pricing. Drip pricing BLOCK conditions are not met.",
       "recommendation": "Maintain the above-fold free shipping threshold disclosure. If any mandatory non-shipping, non-government fees are introduced at checkout (e.g., a processing fee applied to all orders), these must be disclosed on the product page — not revealed for the first time at checkout.",
       "why_this_matters": "Hidden fees account for 39-48% of cart abandonment. The current transparent disclosure both satisfies legal requirements and reduces abandonment. The FTC Junk Fees Rule and CA SB-478 mandatory-fee BLOCK conditions are clear.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "ethics",
@@ -256,8 +268,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "copy",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.85,
@@ -279,7 +291,13 @@
       "observation": "The site presents no cookie consent banner on either device capture. This is appropriate for a US-market-only store: (1) hreflang[] is empty — no EU/UK language/region targeting signals; (2) the announcement bar specifies 'Contiguous US only' shipping; (3) CCPA-specific 'Your Privacy Choices' link is present, indicating the operator's compliance posture is US-law-oriented. EU ePrivacy Art 5(3) and GDPR cookie consent requirements apply to sites with EU visitors — absent any EU traffic targeting, no cookie consent banner is required. Note: if the operator begins running EU-targeted advertising or adds EU hreflang tags, a compliant cookie consent banner must be implemented before EU traffic arrives.",
       "recommendation": "Maintain the CCPA 'Your Privacy Choices' opt-out link. If EU or UK traffic is ever targeted (via paid advertising, hreflang, or EU fulfillment), implement a compliant cookie consent banner before enabling EU-targeted campaigns — prior-consent requirements under ePrivacy Art 5(3) apply from the moment EU visitors land on the page.",
       "why_this_matters": "ePrivacy Art 5(3) and GDPR cookie consent requirements have produced the largest cookie-enforcement fines in EU regulatory history (CNIL fined Google €150M and Facebook €60M for consent-interface violations in 2022). The current US-only posture avoids this exposure. Expansion to EU markets without a compliant consent banner would immediately create BLOCK-class exposure.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "ethics",
@@ -296,8 +314,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "copy",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.95,

@@ -54,7 +54,13 @@
       "observation": "AWDMods sells high-consideration performance parts for Focus RS, Focus ST, WRX, and STI owners -- a customer base that builds their cars over multiple purchases across months or years. The homepage newsletter section and footer carry zero loyalty program signal: no rewards enrollment invitation, no points-per-purchase teaser, and no 'join rewards' link in the footer navigation. The My Account column (visible at scroll position 2612px, e33) lists only Order History, Wish List, and Track My Order -- no rewards entry point. A customer who just placed their first order and returns to the site has no pathway to discover or enroll in a loyalty program from these surfaces.",
       "recommendation": "If AWDMods has an active loyalty program, add a 'Earn rewards on every build' entry point to the footer My Account column alongside Order History. Add a one-line loyalty teaser beneath the newsletter headline: 'Plus earn points on every part you add to your build -- redeem for store credit.' If no loyalty program exists, the newsletter section and order confirmation page are the two highest-leverage locations to introduce one, given the repeat-purchase cadence of this customer base.",
       "why_this_matters": "Loyalty program enrollment rates reach 12-25% of new customers when the prompt appears at or near the purchase confirmation moment (loyalty-programs.md F9). For a specialty auto parts store where a single customer may spend thousands across a year of modifications, a program that converts even one additional purchase from 15% of subscribers meaningfully outperforms most paid acquisition channels. Leaving the repeat-purchase opportunity unaddressed at this touchpoint loses the compounding effect of the endowed progress mechanism (loyalty-programs.md F1, Nunes and Dreze 2006, Journal of Consumer Research, Gold) on customer return rates.",
-      "evidence_tier": "Bronze"
+      "evidence_tier": "Bronze",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "post-purchase",
@@ -148,7 +154,13 @@
       "observation": "The footer and newsletter section contain no referral program entry point. There is no 'Refer a Friend,' 'Give $X, Get $X,' or equivalent link visible in the footer navigation, newsletter block, or My Account column. Performance car modification is an intensely social, word-of-mouth category: owners share builds on Instagram, YouTube, and at events -- the exact audience most likely to refer peers who own the same vehicles covered by AWDMods (Focus RS, WRX, STI). The 72-hour post-purchase window is the peak referral opportunity, and a customer returning to check order status finds no referral mechanism anywhere on the page.",
       "recommendation": "Add a 'Refer a Friend' link to the footer My Account or Information column that links to a referral program landing page. For the newsletter section, consider adding a one-line prompt beneath the email field: 'Already a customer? Share AWDMods with a fellow RS or WRX owner -- give them $15 off their first order, get $15 back.' The give-first framing (referral-programs.md F4, Silver) outperforms get-first framing and aligns with the community-oriented ethos of the enthusiast audience.",
       "why_this_matters": "Referred customers from genuine peer recommendations show 16-25% higher profit margin over three years and 37% higher retention than non-referred customers (referral-programs.md F8, Villanueva et al. 2008, Journal of Marketing Research, Gold). For a niche performance parts brand whose customers self-identify through their vehicle (WRX owner, Focus RS owner), peer referrals carry outsized trust. Leaving the brand's most natural acquisition channel -- enthusiast word-of-mouth -- without a structured referral path means relying on organic sharing with no conversion mechanism.",
-      "evidence_tier": "Bronze"
+      "evidence_tier": "Bronze",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     }
   ],
   "notes": [
@@ -168,7 +180,9 @@
       "evidence-tiers.md"
     ],
     "sections_routed": 1,
-    "sections_audited": ["newsletter-footer"],
+    "sections_audited": [
+      "newsletter-footer"
+    ],
     "baton_elements_checked": 11
   }
 }

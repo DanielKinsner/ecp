@@ -58,7 +58,13 @@
       "observation": "The product page purchase zone — the section containing the quantity field and 'Add to Cart' button — has no Apple Pay, Google Pay, or Amazon Pay express checkout buttons. PayPal's 'Pay in 4' instalment message is present below the price, but no one-tap wallet options are offered alongside the primary CTA. Apple Pay, Google Pay, and Amazon Pay logos do appear in the footer, confirming the store supports these methods, but mobile shoppers who reach the page never see them as purchase options until after checkout has begun.",
       "recommendation": "If the payment gateway already processes Apple Pay, Google Pay, and Amazon Pay (confirmed by the footer logos), add express checkout buttons directly in the purchase zone above or immediately below the 'Add to Cart' button. On a 390px mobile viewport, a two-column button row (Apple Pay | Google Pay) followed by a full-width Amazon Pay button fits without crowding the quantity control. Stripe Express Checkout Element or the platform's native wallet button component will surface the device-appropriate option automatically — an iOS visitor sees Apple Pay; an Android visitor sees Google Pay.",
       "why_this_matters": "Stripe's controlled A/B tests show express checkout buttons placed early in the purchase flow (near the CTA, not at payment-step) convert at roughly twice the rate of buttons placed late. For a $59.95 accessory on mobile — where thumb-typing a card number is the primary friction point — removing the form entirely for wallet users is the single highest-leverage checkout change available on this page.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "checkout-flows",
@@ -107,7 +113,13 @@
       "observation": "The price block displays '$59.95' with no shipping estimate alongside it. The site's structured data (schema.org Offer) encodes a shipping rate of $7.99, but this figure is not rendered anywhere on the product page. The footer carries an asterisk note — '* Free Shipping Applies to Most Contiguous U.S. Orders - Some Items May Not Qualify' — but this disclaimer is more than 2,400px below the purchase zone and is not linked from the price block. A mobile shopper adding this item to cart has no shipping cost signal until checkout begins.",
       "recommendation": "If this SKU qualifies for free shipping, add a short line directly below the price — for example, 'Free shipping on this item to the contiguous US' — and link the disclaimer to the shipping policy page. If the item carries a flat $7.99 shipping fee (as in the structured data), display that amount in the price zone so the total landed cost is visible before add-to-cart. Either disclosure eliminates the most common cause of late-funnel abandonment without requiring any backend changes — it is a template copy edit.",
       "why_this_matters": "Baymard's 50-study aggregate identifies extra costs revealed late as the cause of 39% of all actionable cart abandonments. Showing the shipping cost or free-shipping status on the product page removes the largest single friction point before it can trigger abandonment at checkout.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "checkout-flows",

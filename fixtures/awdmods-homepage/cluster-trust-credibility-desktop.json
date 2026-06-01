@@ -123,7 +123,13 @@
       "observation": "The homepage featured collection carries no trust signals at the product-card level: no return policy snippet, no money-back guarantee badge, no security seal. Payment method icons (AmEx, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) are present on the page but only in the footer at scroll_y ~2841 — roughly 2,000 pixels below the first featured product cards. Baymard Institute usability research establishes that trust badges function only when placed at the moment of purchase anxiety; footer placement is perceived as generic branding, not as a security assurance for the specific product a visitor is considering.",
       "recommendation": "Add a compact trust strip below the featured-collection section or integrate 2–3 trust signals into the product card template: (1) a return policy indicator such as 'Free returns within 30 days' or a link to the returns page; (2) a single recognized payment badge (PayPal achieves the highest notice rate at 67% in CXL eye-tracking research). If a money-back guarantee exists, positive framing ('Love it or return it') near the Add to Cart area converts better than policy-linked text in the footer.",
       "why_this_matters": "Payment icons visible only in the footer provide no trust lift at the point of intent. For an automotive-parts audience evaluating 'Made to Order' products at $49–$1,766, the absence of a visible return path and payment reassurance at the product level forces visitors to evaluate risk without the information needed to commit — increasing exit rates and reducing click-through to product pages.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "trust-credibility",
@@ -180,7 +186,13 @@
       "observation": "Of the 9 distinct product cards visible across the featured collection, the majority display no reviews at all. The highest-AOV products on the page — Borla cat-back exhaust at $1,649.99, Magnaflow Competition cat-back at $1,766, and Injen cold air intake at $405.48 — show no star rating widget. The Spiegel Research Center study established that products with zero reviews have 270% lower purchase likelihood than products with 5 reviews, with the lift increasing to 380% for higher-priced items where purchase risk is greatest. An automotive-parts homepage featuring multiple $400–$1,800 performance exhaust systems without a single review on those products faces the full force of this conversion gap.",
       "recommendation": "Treat the featured collection as a curated trust showcase: only feature products that have reached the 5-review threshold, or implement a post-purchase email campaign targeting buyers of the zero-review products to seed initial reviews. For the Borla and Magnaflow exhaust systems in particular, even 5 genuine reviews would yield a documented 380% purchase-likelihood uplift — making review collection the highest-ROI trust investment on the page. If products must be featured before review thresholds are met, add a 'New arrival' or 'Be the first to review' callout rather than displaying an empty star field, which implicitly signals zero social proof.",
       "why_this_matters": "The majority of the featured collection's highest-AOV products have no social proof. For buyers making $400–$1,800 discretionary performance upgrade decisions, the absence of any peer validation is the single most significant trust barrier on the page. Fixing the review gap on just two or three of these products could meaningfully change conversion rates on the featured collection as a whole.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "trust-credibility",

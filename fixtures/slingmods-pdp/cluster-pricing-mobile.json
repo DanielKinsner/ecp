@@ -79,7 +79,7 @@
         "change_type": "html-attr",
         "change_scope": "single-file"
       },
-      "confidence": 0.90,
+      "confidence": 0.9,
       "evidence_anchors": [
         {
           "type": "visual",
@@ -108,7 +108,13 @@
       "observation": "The page's structured data (schema.org Offer) records a $7.99 shipping charge for this product — meaning this item does not qualify for the blanket free-shipping program referenced in the footer. Yet the price block at y=823 shows only '$59.95' with no shipping cost, no threshold callout, and no 'add $X for free shipping' prompt. The only shipping-related copy visible to a mobile shopper is a footer disclaimer at scroll_y 2417 — more than 1,600px below the price — reading 'Free Shipping Applies to Most Contiguous U.S. Orders - Some Items May Not Qualify.' For a shopper on this product, shipping is not free and there is no notification of that fact anywhere near the purchase decision point.",
       "recommendation": "Add a single line beneath the price block disclosing the shipping cost for this product — for example, '+ $7.99 shipping' or 'Ships for $7.99 (free on orders over $[threshold])'. If there is a cart-level free-shipping threshold that this product helps qualify for, replace the static line with a goal-gradient prompt: 'Add $[X] more to your cart for FREE shipping.' The zero-price transition from a fee to free shipping generates psychological value disproportionate to the dollar amount saved.",
       "why_this_matters": "Baymard Institute data shows 39% of US shoppers who abandon carts cite unexpectedly high extra costs as the primary controllable reason. A $7.99 shipping surprise at checkout on a $59.95 product represents a 13% price increase the shopper did not anticipate at the point of intent — a disproportionate shock relative to the product price that elevates abandonment risk significantly.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "pricing",
@@ -168,7 +174,7 @@
         "change_type": "copy",
         "change_scope": "single-file"
       },
-      "confidence": 0.80,
+      "confidence": 0.8,
       "evidence_anchors": [
         {
           "type": "visual",

@@ -58,7 +58,13 @@
       "observation": "The cart drawer element (e17) is present in the page DOM but was empty at capture — no Apple Pay, Google Pay, or Shop Pay buttons appear inside it. No express checkout buttons exist anywhere in the above-fold header area or on the product cards in the featured collection. On mobile, where 70%+ of Shop Pay transactions originate, the absence of wallet buttons means every buyer must navigate through the full checkout form regardless of whether their payment credentials are already stored on their device.",
       "recommendation": "On a Shopify store, enable the 'dynamic checkout buttons' setting on product forms and within the cart drawer. This surfaces Apple Pay, Google Pay, or Shop Pay (whichever is relevant to the shopper's device and configured wallets) as a single-tap payment path above the standard 'Checkout' button. Place these buttons at the top of the cart drawer, before the email or address fields, so mobile visitors can complete purchase in 1-2 taps from any page.",
       "why_this_matters": "Stripe's controlled A/B testing shows express checkout buttons placed at the top of the flow convert at approximately 2x the rate of buttons placed at the end. Apple Pay specifically delivers a +22.3% conversion lift (Stripe verified). For a mobile-first automotive accessories store where the average visitor is browsing on an iPhone or Android device with a digital wallet already configured, the missing express path is the single highest-leverage checkout fix available.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "checkout-flows",
@@ -215,7 +221,15 @@
       "cookie-consent-and-compliance.md"
     ],
     "sections_routed_to_cluster": 1,
-    "section_slugs": ["newsletter-footer"],
-    "baton_elements_used": ["e6", "e14", "e17", "e18", "e32"]
+    "section_slugs": [
+      "newsletter-footer"
+    ],
+    "baton_elements_used": [
+      "e6",
+      "e14",
+      "e17",
+      "e18",
+      "e32"
+    ]
   }
 }

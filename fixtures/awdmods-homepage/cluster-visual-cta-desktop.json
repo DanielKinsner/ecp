@@ -54,7 +54,13 @@
       "observation": "The hero section at awdmods.com displays a full-width dark car photograph with a vehicle year/make/model selector overlay, but contains no headline, no subheadline, and no explicit value proposition copy. The phrase 'Car parts, simplified.' appears only as a small secondary line inside the header utility widget, not as a hero headline. A first-time visitor arriving from paid or organic traffic cannot answer 'What does AWDMods offer that competitors do not?' within 5 seconds. Baymard and NNGroup research identifies the hero headline as the first of five required above-fold elements for cold-traffic landing pages; without it, visitors lack the orientation signal needed to build purchase confidence.",
       "recommendation": "If AWDMods targets first-time visitors from paid search or social ads, add a headline layer to the hero image containing a specific, differentiated value proposition — for example: 'Ford Focus RS / ST and WRX/STI Performance Parts — Curated by Enthusiasts, Shipped Fast.' Place the headline at a readable size (40px minimum) in the upper-left or center of the hero, above the vehicle selector widget. If the vehicle selector is intended to replace the headline, add a one-line benefit statement directly above the selector dropdowns to anchor context: something that names the vehicle makes served and the key differentiator before asking visitors to self-select.",
       "why_this_matters": "Visitors without a headline to anchor context bounce faster than visitors who receive an immediate relevance signal. The 5-second-test standard holds that if visitors cannot identify what a site sells and why they should care before the first scroll, a significant share will leave before engaging the category tiles or featured collection — directly suppressing the click-through the category CTAs below the fold are designed to generate.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "visual-cta",
@@ -99,7 +105,13 @@
       "observation": "The full above-fold viewport on desktop (1920×1080) contains no trust signal of any kind — no star rating, no review count, no customer count, no recognized media mention, and no satisfaction guarantee. The free-shipping announcement bar at the very top ('FREE SHIPPING on most orders $75+ — Contiguous US only SHOP NOW') is the only policy signal present, but it is not a credibility indicator for an unknown brand. The 'Featured Collection' h2 and product cards with review stars appear at scroll_y 906 and below — outside the above-fold zone for a 1080px viewport.",
       "recommendation": "Add one compact trust signal directly in the hero or immediately beneath the vehicle selector widget. The minimum viable option: a review aggregate pulled from the existing product reviews ('★★★★★ 5.0 from verified buyers') or a customer count ('Parts shipped to 10,000+ AWD enthusiasts'). Position it at approximately the same vertical level as the vehicle selector dropdowns, left- or center-aligned, in a small but readable type size. If aggregate site-level reviews are unavailable, a media mention or a single strong brand qualifier ('Focused exclusively on Ford Focus RS/ST and Subaru WRX/STI — no generic parts catalog') serves the same credibility anchoring function.",
       "why_this_matters": "Stanford credibility research (Fogg et al., 2002) found users assess website credibility within seconds, primarily on first-impression cues. An automotive parts site selling $135–$1,766 products to enthusiasts who do not already know the brand faces a high trust bar. The absence of any above-fold credibility signal means every first-time visitor must scroll into the featured collection before encountering social proof — a friction point that increases bounce for cold traffic.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "visual-cta",
@@ -119,7 +131,7 @@
         "change_type": "copy",
         "change_scope": "single-file"
       },
-      "confidence": 0.90,
+      "confidence": 0.9,
       "evidence_anchors": [
         {
           "type": "dom",

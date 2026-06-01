@@ -95,7 +95,13 @@
       "observation": "The Product schema's Offer block contains 'priceValidUntil': '2026-04-29'. This date is tomorrow. Once this date passes, Google's Merchant Center crawler and rich result validator will treat the price as expired, removing the page from Shopping rich result eligibility and degrading its appearance in Google Shopping panels. The same data powers ChatGPT Instant Checkout product matching — an expired price validity field can cause the product to be flagged as unavailable or stale in AI shopping agents.",
       "recommendation": "Set priceValidUntil to a rolling date at least 30 days ahead and automate its update — most platforms support this through a CMS field or template variable. A common pattern is to set the date 365 days forward and refresh it on each catalog sync. Never let this field lapse to yesterday: once it expires, re-crawl latency means the product may be suppressed from Shopping results for days before Google re-validates it.",
       "why_this_matters": "An expired priceValidUntil causes immediate loss of Google Shopping rich results and Merchant Center eligibility, removing the product from price-comparison panels and AI shopping agent consideration — directly reducing discoverable impressions for this product listing.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -113,7 +119,7 @@
         "change_type": "html-attr",
         "change_scope": "single-file"
       },
-      "confidence": 0.90,
+      "confidence": 0.9,
       "evidence_anchors": [
         {
           "type": "dom",
@@ -136,7 +142,13 @@
       "observation": "The product's JSON-LD schema contains an MPN ('canam-spyder-handlebar-end-weights-evolutionr') and an internal product ID ('22409') but no GTIN field. GTIN is required by both Google Merchant Center (for full Shopping eligibility) and the OpenAI Agentic Commerce Product Feed for ChatGPT Instant Checkout. Without a GTIN, AI shopping agents that cross-reference product databases from multiple sources — comparing prices, checking availability, confirming it's the same physical item — cannot confidently match this product. The MPN is a useful supplementary identifier but does not substitute for GTIN in cross-platform shopping contexts.",
       "recommendation": "If EvolutionR's handlebar end weights have a manufacturer-assigned UPC or EAN (as a brand selling into retail channels, they likely do), add the GTIN to the JSON-LD schema using the 'gtin' property and to the Google Merchant Center product feed. If no manufacturer GTIN exists for this private-label product, document that explicitly and ensure the MPN is fully populated — the combination of brand + MPN is the documented fallback for Google Merchant Center exemptions. For ChatGPT Instant Checkout eligibility, verify current OpenAI Product Feed requirements at developers.openai.com/commerce/specs/feed.",
       "why_this_matters": "GTIN is the single point of convergence for product identity across Google Shopping, ChatGPT Instant Checkout, and Perplexity shopping. Without it, the product is invisible to AI agents performing cross-platform price comparison — a channel that converts at 31–33% lower bounce rates than standard organic traffic.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -172,7 +184,13 @@
       "observation": "The product's JSON-LD schema declares the primary product image URL using an insecure http:// protocol ('http://www.slingmods.com/image/catalog/...'). The page's canonical URL correctly uses https://. This creates a mixed-protocol inconsistency in structured data: Google's documentation explicitly lists HTTPS URLs as preferred for canonicalization when other signals tie. An http:// image URL in schema may trigger a Content Security Policy warning on the live page, reduce the image's Google Merchant Center eligibility for Shopping image display, and signal protocol inconsistency to crawlers that compare schema URLs against page canonical.",
       "recommendation": "Update the schema image URL from http:// to https:// in the JSON-LD template that generates this product's structured data. Audit all other schema URL fields (offers.url, offers.hasMerchantReturnPolicy.merchantReturnLink) to confirm they also use https://. Verify with Google's Rich Results Test after the fix to confirm no remaining protocol warnings.",
       "why_this_matters": "HTTPS is a confirmed canonicalization signal; http:// images in schema undermine trust signals used by Google Merchant Center image validation and can cause product image disapproval, removing the product image from Shopping panels.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -208,7 +226,13 @@
       "observation": "The canonical tag is correctly formed: absolute HTTPS URL, hyphenated slug with no underscores, no trailing slash, no session parameters. The page title at 51 characters sits at the start of the optimal 51–60 character range. The meta description at 112 characters is within mobile display limits.",
       "recommendation": "No action required for these elements. Maintain this pattern across variant pages if additional color or model variants are added in future.",
       "why_this_matters": "Well-formed canonicals and correct URL hygiene prevent link equity dilution across duplicate URL variants and maintain consistent crawl behavior.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -282,7 +306,13 @@
       "observation": "The MerchantReturnPolicy block includes applicableCountry, returnPolicyCategory (MerchantReturnFiniteReturnWindow), merchantReturnDays (90), merchantReturnLink, returnFees, and returnMethod — all Option A required fields are present and correctly structured. This is a meaningful competitive advantage: the majority of ecommerce product pages omit this block entirely. The returnFees value 'https://schema.org/ReturnShippingFees' is a valid Schema.org enumeration. One gap: the returnMethod value 'https://schema.org/ReturnByMail' is correct but there is no explicit applicableCountry scope for the return window — the implementation is valid per current spec and should validate cleanly in Google's Rich Results Test. Verify the 90-day window in schema matches your actual published return policy at slingmods.com/terms.",
       "recommendation": "Run the page through Google's Rich Results Test to confirm the MerchantReturnPolicy block validates without warnings. Verify the 90-day return window declared in schema matches the terms page at slingmods.com/terms — discrepancies between schema and published policy can trigger manual review flags in Merchant Center. No structural changes required if validation passes.",
       "why_this_matters": "AI shopping agents (ChatGPT Shopping Research, Google AI shopping) use return policy schema data when comparing merchants on equivalent products. An accurate, validated MerchantReturnPolicy makes this product's 90-day window machine-readable for AI-driven merchant comparison, a competitive data advantage for higher-consideration purchases.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     }
   ],
   "notes": [

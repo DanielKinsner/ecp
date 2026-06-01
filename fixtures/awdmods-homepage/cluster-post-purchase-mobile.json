@@ -54,7 +54,13 @@
       "observation": "The AWDMods homepage carries no loyalty program signal anywhere — no points-teaser in the product area, no 'Earn points on this purchase' copy in the newsletter section, no 'Join Rewards' link in the footer 'My Account' accordion, and no loyalty-related nav item. If AWDMods operates a loyalty program (Smile.io, LoyaltyLion, or similar), the homepage is missing the enrollment and awareness touchpoints that generate the bulk of program membership. The footer 'My Account' accordion (collapsed by default on mobile) contains four links — My Account, Order History, Wish List, Track My Order — but no Rewards or Points entry.",
       "recommendation": "If AWDMods has an active loyalty program, add a 'Earn points on every order — join free' teaser to the newsletter section above the email input, and add a 'Rewards' link to the footer 'My Account' accordion. If no loyalty program exists yet, the newsletter section is the natural anchor for a 'Join Rewards' enrollment CTA, since it already captures email at the end of the browse session.",
       "why_this_matters": "The confirmation page generates the highest loyalty enrollment rate (12-25% of new customers) per loyalty platform benchmarks, but homepage awareness is what surfaces the program to returning visitors who missed the confirmation-page prompt. Without a loyalty signal on the homepage, repeat customers have no reminder that the program exists between orders — and the opportunity to activate the goal gradient effect (purchase acceleration toward a reward) is lost on every visit.",
-      "evidence_tier": "Bronze"
+      "evidence_tier": "Bronze",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "post-purchase",
@@ -74,7 +80,7 @@
         "change_type": "component",
         "change_scope": "single-file"
       },
-      "confidence": 0.80,
+      "confidence": 0.8,
       "evidence_anchors": [
         {
           "type": "visual",
@@ -99,7 +105,13 @@
       "observation": "Neither the newsletter section nor the footer contains a referral program CTA. The footer 'My Account' accordion links to My Account, Order History, Wish List, and Track My Order — but no referral or 'Share with a friend' entry point. AWDMods has Facebook, Instagram, and YouTube social links in the footer, which confirms social sharing infrastructure exists, but no mechanism connects that social presence to a structured referral incentive. On a homepage serving returning customers (who are already past the 72-hour post-purchase peak), the footer is the highest-reach location for a persistent referral CTA.",
       "recommendation": "Add a referral link to the footer 'My Account' accordion — 'Refer a Friend, Earn $X' — pointing to a referral landing page. Frame the CTA in give-first language: 'Give your friend $15 off. You get $15 too.' If a referral program does not exist, this is the time to build one: the performance-mod community is highly word-of-mouth driven, and the 72-hour post-purchase window (order confirmation + shipping notification emails) is where referral participation peaks.",
       "why_this_matters": "Word-of-mouth referrals from existing customers in niche automotive enthusiast communities (Focus RS/ST, WRX/STI owners) carry outsized credibility compared to paid acquisition — referred customers arrive pre-validated by a trusted peer. Without a referral mechanism, AWDMods forfeits the compounding acquisition benefit of enthusiast social networks at zero incremental media spend.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "post-purchase",
@@ -214,6 +226,14 @@
     "sections_routed": 1,
     "section_label": "Newsletter signup and footer with payment icons",
     "page_type": "homepage",
-    "baton_elements_referenced": ["e29", "e30", "e31", "e32", "e33", "e34", "e35"]
+    "baton_elements_referenced": [
+      "e29",
+      "e30",
+      "e31",
+      "e32",
+      "e33",
+      "e34",
+      "e35"
+    ]
   }
 }

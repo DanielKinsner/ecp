@@ -59,7 +59,13 @@
       "observation": "The product hero image — the primary visual element for the EvolutionR Stainless Steel Weighted Handlebar End Caps — loads above the fold with no fetchpriority=\"high\" attribute and no corresponding <link rel=\"preload\"> in the page head. On product detail pages, the hero image is the LCP element in the majority of cases. Without these attributes, the browser deprioritizes this image in its network queue, treating it as equal priority to below-fold images, and begins fetching it only after the HTML parser encounters the img tag rather than during head parsing. The product image URL is captured in the structured data (schema.org Product markup) but not referenced in a preload hint.",
       "recommendation": "If the primary product image renders in the first viewport on page load, add fetchpriority=\"high\" to its <img> element and add <link rel=\"preload\" as=\"image\" href=\"[hero-image-url]\" fetchpriority=\"high\"> in the <head> before other non-critical resources. This is a two-attribute change to a single template file. Do not add loading=\"lazy\" to this image. All gallery images below position two in the carousel can use loading=\"lazy\" safely.",
       "why_this_matters": "LCP directly predicts conversion rate — a controlled A/B test at Vodafone showed a 31% LCP improvement produced 8% more online sales. Deprioritizing the hero image adds hundreds of milliseconds to LCP on mid-speed connections, compounding the revenue drag identified in Deloitte's Milliseconds Make Millions study (8.4% retail conversion lift per 0.1s improvement).",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "performance-ux",
@@ -109,7 +115,13 @@
       "observation": "Product images — including the hero shot visible above the fold in section-1 — are delivered as JPEG files with no modern format negotiation. AVIF is supported by approximately 94.9% of global browsers and reduces file size by 45-55% compared to JPEG at equivalent visual quality; WebP (96.4% support) reduces size by 25-34%. The page uses no <picture> element with <source type=\"image/avif\"> or <source type=\"image/webp\">, and the image CDN path pattern (slingmods.com/image/catalog/...) shows no automatic format-switching parameters. A typical product hero image as JPEG at 1500×1500px runs approximately 500KB; the same image as AVIF would be approximately 100KB.",
       "recommendation": "If images are served from a CDN that supports automatic format negotiation (Cloudflare Images, Cloudinary, or Imgix), enable Accept-header-based format selection — the CDN will serve AVIF or WebP automatically without changing the HTML. If images are served directly, wrap each product image in a <picture> element offering <source srcset=\"image.avif\" type=\"image/avif\">, <source srcset=\"image.webp\" type=\"image/webp\">, and <img src=\"image.jpg\"> as fallback. Apply this to the hero image first since it is the LCP candidate.",
       "why_this_matters": "Serving oversized JPEG files to browsers that support AVIF wastes bandwidth on every product page load. For a store with significant traffic, the aggregate LCP delay from unoptimized image formats compounds directly into conversion loss — the Deloitte/Google study found each 0.1s improvement in mobile load time yields 8.4% more retail conversions.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "performance-ux",
@@ -129,7 +141,7 @@
         "change_type": "html-attr",
         "change_scope": "single-file"
       },
-      "confidence": 0.90,
+      "confidence": 0.9,
       "evidence_anchors": [
         {
           "type": "visual",
@@ -202,7 +214,13 @@
       "observation": "The page head contains brainyfilter.css (v=1.4) loaded twice in identical consecutive <link> tags. Each render-blocking stylesheet request delays the browser's First Contentful Paint — the browser must download and parse all render-blocking CSS before painting any pixels. A duplicate stylesheet means the browser issues two network requests for the same file and parses the same CSS rules twice, adding latency even when the second request is served from cache (the browser still processes the duplicate rule application). This appears to be a template merge or copy-paste error in the PrestaShop theme.",
       "recommendation": "Remove the duplicate <link> tag for brainyfilter.css from the page head template. One instance of the stylesheet is sufficient. After removing the duplicate, audit the remaining render-blocking stylesheet order: move critical above-fold styles inline or into a critical CSS block, and defer non-critical stylesheets (dropzone.css, qa.css, magnific-popup.css, datetimepicker.css) to load after initial paint using rel=\"preload\" with onload swap or media=\"print\" technique.",
       "why_this_matters": "Every render-blocking resource in the head delays First Contentful Paint and LCP. A duplicate stylesheet is pure overhead with no benefit — removing it eliminates one redundant network round-trip and one redundant CSS parse pass at zero cost to functionality.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "performance-ux",

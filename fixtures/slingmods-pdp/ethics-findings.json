@@ -63,7 +63,13 @@
       "observation": "The footer email subscribe form (desktop and mobile) collects an email address with a single SUBSCRIBE button and no adjacent disclosure about what types of commercial messages will be sent, no link to the privacy policy, and no pre-submission statement about how to unsubscribe. CAN-SPAM (15 U.S.C. §§ 7701-7713) applies to the commercial emails themselves rather than the signup form, so this is not a per-se violation today. The adjacency risk is that the form's complete silence about marketing intent — combined with the 'New Mods / Coupons / Giveaways' label — creates an implied representation about email content that could mislead a subscriber who later receives off-topic or high-frequency promotional email. FTC Section 5 independently prohibits deceptive collection practices, and the FTC's guidance on email marketing recommends that signup forms clearly identify the commercial nature of communications.",
       "recommendation": "Add one line of disclosure text directly below the SUBSCRIBE button: 'By subscribing you agree to receive marketing emails. Unsubscribe at any time.' Link the word 'Privacy Policy' to https://www.slingmods.com/privacy. This is a single HTML snippet — no backend change required. The disclosure eliminates the FTC Section 5 adjacency and increases subscriber trust, which reduces complaint rates and list churn.",
       "why_this_matters": "A subscriber who did not expect commercial email and cannot easily identify how to opt out is one complaint away from a CAN-SPAM investigation. The Verkada $2.95M CAN-SPAM enforcement action (2024) included missing opt-out mechanisms as a named violation. Adding a one-line disclosure and privacy link costs nothing and removes this exposure.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "ethics",
@@ -80,8 +86,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "html-attr",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.9,
@@ -119,8 +125,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "html-attr",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.95,
@@ -167,8 +173,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "html-attr",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.97,
@@ -208,8 +214,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "html-attr",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.98,
@@ -254,8 +260,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "html-attr",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.93,
@@ -278,7 +284,13 @@
       "observation": "A dedicated Prop 65 Warning tab is present in the product tab bar, and the warning body includes the required chemical disclosure (phthalates and lead as cancer and reproductive harm agents per the California Prop 65 list) and links to the official registry at p65warnings.ca.gov/motor-vehicle-parts. This is the correct disclosure for a motor vehicle parts product sold to California consumers.",
       "recommendation": "Maintain the Prop 65 tab and warning text. Verify that the chemicals listed (phthalates and lead) are accurate for this specific SKU — stainless steel handlebar end caps may use a generic motor-vehicle-parts template that lists phthalates even if not present. Using an inaccurate warning does not violate Prop 65 but can confuse customers and is worth confirming with the supplier.",
       "why_this_matters": "California Prop 65 warnings are required before exposure to listed chemicals. Failure to warn exposes the operator to private plaintiff enforcement; accurate and complete warnings are a routine enforcement target in the powersports accessories category.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "ethics",
@@ -295,8 +307,8 @@
       "severity": "LOW",
       "scope": "page",
       "effort": {
-        "change_type": "html-attr",
-        "change_scope": "single-file"
+        "change_type": "not_applicable",
+        "change_scope": "not_applicable"
       },
       "ethics_state": "CLEAR",
       "confidence": 0.95,

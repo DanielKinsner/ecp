@@ -249,7 +249,13 @@
       "observation": "Slingmods has a published Price Match Guarantee (confirmed via footer link in e18). However, no mention of this guarantee appears near the price block, the Add to Cart button, or anywhere above the fold. A customer comparison-shopping against another vendor sees the $59.95 price in isolation, with no reassurance that they will not find it cheaper elsewhere — a signal that could stop comparison shopping entirely if placed near the price.",
       "recommendation": "Add a short price match statement or icon adjacent to the price block or below the Add to Cart button. A line such as 'Price Match Guarantee — found it cheaper? We'll match it.' with a link to the policy page reduces comparison-shopping urgency at the moment of price evaluation. The placement should be within the first viewport and within visual proximity of the price element (e8) — not relegated to the footer where it is below the point of purchase consideration.",
       "why_this_matters": "Price match guarantees reduce price-search urgency even when customers almost never invoke them. The guarantee signals pricing confidence and stops a customer from opening a new tab to check a competitor. Placing it near the price converts a dormant policy into an active conversion asset at zero additional cost.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     }
   ],
   "notes": [

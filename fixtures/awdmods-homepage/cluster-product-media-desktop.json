@@ -203,7 +203,13 @@
       "observation": "The baton index captures product card images (e10, e11) as standalone `img` elements and brand/title text as separate elements below, with no wrapping anchor element spanning the full card surface visible in the element tree. This is consistent with a split hit-area pattern where the image links to the PDP but the product title and price are either plain text or a separate link — a pattern that Baymard identifies at 76% of sites and characterizes as a consistent source of misclicks and confusion. On a 1920×1080 desktop viewport, users moving from the title text toward an adjacent card frequently misclick when the title area is not part of the card's clickable region.",
       "recommendation": "Wrap each product card's full surface — image, brand name, product title, price, badge, and rating — in a single `<a>` element pointing to the PDP. Position any interactive elements that must remain separate (e.g., a wishlist icon or quick-add button) using absolute positioning and a higher z-index above the card link layer, so they remain individually actionable without breaking the unified hit area. Test with keyboard navigation to confirm Tab reaches each card and Enter navigates correctly.",
       "why_this_matters": "Split hit areas on product cards cause misclicks that interrupt the browse flow and create a perception of a broken or low-quality storefront. For a homepage featured collection that serves as the first product-evaluation touchpoint for many visitors, clickability friction at this stage directly suppresses downstream click-through and add-to-cart rates.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "product-media",
@@ -269,6 +275,11 @@
       "featured-collection-top",
       "featured-collection-bottom"
     ],
-    "baton_elements_cited": ["e10", "e11", "e4", "absent"]
+    "baton_elements_cited": [
+      "e10",
+      "e11",
+      "e4",
+      "absent"
+    ]
   }
 }

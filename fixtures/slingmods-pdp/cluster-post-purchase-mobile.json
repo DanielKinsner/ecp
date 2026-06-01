@@ -101,7 +101,13 @@
       "observation": "There is no referral program visible anywhere on this product page — not in the footer, not in the header, not adjacent to the social sharing or product content areas. A customer who just decided to purchase EvolutionR handlebar end caps for their Can-Am Spyder F3 is at peak brand enthusiasm and social sharing intent, yet the page provides no framing, incentive, or mechanism for them to tell a fellow Spyder or Slingshot rider about Slingmods.",
       "recommendation": "If Slingmods has or intends to launch a referral program, the highest-leverage placement on mobile is a brief double-sided framing block in the order confirmation flow — but a secondary placement on the PDP footer (above the payment icons row) can capture pre-purchase sharers. The copy should lead with the give framing: 'Know another Spyder or Slingshot rider? Give them $15 off — and get $15 when they buy.' A one-tap native share button (navigator.share API) eliminates copy-paste friction on mobile. If no referral program exists, the confirmation email is the minimum viable touchpoint for the 72-hour referral window.",
       "why_this_matters": "Customers who share a product page immediately after deciding to purchase convert referred friends at measurably higher rates than cold traffic. Slingmods sells to a tight, enthusiast community — Polaris Slingshot and Can-Am owners who actively talk to each other at rallies and in online communities. A referral program tuned to this community would generate high-quality acquisitions at lower CAC than paid search, and referred customers in this category typically show 16–25% higher lifetime profit margin than non-referred buyers.",
-      "evidence_tier": "Bronze"
+      "evidence_tier": "Bronze",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "post-purchase",

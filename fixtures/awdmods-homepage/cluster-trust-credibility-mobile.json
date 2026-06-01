@@ -216,7 +216,13 @@
       "observation": "Across all four page sections, no expert editorial content is present: no staff picks with fitment rationale, no 'vehicles we know best' copy, no technical orientation for new visitors. The homepage communicates category breadth (Performance, Handling, Interior, Exterior, Electronics) and a vehicle finder, but nothing that demonstrates AWDMods' specialist knowledge of the Focus RS, Focus ST, WRX, or STI platforms it explicitly names in the newsletter copy. Google's Quality Rater Guidelines identify expert editorial content — fitment compatibility notes, installation difficulty ratings, known issues the manufacturer omits — as a key Expertise signal that differentiates a specialist from a generic reseller.",
       "recommendation": "Add a short specialist-voice block beneath the Featured Collection section — 3–4 sentences establishing AWDMods' focus ('We specialize in Focus RS/ST and WRX/STI builds; every part we carry is one we've tested or installed ourselves') alongside 1–2 staff-pick callouts for currently featured products that name a specific fitment or installation note the product card omits. This is a copy change, not a UI redesign, and it serves both the first-time visitor who wants assurance they're on the right site and Google's quality raters who look for genuine product knowledge. For technically complex products (exhausts, intakes, suspension), brief fitment notes ('Fits Focus RS 2016–2018 with stock subframe') are the clearest Expertise signal possible.",
       "why_this_matters": "Without editorial voice, AWDMods looks identical to a generic drop-shipper aggregating the same catalog. Automotive performance shoppers research extensively and trust specialists over generalists — demonstrating domain knowledge on the homepage is the differentiator that earns the product-page click from a comparison shopper.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "trust-credibility",

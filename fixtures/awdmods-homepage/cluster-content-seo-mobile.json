@@ -52,7 +52,13 @@
       "observation": "The page title is 'AWDMods - AWDMods' — 17 characters and a duplicate of the brand name with no descriptive content. Zyppy's Q1 2025 study of 81,000 titles found that titles under 30 characters are rewritten by Google more than 95% of the time. The current title gives Google no usable signal about what the store sells, which categories are available, or who the target customer is. Google will almost certainly substitute its own version, which may not align with AWDMods' intended positioning.",
       "recommendation": "If this is a general automotive performance parts store targeting Ford Focus RS, WRX, and STI owners, rewrite the title to the formula [Store Type] - [Key Vehicle Coverage] | [Brand]. For example: 'Performance Parts for Focus RS, WRX & STI | AWDMods' (51 characters). This fits the 51–60 character sweet spot, front-loads the product category, and names the vehicles explicitly — matching the long-tail transactional queries that convert best in the automotive aftermarket.",
       "why_this_matters": "Google rewrites titles that are too short with whatever copy it finds most relevant on the page — often the H1 or a navigation link. A store with a 17-character title is surrendering complete control over how it appears in search results, including which keywords it ranks for.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -95,7 +101,13 @@
       "observation": "There is no <meta name='description'> tag on the page. The og:description property is present but contains only 'AWDMods' — no store description, no vehicle coverage, no value proposition. Google will generate a snippet by extracting whatever text it finds most relevant, which on this page is likely to be category navigation labels or the newsletter copy. The og:description also powers social share previews; 'AWDMods' as a social preview description provides no context for click-through.",
       "recommendation": "Write a meta description of 140–155 characters that names the store's vehicle coverage, product categories, and a single differentiator. For example: 'Shop performance parts, exterior mods, and accessories for the Ford Focus RS, Focus ST, Subaru WRX, and STI. Free shipping on orders $75+.' (152 characters). Apply the same text to og:description for social sharing consistency.",
       "why_this_matters": "Google auto-generates snippets for pages without meta descriptions, and auto-generated snippets often pull from navigation menus or boilerplate text. A well-written meta description acts as a free ad in the SERP — the absence of one means competitors with even minimal meta descriptions will present more compelling click invitations.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -140,7 +152,13 @@
       "observation": "The page has no og:image tag. When the AWDMods homepage is shared on Facebook, Twitter/X, iMessage, Slack, or LinkedIn, the preview will render with no image — a blank thumbnail or a platform-chosen fallback. AI shopping agents and browsers that generate link previews will also lack a visual anchor. The homepage contains high-quality photography (hero section showing a WRX in a cinematic night setting, visible in section-1-mobile.jpg) that could serve as an effective og:image.",
       "recommendation": "Add <meta property='og:image' content='[absolute URL to the hero image]'> pointing to a 1200×630px crop of the homepage hero photograph. Also add og:image:width and og:image:height tags. For Twitter, add <meta name='twitter:image'> with the same URL. The image should be pre-sized to exactly 1200×630 to prevent platform-side auto-cropping that may cut out the car.",
       "why_this_matters": "Pages without og:image lose the single highest-visibility element in social and messaging link previews. In automotive communities where enthusiasts share links in Discord servers, Facebook groups, and iMessage threads, a blank thumbnail dramatically reduces the click-through rate on those shares.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -195,7 +213,13 @@
       "observation": "The only structured data on the page is an OnlineStore block (brand identity) and a WebSite block (SearchAction). Product-level schema — @type Product, Offer, AggregateRating, MerchantReturnPolicy — is entirely absent from the homepage. Featured product cards visible in the page (section-3-mobile.jpg) show products with prices and star ratings, but none of this data is exposed in JSON-LD. This means AWDMods is ineligible for Google Shopping rich results, star ratings in SERPs, ChatGPT Shopping (launched September 29, 2025), and Perplexity product cards on this page.",
       "recommendation": "Add JSON-LD Product markup for the featured collection products surfaced on the homepage. Each featured product card should emit: @type Product with name, image, offers (price, priceCurrency, availability, url), and AggregateRating where reviews exist. Additionally, add MerchantReturnPolicy to the OnlineStore block so AI shopping agents can surface return terms when comparing AWDMods against competitors. For Shopify implementation, this requires updating the homepage Liquid template to inject product schema for each featured_collection product in the section.",
       "why_this_matters": "SearchPilot's controlled test found that adding AggregateRating schema alone produced approximately 20% organic traffic uplift. Without any Product schema, AWDMods cannot appear in Google Shopping carousels, cannot surface in ChatGPT Shopping comparisons, and loses every star-rating rich result opportunity — while competitor stores with complete schema capture those placements.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -240,7 +264,13 @@
       "observation": "The AWDMods homepage has no H1 element. The page jumps directly to H2 headings ('Featured Collection', 'Join Our Newsletter!'). Without an H1, there is no semantic anchor for Google to confirm what the page's primary topic is, and the H1/title alignment strategy — which reduces Google's title rewrite rate from 76% to approximately 20% — cannot be implemented. The current title 'AWDMods - AWDMods' also has no H1 to align with.",
       "recommendation": "Add a visually prominent H1 to the hero section that names the store's core value proposition and vehicle coverage. If the hero image cannot accommodate visible text, a visually hidden (CSS off-screen) H1 is acceptable for SEO purposes. Suggested text: 'Performance Parts and Accessories for Ford Focus RS, Focus ST, Subaru WRX & STI'. This H1 then becomes the semantic anchor to align the title tag against, reducing rewrite risk on both.",
       "why_this_matters": "Zyppy's Q1 2025 data shows H1 and title alignment is the single highest-leverage defense against Google title rewrites, dropping the rewrite rate from 76% to ~20%. Without any H1, the page has no alignment possible — Google will select its own preferred title based on whatever on-page copy it deems most relevant.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -278,7 +308,13 @@
       "observation": "The OnlineStore JSON-LD block has a sameAs array with 12 entries, 9 of which are empty strings ('') rather than valid URL values. Google's structured data validator will flag empty string values in sameAs as malformed — they are not valid URL format. The three legitimate entries (Facebook, Instagram, YouTube) are correct, but the empty entries create schema validation errors that may affect Google's confidence in the entire block.",
       "recommendation": "Remove all empty string entries from the sameAs array, keeping only the three valid social profile URLs. The corrected block should read: sameAs: ['https://www.facebook.com/awdmods', 'https://www.instagram.com/awdmods', 'https://www.youtube.com/@AWDMods']. In Shopify Liquid, this is typically in the theme's layout or SEO snippet — remove empty entries from the template that generates this array.",
       "why_this_matters": "Malformed structured data can trigger Google Search Console rich result validation errors and reduce confidence in the store's brand knowledge graph entity. Empty sameAs entries signal incomplete template implementation that may carry over into other schema blocks.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -316,7 +352,13 @@
       "observation": "The canonical tag is correctly implemented: absolute HTTPS URL, lowercase, self-referencing, and matches the captured page URL exactly. No trailing slash inconsistency. For a Shopify store, this is the expected default behavior from the platform.",
       "recommendation": "No action required. Continue verifying canonical tags after any theme updates, as Shopify theme modifications can inadvertently break canonical implementation.",
       "why_this_matters": "A correctly implemented self-referencing canonical prevents Google from selecting an alternate URL variant (e.g., HTTP, mixed-case, with tracking parameters) as the canonical, protecting link equity consolidation.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -348,7 +390,13 @@
       "observation": "The viewport meta tag is correctly implemented with 'width=device-width,initial-scale=1', confirming proper mobile viewport configuration. This is the prerequisite for Google's mobile-first indexing and prevents the double-tap-to-zoom behavior that degrades mobile conversion.",
       "recommendation": "No action required.",
       "why_this_matters": "Without a correct viewport meta tag, Google's mobile-first indexing treats the page as non-mobile-optimized, which can suppress rankings on mobile queries.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",
@@ -400,7 +448,13 @@
       "observation": "The AWDMods homepage contains no store description, no brand positioning statement, and no body copy that explains what AWDMods sells, which vehicles it supports, or why a shopper should buy from AWDMods over a competitor. The only text content visible is: category navigation labels (Performance, Handling & Brakes, Interior, Exterior, Electronics), featured product card titles, and the newsletter signup copy. AI shopping agents (ChatGPT Shopping Research, Perplexity) that crawl the page to answer 'What does AWDMods sell?' will find no extractable answer. NNGroup research finds approximately 20% of purchase task failures result from insufficient product information — applied to a store homepage, absent positioning copy means shoppers cannot determine fit before entering the catalog.",
       "recommendation": "Add a 2–3 sentence store description to the homepage, placed between the hero vehicle finder and the category carousel. The copy should answer: what product categories are available, which vehicles are supported, and what makes AWDMods the right choice. For example: 'AWDMods specializes in performance, exterior, and interior upgrades for the Ford Focus RS, Focus ST, Subaru WRX, and WRX STI. Every part is fitment-tested for your platform — shop by vehicle to see only what fits your build.' This copy also becomes the source material for the meta description (Finding 2) and serves as AI-extractable text for shopping agent queries.",
       "why_this_matters": "A homepage without any descriptive text is invisible to AI shopping agents attempting to qualify AWDMods as a vendor. As ChatGPT Shopping and Perplexity grow their share of product discovery queries, stores with extractable positioning copy will be surfaced over those without.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "content-seo",

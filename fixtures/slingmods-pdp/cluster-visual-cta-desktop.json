@@ -98,7 +98,13 @@
       "observation": "The 'Add to Cart' button sits in a zone containing a loyalty-points prompt ('Login & Earn 60 Points') but nothing that addresses the buyer's purchase hesitation at the moment of commitment. The site's footer references a Price Match Guarantee and a Free Shipping threshold, and the top navigation bar shows 'FREE SHIPPING ON MOST ORDERS OVER $75' — but neither of these appears within the buy-box where the buyer is deciding whether to click. At $59.95, the purchase is close enough to the $75 free-shipping threshold that a one-line reminder would be directly actionable.",
       "recommendation": "If the order qualifies for free shipping above $75, add a single line of microcopy directly below the 'Add to Cart' button: 'Add $15.05 more for free shipping · 30-day easy returns.' If the product ships free regardless of order size, update the line to reflect that. The copy should be factually accurate and match the actual shipping policy. Keep it to one line — it is a friction-reducer at the conversion point, not a secondary pitch.",
       "why_this_matters": "Baymard's checkout usability research consistently shows that unanswered questions at the moment of commitment are the primary driver of silent abandonment on product pages. A buyer who wants the item but isn't sure about shipping cost or return risk will hesitate; a single accurate sentence removes both uncertainties at zero development cost.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "visual-cta",

@@ -160,7 +160,13 @@
       "observation": "The Add to Cart button zone in the above-fold product hero (scroll_y 0–466 based on the PayPal widget at y=442) contains no trust signals adjacent to or below the cart action. The payment method logos (Visa, Mastercard, Google Pay, Apple Pay, PayPal, Affirm) are present on the page but are positioned in the footer at scroll_y approximately 1500+, roughly 1,000 pixels below the point of purchase decision. Baymard Institute's research documents that trust badges in headers or footers are perceived as generic and do not convey that the purchase interaction specifically is secure — proximity to the CTA is the operative variable, not mere presence on the page.",
       "recommendation": "Add a compact trust signal strip directly below the Add to Cart button containing two or three recognizable signals: (1) a payment acceptance strip showing the icons already present in the footer — Visa, Mastercard, PayPal, Affirm — repositioned to immediately below the CTA; (2) a one-line return/guarantee statement (e.g., 'Free shipping on orders $75+ · Easy returns'). Keep to 2–3 elements maximum — badge overload above 3 signals reduces rather than increases conversion. The footer payment icons can remain as a secondary instance; the proximity placement near the CTA is what provides the trust lift.",
       "why_this_matters": "19% of shoppers abandon carts specifically citing security or credit card trust concerns (Baymard, verified data). For an unknown-to-the-buyer specialty parts brand, trust signal proximity to the purchase action is a direct revenue lever. Payment icons already exist on the page — moving them to the CTA zone is a no-new-content implementation that costs one layout change.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "trust-credibility",

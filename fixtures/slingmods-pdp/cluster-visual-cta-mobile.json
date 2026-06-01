@@ -62,7 +62,13 @@
       "observation": "Once a shopper scrolls past the Add to Cart button into the product description, fitment guide, and reviews sections — which collectively span approximately 1,300px of vertical content — there is no persistent purchase button anywhere on screen. The page currently has a bottom tab bar (Overview, Q&A, Reviews, Photos, Prop 65), but this bar contains no purchase action. A shopper who finishes reading the vibration-reduction copy and the fitment table must scroll back up to the product page header to purchase, adding unnecessary friction at the moment when persuasion is highest.",
       "recommendation": "If the page layout is managed through a theme template, add a sticky bottom CTA bar that appears after the shopper scrolls 200px below the main Add to Cart button. The bar should display the product name truncated to one line, the price ($59.95), and a full-width 'Add to Cart' button at minimum 48px height. Keep the bar below the existing tab navigation so it does not obscure product content.",
       "why_this_matters": "Multiple independent A/B tests on mobile product pages show sticky CTAs lift completed orders by 7-37%. On a page where the product description runs over 1,000px and the fitment guide adds another 400px, buyers who finish reading have already made the decision — but the purchase button is not within reach. That gap is where mobile conversions quietly disappear.",
-      "evidence_tier": "Bronze"
+      "evidence_tier": "Bronze",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "visual-cta",
@@ -102,7 +108,13 @@
       "observation": "The 'Add to Cart' button has no supporting microcopy directly beneath or beside it. The schema.org markup shows a 90-day return window (merchantReturnDays: 90), and the footer contains a free shipping notice for most U.S. orders — but neither of these trust signals appears adjacent to the purchase button where a shopper is making the commitment decision. At $59.95, the purchase requires minor but real consideration; the absence of a visible return policy or shipping promise at the CTA zone leaves buyers without a final friction-reducer at the exact moment they need it.",
       "recommendation": "Add a single line of microcopy directly below the Add to Cart button — for example: 'Free shipping on most U.S. orders · 90-day returns'. Keep it under 60 characters, 12px, muted gray, so it does not compete visually with the button itself. The copy should confirm the shipping and returns policies that already exist in the schema data — this is a copy addition, not a policy change.",
       "why_this_matters": "Usability testing consistently shows that short risk-reversal copy placed immediately adjacent to the primary CTA reduces hesitation at the commitment point. Burying return policy information in the footer means the majority of mobile buyers who never scroll to the bottom make their decision without seeing it.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "visual-cta",
@@ -187,7 +199,13 @@
       "observation": "The purchase CTA uses 'Add to Cart' with a cart icon — the low-commitment label that reduces purchase anxiety by framing the action as reversible. The button is full-width, visually distinct from surrounding elements, and uses white-on-black coloring that provides strong contrast against the white page background.",
       "recommendation": "No change required on CTA copy or button styling. The current implementation follows established best practices for label choice, icon usage, and visual differentiation from secondary actions.",
       "why_this_matters": "Correct CTA label and visual treatment are the foundation of the purchase flow. Maintaining 'Add to Cart' over alternatives like 'Buy Now' appropriately frames the action as low-commitment for a $59.95 specialty accessory purchase.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     }
   ],
   "notes": [
@@ -212,6 +230,11 @@
       "section-4-mobile.jpg",
       "section-5-mobile.jpg"
     ],
-    "baton_elements_referenced": ["e3", "e4", "e8", "e13"]
+    "baton_elements_referenced": [
+      "e3",
+      "e4",
+      "e8",
+      "e13"
+    ]
   }
 }

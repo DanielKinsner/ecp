@@ -102,7 +102,13 @@
       "observation": "AWDMods sells compatibility-dependent products — a cold-air intake for a Ford Focus RS will not fit a Subaru WRX STI. The homepage hero includes a vehicle selector (Select Make / Model / Year / Trim), but it is visually buried in the hero image and disconnected from the five category tiles below. Once a visitor selects their vehicle and clicks 'Shop Performance,' there is no visible confirmation that search results will be filtered to their fitment. Baymard's compatibility filter research shows that 65% of users fail to find the correct product when compatibility filtering is absent or unclear, and 32% of sites selling fitment-dependent products lack this filter entirely.",
       "recommendation": "Connect the homepage vehicle selector to the category tile CTAs so that clicking 'Shop Performance' (or any tile) passes the selected vehicle as a URL parameter and renders the target collection page pre-filtered to that fitment. Display a persistent 'Showing parts for: [Year] [Make] [Model]' banner at the top of every collection page when a vehicle has been selected. If the selector is not yet wired to filtering, add a prominent 'Select your vehicle' prompt above the category tiles with a clear affordance that it will refine results.",
       "why_this_matters": "When compatibility filtering is absent or invisible, customers click through to collection pages, scroll past incompatible parts, and abandon — often buying from a competitor whose site surfaces fitment-specific results immediately. For a performance parts store serving Ford Focus RS, WRX, and STI owners, fitment confidence is the single highest-leverage conversion lever at the category navigation level.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "category-navigation",
@@ -201,7 +207,13 @@
       "observation": "No breadcrumb navigation is present on the AWDMods homepage in any form — neither a hierarchy type ('Home > Performance') nor a history type ('← Back to results'). The page's schema JSON-LD (baton page_head.schema_jsonld) contains OnlineStore and WebSite types but no BreadcrumbList markup. While breadcrumbs are typically most critical on PDPs and collection pages, their absence from the Shopify theme architecture means they are likely missing across the site — confirmed absent in the schema data. Two independent SearchPilot controlled tests found that removing breadcrumbs caused -5.5% and -7% organic traffic loss respectively.",
       "recommendation": "Implement BreadcrumbList JSON-LD schema across all collection and product pages. For collection pages, the hierarchy breadcrumb should render as 'Home > [Category]' with crawlable anchor links. For PDPs, add both a hierarchy breadcrumb ('Home > Performance > Intakes > [Product Name]') and a history-type 'Back to [Collection] ([N] items)' link that preserves the visitor's filter and sort state from their previous collection page.",
       "why_this_matters": "Breadcrumb absence costs organic traffic directly (two controlled tests, -5.5% to -7%) and degrades navigation confidence for users who want to step back up the category hierarchy after landing on a product page. For an SEO-dependent store competing on automotive parts keywords, this is a structurally avoidable traffic loss.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "category-navigation",
@@ -269,7 +281,7 @@
         "change_type": "copy",
         "change_scope": "single-file"
       },
-      "confidence": 0.90,
+      "confidence": 0.9,
       "evidence_anchors": [
         {
           "type": "visual",
@@ -352,7 +364,20 @@
       "breadcrumbs.md",
       "collection-page-architecture.md"
     ],
-    "sections_routed": ["hero-nav", "category-grid"],
-    "baton_elements_confirmed": ["e1", "e3", "e10", "e11", "e12", "e13", "e17", "e18", "e19"]
+    "sections_routed": [
+      "hero-nav",
+      "category-grid"
+    ],
+    "baton_elements_confirmed": [
+      "e1",
+      "e3",
+      "e10",
+      "e11",
+      "e12",
+      "e13",
+      "e17",
+      "e18",
+      "e19"
+    ]
   }
 }

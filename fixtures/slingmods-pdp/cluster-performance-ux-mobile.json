@@ -59,7 +59,13 @@
       "observation": "The page head preloads two font files (the Teko display font and FontAwesome) but contains no <link rel=\"preload\" as=\"image\"> for the hero product image — the large above-fold photo of the handlebar end weights that dominates the first viewport on a 390px screen. Without fetchpriority=\"high\" on the <img> element and a matching preload hint in the <head>, the browser queues the hero image at the same priority as decorative resources, delaying Largest Contentful Paint beyond what the hardware can recover in the render pipeline.",
       "recommendation": "Add fetchpriority=\"high\" to the hero product <img> element and add a corresponding <link rel=\"preload\" as=\"image\" href=\"[hero-image-url]\" fetchpriority=\"high\"> in the <head> immediately after the stylesheet links. Do not add loading=\"lazy\" to the hero image — lazy-loading the LCP element is one of the most direct ways to worsen the metric. Gallery images from position 3 onward should retain loading=\"lazy\".",
       "why_this_matters": "On an ecommerce PDP, the hero product image is the LCP element on most mobile viewports. A controlled Vodafone A/B test showed a 31% LCP improvement produced 8% more online sales. Google/Deloitte data across 37 brands found every 0.1-second improvement in mobile load time yields 8.4% higher retail conversion rate. Adding two HTML attributes costs nothing in engineering time and can materially improve both conversion and organic search ranking.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "performance-ux",
@@ -161,7 +167,13 @@
       "observation": "Once a mobile visitor scrolls past the Add to Cart button at y:862 to read the product description, review the fitment guide, or watch the YouTube video below, the primary purchase action disappears from view. There is no sticky bottom bar maintaining the Add to Cart action in the thumb zone. At 390px viewport width, the page height is 3,297px — a visitor who reads the full description and scrolls to the reviews tab travels more than 4 viewport-heights past the CTA before any conversion opportunity reappears.",
       "recommendation": "Implement a sticky bottom bar that appears once the user scrolls past the inline Add to Cart button. The bar should show the product price ($59.95) and an Add to Cart button sized to at least 48px height to meet touch-target guidelines. The bar should dismiss when the user scrolls back up to the inline CTA to avoid redundancy. Ensure the sticky bar adds bottom padding to the page body so it does not obscure the last viewport of content.",
       "why_this_matters": "Mobile shoppers who scroll deep into product content to validate a purchase decision must also reverse that scroll to complete the action. Requiring scroll-back friction at the highest-intent moment of the session directly suppresses conversion — particularly for engaged visitors who have read the full description and fitment guide, which signals purchase intent.",
-      "evidence_tier": "Bronze"
+      "evidence_tier": "Bronze",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "performance-ux",

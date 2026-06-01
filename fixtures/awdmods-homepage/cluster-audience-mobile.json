@@ -73,7 +73,7 @@
         "change_type": "copy",
         "change_scope": "single-file"
       },
-      "confidence": 0.80,
+      "confidence": 0.8,
       "evidence_anchors": [
         {
           "type": "visual",
@@ -181,7 +181,13 @@
       "observation": "The page has no hreflang tags, a US-canonical URL (awdmods.com), USD pricing, and US-standard payment methods (Amex, Apple Pay, Discover, Google Pay, Mastercard, Visa, Shop Pay). No RTL content, no non-USD currency markers, no non-English copy. The page is correctly scoped as a domestic US storefront with no international presentation defects.",
       "recommendation": "No cross-cultural changes required for the current domestic US presentation. If AWDMods expands to serve Canadian or international buyers in the future, the first localization step should be local currency display and locally relevant payment methods — these deliver the highest measurable conversion lift per the localization ROI hierarchy.",
       "why_this_matters": "Forcing cross-cultural localization requirements on a domestic US page would add unnecessary cost and complexity. The current setup is appropriate for the stated market.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     }
   ],
   "notes": [

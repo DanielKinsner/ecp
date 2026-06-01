@@ -58,7 +58,13 @@
       "observation": "The product detail page for the EvolutionR Handlebar End Caps ($59.95) offers no express checkout buttons — no Apple Pay, Google Pay, Shop Pay, or Amazon Pay — anywhere in the purchase flow above the footer. The only accelerated payment signal is a PayPal Pay Later informational widget (scroll_y 442) that links to a BNPL calculator rather than enabling one-tap purchase. Payment logos for Google Pay, Apple Pay, and Amazon Pay are visible in the footer payment strip (scroll_y ~1500), but these are static images, not interactive checkout buttons.",
       "recommendation": "If this product runs on a platform that supports Apple Pay and Google Pay (as signaled by the footer payment logos), add express checkout buttons directly below the Add to Cart button in the product hero area, above the PayPal Pay Later widget. Use a labeled 'Express Checkout' section header to visually separate them from the standard cart flow. Stripe's controlled A/B testing shows express buttons placed at the start of the purchase path convert at approximately 2x the rate of the same buttons positioned at or near the checkout page — placement on the PDP is the highest-leverage deployment.",
       "why_this_matters": "Shoppers who have Apple Pay or Google Pay configured on their device can complete purchase in a single biometric tap from the PDP — bypassing the entire cart and checkout form. Without these buttons on the product page, those shoppers must navigate through cart, then checkout, adding 3-5 friction steps that cost conversion at each stage. Stripe's data shows a +22.3% conversion lift specifically attributable to Apple Pay when surfaced early in the purchase flow.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "checkout-flows",

@@ -64,7 +64,13 @@
       "observation": "The Slingmods store operates a Reward Points program, confirmed by the 'Reward Points' link in the footer and the login prompt noting 'Earn 60 Points when purchasing this item' visible in the product area (e.g., the login/signup bar references this). However, the page does not display how many points a $59.95 purchase earns in a format that reinforces the purchase decision — there is no points-earning indicator adjacent to the price, no enrollment CTA for non-members, and no progress bar or goal-state framing. The only path to the loyalty program from this page is a plain footer link.",
       "recommendation": "If a Reward Points program is active, add a points-earning indicator directly below the $59.95 price display — for example, 'Earn 60 points with this purchase ($0.60 toward your next reward)' styled to complement the PayPal Pay Later widget already at that position. For non-logged-in visitors, frame enrollment as a benefit of completing the purchase: 'Sign up free and earn points on this order.' This placement captures the moment of maximum commitment immediately before the Add to Cart action.",
       "why_this_matters": "Nunes and Dreze (2006) demonstrated that showing customers they are already making progress toward a reward increases completion rates by 79%. A buyer on the fence between this item and an alternative perceives more total value from a brand that visibly rewards the purchase — suppressing this signal at the highest-intent moment on the page leaves a loyalty-building lever inactive exactly when it costs the most.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "post-purchase",
@@ -119,7 +125,13 @@
       "observation": "No referral program link, share mechanism, or 'Refer a Friend' CTA appears anywhere on the Slingmods PDP — not in the footer, not adjacent to the product hero, and not in the My Account or Extras navigation columns. Slingmods sells to a niche enthusiast audience (Polaris Slingshot, Can-Am Spyder owners) where word-of-mouth carries above-average weight. The 72-hour window immediately following a purchase is when referral participation peaks — customers are actively checking confirmations and telling others about their purchase.",
       "recommendation": "If a referral program does not yet exist, evaluate launching one with double-sided framing ('Give a fellow rider $15 off — you get $15 when they buy'). If a referral program exists but is not surfaced here, add a footer link and embed a lightweight referral prompt in the order confirmation email sequence. For the PDP itself, a subtle 'Tell a fellow rider' social share link near the product title or below the Add to Cart button captures pre-purchase sharing intent from visitors who have already decided to buy.",
       "why_this_matters": "Slingmods' customer base is a self-identifying enthusiast community — the same demographic that shares product recommendations in Facebook groups and forums. Talkable platform data shows referral participation jumps 35% when a referral block is added to shipping confirmation emails. Without any referral mechanism, every satisfied customer who would organically share is doing so without a trackable incentive, leaving referral-acquired customer LTV (25% higher profit margin over 3 years per Villanueva et al. 2008) uncaptured.",
-      "evidence_tier": "Bronze"
+      "evidence_tier": "Bronze",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "post-purchase",
@@ -219,7 +231,9 @@
       "evidence-tiers.md"
     ],
     "sections_routed_to_cluster": 1,
-    "baton_elements_referenced": ["e18"],
+    "baton_elements_referenced": [
+      "e18"
+    ],
     "findings_by_verdict": {
       "FAIL": 2,
       "PARTIAL": 1,

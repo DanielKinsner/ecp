@@ -105,7 +105,13 @@
       "observation": "Apple Pay, Google Pay, and Shop Pay buttons are entirely absent from the homepage buy path. The footer lists these payment methods as small brand icons at scroll position y=2841, but they are static logo images with no checkout action. There are no express checkout buttons in the cart icon area, no cart-drawer with an express option, and no quick-add-to-cart flow on the featured product cards. Visitors who want to use a digital wallet have no accelerated path from the homepage.",
       "recommendation": "If this store runs on Shopify (which the page structure confirms — Shopify CDN URLs, Shopify checkout redirect), enable Shop Pay, Apple Pay, and Google Pay through Shopify Payments and display the express checkout buttons in the cart drawer. When a visitor clicks the cart icon, the cart drawer should show Shop Pay, Apple Pay, and Google Pay buttons above the 'Checkout' button. For stores with a checkout page at /checkout, position wallet buttons at the top of the checkout flow above the email/login field, per Stripe's controlled A/B data showing ~2x conversion at top-of-flow versus end-of-flow placement.",
       "why_this_matters": "Apple Pay alone delivers +22.3% conversion lift (Stripe controlled A/B). Shop Pay converts approximately 9% higher across all checkouts. For a specialty performance parts store with AOV in the $135–$1,766 range, the incremental revenue from a 9–22% conversion lift on wallet-enabled visitors is material. Every visitor on macOS Safari or iOS who has Apple Pay configured is being offered a slower path than their device supports.",
-      "evidence_tier": "Silver"
+      "evidence_tier": "Silver",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "desktop"
+      }
     },
     {
       "cluster": "checkout-flows",
@@ -259,6 +265,10 @@
     ],
     "sections_routed_to_cluster": 1,
     "sections_with_dom_content": 1,
-    "baton_elements_referenced": ["e2", "e19", "e37"]
+    "baton_elements_referenced": [
+      "e2",
+      "e19",
+      "e37"
+    ]
   }
 }

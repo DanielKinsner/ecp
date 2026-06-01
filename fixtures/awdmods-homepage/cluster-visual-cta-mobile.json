@@ -54,7 +54,13 @@
       "observation": "The entire above-fold viewport on mobile (390×844px) contains no headline and no value proposition. A visitor arriving cold sees a dark car photograph, four unlabeled dropdown selectors, and a blue 'FIND PARTS' button — but nothing that answers 'What does this store sell?' or 'Why should I choose AWDMods over a competitor?' The page title 'AWDMods - AWDMods' appears only in the browser tab, not on the page itself. Baymard and NNGroup research identifies a visible above-fold headline as a required element for landing pages receiving cold or paid traffic; its absence fails the 5-second clarity test at the most basic level.",
       "recommendation": "Add a single concise headline directly above or beside the vehicle-selector widget — for example, 'Performance parts for Focus RS, Focus ST, WRX, and STI' — that identifies the store's product scope. If the brand positioning warrants differentiation, append a short differentiator: 'Expert-curated. Ships fast.' This can be a one-line `<h1>` or `<p>` element that sits above the selector dropdowns within the existing hero layout, costing zero additional viewport height at mobile sizes if line-height is constrained to 1 line.",
       "why_this_matters": "Without a visible headline, every cold-traffic visitor must decode the page's purpose from visual cues alone. At mobile scroll speeds, many will bounce before the vehicle selector registers as a tool rather than a form to ignore. A single descriptive headline has been shown to meaningfully improve visitor-to-engagement rates precisely because it resolves the 'Is this the right place?' question in under 2 seconds.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "visual-cta",
@@ -99,7 +105,13 @@
       "observation": "Of the five minimum above-fold elements documented by Baymard and NNGroup research — headline, subheadline, primary CTA, supporting image, and trust signal — the AWDMods homepage above-fold is missing both the headline (Finding 1 in this emission) and any trust signal. The free-shipping bar at the top communicates a shipping policy but is not a credibility signal; it does not answer 'Can I trust this merchant?' for a first-time visitor who has never purchased from AWDMods. No star rating, no review count, no customer count, and no third-party endorsement is visible without scrolling.",
       "recommendation": "Add a compact trust signal directly within the hero section, beneath the vehicle selector and above the FIND PARTS button — for example, a one-line element showing '★★★★★ 4.8 · 3,200+ orders shipped' or 'Trusted by WRX and Focus RS owners since [year]'. If aggregate review data is available from the Shopify store, a star rating aggregate with order count is the highest-credibility option and takes approximately 30px of vertical space on mobile.",
       "why_this_matters": "For automotive parts — a considered purchase where fitment errors are costly and returns inconvenient — trust signals at the initial impression point are more important than in impulse categories. A first-time visitor encountering a dark, unfamiliar site with no credibility markers and a vehicle-configuration form as the primary UX has no signal that the merchant is reliable. Trust signals in the hero have been correlated with reduced immediate bounce on cold-traffic landing pages.",
-      "evidence_tier": "Gold"
+      "evidence_tier": "Gold",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "after-section",
+        "section_index": 0,
+        "viewport": "mobile"
+      }
     },
     {
       "cluster": "visual-cta",
@@ -119,7 +131,7 @@
         "change_type": "component",
         "change_scope": "component"
       },
-      "confidence": 0.90,
+      "confidence": 0.9,
       "evidence_anchors": [
         {
           "type": "visual",
@@ -306,7 +318,7 @@
         "change_type": "copy",
         "change_scope": "single-file"
       },
-      "confidence": 0.80,
+      "confidence": 0.8,
       "evidence_anchors": [
         {
           "type": "visual",
