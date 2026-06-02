@@ -4,7 +4,7 @@ Canonical reference for spawning teammates and subagents across all ECP skill co
 
 **Why this file exists:** Prior to Round 12, the dispatch template + model selection rules lived inside `skills/audit/SKILL.md` and `/ecp:build`, `/ecp:compare`, and `/ecp:quick-scan` all deferred to "See `/ecp:audit` `<auditor_dispatch_template>`" for their own spawning logic. That meant those 3 sibling skills had to load the full audit skill (~1500 lines) just to read 100 lines of dispatch rules, AND any change to the rules had to propagate by hand. Round 5 added `--deep` to audit + build but missed compare + quick-scan until Round 9 caught the drift via the addendum review. This file resolves the coupling — dispatch is a first-class canonical reference, no skill owns it.
 
-**Read this file when:** you are the coordinator (lead) of any `/ecp:*` skill that spawns teammates or subagents. That's audit, build, compare, and quick-scan. The audit lead reads this when spawning acquirer (subagent in v2), cluster specialists (teammate), ethics (subagent), synthesizer (subagent), planner/reviewer/builder (subagents in v2). Compare and quick-scan use the same shape per their skill-specific notes below.
+**Read this file when:** you are the coordinator (lead) of any `/ecp:*` skill that spawns teammates or subagents. That's audit, build, compare, and quick-scan. The audit lead reads this when spawning acquirer (subagent in v2), cluster specialists (subagent), ethics (subagent), synthesizer (subagent), planner/reviewer/builder (subagents in v2). Compare and quick-scan use the same shape per their skill-specific notes below.
 
 **Do NOT read this file if you are a teammate or subagent.** They don't spawn sub-roles — they execute a single task. Workflow / specialist-prompt files contain their own instructions, not this dispatch contract.
 
@@ -68,7 +68,7 @@ Pass `--deep` (and therefore use opus for cluster auditors + builder) when:
 - **The output will go directly to a client** and quality signal matters more than cost.
 - **You're iterating on the spec** and want the strongest baseline for A/B comparison between runs.
 
-Otherwise, omit `--deep` and let the default sonnet multipliers apply. A dual-device 5-cluster audit spawns 10 auditor teammates — sonnet cuts that cost by ~60% compared to opus, without meaningful quality regression on typical pages.
+Otherwise, omit `--deep` and let the default sonnet multipliers apply. A dual-device 5-cluster audit spawns 10 cluster-specialist subagents — sonnet cuts that cost by ~60% compared to opus, without meaningful quality regression on typical pages.
 
 See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md` "Cost trace heuristic" for the exact per-role token multipliers that quantify the savings.
 
@@ -124,11 +124,11 @@ Multi-planner is the one role where SendMessage peer negotiation is the WHOLE PO
 
 ---
 
-## Auditor prompt template (for cluster specialists — teammate dispatch in v1 + v2)
+## Auditor prompt template (v1 cluster-auditor teammate dispatch — retained for v1 compatibility only; v2 specialists use `contracts/specialist-prompt-v2.md`)
 
 > **v2 note:** v2 cluster specialists use `contracts/specialist-prompt-v2.md` as the canonical prompt template — that template emits JSON-only against `schema/cluster-emission-v1.json` and explicitly documents "## No coordination" (no SendMessage, no huddles, no SYNTHESIS_HINT propagation; see lines 178-182 of that file). The template below is the v1 markdown-emission template, retained for v1 audit compatibility. **Do NOT propagate this template's huddle/handoff broadcast machinery into the v2 specialist template** — the §3.8 / §17.7.6 / §19.2 coordination ceremony is closed in v2.
 
-When the lead spawns a cluster auditor teammate, the Agent tool call uses these exact parameters:
+In v1, when the lead spawned a cluster auditor teammate, the Agent tool call used these exact parameters (v2 dispatches a one-shot subagent with no `team_name`/`name` — see the v2 table above):
 
 ```
 Agent tool call:
@@ -300,7 +300,7 @@ See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md` for the full cou
 
 ## Subagent dispatch contract (v2 default)
 
-For roles dispatched as one-shot subagents (acquirer, ethics, synthesizer, planner-single, reviewer, builder), the lead uses the `Task` tool — NOT the `Agent` tool. This is the structural difference between subagent and teammate dispatch.
+For roles dispatched as one-shot subagents (acquirer, ethics, synthesizer, planner-single, reviewer, builder — and cluster specialists, per the v2 table above), the lead uses a one-shot spawn with **no `team_name`**. (`Task` and `Agent` are the same unified spawn tool — the legacy alias and its current name dispatch identically; the structural difference between subagent and teammate dispatch is the absence of `team_name`, not which tool name you type.)
 
 ### Tool-call shape
 
@@ -317,7 +317,7 @@ There is no `team_name` parameter (so the subagent does not join the team), no `
 
 ### Why subagents instead of teammates for these roles
 
-1. **They don't peer-coordinate.** The roles flipped to subagent in v2 (acquirer, ethics, synthesizer, planner, reviewer, builder) never SendMessage another role at the same layer. v1 created teammates uniformly; v2 reserves teammate shape for the roles that genuinely need shared workspace (cluster specialists) or peer messaging (multi-planner peers).
+1. **They don't peer-coordinate.** The roles flipped to subagent in v2 (acquirer, ethics, synthesizer, planner, reviewer, builder) never SendMessage another role at the same layer. v1 created teammates uniformly; v2 reserves teammate shape for the one role that genuinely needs real-time peer messaging (multi-planner peers). Cluster specialists share a workspace too, but through the engagement directory by deterministic filename — not teammate shape — so they dispatch as one-shot subagents like the rest.
 2. **Idle notifications collapse.** A teammate that's idle pings the lead's mailbox until it gets a task or is dismissed. A subagent runs once, returns, and exits — no idle stream.
 3. **Lead context shrinks.** Each idle notification is a context entry the lead reads through. ~70 idle pings (v1) → ~5-10 (v2).
 4. **No team-state cleanup.** A subagent that fails leaves no zombie task on the team task list; the lead just dispatches a fresh subagent.

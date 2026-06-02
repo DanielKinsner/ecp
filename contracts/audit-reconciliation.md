@@ -1,18 +1,18 @@
 # Audit reconciliation
 
-Canonical reference for the lead's reconciliation phase — format validation (Step 0), voice check (Step 0b, added in Round 14), deduplication, ethics preservation, and consolidated audit.md assembly. Runs after cluster auditors complete their tasks and before Priority Path synthesis.
+Canonical reference for the lead's reconciliation phase — format validation (Step 0), voice check (Step 0b, added in Round 14), deduplication, ethics preservation, and consolidated audit.md assembly. Runs after cluster specialists emit their cluster files and before Priority Path synthesis.
 
-**Why this file exists:** The reconciliation phase is the quality gate between cluster auditor output and the final audit.md. It contains three distinct enforcement layers (format, voice, dedup+ethics) that all live in the reconciliation step but serve different quality concerns. Prior to Round 12, these 120+ lines sat inline in `skills/audit/SKILL.md` where they interrupted the phase flow. Round 14 added the voice check (Step 0b) on top of the existing format check (Step 0), making the section even heavier. Extracting the whole reconciliation block as an **atomic unit** into this canonical file keeps all three enforcement layers together (they share the same SendMessage correction loop, same two-attempt escape, same audit-trace.log logging) while giving the audit lead a cleaner orchestration narrative.
+**Why this file exists:** The reconciliation phase is the quality gate between cluster auditor output and the final audit.md. It contains three distinct enforcement layers (format, voice, dedup+ethics) that all live in the reconciliation step but serve different quality concerns. Prior to Round 12, these 120+ lines sat inline in `skills/audit/SKILL.md` where they interrupted the phase flow. Round 14 added the voice check (Step 0b) on top of the existing format check (Step 0), making the section even heavier. Extracting the whole reconciliation block as an **atomic unit** into this canonical file keeps all three enforcement layers together (they share the same fresh-re-dispatch correction loop, same second-failure escape, same audit-trace.log logging) while giving the audit lead a cleaner orchestration narrative.
 
 **Atomic extraction rule:** Step 0 + Step 0b + the reconciliation process MUST stay in one file. Do not split the format check from the voice check — they share the correction loop. Do not split the validation passes from the dedup logic — the dedup logic assumes validation passed. This file is the canonical home for the entire reconciliation phase.
 
-**Read this file when:** you are the audit lead (or compare lead — same logic applies to both pages) and all cluster auditor teammates have marked their tasks complete. You're about to validate and reconcile their findings into the consolidated `audit.md`.
+**Read this file when:** you are the audit lead (or compare lead — same logic applies to both pages) and all cluster specialist subagents have written their cluster files. You're about to validate and reconcile their findings into the consolidated `audit.md`.
 
 ---
 
 ## Overview
 
-After all cluster auditor teammates have marked their tasks complete, the lead validates and reconciles their findings into the consolidated `audit.md`. The validation happens in two sequential passes (format, then voice), each with a two-attempt correction loop via SendMessage. Only after both passes clear does dedup + ethics preservation + assembly run.
+After all cluster specialist subagents have written their cluster files, the lead validates and reconciles their findings into the consolidated `audit.md`. The validation happens in two sequential passes (format, then voice), each with a single fresh-re-dispatch correction step (on a second failure the lead fixes in place). Only after both passes clear does dedup + ethics preservation + assembly run.
 
 Sequence of operations:
 
@@ -97,9 +97,9 @@ The remaining fields (`TITLE:`, `SECTION:`, `ELEMENT:`, etc.) are required by th
          model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
    ```
    One re-dispatch per validation failure. The subagent receives cluster content + the specific TITLE violations (missing lines, duplicates, length/slug-match failures) and rewrites only TITLE fields, keeping SECTION, ELEMENT, OBSERVATION, RECOMMENDATION, PRIORITY, REFERENCE, and citations verbatim. On success, re-validate. On second failure, the lead corrects TITLEs in place AND logs the failure in `audit-trace.log` for follow-up.
-5. Wait for the corrected file (the teammate will message you when done) and re-validate. **Two corrections max** — if the teammate still produces wrong format on the second attempt, the lead reformats in place AND logs the failure in `audit-trace.log` for follow-up. Do NOT silently reformat without going through this two-attempt loop first.
+5. When the re-dispatched subagent's corrected file lands on disk, re-validate. **One re-dispatch max** — if the fresh subagent still produces wrong format, the lead reformats in place AND logs the failure in `audit-trace.log` for follow-up. Do NOT silently reformat without going through this re-dispatch step first.
 
-**Why the format check matters:** A live test on awdmods.com (April 7, 2026) showed 5 of 10 cluster auditors writing in the wrong format. Previous behavior was for the reconciler to silently reformat them during audit.md assembly, which "worked" but hid the problem and added unaccounted reconciler work. The new lead-as-validator pattern fails fast at the right layer, gives the auditor a chance to fix its own output, and only falls back to silent rewriting if the teammate genuinely can't produce the right format. This is exactly the kind of mid-flight coordination that subagents couldn't do but teammates can.
+**Why the format check matters:** A live test on awdmods.com (April 7, 2026) showed 5 of 10 cluster auditors writing in the wrong format. Previous behavior was for the reconciler to silently reformat them during audit.md assembly, which "worked" but hid the problem and added unaccounted reconciler work. The new lead-as-validator pattern fails fast at the right layer, gives the cluster a chance to fix its own output via a fresh re-dispatch, and only falls back to silent rewriting if the re-dispatched subagent still can't produce the right format. In v2 this is a fail-fast re-dispatch — the original one-shot subagent has already exited — not the mid-flight SendMessage correction v1 teammates used.
 
 ---
 
@@ -111,7 +111,7 @@ After the format check accepts a cluster file, the lead runs a voice check again
 
 1. **Unexplained acronyms/abbreviations** (reject if present without plain-English expansion in the same sentence): `LCP`, `FID`, `CLS`, `TBT`, `TTFB`, `CWV`, `WCAG` (without "accessibility" context), `ARIA` (without "screen reader" context), `SERP`, `OCMOD`, `LTV`, `DPR`, `SSR`, `CSR`, `CMS`, `DOM`, `CSS` (acceptable in CODE findings only), `srcset`, `rel=preload`, `rel=canonical`, `h1/h2/h3`, `sr-only`, `aria-hidden`, `role=`, `viewport meta`. If the acronym appears only in the structured fields (ELEMENT, REFERENCE), that's OK — the check is on narrative prose only.
 2. **Framework/library jargon without context:** `React`, `Shopify Liquid`, `Next.js` (OK in platform-specific notes, not in client narrative), `schema.org`, `hydration`, `SPA`, `hook`, `component`, `event listener`.
-3. **Compliance/violation framing instead of outcome framing:** look for the words `violation`, `compliance`, `conformance`, `mandates`, `required by spec` — these read as audit-speak. The only legitimate places for these words are ETHICS findings (ethics-gate references) and legal compliance findings (EU DSA, FTC, WCAG AA requirements on accessibility pages). Elsewhere, reject and ask the teammate to rewrite using the voice guide's "what we found / what to do" pattern.
+3. **Compliance/violation framing instead of outcome framing:** look for the words `violation`, `compliance`, `conformance`, `mandates`, `required by spec` — these read as audit-speak. The only legitimate places for these words are ETHICS findings (ethics-gate references) and legal compliance findings (EU DSA, FTC, WCAG AA requirements on accessibility pages). Elsewhere, reject and re-dispatch a fresh subagent to rewrite using the voice guide's "what we found / what to do" pattern.
 4. **Abstract nouns without referents:** `optimize`, `enhance`, `leverage`, `synergy`, `best practice`, `industry standard`, `thought leadership` — empty corporate filler that doesn't tell the visitor what actually changes on the page.
 5. **Citation-only "Why this matters":** if the `**Why this matters:**` line is ONLY a research citation (e.g., "Per Baymard (2024), CTA contrast affects conversion by 8-12%.") without the "for a store doing X orders/month, that's Y" or equivalent business translation, reject.
 6. **Internal pipeline terminology:** References to ECP pipeline artifacts that expose the multi-agent architecture to the client. Reject if the OBSERVATION or RECOMMENDATION contains: `baton`, `dispatch`, `dispatch brief`, `coordinator`, `teammate`, `cluster file`, `cluster context`, `engagement directory`, `acquirer`, `trace log`, `reconciliation`, `auditor-`, `team-lead`, `SendMessage`, `TaskUpdate`. The client should not know the audit was produced by a multi-agent pipeline — write as if you examined the page directly.
@@ -125,7 +125,7 @@ Agent(subagent_type="general-purpose", description="voice-rewrite: cluster-{clus
 ```
 One re-dispatch per validation failure. The subagent receives cluster content + the specific jargon/framing violations and rewrites only OBSERVATION, RECOMMENDATION, and **Why this matters** fields, keeping SECTION, ELEMENT, PRIORITY, SOURCE, and REFERENCE verbatim. On success, re-validate using the same blocklist gate. On second failure, the lead rewrites in place using the voice guide's translation patterns AND logs the voice failure in `audit-trace.log` for follow-up. Do NOT silently pass jargon-laden findings through to the client.
 
-Same two-attempt loop as the format check. On third failure, the lead rewrites in place using the voice guide's translation patterns AND logs the voice failure in `audit-trace.log` for follow-up. Do NOT silently pass jargon-laden findings through to the client.
+Same single re-dispatch as the format check. On second failure, the lead rewrites in place using the voice guide's translation patterns AND logs the voice failure in `audit-trace.log` for follow-up. Do NOT silently pass jargon-laden findings through to the client.
 
 **Exemptions from the voice check:**
 - Ethics findings citing regulations (EU DSA, FTC Fake Reviews Rule, CA SB-478, GDPR) MAY use compliance-framing because that's the legal nature of the finding.
@@ -158,7 +158,7 @@ Agent(subagent_type="general-purpose", description="evidence-anchor-rewrite: clu
 ```
 One re-dispatch per validation failure. The subagent receives cluster content + the specific evidence-anchor failures (missing ELEMENT, abstract framing, missing citations, vague recommendations) and rewrites to ground findings in concrete page evidence: DOM selectors, screenshot coordinates, or quoted copy from the cluster-context JSON. On success, re-validate. On second failure, the lead **drops the finding silently** (no special marker, no placeholder) — a cluster that lands with zero surviving findings after Step 0c is rendered in the audit as an empty cluster. Generic advice never reaches the client.
 
-Same two-attempt loop as format and voice checks. On third failure, the lead **drops the finding silently** (no special marker, no placeholder) — a cluster that lands with zero surviving findings after Step 0c is rendered in the audit as an empty cluster. Generic advice never reaches the client.
+Same single re-dispatch as format and voice checks. On second failure, the lead **drops the finding silently** (no special marker, no placeholder) — a cluster that lands with zero surviving findings after Step 0c is rendered in the audit as an empty cluster. Generic advice never reaches the client.
 
 **Exemptions from the evidence-anchor gate:**
 - Ethics findings (ETHICS_STATE: BLOCK or ADJACENT) are exempt — their evidence anchor is the cited regulation, not the page. Ethics findings already carry SOURCE_URL linking to the primary source.
@@ -280,7 +280,7 @@ Only run AFTER format validation AND voice check pass for all cluster files.
    - For contested CRITICAL findings that cite specific regulations (ethics-gate references): verify the regulation actually applies to the specific scenario. If the citation is incorrect (e.g., citing FTC Operation AI Comply for decorative imagery, or CA SB-478 for shipping costs), downgrade to the severity supported by the correct legal analysis.
    - Log contested findings and the lead's resolution in `audit-trace.log`.
 
-6. **Ethics gate preservation rule:** If ANY teammate flagged a finding as `PRIORITY: CRITICAL` with a reference to `ethics-gate.md`, the lead MUST verify that the cited regulation **actually applies to the specific scenario on this page** before preserving CRITICAL. A correct regulation name with an incorrect application is still a false positive. Verification means:
+6. **Ethics gate preservation rule:** If any cluster specialist flagged a finding as `PRIORITY: CRITICAL` with a reference to `ethics-gate.md`, the lead MUST verify that the cited regulation **actually applies to the specific scenario on this page** before preserving CRITICAL. A correct regulation name with an incorrect application is still a false positive. Verification means:
    - Check the regulation's source URL (see ethics-gate.md Source Registry) to confirm the specific section cited covers this conduct
    - Check whether the auditor passed the three-question Applicability Self-Check (ethics-gate.md)
    - If the finding has `APPLICABILITY_UNCERTAIN: true`, the lead MUST independently verify before preserving CRITICAL
