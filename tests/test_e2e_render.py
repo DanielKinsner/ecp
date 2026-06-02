@@ -88,6 +88,7 @@ class PipelineSmokeTests(unittest.TestCase):
             [sys.executable, *args],
             capture_output=True,
             text=True,
+            encoding="utf-8",
             cwd=str(_REPO),
         )
         if result.returncode != 0:
@@ -189,7 +190,7 @@ class DevicePairingTests(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, "scripts/assemble-audit.py",
              "--engagement", str(self.engagement), "--device", "laptop"],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0, f"assembly failed: {result.stderr}")
 
@@ -208,7 +209,7 @@ class DevicePairingTests(unittest.TestCase):
              "--audit", "audit.md",
              "--baton", "baton.json",
              "--plugin-root", str(_REPO)],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertNotEqual(result.returncode, 0,
             "Renderer must fail on device mismatch, not silently produce a wrong report")
@@ -249,7 +250,7 @@ class MissingClusterFileTests(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, "scripts/assemble-audit.py",
              "--engagement", str(self.engagement), "--device", "laptop"],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertNotEqual(result.returncode, 0,
             "Missing cluster file must not produce exit 0 (partial audit)")
@@ -311,7 +312,7 @@ class ZeroFindingsTests(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, "scripts/assemble-audit.py",
              "--engagement", str(self.engagement), "--device", "laptop"],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0,
             f"Zero-findings assembly must succeed. "
@@ -332,7 +333,7 @@ class ZeroFindingsTests(unittest.TestCase):
         subprocess.run(
             [sys.executable, "scripts/assemble-audit.py",
              "--engagement", str(self.engagement), "--device", "laptop"],
-            capture_output=True, text=True, cwd=str(_REPO), check=True,
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO), check=True,
         )
         # Render
         result = subprocess.run(
@@ -342,7 +343,7 @@ class ZeroFindingsTests(unittest.TestCase):
              "--audit", "audit.md",
              "--baton", "baton.json",
              "--plugin-root", str(_REPO)],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0,
             f"Zero-findings render must succeed. stderr: {result.stderr}")
@@ -386,7 +387,7 @@ class PathContainmentTests(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, "scripts/assemble-audit.py",
              "--engagement", str(self.engagement), "--device", "laptop"],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0, f"assembly failed: {result.stderr}")
 
@@ -411,7 +412,7 @@ class PathContainmentTests(unittest.TestCase):
              "--audit", "audit.md",
              "--baton", "baton.json",
              "--plugin-root", str(_REPO)],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertNotEqual(result.returncode, 0,
             "Renderer must fail when baton specifies a traversal screenshot path")
@@ -428,7 +429,7 @@ class PathContainmentTests(unittest.TestCase):
              "--engagement", str(self.engagement),
              "--device", "laptop",
              "--priority-path", "../../../tmp/fake-synth.txt"],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertNotEqual(result.returncode, 0,
             "Assembly must fail when --priority-path escapes engagement dir")
@@ -462,7 +463,7 @@ class NoScreenshotsGracefulTests(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, "scripts/assemble-audit.py",
              "--engagement", str(self.engagement), "--device", "laptop"],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0,
             f"assembly failed: {result.stderr}")
@@ -481,7 +482,7 @@ class NoScreenshotsGracefulTests(unittest.TestCase):
              "--audit", "audit.md",
              "--baton", "baton.json",
              "--plugin-root", str(_REPO)],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0,
             f"Render must succeed without screenshots. stderr: {result.stderr}")
@@ -502,7 +503,7 @@ class NoScreenshotsGracefulTests(unittest.TestCase):
              "--audit", "audit.md",
              "--baton", "baton.json",
              "--plugin-root", str(_REPO)],
-            capture_output=True, text=True, cwd=str(_REPO), check=True,
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO), check=True,
         )
         html = (self.engagement / "visual-report.html").read_text(encoding="utf-8")
         # No-screenshot mode: the hint references the right panel, not
@@ -601,7 +602,7 @@ class PriorityPathSidecarTests(unittest.TestCase):
              "--engagement", str(self.engagement),
              "--device", "laptop",
              "--priority-path", str(synth_path)],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0,
             f"Assembly with --priority-path must succeed on valid synth "
@@ -671,7 +672,7 @@ class PriorityPathSidecarTests(unittest.TestCase):
              "--audit", "audit.md",
              "--baton", "baton.json",
              "--plugin-root", str(_REPO)],
-            capture_output=True, text=True, cwd=str(_REPO),
+            capture_output=True, text=True, encoding="utf-8", cwd=str(_REPO),
         )
         self.assertEqual(result.returncode, 0,
             f"Renderer must succeed when sidecar is present. stderr: {result.stderr}")
