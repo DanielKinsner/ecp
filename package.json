@@ -9,7 +9,7 @@
   },
   "scripts": {
     "check:editor": "node --check tools/editor/editor.js",
-    "check:python": "python -m py_compile scripts/report/templates/js.py scripts/report/templates/html_structure.py scripts/report/templates/components.py scripts/report/templates/css.py scripts/report/html_builder.py scripts/report/v2_html_builder.py",
+    "check:python": "node scripts/check-python.cjs",
     "serve:editor": "node scripts/serve-editor.cjs",
     "smoke:editor-server": "node tests/editor-server-render-smoke.mjs",
     "smoke:editor": "node tests/editor-smoke.mjs",

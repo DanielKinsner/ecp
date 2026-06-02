@@ -3,6 +3,7 @@ const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { resolvePython } = require("./lib/python-cmd.cjs");
 
 function argValue(name, fallback = null) {
   const idx = process.argv.indexOf(name);
@@ -94,9 +95,11 @@ function renderReview(state) {
   const reviewPath = path.join(engagementDir, reviewName);
   fs.writeFileSync(reviewPath, JSON.stringify(state, null, 2) + "\n", "utf8");
 
+  const py = resolvePython();
   const result = spawnSync(
-    "python",
+    py.command,
     [
+      ...py.baseArgs,
       "scripts/generate-report.py",
       "--engagement",
       engagementDir,

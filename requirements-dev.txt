@@ -1,0 +1,14 @@
+# ECP development / test dependencies.
+#
+# Runtime deps (jsonschema, sentence-transformers) live in requirements.txt.
+# This file declares only what the test suite needs on top of that.
+#
+# pytest is the canonical runner for the tests/ suite: the suite mixes
+# unittest.TestCase classes with bare pytest-style functions, and pytest
+# collects BOTH. `python -m unittest` only discovers TestCase subclasses, so it
+# silently skips the bare functions — run `python -m pytest tests/` instead.
+#
+# Install (inside the activated venv):
+#   pip install -r requirements.txt -r requirements-dev.txt
+
+pytest>=9.0,<10

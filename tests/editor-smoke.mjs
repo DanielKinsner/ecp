@@ -1,10 +1,15 @@
 import { execFile } from "node:child_process";
 import { mkdtemp, rm, cp, access } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { chromium } from "playwright";
+
+const require = createRequire(import.meta.url);
+const { resolvePython } = require("../scripts/lib/python-cmd.cjs");
+const py = resolvePython();
 
 const execFileAsync = promisify(execFile);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -46,8 +51,9 @@ async function main() {
   try {
     await cp(sourceEngagement, tmpEngagement, { recursive: true });
 
-    await run("python", ["scripts/generate-editor.py", "--engagement", tmpEngagement, "--plugin-root", repoRoot]);
-    await run("python", [
+    await run(py.command, [...py.baseArgs, "scripts/generate-editor.py", "--engagement", tmpEngagement, "--plugin-root", repoRoot]);
+    await run(py.command, [
+      ...py.baseArgs,
       "scripts/generate-report.py",
       "--engagement", tmpEngagement,
       "--device", device,

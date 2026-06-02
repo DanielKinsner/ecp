@@ -45,6 +45,11 @@ async function main() {
   let server;
   try {
     await cp(sourceEngagement, tmpEngagement, { recursive: true });
+    // The fixture ships a pre-rendered visual-report-<device>-final.html. Delete
+    // it from the working copy so the existence/content assertions below prove the
+    // server actually re-rendered it via Python — otherwise this smoke passes
+    // vacuously on the stale copied file even when the render path is broken.
+    await rm(path.join(tmpEngagement, `visual-report-${device}-final.html`), { force: true });
     server = spawn("node", [
       "scripts/serve-editor.cjs",
       "--engagement",
