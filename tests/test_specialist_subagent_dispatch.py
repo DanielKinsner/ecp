@@ -389,5 +389,20 @@ def test_team_lifecycle_annotated_and_parity_archived():
     assert "not" in parity.lower() and "gate" in parity.lower()
 
 
+# ---------------------------------------------------------------------------
+# Task 12 — canary_checks._SPECIALIST_COUNTERS accepts the one-shot counter
+# ---------------------------------------------------------------------------
+def test_canary_checks_accepts_both_specialist_counters():
+    """The reconciliation canary's specialist-counter alias tuple includes the
+    canonical subagent_spawned_specialists plus both legacy teammate aliases, so a
+    v2 one-shot audit and a legacy teammate audit both reconcile."""
+    from assembly.canary_checks import _SPECIALIST_COUNTERS
+    assert "subagent_spawned_specialists" in _SPECIALIST_COUNTERS, (
+        "canary must accept the canonical one-shot specialist counter"
+    )
+    assert "team_spawned_specialists" in _SPECIALIST_COUNTERS  # legacy v2 alias
+    assert "team_spawned_auditors" in _SPECIALIST_COUNTERS     # legacy v1 alias
+
+
 if __name__ == "__main__":
     unittest.main()

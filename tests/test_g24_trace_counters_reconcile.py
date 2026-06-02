@@ -114,7 +114,7 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
         self._touch_synth()
         self._write_trace({
             "subagent_spawned_acquirers": 2,
-            "team_spawned_specialists": 4,
+            "subagent_spawned_specialists": 4,
             "subagent_spawned_ethics": 1,
             "subagent_spawned_synthesizer": 1,
             "cluster_files_written": 4,
@@ -140,7 +140,7 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
         self._touch_synth()
         self._write_trace({
             "subagent_spawned_acquirers": 5,  # over-counted vs 1 observed
-            "team_spawned_specialists": 12,   # over-counted vs 1 observed
+            "subagent_spawned_specialists": 12,   # over-counted vs 1 observed
             "subagent_spawned_ethics": 1,
             "subagent_spawned_synthesizer": 1,
             "cluster_files_written": 12,
@@ -150,8 +150,9 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
 
     def test_v1_counter_alias_accepted_for_specialists(self):
         """contracts/dispatch-contract.md §"Backwards compatibility":
-        v1 audits use team_spawned_auditors; v2 uses team_spawned_specialists.
-        The canary accepts either as evidence the specialist role ran."""
+        v1 audits use team_spawned_auditors; v2 uses either team_spawned_specialists
+        (Agent-Teams dispatch) or subagent_spawned_specialists (one-shot subagent dispatch).
+        The canary accepts any of the three as evidence the specialist role ran."""
         self._write_meta(["pricing"], ["desktop"])
         self._touch_cluster_emission("pricing", "desktop")
         self._touch_baton("desktop")
@@ -168,6 +169,29 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
         self.assertTrue(
             result["passed"],
             f"v1 counter aliases must reconcile. summary={result['summary']!r}",
+        )
+
+    def test_v2_subagent_specialist_counter_accepted(self):
+        """Phase H.2 (2026-06-01): specialists migrate from Agent-Teams dispatch
+        (team_spawned_specialists) to one-shot subagent dispatch
+        (subagent_spawned_specialists). The canary accepts the new counter name
+        as evidence the specialist role ran."""
+        self._write_meta(["pricing"], ["desktop"])
+        self._touch_cluster_emission("pricing", "desktop")
+        self._touch_baton("desktop")
+        self._touch_ethics()
+        self._touch_synth()
+        self._write_trace({
+            "subagent_spawned_acquirers": 1,    # v2 acquirer
+            "subagent_spawned_specialists": 1,  # v2 specialist (subagent dispatch)
+            "subagent_spawned_ethics": 1,
+            "subagent_spawned_synthesizer": 1,
+            "cluster_files_written": 1,
+        })
+        result = check_trace_counters_reconcile_with_artifacts(self.eng)
+        self.assertTrue(
+            result["passed"],
+            f"v2 subagent specialist counter must reconcile. summary={result['summary']!r}",
         )
 
     # ------------------------------------------------------------------
@@ -201,7 +225,7 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
         self._write_trace(
             {
                 "subagent_spawned_acquirers": 0,
-                "team_spawned_specialists": 0,
+                "subagent_spawned_specialists": 0,
                 "subagent_spawned_ethics": 0,
                 "subagent_spawned_synthesizer": 0,
             },
@@ -239,7 +263,7 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
         self._touch_synth()
         self._write_trace({
             "subagent_spawned_acquirers": 1,
-            "team_spawned_specialists": 0,   # under-counted vs 1 observed
+            "subagent_spawned_specialists": 0,   # under-counted vs 1 observed
             "subagent_spawned_ethics": 1,
             "subagent_spawned_synthesizer": 1,
             "cluster_files_written": 1,

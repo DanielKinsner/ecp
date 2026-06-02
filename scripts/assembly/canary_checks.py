@@ -736,11 +736,11 @@ _TRACE_COUNTER_RE = re.compile(
 # Counter aliases per ``contracts/dispatch-contract.md`` §"Backwards
 # compatibility": v1 audits emit `team_spawned_acquirers` /
 # `team_spawned_auditors`; v2 audits emit `subagent_spawned_acquirers` /
-# `team_spawned_specialists`. The reconciliation canary accepts either
+# `subagent_spawned_specialists` (Phase H.2; `team_spawned_specialists` / `team_spawned_auditors` retained as aliases). The reconciliation canary accepts any
 # naming as evidence the role ran — checking the role's actual spawn
 # count against observed artifact count, not the specific counter name.
 _ACQUIRER_COUNTERS = ("subagent_spawned_acquirers", "team_spawned_acquirers")
-_SPECIALIST_COUNTERS = ("team_spawned_specialists", "team_spawned_auditors")
+_SPECIALIST_COUNTERS = ("subagent_spawned_specialists", "team_spawned_specialists", "team_spawned_auditors")
 _ETHICS_COUNTERS = ("subagent_spawned_ethics",)
 _SYNTHESIZER_COUNTERS = ("subagent_spawned_synthesizer",)
 _CLUSTER_FILES_COUNTERS = ("cluster_files_written",)
