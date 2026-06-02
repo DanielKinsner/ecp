@@ -150,6 +150,14 @@ subagent, keeping the lead's wave-of-≤5 + validate→autofix→re-dispatch log
 **spec-change-log** entry (touches the dispatch contract). Sources: `code.claude.com/docs`
 sub-agents, workflows, agent-sdk/subagents, changelog.
 
+**§5b implementation status — COMPLETE (2026-06-01, path #1 / GA parallel subagents).** The migration plan `docs/2026-06-01-cluster-specialists-off-agent-teams-plan.md` is fully implemented and committed to `main` (Tasks 1–13; suite green at 989 passed / 12 skipped). What landed:
+- **Transport flip:** cluster specialists dispatch as one-shot `Agent(subagent_type="general-purpose", description=…, model="sonnet"|"opus", prompt=…)` — no `team_name`, no `name`. No `TeamCreate` in the audit flow.
+- **Recovery change:** validation failure → autofix → fresh one-shot re-dispatch with the error embedded (`scripts/test-specialist.py --write-retry-prompt`) → second failure marks `partial`. No SendMessage-bounce to a still-alive teammate.
+- **Concurrency:** default flipped from waves-of-≤5 to **full-parallel** (all requested clusters in one message); `--max-concurrent N` (default = unlimited) is the documented rate-limit fallback. (This refines §5b path #1's "keep the wave-of-≤5" suggestion — full-parallel is the default; waves are the escape hatch.)
+- **Counters:** canonical `subagent_spawned_specialists`; `team_spawned_specialists` + `team_spawned_auditors` retained as aliases. Both runtime consumers accept it — `scripts/assembly/determinism_gate.py` (alias normalization) and `scripts/assembly/canary_checks.py` (`_SPECIALIST_COUNTERS`).
+- **Multi-planner stays on teams:** `contracts/team-lifecycle.md` annotated dead-for-audit but retained for a future multi-planner resume; `scripts/test-cluster-specialist-parity.py` marked ARCHIVED.
+- **Follow-ups (NOT done here):** a live `/ecp:audit` smoke run proving zero team creation + `subagent_spawned_specialists` non-zero + the fresh-re-dispatch path exercised (green tests prove the edits, not live dispatch); regenerating the `audit-trace.log` fixtures from a real audit; the broad cosmetic `Task`→`Agent` rename of the other one-shot roles.
+
 ## 6. Key reference docs
 
 - `docs/2026-06-01-migration-reinvestigation-measure-twice.md` — the decision record (what was confirmed/refuted; 20 refuted false leads not to re-chase).
