@@ -34,7 +34,7 @@ The lead MUST ensure teammates receive **absolute paths** in their dispatched pr
 | Role | Default model | With `--deep` | v2 Dispatch shape | Rationale |
 |------|--------------|---------------|-------------------|-----------|
 | Acquirer | `sonnet` | `sonnet` (unchanged) | **subagent** (Task tool, no team_name) | Mechanical task — navigate, screenshot, extract DOM, write baton. No synthesis needed. No peer coordination. Subagent eliminates an idle-notification stream the lead never reads. |
-| Cluster specialist (a.k.a. cluster auditor) | `sonnet` | `opus` | **subagent** (Agent tool, no team_name) | Mechanical coverage work — read reference files, apply principles to page, emit JSON-only emission. One-shot dispatch (no team_name); file-presence glob determines missing clusters at resume. v2 specialists do NOT peer-coordinate (no SendMessage, no huddles) — see `contracts/specialist-prompt-v2.md` "## No coordination" section. |
+| Cluster specialist (a.k.a. cluster auditor) | `opus` | `opus` (unchanged) | **subagent** (Agent tool, no team_name) | Coverage work — read reference files, apply principles to page, emit JSON-only emission. **Runs on `opus` by default (2026-06-02):** the audit runs on a Max-plan budget (5-hour chunks, not per-token billing), so the ~2.3× token cost that made sonnet attractive is not a binding constraint, and opus's stronger instruction-following reduces the schema/format/voice drift the four reconciliation guardrails were built to catch on sonnet. One-shot dispatch (no team_name); file-presence glob determines missing clusters at resume. v2 specialists do NOT peer-coordinate (no SendMessage, no huddles) — see `contracts/specialist-prompt-v2.md` "## No coordination" section. |
 | Ethics subagent | `sonnet` | `opus` | **subagent** (Task tool, no team_name) | Layer 1.5 in v2 — runs after specialists, before synthesizer. Single-pass page-scope emission. No peer coordination, no shared workspace need beyond writing one JSON file. See `contracts/ethics-subagent-v2.md`. |
 | Lead (coordinator) | `opus` | `opus` (unchanged) | n/a — IS the lead | Reconciliation, dedup, Priority Path synthesis, ethics gate processing. The synthesis brain stays on opus. |
 | Synthesizer | `opus` | `opus` (unchanged) | **subagent** (Task tool, no team_name) | Layer 3 prose writer. Runs once per engagement, single dispatch with the full canonical-f_refs manifest + cluster emissions trimmed. No peer coordination. See `contracts/synthesizer-v2.md`. |
@@ -43,32 +43,34 @@ The lead MUST ensure teammates receive **absolute paths** in their dispatched pr
 | Builder | `sonnet` | `opus` | **subagent** (Task tool, no team_name) | Code writing is mechanical for most changes. Use opus only on complex refactors or client-facing builds. Subagent shape; lead surfaces builder questions inline at checkpoint_build. |
 | Multi-planner peers | `opus` each | `opus` (unchanged) | **teammate** (Agent + team_name) | Cross-cluster negotiation benefits from reasoning depth AND from peer-to-peer SendMessage during planning per `contracts/multi-planner-protocol.md`. Multi-planner is the ONLY non-specialist role that retains teammate status — the SendMessage peer negotiation is the entire point. |
 
-**The `--deep` escape hatch:** If `--deep` is set in the skill invocation, pass `model: "opus"` instead of `model: "sonnet"` for both cluster auditors AND builder. Everything else stays on its default (acquirer stays sonnet, lead/planner/reviewer stay opus). The flag is a single decision point at the top of the skill — the lead reads `--deep` from the arguments and applies it uniformly. See `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md` for the full `--deep` flag documentation.
+**The `--deep` escape hatch:** Cluster specialists now run on `opus` unconditionally (see the table above), so `--deep` no longer changes their model. `--deep` still upgrades the **ethics subagent and builder** from `model: "sonnet"` to `model: "opus"`. Everything else stays on its default (acquirer stays sonnet; lead/planner/reviewer/synthesizer/specialists stay opus). The flag is a single decision point at the top of the skill — the lead reads `--deep` from the arguments and applies it uniformly. See `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md` for the full `--deep` flag documentation.
 
 ---
 
-## Why sonnet is the safe default for cluster auditors and builders
+## Why cluster specialists run on opus — and the guardrails that keep output honest
 
-Earlier in this release cycle (2026-04-07 awdmods test), sonnet drifted on FINDING block format — 5 of 10 auditors wrote `### F-SEO-XX` headings instead of code-fenced blocks. That drift is now caught by **four reinforcing guardrails** that did not exist at the time of that test:
+As of 2026-06-02, cluster specialists default to **opus**. The audit runs on a Max-plan budget (5-hour chunks, not per-token billing), so the ~2.3× token cost that made sonnet attractive is not a binding constraint, and opus's stronger instruction-following reduces drift directly. The **builder** still defaults to sonnet (and upgrades on `--deep`), so the guardrails below — originally built to make a sonnet specialist safe — remain in force for the builder and as a backstop for any model.
+
+Earlier in this release cycle (2026-04-07 awdmods test), sonnet drifted on FINDING block format — 5 of 10 auditors wrote `### F-SEO-XX` headings instead of code-fenced blocks. That drift is caught by **four reinforcing guardrails**:
 
 1. **Lead-as-validator format check** in `<finding_reconciliation>` Step 0 — reads each cluster file as it arrives, bounces non-compliant files back via SendMessage with corrective instructions. See `${CLAUDE_PLUGIN_ROOT}/contracts/audit-reconciliation.md`.
 2. **Lead-as-validator voice check** in `<finding_reconciliation>` Step 0b (added in Round 14) — catches client-tone drift (jargon, compliance-speak, citation-only Why-this-matters) before reconciliation. Also in contracts/audit-reconciliation.md.
 3. **`<audit_trace_assertion_header>` canary** — surfaces silent format failures in the numerical counters at audit completion. See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`.
 4. **Explicit format examples in `workflows/audit.md` Step 4a + worked voice examples in Step 4b/4c** — sonnet follows concrete examples better than prose descriptions.
 
-With those guardrails in place, sonnet handles format fine. If you ever see a future test where sonnet auditors silently drift past all four guardrails, flip the default back to opus and file a spec gap.
+Opus clears this bar with less drift and fewer re-dispatches than sonnet did. If you ever need a cost-sensitive run, the guardrails above still hold on sonnet — flip the specialist default back in the per-role table above and file a spec note.
 
 ---
 
 ## When to pass `--deep` / opus
 
-Pass `--deep` (and therefore use opus for cluster auditors + builder) when:
+Pass `--deep` (and therefore use opus for the **ethics subagent + builder** — cluster specialists are already opus) when:
 
 - **The page is complex** — configurator, multi-step checkout, heavily-designed landing page, React SPA with late hydration, a site you've already audited and sonnet missed subtle findings on.
 - **The output will go directly to a client** and quality signal matters more than cost.
 - **You're iterating on the spec** and want the strongest baseline for A/B comparison between runs.
 
-Otherwise, omit `--deep` and let the default sonnet multipliers apply. A dual-device 5-cluster audit spawns 10 cluster-specialist subagents — sonnet cuts that cost by ~60% compared to opus, without meaningful quality regression on typical pages.
+Otherwise, omit `--deep`: the ethics subagent and builder run on sonnet. Cluster specialists run on opus either way. Cost is not a factor on the Max-plan budget this audit targets, so `--deep` exists only for the roles that still default to sonnet.
 
 See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md` "Cost trace heuristic" for the exact per-role token multipliers that quantify the savings.
 
@@ -106,7 +108,7 @@ Multi-planner is the one role where SendMessage peer negotiation is the WHOLE PO
 | Role | Template / prompt source | Tool call |
 |---|---|---|
 | Acquirer | `workflows/acquire.md` | `Task(subagent_type="general-purpose", model="sonnet", prompt=<acquire workflow>)` |
-| Cluster specialist | `contracts/specialist-prompt-v2.md` (with per-cluster params from `contracts/specialists/{cluster}.md`) | `Agent(subagent_type="general-purpose", description="Audit {cluster} cluster", model="sonnet", prompt=<rendered template>)` |
+| Cluster specialist | `contracts/specialist-prompt-v2.md` (with per-cluster params from `contracts/specialists/{cluster}.md`) | `Agent(subagent_type="general-purpose", description="Audit {cluster} cluster", model="opus", prompt=<rendered template>)` |
 | Ethics subagent | `contracts/ethics-subagent-v2.md` | `Task(subagent_type="general-purpose", model="sonnet", prompt=<rendered ethics template>)` |
 | Synthesizer | `contracts/synthesizer-v2.md` | `Task(subagent_type="general-purpose", model="opus", prompt=<rendered synthesizer template with canonical_f_refs_manifest>)` |
 | Multi-planner peer | `contracts/multi-planner-protocol.md` | `Agent(subagent_type="general-purpose", team_name="audit-{engagement_id}", name="planner-{cluster}", model="opus", prompt=<plan scope + multi-planner-protocol>)` |
@@ -119,7 +121,7 @@ Multi-planner is the one role where SendMessage peer negotiation is the WHOLE PO
 
 - **The explicit-model rule** (every dispatch passes `model: ...` inline; never inherit from parent).
 - **Sonnet vs Opus assignment per role.** The flip is about *transport* (subagent vs teammate), not about model choice.
-- **The `--deep` escape hatch** — affects model choice for cluster specialists + builder only, dispatch shape is unchanged.
+- **The `--deep` escape hatch** — now affects model choice for the ethics subagent + builder only (cluster specialists run on opus unconditionally); dispatch shape is unchanged.
 - **The forensic-trace assertion canary.** Counter names evolve to reflect the new shape; see "Assertion counter update on spawn" below for the v2 counter set.
 
 ---
@@ -135,7 +137,7 @@ Agent tool call:
 - subagent_type: "general-purpose"
 - team_name: "audit-{engagement-id}"
 - name: "auditor-{cluster}-{device}"   (e.g., "auditor-pricing-mobile")
-- model: "sonnet"   ← DEFAULT (pass "opus" ONLY if --deep flag is set)
+- model: "sonnet"   ← v1 DEFAULT (v1 passed "opus" only with --deep). NOTE: v2 cluster specialists run "opus" unconditionally — see the per-role table above; this v1 block is retained only for replaying archived v1 markdown engagements.
 - prompt: [the prompt template below]
 ```
 

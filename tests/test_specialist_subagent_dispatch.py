@@ -303,7 +303,7 @@ def test_validation_failure_triggers_subagent_not_sendmessage():
             f"{name}: missing test-specialist.py --write-retry-prompt"
         )
         assert "team_name=" not in section, f"{name}: Agent() must not include team_name"
-        assert 'model="sonnet"' in section, f'{name}: Agent() must specify model="sonnet"'
+        assert 'model="opus"' in section, f'{name}: Agent() must specify model="opus"'
 
     # Validation logic preserved (delivery changes only)
     assert "code-fenced" in step_0

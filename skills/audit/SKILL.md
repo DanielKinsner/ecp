@@ -130,7 +130,7 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
    ```powershell
    python scripts/test-specialist.py autofix --emission-path docs/ecp/{id}/cluster-{cluster}-{device}.json --in-place
    ```
-   Re-run `validate` against the autofixed emission. If validation now passes, proceed (the `--in-place` repairs were semantically conservative and the repairs log is at `<emission>.repairs.json`). If validation still fails, use `scripts/test-specialist.py --write-retry-prompt <path>` to generate a fresh-dispatch prompt with the validation error embedded, then re-dispatch a **fresh one-shot subagent** via `Agent(subagent_type="general-purpose", description="...", model="sonnet", prompt=<retry-prompt>)`. On second validation failure, mark the cluster "partial" and continue; never hand-edit an emission beyond what autofix repaired.
+   Re-run `validate` against the autofixed emission. If validation now passes, proceed (the `--in-place` repairs were semantically conservative and the repairs log is at `<emission>.repairs.json`). If validation still fails, use `scripts/test-specialist.py --write-retry-prompt <path>` to generate a fresh-dispatch prompt with the validation error embedded, then re-dispatch a **fresh one-shot subagent** via `Agent(subagent_type="general-purpose", description="...", model="opus", prompt=<retry-prompt>)`. On second validation failure, mark the cluster "partial" and continue; never hand-edit an emission beyond what autofix repaired.
 
 2. **Build the canonical f_refs manifest** (after all specialists + ethics validate):
    ```powershell

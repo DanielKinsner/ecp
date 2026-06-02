@@ -119,20 +119,22 @@ Override auto-selected clusters. The full routing table, page-type defaults, dom
 **Default:** false.
 **Supported by:** `/ecp:audit`, `/ecp:build`, `/ecp:compare`, `/ecp:quick-scan`.
 
-Route cluster auditors and builder to `opus` instead of the default `sonnet`. Use when:
+Route the ethics subagent and builder to `opus` instead of their default `sonnet`. (Cluster specialists already run on `opus` unconditionally as of 2026-06-02, so `--deep` no longer changes them.) Use when:
 - Comparing heavily-designed client-facing sites where extra reasoning depth is worth the cost.
 - Auditing complex pages (configurators, multi-step checkout, heavily-designed landing pages).
 - Producing client-facing output where the strongest possible quality signal matters more than speed.
 
-**Default behavior (no `--deep`):** cluster auditors and builder run on `sonnet`. Faster, cheaper, good enough for most pages.
+**Default behavior (no `--deep`):** the ethics subagent and builder run on `sonnet`. Cluster specialists run on `opus` regardless of this flag.
 
 **Roles that stay on `opus` regardless of `--deep`:**
 - Lead (coordinator)
+- Cluster specialists (a.k.a. cluster auditors) — opus by default as of 2026-06-02
+- Synthesizer
 - Planner
 - Reviewer
 - Multi-planner peers
 
-These are the synthesis brain and quality gate — downgrading them would degrade audit quality. See `contracts/dispatch-contract.md` for the full per-role model assignment table.
+These are the audit's reasoning roles — downgrading them would degrade audit quality. See `contracts/dispatch-contract.md` for the full per-role model assignment table.
 
 **Quick-scan note:** `--deep` is rarely needed for quick-scan (the value prop is speed), but available for client-facing quick-scan runs.
 

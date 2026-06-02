@@ -16,7 +16,7 @@ The lead constructs a final dispatch prompt by combining:
 2. **Per-cluster parameters** from `contracts/specialists/{cluster}.md` — reference file list, cluster-specific guidance, optional surface notes.
 3. **Per-engagement variables** — cluster-context path, baton path, screenshot paths, device, viewport, page type.
 
-The result is a single user-turn prompt string. The lead dispatches it via the Agent tool (`subagent_type: "general-purpose"`, `model: "sonnet"`). Sonnet 4.6 is the v2 default per [`contracts/dispatch-contract.md`](dispatch-contract.md). Opus is reserved for the synthesizer (Layer 3) and the lead.
+The result is a single user-turn prompt string. The lead dispatches it via the Agent tool (`subagent_type: "general-purpose"`, `model: "opus"`). Opus is the v2 default for cluster specialists per [`contracts/dispatch-contract.md`](dispatch-contract.md) — the audit runs on a Max-plan budget where per-token cost is not the constraint, and opus reduces the schema/voice drift that cost re-dispatches on sonnet.
 
 **No assistant-prefill.** The Agent tool only takes a single user-turn `prompt` string — there is no `messages[]` with role='assistant' to seed `{`. Pattern-match the JSON-only emission via the embedded one-shot example instead.
 
@@ -517,7 +517,7 @@ This is what a single-finding emission looks like for a hypothetical pricing-clu
   "cluster": "pricing",
   "device": "mobile",
   "specialist_model": {
-    "family": "sonnet",
+    "family": "opus",
     "version": "4.6"
   },
   "started_at": "2026-04-27T16:14:02.000Z",
