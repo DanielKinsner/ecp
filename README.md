@@ -21,9 +21,33 @@ archived with the previous repo and are **out of scope** in this build (`product
 
 ## Setup (one time)
 
+### Setup (Windows / PowerShell)
+
 ```powershell
-python -m venv .venv ; .\.venv\Scripts\Activate.ps1 ; pip install -r requirements.txt
-npm install        # playwright (acquisition) + the hotspot editor
+python -m venv .venv ; .\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt -r requirements-dev.txt
+npm install                       # playwright for the hotspot-editor smoke
+npx playwright install chromium   # the editor smoke launches a real browser
+```
+
+### Setup (macOS / Linux)
+
+```bash
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt -r requirements-dev.txt
+npm install                    # playwright for the hotspot-editor smoke
+npx playwright install chromium   # the editor smoke launches a real browser
+```
+
+> **For a real `/ecp:audit`** (live URL/DOM capture), also install the acquisition browser globally:
+> `npm install -g agent-browser && agent-browser install` — this is **separate** from the repo's
+> `playwright` dep, which only powers the hotspot-editor smoke tests.
+
+### Run the tests
+
+```bash
+python -m pytest tests/   # in the activated venv (collects unittest + bare pytest funcs)
+npm test                  # check:editor + check:python + the editor smoke (needs chromium)
 ```
 
 ## Run
