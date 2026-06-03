@@ -339,8 +339,8 @@ def preprocess_device(
 
     dom_html = dom_path.read_text(encoding="utf-8", errors="replace")
     baton = json.loads(baton_path.read_text(encoding="utf-8"))
-    baton_sections = baton.get("sections", [])
-    elements = baton.get("elements", [])
+    baton_sections = baton.get("sections") or []
+    elements = baton.get("elements") or []
     styles = baton.get("styles", {})
     baton_page_head = baton.get("page_head") or {}
     structured_data = (
@@ -409,6 +409,8 @@ def preprocess_device(
         seen_keys: set[tuple[int, str]] = set()
 
         for sec in baton_sections:
+            if not isinstance(sec, dict):
+                continue
             label = sec.get("label") or ""
             scroll_y = int(section_scroll_top(sec))
             scroll_y_bottom = int(section_scroll_bottom(sec, float((viewport or {}).get("height") or 0)))
@@ -491,8 +493,8 @@ def _resolve_clusters(engagement_dir: Path) -> list[str]:
     meta_path = engagement_dir / "meta.json"
     if meta_path.exists():
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        clusters = meta.get("clusters_used") or []
-        if clusters:
+        clusters = meta.get("clusters_used")
+        if isinstance(clusters, list) and clusters:
             return clusters
     return CLUSTERS_DEFAULT
 
