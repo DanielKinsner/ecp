@@ -53,6 +53,10 @@ def _build_evidence_anchors_html(finding: dict) -> str:
         atype = (ea.get("type") or "").lower()
         ref = ea.get("reference") or ""
         scroll_y = ea.get("scroll_y")
+        try:
+            scroll_y_int = int(scroll_y) if scroll_y is not None else None
+        except (TypeError, ValueError):
+            scroll_y_int = None  # operator override anchors aren't schema-validated
         viewport = ea.get("viewport") or ""
         context = ea.get("context") or ""
 
@@ -60,11 +64,11 @@ def _build_evidence_anchors_html(finding: dict) -> str:
         if atype == "dom":
             label = f"DOM &middot; <code>{escape_html(ref)}</code>"
         elif atype == "visual":
-            scroll_part = f" @ y={int(scroll_y)}" if scroll_y is not None else ""
-            viewport_part = f" ({escape_html(viewport)})" if viewport else ""
+            scroll_part = f" @ y={scroll_y_int}" if scroll_y_int is not None else ""
+            viewport_part = f" ({escape_html(str(viewport))})" if viewport else ""
             label = f"Visual &middot; <code>{escape_html(ref)}</code>{escape_html(scroll_part)}{viewport_part}"
         elif atype == "both":
-            scroll_part = f" @ y={int(scroll_y)}" if scroll_y is not None else ""
+            scroll_part = f" @ y={scroll_y_int}" if scroll_y_int is not None else ""
             label = f"DOM + Visual &middot; <code>{escape_html(ref)}</code>{escape_html(scroll_part)}"
         else:
             label = f"{escape_html(atype.upper())} &middot; <code>{escape_html(ref)}</code>"

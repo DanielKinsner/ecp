@@ -499,7 +499,7 @@ def _apply_review_state_to_slide_markers(slide_markers, review_state, findings):
 
 def _process_screenshots(engagement_path, baton, slide_markers):
     """Base64-encode screenshots (hotspots are rendered as interactive overlays)."""
-    viewport = baton.get("viewport", {})
+    viewport = baton.get("viewport") or {}
     default_slide_aspect_ratio = aspect_ratio_value(viewport.get("width"), viewport.get("height"))
     screenshots = baton.get("screenshots", [])
     screenshot_paths = []
