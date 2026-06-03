@@ -5,6 +5,7 @@ export const meta = {
   phases: [
     { title: 'Triage', detail: 'Tier-0 placement_audit (free, deterministic) + crop suspect markers' },
     { title: 'Verify', detail: 'vision agent per crop: on-target / off-target / wrong-element / empty-region' },
+    { title: 'Repair', detail: 'auto re-anchor misplaced findings, re-verify the re-anchors with vision, flag the rest' },
     { title: 'Aggregate', detail: 'summarize verdicts + flag misplacements for repair' },
   ],
 }
@@ -16,6 +17,7 @@ const DEVICE = (args && args.device) || 'desktop'
 const TIER = (args && args.tier) || 'standard' // 'free' | 'standard' | 'deep'
 const MIX = (args && args.mix) || (TIER === 'deep' ? 40 : 8)
 const VOTES = TIER === 'deep' ? 3 : 1
+const REPAIR = (args && args.repair) !== false // auto-repair misplaced findings (default on)
 
 const MANIFEST_SCHEMA = {
   type: 'object',
@@ -49,6 +51,18 @@ const VERDICT_SCHEMA = {
     verdict: { type: 'string', description: 'on-target | off-target | wrong-element | empty-region | too-large-ambiguous' },
     inside_box: { type: 'string', description: 'one sentence: what is actually inside the orange rectangle' },
     why: { type: 'string', description: 'one sentence: does that match the finding subject' },
+  },
+}
+
+const CROPS_SCHEMA = { type: 'object', required: ['crops'], properties: { crops: MANIFEST_SCHEMA.properties.crops } }
+
+const REPAIR_SCHEMA = {
+  type: 'object',
+  required: ['re_anchored', 'flagged', 'repaired_path'],
+  properties: {
+    re_anchored: { type: 'array', items: { type: 'object', required: ['f_ref'], properties: { f_ref: { type: 'string' } } } },
+    flagged: { type: 'array', items: { type: 'object', required: ['f_ref'], properties: { f_ref: { type: 'string' }, reason: { type: 'string' } } } },
+    repaired_path: { type: 'string', description: 'absolute path to review-state-{device}.repaired.json' },
   },
 }
 
@@ -103,11 +117,51 @@ const verified = await pipeline(
     }),
 )
 
-phase('Aggregate')
 const results = verified.filter(Boolean)
 const misplaced = results.filter((r) => r.status === 'misplaced')
 log(`Visual QA: ${results.length} verified -> ${results.length - misplaced.length} on-target, ${misplaced.length} misplaced`)
 
+// ---- Phase 3: repair (deterministic re-anchor + flag) then re-verify the re-anchors ----
+let repair = null
+if (REPAIR && misplaced.length > 0) {
+  phase('Repair')
+  const misplacedRefs = misplaced.map((r) => r.f_ref).join(',')
+  const rep = await agent(
+    `From ${ROOT}, run with the project Python (python / py -3):
+  python scripts/report/placement_repair.py --engagement ${ENG} --device ${DEVICE} --misplaced "${misplacedRefs}" --plugin-root ${ROOT}
+Then read ${ENG}/placement-repair-log.json and return: re_anchored (array of {f_ref} from log entries with action "re-anchored"), flagged (array of {f_ref, reason} from entries with action "flagged"), and repaired_path = the absolute path to ${ENG}/review-state-${DEVICE}.repaired.json.`,
+    { schema: REPAIR_SCHEMA, label: 'repair', phase: 'Repair' },
+  )
+
+  // Re-verify each re-anchor (it trusts the finding's anchor text, so confirm with vision).
+  let reverified = []
+  if (rep.re_anchored.length > 0) {
+    const reRefs = rep.re_anchored.map((r) => r.f_ref).join(',')
+    const recrop = await agent(
+      `From ${ROOT}, make a fresh temp dir and run with the project Python:
+  python scripts/report/placement_audit.py crops --engagement ${ENG} --device ${DEVICE} --review-state "${rep.repaired_path}" --out <tmp_dir> --f-refs "${reRefs}"
+Return the crops-manifest "crops" array with ABSOLUTE png paths.`,
+      { schema: CROPS_SCHEMA, label: 'repair:recrop', phase: 'Repair' },
+    )
+    reverified = (await parallel(
+      recrop.crops.map((c) => () =>
+        agent(verifyPrompt(c), { label: `reverify:${c.f_ref}`, phase: 'Repair', schema: VERDICT_SCHEMA })
+          .then((v) => ({ f_ref: c.f_ref, kept: v.verdict === 'on-target', verdict: v.verdict, evidence: v.inside_box })),
+      ),
+    )).filter(Boolean)
+  }
+  const fixed = reverified.filter((r) => r.kept).map((r) => r.f_ref)
+  const reverted = reverified.filter((r) => !r.kept)
+  log(`Repair: ${fixed.length} re-anchored+verified, ${reverted.length} reverted to manual, ${rep.flagged.length} flagged`)
+  repair = {
+    repaired_path: rep.repaired_path,
+    re_anchored_verified: fixed,
+    re_anchored_reverted: reverted.map((r) => ({ f_ref: r.f_ref, verdict: r.verdict, evidence: r.evidence })),
+    flagged_for_manual: rep.flagged,
+  }
+}
+
+phase('Aggregate')
 return {
   engagement: ENG,
   device: DEVICE,
@@ -120,4 +174,5 @@ return {
     evidence: (r.votes[0] && r.votes[0].inside_box) || '',
   })),
   on_target: results.filter((r) => r.status === 'on-target').map((r) => r.f_ref),
+  repair,
 }

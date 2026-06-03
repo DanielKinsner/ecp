@@ -107,8 +107,8 @@ def _find_stacks(markers: list[dict]) -> dict[tuple, list[str]]:
     return {k: v for k, v in groups.items() if len(v) >= STACK_MIN}
 
 
-def analyze_device(engagement: Path, device: str) -> dict | None:
-    path = engagement / f"review-state-{device}.json"
+def analyze_device(engagement: Path, device: str, review_state_path: Path | None = None) -> dict | None:
+    path = review_state_path or (engagement / f"review-state-{device}.json")
     if not path.exists():
         return None
     rs = json.loads(path.read_text(encoding="utf-8"))
@@ -292,10 +292,11 @@ def _cmd_audit(args: argparse.Namespace) -> int:
 
 def _cmd_crops(args: argparse.Namespace) -> int:
     args.out.mkdir(parents=True, exist_ok=True)
-    rs = json.loads((args.engagement / f"review-state-{args.device}.json").read_text(encoding="utf-8"))
+    rs_path = args.review_state or (args.engagement / f"review-state-{args.device}.json")
+    rs = json.loads(rs_path.read_text(encoding="utf-8"))
     raw_by_fref = {m["f_ref"]: m for m in _dedup_by_fref(rs.get("markers") or []) if m.get("f_ref")}
     findings = _finding_index(rs)
-    rep = analyze_device(args.engagement, args.device)
+    rep = analyze_device(args.engagement, args.device, rs_path)
 
     if args.f_refs:
         flagged_reasons = {f["f_ref"]: f["reasons"] for f in rep["flagged"]}
@@ -338,6 +339,8 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--out", required=True, type=Path)
     c.add_argument("--mix", type=int, default=6, help="auto-select N markers (weak + strong controls)")
     c.add_argument("--f-refs", default=None, help="comma-separated f_refs to crop (overrides --mix)")
+    c.add_argument("--review-state", type=Path, default=None,
+                   help="override the review-state file (e.g. a .repaired.json for re-verify)")
 
     args = parser.parse_args(argv)
     if args.cmd == "audit":
