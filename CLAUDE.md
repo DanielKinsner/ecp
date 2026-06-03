@@ -3,6 +3,13 @@
 **`product.md` is the constitution — it wins over this file.** This doc is only *how to set
 ECP up and not break it across machines*. If anything here disagrees with `product.md`, `product.md` is right.
 
+## ▶ Start here (current work state)
+**Rolling handoff: [`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md)** —
+read it before picking up hotspot-accuracy work. Current state (2026-06-03): all four
+hotspot-placement fixes are in code (acquirer element-capture, mobile tiling, hero-stack
+distribute+flag) and pushed to `main`; the one remaining step is a single live verification
+audit — **which requires the `--plugin-dir` launch below, or it tests stale code.**
+
 ## Platform reality
 - **Primary dev/run environment is Windows** (PowerShell). The majority of work and every real
   `/ecp:audit` happens there.
