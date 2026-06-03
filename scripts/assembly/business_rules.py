@@ -166,6 +166,35 @@ class BusinessRuleViolation(Exception):
         return f"{self.finding_path}.{self.field}: {self.message}"
 
 
+def _as_dict(value: object) -> dict:
+    """Coerce a value to a dict, or ``{}`` if it is not one.
+
+    Guards ``.get()`` access on emission fields the schema declares as objects
+    (``element``, citation entries, anchors) but a malformed LLM emission may
+    send as a list/string/null. Business rules run *alongside* schema
+    validation (not gated by it), so they must report such emissions via the
+    retry path rather than crash on them.
+    """
+    return value if isinstance(value, dict) else {}
+
+
+def _as_finding_list(emission: dict) -> list[dict]:
+    """Return ``emission['findings']`` as a list of dict findings.
+
+    A missing key, an explicit ``null``, a single object, or a list containing
+    scalars all collapse to a clean list of dicts (non-dict entries dropped).
+    ``dict.get("findings", [])`` does NOT help here: the default only fires on a
+    *missing* key, so an explicit ``"findings": null`` returns ``None`` and
+    crashes ``enumerate``. The schema already rejects these shapes; this keeps
+    the business-rule layer from crashing before that schema error surfaces.
+    Mirrors the isinstance discipline already used in ``emission_autofix.py``.
+    """
+    findings = emission.get("findings")
+    if not isinstance(findings, list):
+        return []
+    return [f for f in findings if isinstance(f, dict)]
+
+
 def validate_business_rules(
     emission: dict,
     *,
@@ -224,7 +253,7 @@ def validate_business_rules(
     if emission.get("status") == "skipped":
         return violations
 
-    findings = emission.get("findings", [])
+    findings = _as_finding_list(emission)
 
     # Build the union of baton e_indexes for resolution checks
     baton_indexes: set[str] = set()
@@ -319,7 +348,10 @@ def _baton_sections(*batons: dict | None) -> set[str]:
 
 def _check_evidence_tier(finding: dict, path: str) -> list[BusinessRuleViolation]:
     """Rule: evidence_tier == max(reference_citations[].tier)."""
-    cites = finding.get("reference_citations") or []
+    cites = [
+        c for c in (finding.get("reference_citations") or [])
+        if isinstance(c, dict)
+    ]
     declared = finding.get("evidence_tier", "")
     if not cites:
         # No citations — only valid for PASS findings; the schema enforces
@@ -371,7 +403,7 @@ def _check_baton_index_in_candidate_registry(
     if verdict not in {"FAIL", "PARTIAL"}:
         return []
 
-    element = finding.get("element") or {}
+    element = _as_dict(finding.get("element"))
     bi = element.get("baton_index", "")
     if not bi or bi == "absent":
         return []
@@ -436,7 +468,7 @@ def _check_baton_index(
     finding: dict, path: str, baton_indexes: set[str]
 ) -> list[BusinessRuleViolation]:
     """Rule: element.baton_index resolves to baton.elements[].e_index (or 'absent')."""
-    element = finding.get("element") or {}
+    element = _as_dict(finding.get("element"))
     bi = element.get("baton_index", "")
     if not bi:
         return []  # Schema requires baton_index; if missing, schema validation already caught it
@@ -574,7 +606,7 @@ def _check_element_text_match(
     and ``visual-cta F-44`` both cited e15 with text 'div.announcement-bar' / 'div.hero__inner';
     actual mobile e15 was a <header role='banner'> containing 'Shop All / Shop by Category'.
     """
-    element = finding.get("element") or {}
+    element = _as_dict(finding.get("element"))
     bi = element.get("baton_index", "")
     if not bi or bi == "absent":
         return []
@@ -676,7 +708,7 @@ def _check_evidence_anchor_consistency(
     was left unchanged (or vice-versa). Soft check — emits only when both are concrete e_indexes
     AND they disagree AND no proposed_anchor explains the split.
     """
-    element = finding.get("element") or {}
+    element = _as_dict(finding.get("element"))
     bi = element.get("baton_index", "")
     if not bi or bi == "absent" or not _E_INDEX_PATTERN.match(bi):
         return []
@@ -685,6 +717,8 @@ def _check_evidence_anchor_consistency(
     has_proposed_anchor = bool(finding.get("proposed_anchor"))
     out: list[BusinessRuleViolation] = []
     for j, a in enumerate(finding.get("evidence_anchors") or []):
+        if not isinstance(a, dict):
+            continue
         if a.get("type") != "dom":
             continue
         ref = a.get("reference", "")
@@ -715,6 +749,8 @@ def _check_anchor_resolution(
     """Rule: evidence_anchors[].reference resolves to baton element or screenshot."""
     out: list[BusinessRuleViolation] = []
     for j, a in enumerate(finding.get("evidence_anchors") or []):
+        if not isinstance(a, dict):
+            continue
         apath = f"{path}.evidence_anchors[{j}]"
         ref = a.get("reference", "")
         atype = a.get("type", "")
@@ -851,7 +887,7 @@ def _check_baton_precedence(
     (verbatim anchor > absence anchor > lowest e_index tie-break) is enforced
     primarily through the prompt; this validator catches the egregious cases.
     """
-    bi = (finding.get("element") or {}).get("baton_index", "")
+    bi = _as_dict(finding.get("element")).get("baton_index", "")
     if not bi or bi == "absent":
         return []
 
@@ -934,14 +970,14 @@ def _check_within_emission_unique_anchors(
     no JSON-LD vs no OG image vs no GTIN — all ``(meta-tag, absent, FAIL)`` but
     conceptually distinct, low Jaccard between titles).
     """
-    findings = emission.get("findings", [])
+    findings = _as_finding_list(emission)
     violations: list[BusinessRuleViolation] = []
 
     by_tuple: dict[tuple[str, str, str], list[tuple[int, dict]]] = {}
     for i, f in enumerate(findings):
         key = (
             f.get("surface", ""),
-            (f.get("element") or {}).get("baton_index", ""),
+            _as_dict(f.get("element")).get("baton_index", ""),
             f.get("verdict", ""),
         )
         by_tuple.setdefault(key, []).append((i, f))
@@ -998,6 +1034,8 @@ def _check_within_emission_unique_anchors(
 
 def _title_jaccard(a: str, b: str) -> float:
     """Token-set Jaccard similarity on lowercase title tokens, stopwords removed."""
+    a = a if isinstance(a, str) else ""
+    b = b if isinstance(b, str) else ""
     tokens_a = {t for t in re.findall(r"\w+", a.lower()) if t not in _TITLE_STOPWORDS}
     tokens_b = {t for t in re.findall(r"\w+", b.lower()) if t not in _TITLE_STOPWORDS}
     union = tokens_a | tokens_b
@@ -1010,7 +1048,7 @@ def _check_finding_count_in_band(
     emission: dict, band: FindingBand
 ) -> list[BusinessRuleViolation]:
     """findings[] count must be within band when status='complete'."""
-    findings = emission.get("findings", [])
+    findings = _as_finding_list(emission)
     n = len(findings)
     if n < band.min_count or n > band.max_count:
         if n > band.max_count:
