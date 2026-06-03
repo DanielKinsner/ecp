@@ -178,11 +178,24 @@ def _slide_for_y(scroll_y: float, viewport_h: float, screenshots: list) -> int:
     return best_slide
 
 
+def _coerce_pct(value: object, default: float = 50.0) -> float:
+    """Coerce an operator-supplied percentage to a float; default on bad input.
+
+    Operator ``--markers`` override entries are merged verbatim with no
+    per-field schema validation, so ``x_pct``/``y_pct`` may be missing or
+    non-numeric strings.
+    """
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _section_centroid(
     surface: str,
     sections: list,
     viewport: dict,
-) -> tuple[int, float, float] | None:
+) -> tuple[int, float, float, str | None] | None:
     """Find the baton section matching ``surface`` and return (slide_idx, x_pct, y_pct).
 
     Match is case-insensitive substring on the section slug. The slide_idx
@@ -898,10 +911,14 @@ def compute_marker_positions_v2(
         slide = mapping.get("slide")
         if slide is None:
             continue
+        try:
+            slide = int(slide)
+        except (TypeError, ValueError):
+            continue
         if slide not in slide_markers:
             slide_markers[slide] = []
 
-        finding_idx = mapping["finding_index"]
+        finding_idx = mapping.get("finding_index")
         burn_number = mapping.get("burn_number") or finding_idx
         severity = mapping.get("severity", "medium")
         elem_idx = mapping.get("baton_element_index")
@@ -919,17 +936,19 @@ def compute_marker_positions_v2(
             nat_w = default_nat_w
             scroll_y = 0.0
 
-        if fallback_pos is not None:
-            cx = int(nat_w * fallback_pos["x_pct"] / 100)
-            cy = int(nat_h * fallback_pos["y_pct"] / 100)
+        if isinstance(fallback_pos, dict):
+            fx = _coerce_pct(fallback_pos.get("x_pct"))
+            fy = _coerce_pct(fallback_pos.get("y_pct"))
+            cx = int(nat_w * fx / 100)
+            cy = int(nat_h * fy / 100)
             slide_markers[slide].append({
                 "number": burn_number,
                 "finding_index": finding_idx,
                 "f_ref": mapping.get("f_ref"),
                 "x": cx,
                 "y": cy,
-                "x_pct": fallback_pos["x_pct"],
-                "y_pct": fallback_pos["y_pct"],
+                "x_pct": fx,
+                "y_pct": fy,
                 "severity": severity,
                 "fallback_role": mapping.get("fallback_role"),
                 "match_method": mapping.get("match_method"),
