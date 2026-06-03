@@ -79,6 +79,8 @@ def _ve(finding_or_marker: dict) -> dict | None:
     """Return the finding/marker's ``visual_evidence`` dict if present, else
     None. Tolerates both review-state findings (visual_evidence at top
     level) and marker mappings (same shape)."""
+    if not isinstance(finding_or_marker, dict):
+        return None
     ve = finding_or_marker.get("visual_evidence")
     return ve if isinstance(ve, dict) else None
 

@@ -72,7 +72,7 @@ _TOKEN_RE = re.compile(r"[A-Za-z0-9]+")
 
 def _tokenize(text: str) -> set[str]:
     """Lowercase alphanumeric word-set extraction; punctuation discarded."""
-    return set(_TOKEN_RE.findall((text or "").lower()))
+    return set(_TOKEN_RE.findall((text if isinstance(text, str) else "").lower()))
 
 
 def title_token_set_jaccard(a: str, b: str) -> float:

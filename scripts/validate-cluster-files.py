@@ -268,7 +268,10 @@ def _page_netloc_from_meta(engagement_dir: Path) -> str | None:
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return None
-    page = meta.get("page") or {}
+    if not isinstance(meta, dict):
+        return None
+    page = meta.get("page")
+    page = page if isinstance(page, dict) else {}
     url = page.get("url") or meta.get("url")
     if not url:
         return None
