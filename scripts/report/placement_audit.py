@@ -261,8 +261,8 @@ def make_crop(engagement: Path, marker: dict, finding: dict | None,
         "severity": marker.get("severity"),
         "classification": classification,
         "reasons": reasons,
-        "finding_title": f.get("finding_title") or f.get("title", ""),
-        "observation": (f.get("observation") or "")[:400],
+        "finding_title": f.get("finding_title_override") or f.get("finding_title") or f.get("title", ""),
+        "observation": (f.get("observation_override") or f.get("observation") or "")[:400],
         "element_hint": oa.get("selector_hint") or oa.get("text_quote") or "",
     }
 

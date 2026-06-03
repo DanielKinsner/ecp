@@ -57,9 +57,14 @@ def _query_tokens(finding: dict, marker: dict) -> set[str]:
     for v in (oa.get("text_quote"), oa.get("selector_hint")):
         if v:
             parts.append(str(v))
-    for k in ("finding_title", "callout_title", "element"):
-        if finding.get(k):
-            parts.append(str(finding[k]))
+    # Prefer operator-corrected text, mirroring _display_title (review_state.py) /
+    # displayTitle (editor.js) — a corrected title is the real subject.
+    for base in ("finding_title", "callout_title"):
+        val = finding.get(f"{base}_override") or finding.get(base)
+        if val:
+            parts.append(str(val))
+    if finding.get("element"):
+        parts.append(str(finding["element"]))
     return _tokens(" ".join(parts))
 
 
@@ -71,7 +76,7 @@ def _flatten_targets(snap: dict) -> list[dict]:
     return out
 
 
-def decide_match(query_tokens: set[str], targets: list[dict]) -> dict:
+def decide_match(query_tokens: set[str], targets: list[dict], current_slide: str | None = None) -> dict:
     """Decide whether to re-anchor (confident, unambiguous text match) or flag,
     and explain why. Pure function — the testable core of the repair.
 
@@ -79,8 +84,21 @@ def decide_match(query_tokens: set[str], targets: list[dict]) -> dict:
     lexical match can still land on the wrong element (e.g. a finding anchored to
     the title but semantically about the description). The workflow must re-verify
     a re-anchor with vision before trusting it.
+
+    When ``current_slide`` is given, only same-slide elements are eligible for a
+    re-anchor — an auto-repair never silently relocates a finding across sections.
+    A strong off-slide match is surfaced in the flag reason for a manual move.
     """
-    scored = sorted(((_overlap(t["label"], query_tokens), t) for t in targets),
+    off_best = None
+    pool = targets
+    if current_slide is not None:
+        pool = [t for t in targets if t.get("slide_id") == current_slide]
+        off = sorted(((_overlap(t["label"], query_tokens), t)
+                      for t in targets if t.get("slide_id") != current_slide),
+                     key=lambda st: st[0], reverse=True)
+        off_best = off[0] if off else None
+
+    scored = sorted(((_overlap(t["label"], query_tokens), t) for t in pool),
                     key=lambda st: st[0], reverse=True)
     best_score, best = (scored[0] if scored else (0.0, None))
     second_score = scored[1][0] if len(scored) > 1 else 0.0
@@ -101,6 +119,9 @@ def decide_match(query_tokens: set[str], targets: list[dict]) -> dict:
     else:
         reason = (f"ambiguous: '{best['label']}' ({best_score:.2f}) vs '{scored[1][1]['label']}' "
                   f"({second_score:.2f}) within {MATCH_MARGIN} — needs human disambiguation")
+    if off_best and off_best[0] >= MATCH_MIN:
+        reason += (f"; a strong match exists on a different slide "
+                   f"'{off_best[1].get('slide_id')}' ('{off_best[1]['label']}') — manual cross-section move")
     return {"action": "flag", "best": best, "score": best_score, "scored": scored, "reason": reason}
 
 
@@ -132,7 +153,7 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
         finding = findings.get(fref)  # the dict inside rs (mutations persist), or None
 
         qtok = _query_tokens(finding or {}, marker)
-        decision = decide_match(qtok, targets)
+        decision = decide_match(qtok, targets, marker.get("slide_id"))
         if decision["action"] == "re-anchor":
             best = decision["best"]
             old = {"slide_id": marker.get("slide_id"), "source": marker.get("source"),

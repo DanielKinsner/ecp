@@ -53,6 +53,16 @@ class TestDecideMatch(unittest.TestCase):
         self.assertEqual(d["action"], "flag")
         self.assertIn("no anchorable element text", d["reason"])
 
+    def test_off_slide_match_flagged_not_reanchored(self):
+        # the only match is on a different slide than the marker -> flag (manual move)
+        d = decide_match({"add", "cart"}, [_t("Add to Cart", "e1")], current_slide="desktop-section-9")
+        self.assertEqual(d["action"], "flag")
+        self.assertIn("different slide", d["reason"])
+
+    def test_same_slide_match_reanchors(self):
+        d = decide_match({"add", "cart"}, [_t("Add to Cart", "e1")], current_slide="desktop-section-1")
+        self.assertEqual(d["action"], "re-anchor")
+
 
 class TestQueryTokens(unittest.TestCase):
     def test_pulls_from_finding_and_marker(self):
@@ -61,6 +71,12 @@ class TestQueryTokens(unittest.TestCase):
         toks = _query_tokens(finding, marker)
         self.assertIn("cart", toks)
         self.assertNotIn("low", toks)  # stopword
+
+    def test_prefers_finding_title_override(self):
+        finding = {"finding_title": "Stale Wrong Subject", "finding_title_override": "Add to Cart Button"}
+        toks = _query_tokens(finding, {})
+        self.assertIn("cart", toks)
+        self.assertNotIn("stale", toks)
 
 
 class TestRepairIntegration(unittest.TestCase):
