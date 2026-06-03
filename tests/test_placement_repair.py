@@ -8,7 +8,11 @@ from pathlib import Path
 _REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO / "scripts"))
 
-from report.placement_repair import decide_match, _overlap, _query_tokens  # noqa: E402
+import json  # noqa: E402
+import tempfile  # noqa: E402
+
+import assembly.review_state as _rs_mod  # noqa: E402
+from report.placement_repair import decide_match, _overlap, _query_tokens, repair  # noqa: E402
 
 
 def _t(label, e):
@@ -57,6 +61,69 @@ class TestQueryTokens(unittest.TestCase):
         toks = _query_tokens(finding, marker)
         self.assertIn("cart", toks)
         self.assertNotIn("low", toks)  # stopword
+
+
+class TestRepairIntegration(unittest.TestCase):
+    """Locks the editor contract + file/log shapes the JS reads back (finding [6])."""
+
+    def setUp(self):
+        self._orig = _rs_mod._build_snap_targets
+        _rs_mod._build_snap_targets = lambda eng, root, dev: {
+            "desktop-section-1": [
+                {"e_index": "e9", "label": "Add to Cart", "x_pct": 40, "y_pct": 50, "w_pct": 15, "h_pct": 8},
+            ]
+        }
+        self.addCleanup(lambda: setattr(_rs_mod, "_build_snap_targets", self._orig))
+        self.eng = Path(tempfile.mkdtemp(prefix="ecp-repair-int-"))
+        self.rs = {
+            "findings": [
+                {"f_ref": "visual-cta F-01", "finding_title": "Add to Cart Button Low Contrast",
+                 "hotspot_confidence": "exact-selector"},
+                {"f_ref": "pricing F-02", "finding_title": "Pre-Order Badge Elapsed Date",
+                 "hotspot_confidence": "exact-selector"},
+            ],
+            "markers": [
+                {"f_ref": "visual-cta F-01", "marker_id": "m1", "slide_id": "desktop-section-1",
+                 "shape": "rect", "source": "proposed_anchor_section",
+                 "x_pct": 1, "y_pct": 1, "w_pct": 5, "h_pct": 5},
+                {"f_ref": "pricing F-02", "marker_id": "m2", "slide_id": "desktop-section-1",
+                 "shape": "rect", "source": "proposed_anchor_section",
+                 "x_pct": 1, "y_pct": 1, "w_pct": 5, "h_pct": 5},
+            ],
+        }
+        self.orig_path = self.eng / "review-state-desktop.json"
+        self.orig_path.write_text(json.dumps(self.rs, indent=2), encoding="utf-8")
+        self.orig_bytes = self.orig_path.read_bytes()
+
+    def test_repair_sets_editor_contract_and_is_nondestructive(self):
+        res = repair(self.eng, "desktop", ["visual-cta F-01", "pricing F-02"], _REPO)
+        self.assertEqual(res["re_anchored"], 1)
+        self.assertEqual(res["flagged"], 1)
+
+        repaired = json.loads((self.eng / "review-state-desktop.repaired.json").read_text(encoding="utf-8"))
+        rm = {m["f_ref"]: m for m in repaired["markers"]}
+        rf = {f["f_ref"]: f for f in repaired["findings"]}
+
+        # re-anchored marker: valid source enum + new e_index bbox
+        self.assertEqual(rm["visual-cta F-01"]["source"], "e_index_lookup")
+        self.assertEqual(rm["visual-cta F-01"]["snapped_baton_index"], "e9")
+        self.assertEqual(rm["visual-cta F-01"]["x_pct"], 40)
+        # finding-level confidence drives the editor: unverified re-anchor = check placement
+        self.assertEqual(rf["visual-cta F-01"]["hotspot_confidence"], "section-match")
+        # flagged finding enters the "Place manually" worklist
+        self.assertEqual(rf["pricing F-02"]["hotspot_confidence"], "needs-manual-marker")
+
+        # original file untouched
+        self.assertEqual(self.orig_path.read_bytes(), self.orig_bytes)
+
+        # log/action shapes the JS reads back
+        actions = {e["f_ref"]: e["action"] for e in res["log"]}
+        self.assertEqual(actions["visual-cta F-01"], "re-anchored")
+        self.assertEqual(actions["pricing F-02"], "flagged")
+
+    def test_duplicate_misplaced_processed_once(self):
+        res = repair(self.eng, "desktop", ["pricing F-02", "pricing F-02"], _REPO)
+        self.assertEqual(res["flagged"], 1)  # not 2
 
 
 if __name__ == "__main__":

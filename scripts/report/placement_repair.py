@@ -118,14 +118,18 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
     log: list[dict] = []
     re_anchored = flagged = 0
 
+    seen: set[str] = set()
     for fref in misplaced:
-        finding = findings.get(fref, {})
+        if fref in seen:  # dedup: a repeated f_ref must not be double-processed
+            continue
+        seen.add(fref)
         marker = markers.get(fref)
         if marker is None:
             log.append({"f_ref": fref, "action": "skipped", "reason": "no marker in review-state"})
             continue
+        finding = findings.get(fref)  # the dict inside rs (mutations persist), or None
 
-        qtok = _query_tokens(finding, marker)
+        qtok = _query_tokens(finding or {}, marker)
         decision = decide_match(qtok, targets)
         if decision["action"] == "re-anchor":
             best = decision["best"]
@@ -134,16 +138,25 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
                    "box": {k: marker.get(k) for k in ("x_pct", "y_pct", "w_pct", "h_pct")}}
             marker.update({"slide_id": best["slide_id"], "x_pct": best["x_pct"], "y_pct": best["y_pct"],
                            "w_pct": best["w_pct"], "h_pct": best["h_pct"],
-                           "snapped_baton_index": best.get("e_index"), "source": "re_anchored",
+                           "snapped_baton_index": best.get("e_index"),
+                           "source": "e_index_lookup",  # valid schema enum; it is now e_index-anchored
                            "repair_status": "re_anchored_unverified"})
+            # Fail safe: an UNVERIFIED re-anchor must read "Check placement", never "Likely OK".
+            # The workflow re-verify upgrades (confirmed) or downgrades (reverted) this finding.
+            if finding is not None:
+                finding["hotspot_confidence"] = "section-match"
             re_anchored += 1
             log.append({"f_ref": fref, "action": "re-anchored", "from": old,
                         "to": {"e_index": best.get("e_index"), "slide_id": best["slide_id"],
                                "label": best["label"], "score": round(decision["score"], 2)},
                         "reason": decision["reason"]})
         else:
-            marker["placement_review_needed"] = True
-            marker["hotspot_confidence"] = "low"
+            # Queue into the editor's "Place manually" worklist. The editor reads
+            # FINDING-level hotspot_confidence (enum review-state-v1.json:121-123);
+            # marker-level flags are inert downstream.
+            if finding is not None:
+                finding["hotspot_confidence"] = "needs-manual-marker"
+            marker["placement_review_needed"] = True  # provenance only (schema allows; editor ignores)
             flagged += 1
             log.append({"f_ref": fref, "action": "flagged", "reason": decision["reason"],
                         "query_tokens": sorted(qtok),
