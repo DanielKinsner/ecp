@@ -24,6 +24,7 @@ const MANIFEST_SCHEMA = {
   required: ['summary', 'crops'],
   properties: {
     summary: { type: 'string', description: 'the Tier-0 audit summary text' },
+    total_weak: { type: 'integer', description: 'total WEAK placements the audit reported (the Y in "X strong, Y weak")' },
     crops: {
       type: 'array',
       items: {
@@ -76,16 +77,20 @@ const triage = await agent(
    python scripts/report/placement_audit.py crops --engagement ${ENG} --device ${DEVICE} --out <that_tmp_dir> --mix ${MIX}
    then read <that_tmp_dir>/crops-manifest.json`}
 
-Return the audit summary text in "summary". ${TIER === 'free'
+Return the audit summary text in "summary" and total_weak = the WEAK count from the "[device] N markers -> X strong, Y weak" line. ${TIER === 'free'
     ? 'Return an empty "crops" array.'
     : 'Return the manifest\'s "crops" array verbatim, but ensure each crop\'s "png" is an ABSOLUTE path.'}`,
   { schema: MANIFEST_SCHEMA, label: `triage:${DEVICE}`, phase: 'Triage' },
 )
 
+if (!triage || !Array.isArray(triage.crops)) {
+  return { engagement: ENG, device: DEVICE, tier: TIER, error: 'triage returned no usable result', verified: [] }
+}
+
 log(`Tier-0 triage complete (${DEVICE}, tier=${TIER}): ${triage.crops.length} crops to verify`)
 
 if (TIER === 'free' || triage.crops.length === 0) {
-  return { engagement: ENG, device: DEVICE, tier: TIER, summary: triage.summary, verified: [] }
+  return { engagement: ENG, device: DEVICE, tier: TIER, summary: triage.summary, total_weak: triage.total_weak ?? null, verified: [] }
 }
 
 // ---- Phase 2: vision verification (1 verifier, or 3-of majority for deep) ----
@@ -178,11 +183,19 @@ Return the crops-manifest "crops" array with ABSOLUTE png paths.`,
 }
 
 phase('Aggregate')
+// Coverage honesty: the MIX sample caps how many weak markers get verified. Surface
+// the gap so "verified" can't be misread as "the whole page was QA'd".
+const weakVerified = triage.crops.filter((c) => c.classification === 'weak').length
+const weakNotVerified = Math.max(0, (triage.total_weak ?? weakVerified) - weakVerified)
+if (weakNotVerified > 0) {
+  log(`Coverage gap: ${weakNotVerified} weak placements NOT verified (MIX cap ${MIX}) — raise --mix or use tier=deep`)
+}
 return {
   engagement: ENG,
   device: DEVICE,
   tier: TIER,
   summary: triage.summary,
+  coverage: { weak_total: triage.total_weak ?? null, weak_verified: weakVerified, weak_not_verified: weakNotVerified, mix_cap: MIX },
   totals: { verified: results.length, on_target: results.length - misplaced.length, misplaced: misplaced.length },
   misplaced: misplaced.map((r) => ({
     f_ref: r.f_ref, severity: r.severity, finding_title: r.finding_title,
