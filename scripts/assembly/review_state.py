@@ -1128,6 +1128,9 @@ def _hotspot_confidence(match_method: str | None) -> str:
         "unplaced": "needs-manual-marker",
         "banner": "needs-manual-marker",
         "operator_override": "exact-selector",
+        # Distributed hero-stack markers (diagnosis Fix #3): rendered at a
+        # spread position but explicitly queued for manual verification.
+        "section_stacked_manual": "needs-manual-marker",
     }.get(match_method or "", "needs-manual-marker")
 
 
@@ -1142,6 +1145,9 @@ def _marker_source(match_method: str | None) -> str:
         "proposed_anchor_viewport": "proposed_anchor_viewport",
         "section_centroid": "proposed_anchor_section",
         "banner": "proposed_anchor_viewport",
+        # Distributed hero-stack markers keep their section provenance; the
+        # finding-level needs-manual-marker confidence is what flags them.
+        "section_stacked_manual": "proposed_anchor_section",
     }.get(match_method or "", "manual")
 
 

@@ -538,6 +538,63 @@ def _resolve_proposed_anchor(
     return None
 
 
+# Distributed-stack match_method (diagnosis Fix #3, 2026-06-03). When multiple
+# absent findings fall back to the SAME section anchor, they collapse onto one
+# pixel — emission_autofix injects an identical (section_index=0,
+# section-bottom-overlay) anchor for every absent finding that lacks a
+# proposed_anchor, so a hero with N absent concerns stacks N pins at ~y=90%.
+# We spread them UP the section band by ordinal (each individually visible) and
+# relabel them so review_state maps the finding to hotspot_confidence=
+# "needs-manual-marker" — the markers still render at their distributed
+# positions, but the editor queues each for manual verification instead of any
+# pin claiming section-match confidence on a pixel it didn't earn.
+SECTION_STACKED_MANUAL = "section_stacked_manual"
+_STACK_DISTRIBUTE_FLOOR_PCT = 15.0
+
+
+def _distribute_stacked_section_markers(mappings: list[dict]) -> None:
+    """Spread co-located section-fallback markers up the band + flag for manual review.
+
+    Mutates ``mappings`` in place. Only touches ``proposed_anchor_section``
+    markers (the auto-injected absent-in-section fallback) that share an
+    identical (slide, x_pct, y_pct) with at least one sibling — a real stack.
+    Single markers and element/viewport placements are left untouched.
+    """
+    groups: dict[tuple, list[dict]] = {}
+    for m in mappings:
+        if m.get("match_method") != "proposed_anchor_section":
+            continue
+        pos = m.get("fallback_position")
+        if not isinstance(pos, dict):
+            continue
+        try:
+            key = (m.get("slide"), round(float(pos.get("x_pct", 0.0)), 1),
+                   round(float(pos.get("y_pct", 0.0)), 1))
+        except (TypeError, ValueError):
+            continue
+        groups.setdefault(key, []).append(m)
+
+    for (_slide, _x, y_pct), group in groups.items():
+        if len(group) < 2:
+            continue
+        # Deterministic order so re-runs are stable (burn_number, then f_ref).
+        group.sort(key=lambda m: (
+            m.get("burn_number") if isinstance(m.get("burn_number"), int) else 0,
+            str(m.get("f_ref") or ""),
+        ))
+        n = len(group)
+        bottom = max(_STACK_DISTRIBUTE_FLOOR_PCT, float(y_pct))
+        top = _STACK_DISTRIBUTE_FLOOR_PCT
+        for i, m in enumerate(group):
+            # Spread evenly across [top, bottom], bottom-anchored at the original y.
+            new_y = bottom - (bottom - top) * (i / (n - 1))
+            pos = dict(m.get("fallback_position") or {})
+            pos["y_pct"] = round(max(0.0, min(100.0, new_y)), 3)
+            m["fallback_position"] = pos
+            m["match_method"] = SECTION_STACKED_MANUAL
+            m["fallback_role"] = "absent_in_section_manual"
+
+
 def auto_map_markers_v2(
     findings: Sequence[dict],
     baton: dict,
@@ -723,6 +780,11 @@ def auto_map_markers_v2(
             "fallback_position": None,
             "scope": scope,
         })
+
+    # Phase 1b — break up hero stacks (diagnosis Fix #3). Distribute co-located
+    # section-fallback markers up the band + relabel them for manual review.
+    # Runs before Phase 2 so derived visual_evidence reflects the new method.
+    _distribute_stacked_section_markers(mappings)
 
     # Phase 2 — augment each mapping with visual_evidence so downstream
     # consumers (review-state writer, HTML builder, Phase 3 quality gates)

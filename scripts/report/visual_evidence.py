@@ -68,6 +68,10 @@ _MATCH_METHOD_TO_TYPE: dict[str, tuple[str, str]] = {
     "unplaced": ("page_level", "low"),
     "banner": ("page_level", "low"),
     "operator": ("page_level", "needs_review"),
+    # Distributed hero-stack fallback (diagnosis Fix #3): spread up the section
+    # band and explicitly queued for manual review — same evidence class as the
+    # section centroid it derives from.
+    "section_stacked_manual": ("section_absence", "low"),
 }
 
 
