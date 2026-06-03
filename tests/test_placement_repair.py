@@ -125,6 +125,11 @@ class TestRepairIntegration(unittest.TestCase):
         res = repair(self.eng, "desktop", ["pricing F-02", "pricing F-02"], _REPO)
         self.assertEqual(res["flagged"], 1)  # not 2
 
+    def test_non_dict_root_raises(self):
+        (self.eng / "review-state-desktop.json").write_text("[1, 2, 3]", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            repair(self.eng, "desktop", ["pricing F-02"], _REPO)
+
 
 class TestFinalize(unittest.TestCase):
     def test_applies_verdicts_to_repaired_file(self):

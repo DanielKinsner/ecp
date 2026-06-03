@@ -112,6 +112,8 @@ def analyze_device(engagement: Path, device: str, review_state_path: Path | None
     if not path.exists():
         return None
     rs = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(rs, dict):
+        return None
     markers = _dedup_by_fref(rs.get("markers") or [])
     findings = rs.get("findings") or []
 
@@ -220,7 +222,10 @@ def make_crop(engagement: Path, marker: dict, finding: dict | None,
     shot = _screenshot_for(engagement, marker.get("slide_id"))
     if shot is None:
         return None
-    img = Image.open(shot).convert("RGB")
+    try:
+        img = Image.open(shot).convert("RGB")  # convert() forces load -> truncated/corrupt raises here
+    except OSError:
+        return None  # corrupt/truncated/non-image file -> skip like a missing screenshot
     W, H = img.size
 
     def pct(k: str) -> float:
@@ -294,6 +299,9 @@ def _cmd_crops(args: argparse.Namespace) -> int:
     args.out.mkdir(parents=True, exist_ok=True)
     rs_path = args.review_state or (args.engagement / f"review-state-{args.device}.json")
     rs = json.loads(rs_path.read_text(encoding="utf-8"))
+    if not isinstance(rs, dict):
+        print(f"review-state root is not a JSON object: {rs_path}", file=sys.stderr)
+        return 2
     raw_by_fref = {m["f_ref"]: m for m in _dedup_by_fref(rs.get("markers") or []) if m.get("f_ref")}
     findings = _finding_index(rs)
     rep = analyze_device(args.engagement, args.device, rs_path)

@@ -109,6 +109,8 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
 
     rs_path = engagement / f"review-state-{device}.json"
     rs = json.loads(rs_path.read_text(encoding="utf-8"))
+    if not isinstance(rs, dict):
+        raise ValueError(f"{rs_path} root is not a JSON object")
     findings = {f["f_ref"]: f for f in rs.get("findings") or [] if isinstance(f, dict) and f.get("f_ref")}
     markers = {m["f_ref"]: m for m in rs.get("markers") or [] if isinstance(m, dict) and m.get("f_ref")}
 

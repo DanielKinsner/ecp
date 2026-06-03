@@ -100,5 +100,20 @@ class TestCrop(unittest.TestCase):
         self.assertEqual(entry["classification"], "weak")
 
 
+class TestCrashGuards(unittest.TestCase):
+    def test_corrupt_image_returns_none(self):
+        eng = Path(tempfile.mkdtemp(prefix="ecp-corrupt-"))
+        (eng / "section-1.jpg").write_bytes(b"not a real image")  # exists but unidentifiable
+        marker = {"f_ref": "x F-1", "slide_id": "desktop-section-1",
+                  "x_pct": 10, "y_pct": 10, "w_pct": 20, "h_pct": 10}
+        out = Path(tempfile.mkdtemp(prefix="ecp-corrupt-out-"))
+        self.assertIsNone(make_crop(eng, marker, {}, [], "weak", out))
+
+    def test_analyze_device_non_dict_root_returns_none(self):
+        eng = Path(tempfile.mkdtemp(prefix="ecp-nondict-"))
+        (eng / "review-state-desktop.json").write_text("[1, 2, 3]", encoding="utf-8")
+        self.assertIsNone(analyze_device(eng, "desktop"))
+
+
 if __name__ == "__main__":
     unittest.main()
