@@ -9,7 +9,8 @@ Implements a report-compatible subset of `workflows/acquire.md`:
 - resolves `agent-browser` in a Windows-friendly way (`shutil.which`)
 - sets device/viewport
 - navigates + settles
-- captures 1–6 JPEG viewport screenshots (hash de-dupe + one retry on duplicates)
+- captures viewport screenshots tiled to page height — up to 6 (desktop) / 12 (mobile)
+  by default, contiguous with slight overlap (hash de-dupe + one retry on duplicates)
 - extracts per-scroll element boxes and applies DPR scaling to match screenshot pixels
 - captures basic computed style metadata
 - writes DOM to `dom.html` (laptop/desktop) or `dom-mobile.html` (mobile)
@@ -660,9 +661,32 @@ def _outer_html(agent_browser: str, session: str | None) -> str:
     return _parse_eval_json_string(out)
 
 
-def _plan_scroll_ys(*, max_scroll: int, inner_h: int, doc_h: int, max_shots: int) -> list[int]:
-    max_shots = max(1, min(6, int(max_shots)))
-    n_by_page = max(1, int(math.ceil(doc_h / max(1, inner_h))))
+# Per-device viewport-screenshot caps. Mobile PDPs (390x844 CSS px) run far
+# taller than desktop, so a universal cap of 6 left ~700px gaps between evenly
+# spaced shots and stranded most of the page with no section image to anchor
+# hotspots to (Root Cause #2 of docs/2026-06-02-hotspot-placement-diagnosis.md).
+# Mobile now tiles contiguously up to MAX_SCREENSHOTS_MOBILE; both caps bound
+# audit cost. SCROLL_OVERLAP_FACTOR adds a small per-tile overlap so an element
+# straddling a viewport boundary still lands whole inside one shot.
+MAX_SCREENSHOTS_DESKTOP = 6
+MAX_SCREENSHOTS_MOBILE = 12
+SCROLL_OVERLAP_FACTOR = 1.1
+
+
+def _device_screenshot_cap(device: str) -> int:
+    return MAX_SCREENSHOTS_MOBILE if str(device).lower() == "mobile" else MAX_SCREENSHOTS_DESKTOP
+
+
+def _plan_scroll_ys(
+    *,
+    max_scroll: int,
+    inner_h: int,
+    doc_h: int,
+    max_shots: int,
+    overlap: float = SCROLL_OVERLAP_FACTOR,
+) -> list[int]:
+    max_shots = max(1, int(max_shots))
+    n_by_page = max(1, int(math.ceil((doc_h / max(1, inner_h)) * max(1.0, float(overlap)))))
     n = min(max_shots, n_by_page)
     if n == 1:
         ys = [0]
@@ -867,7 +891,9 @@ def _run_one_device(
     dpr = float(m0.get("dpr") or prof.dpr)
     dpr_i = _dpr_int_from(dpr)
 
-    max_shots_eff = int(max_screenshots)
+    _req_shots = int(max_screenshots)
+    # 0 (the default) = auto per-device cap; an explicit nonzero value overrides it.
+    max_shots_eff = _device_screenshot_cap(device) if _req_shots <= 0 else _req_shots
     if not viewport_ok:
         max_shots_eff = 1
         print(
@@ -1232,8 +1258,12 @@ def main() -> int:
     parser.add_argument(
         "--max-screenshots",
         type=int,
-        default=6,
-        help="Max screenshots to capture (capped at 6; minimum 1)",
+        default=0,
+        help=(
+            "Max viewport screenshots per device; 0 = auto per-device cap "
+            f"(desktop {MAX_SCREENSHOTS_DESKTOP}, mobile {MAX_SCREENSHOTS_MOBILE}). "
+            "Pass a nonzero value to override for all devices."
+        ),
     )
     parser.add_argument(
         "--settle-seconds",
@@ -1327,7 +1357,7 @@ def main() -> int:
                     ecp_ov=ecp_ov,
                     sec_hints=sec_hints,
                     ecp_cfg=ecp_cfg,
-                    max_screenshots=6,
+                    max_screenshots=0,
                     settle_seconds=max(float(args.settle_seconds), 5.0),
                     post_scroll_wait=max(float(args.post_scroll_wait), 1.25),
                     goto_timeout=max(float(args.goto_timeout), 45.0),
