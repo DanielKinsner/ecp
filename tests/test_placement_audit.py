@@ -10,7 +10,13 @@ from pathlib import Path
 _REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO / "scripts"))
 
-from report.placement_audit import analyze_device, score_marker, _find_stacks  # noqa: E402
+from report.placement_audit import (  # noqa: E402
+    analyze_device,
+    score_marker,
+    _find_stacks,
+    _screenshot_for,
+    make_crop,
+)
 
 
 def _m(**kw):
@@ -68,6 +74,30 @@ class TestAnalyzeDevice(unittest.TestCase):
         self.assertEqual(r["strong"], 1)
         self.assertEqual(r["weak"], 3)
         self.assertEqual(len(r["stacks"]), 1)
+
+
+class TestCrop(unittest.TestCase):
+    def test_screenshot_mapping(self):
+        eng = Path(tempfile.mkdtemp(prefix="ecp-crop-"))
+        (eng / "section-2.jpg").write_bytes(b"x")
+        (eng / "section-2-mobile.jpg").write_bytes(b"x")
+        self.assertEqual(_screenshot_for(eng, "desktop-section-2").name, "section-2.jpg")
+        self.assertEqual(_screenshot_for(eng, "mobile-section-2").name, "section-2-mobile.jpg")
+        self.assertIsNone(_screenshot_for(eng, "desktop-section-9"))
+
+    def test_make_crop_writes_png(self):
+        from PIL import Image
+        eng = Path(tempfile.mkdtemp(prefix="ecp-crop-"))
+        Image.new("RGB", (1000, 800), (200, 200, 200)).save(eng / "section-1.jpg", "JPEG")
+        out = Path(tempfile.mkdtemp(prefix="ecp-crops-out-"))
+        marker = {"f_ref": "pricing F-01", "slide_id": "desktop-section-1",
+                  "x_pct": 30, "y_pct": 30, "w_pct": 20, "h_pct": 15, "severity": "HIGH"}
+        entry = make_crop(eng, marker, {"finding_title": "T", "observation": "o"},
+                          ["stacked: 3 findings on one pixel"], "weak", out)
+        self.assertIsNotNone(entry)
+        self.assertTrue(Path(entry["png"]).exists())
+        self.assertEqual(entry["f_ref"], "pricing F-01")
+        self.assertEqual(entry["classification"], "weak")
 
 
 if __name__ == "__main__":

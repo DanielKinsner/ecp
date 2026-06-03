@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -121,14 +122,14 @@ def analyze_device(engagement: Path, device: str) -> dict | None:
             stacked_frefs[fr] = len(frefs)
 
     flagged: list[dict] = []
-    strong = 0
+    strong_frefs: list[str] = []
     for m in markers:
         reasons = score_marker(m)
         fref = m.get("f_ref") or m.get("marker_id")
         if fref in stacked_frefs:
             reasons.append(f"stacked: {stacked_frefs[fref]} findings on one pixel")
         if not reasons:
-            strong += 1
+            strong_frefs.append(fref)
             continue
         ve = m.get("visual_evidence") if isinstance(m.get("visual_evidence"), dict) else {}
         flagged.append(
@@ -148,7 +149,8 @@ def analyze_device(engagement: Path, device: str) -> dict | None:
         "device": device,
         "total_markers": len(markers),
         "total_findings": len(findings),
-        "strong": strong,
+        "strong": len(strong_frefs),
+        "strong_frefs": strong_frefs,
         "weak": len(flagged),
         "stacks": [
             {"slide_id": k[0], "x_pct": k[1], "y_pct": k[2], "f_refs": v}
@@ -187,16 +189,95 @@ def _print_summary(report: dict) -> None:
                 print(f"    - {f['f_ref']} [{f['severity']}] {f['slide_id']}: {'; '.join(f['reasons'])}")
 
 
-def main(argv: list[str] | None = None) -> int:
-    force_utf8_io()
-    parser = argparse.ArgumentParser(description=__doc__)
-    sub = parser.add_subparsers(dest="cmd", required=True)
-    a = sub.add_parser("audit", help="Tier-0 placement-confidence report")
-    a.add_argument("--engagement", required=True, type=Path)
-    a.add_argument("--device", default="both", choices=["desktop", "mobile", "both"])
-    a.add_argument("--json", type=Path, default=None, help="write the full report JSON here")
-    args = parser.parse_args(argv)
+# ---------------------------------------------------------------------------
+# Tier-1 input: composite the marker box onto its screenshot and crop
+# ---------------------------------------------------------------------------
 
+
+def _screenshot_for(engagement: Path, slide_id: str | None) -> Path | None:
+    """Map a slide_id (e.g. 'mobile-section-2') to its section screenshot file."""
+    if not slide_id:
+        return None
+    n = slide_id.rsplit("-", 1)[-1]
+    name = f"section-{n}-mobile.jpg" if slide_id.startswith("mobile") else f"section-{n}.jpg"
+    cand = engagement / name
+    return cand if cand.exists() else None
+
+
+def _finding_index(rs: dict) -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for f in rs.get("findings") or []:
+        if isinstance(f, dict) and f.get("f_ref"):
+            out[f["f_ref"]] = f
+    return out
+
+
+def make_crop(engagement: Path, marker: dict, finding: dict | None,
+              reasons: list[str], classification: str, out_dir: Path) -> dict | None:
+    """Draw the marker box on its screenshot, crop to box+context, save a PNG."""
+    from PIL import Image, ImageDraw
+
+    shot = _screenshot_for(engagement, marker.get("slide_id"))
+    if shot is None:
+        return None
+    img = Image.open(shot).convert("RGB")
+    W, H = img.size
+
+    def pct(k: str) -> float:
+        v = marker.get(k)
+        return float(v) if isinstance(v, (int, float)) else 0.0
+
+    left, top = pct("x_pct") / 100 * W, pct("y_pct") / 100 * H
+    bw, bh = pct("w_pct") / 100 * W, pct("h_pct") / 100 * H
+
+    draw = ImageDraw.Draw(img)
+    draw.rectangle([left, top, left + bw, top + bh], outline=(249, 115, 22),
+                   width=max(4, W // 240))
+
+    margin = max(max(bw, bh) * 0.6, 220)
+    crop = img.crop((max(0, int(left - margin)), max(0, int(top - margin)),
+                     min(W, int(left + bw + margin)), min(H, int(top + bh + margin))))
+    if max(crop.size) > 900:  # cap to keep vision-token cost low
+        s = 900 / max(crop.size)
+        crop = crop.resize((int(crop.size[0] * s), int(crop.size[1] * s)))
+
+    fref = marker.get("f_ref") or "marker"
+    slug = re.sub(r"[^a-z0-9]+", "-", fref.lower()).strip("-")
+    out_path = out_dir / f"{marker.get('slide_id', 'slide')}__{slug}.png"
+    crop.save(out_path, "PNG")
+
+    ve = marker.get("visual_evidence") if isinstance(marker.get("visual_evidence"), dict) else {}
+    oa = ve.get("observed_anchor") if isinstance(ve.get("observed_anchor"), dict) else {}
+    f = finding or {}
+    return {
+        "f_ref": fref,
+        "png": str(out_path),
+        "slide_id": marker.get("slide_id"),
+        "severity": marker.get("severity"),
+        "classification": classification,
+        "reasons": reasons,
+        "finding_title": f.get("finding_title") or f.get("title", ""),
+        "observation": (f.get("observation") or "")[:400],
+        "element_hint": oa.get("selector_hint") or oa.get("text_quote") or "",
+    }
+
+
+def _select_for_mix(rep: dict, mix: int) -> list[tuple[str, list[str], str]]:
+    """Pick a representative sample: stacked + HIGH-severity weak first, plus
+    a couple of strong markers as controls. Returns (f_ref, reasons, class)."""
+    def rank(f: dict) -> tuple:
+        stacked = any("stacked" in r for r in f["reasons"])
+        return (0 if stacked else 1, 0 if f.get("severity") == "HIGH" else 1)
+
+    weak_sorted = sorted(rep["flagged"], key=rank)
+    n_weak = max(1, mix - 2)
+    picks = [(f["f_ref"], f["reasons"], "weak") for f in weak_sorted[:n_weak]]
+    for fr in rep.get("strong_frefs", [])[: max(0, mix - len(picks))]:
+        picks.append((fr, ["strong: exact element anchor (control)"], "strong"))
+    return picks
+
+
+def _cmd_audit(args: argparse.Namespace) -> int:
     devices = _DEVICES if args.device == "both" else (args.device,)
     report = analyze(args.engagement, devices)
     if not report["devices"]:
@@ -207,6 +288,63 @@ def main(argv: list[str] | None = None) -> int:
     out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"\nWrote {out_path}")
     return 0
+
+
+def _cmd_crops(args: argparse.Namespace) -> int:
+    args.out.mkdir(parents=True, exist_ok=True)
+    rs = json.loads((args.engagement / f"review-state-{args.device}.json").read_text(encoding="utf-8"))
+    raw_by_fref = {m["f_ref"]: m for m in _dedup_by_fref(rs.get("markers") or []) if m.get("f_ref")}
+    findings = _finding_index(rs)
+    rep = analyze_device(args.engagement, args.device)
+
+    if args.f_refs:
+        flagged_reasons = {f["f_ref"]: f["reasons"] for f in rep["flagged"]}
+        picks = [(fr, flagged_reasons.get(fr, ["strong (control)"]),
+                  "weak" if fr in flagged_reasons else "strong")
+                 for fr in [x.strip() for x in args.f_refs.split(",") if x.strip()]]
+    else:
+        picks = _select_for_mix(rep, args.mix)
+
+    manifest = []
+    for fref, reasons, classification in picks:
+        m = raw_by_fref.get(fref)
+        if not m:
+            continue
+        entry = make_crop(args.engagement, m, findings.get(fref), reasons, classification, args.out)
+        if entry:
+            manifest.append(entry)
+            print(f"  {classification:6s} {fref}: {entry['png']}")
+
+    man_path = args.out / "crops-manifest.json"
+    man_path.write_text(json.dumps({"engagement": args.engagement.name, "device": args.device,
+                                    "crops": manifest}, indent=2), encoding="utf-8")
+    print(f"\nWrote {len(manifest)} crops + {man_path}")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    force_utf8_io()
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    a = sub.add_parser("audit", help="Tier-0 placement-confidence report")
+    a.add_argument("--engagement", required=True, type=Path)
+    a.add_argument("--device", default="both", choices=["desktop", "mobile", "both"])
+    a.add_argument("--json", type=Path, default=None, help="write the full report JSON here")
+
+    c = sub.add_parser("crops", help="composite marker boxes onto screenshots (Tier-1 input)")
+    c.add_argument("--engagement", required=True, type=Path)
+    c.add_argument("--device", default="desktop", choices=["desktop", "mobile"])
+    c.add_argument("--out", required=True, type=Path)
+    c.add_argument("--mix", type=int, default=6, help="auto-select N markers (weak + strong controls)")
+    c.add_argument("--f-refs", default=None, help="comma-separated f_refs to crop (overrides --mix)")
+
+    args = parser.parse_args(argv)
+    if args.cmd == "audit":
+        return _cmd_audit(args)
+    if args.cmd == "crops":
+        return _cmd_crops(args)
+    return 1
 
 
 if __name__ == "__main__":
