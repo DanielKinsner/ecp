@@ -176,7 +176,10 @@ def check_ethics_findings_have_source_urls(
         if state in {"BLOCK", "ADJACENT"}:
             actionable_findings.append(f)
             local_id = f.get("local_id")
-            f_ref = f"ethics F-{local_id:02d}" if local_id else "ethics F-??"
+            try:
+                f_ref = f"ethics F-{int(local_id):02d}"
+            except (TypeError, ValueError):
+                f_ref = "ethics F-??"
             source_url = (f.get("source_url") or "").strip()
 
             if not source_url:
@@ -658,7 +661,8 @@ def check_clusters_represented(
             detail={"error": str(e)},
         )
 
-    expected = set(meta.get("clusters_used") or []) - {"ethics"}
+    clusters_used = meta.get("clusters_used")
+    expected = (set(clusters_used) if isinstance(clusters_used, list) else set()) - {"ethics"}
     valid_refs = canon.get("valid_refs") or []
     represented = {
         ref.split(" F-", 1)[0]
@@ -869,8 +873,13 @@ def check_trace_counters_reconcile_with_artifacts(
     # emissions). Restrict to (cluster, device) pairs that were actually
     # requested per meta.json so an unrelated stray emission doesn't
     # inflate the observation.
-    requested_clusters = [c for c in (meta.get("clusters_used") or []) if c != "ethics"]
-    requested_devices = list(meta.get("devices_scanned") or [])
+    _clusters_used = meta.get("clusters_used")
+    requested_clusters = (
+        [c for c in _clusters_used if c != "ethics"]
+        if isinstance(_clusters_used, list) else []
+    )
+    _devices_scanned = meta.get("devices_scanned")
+    requested_devices = _devices_scanned if isinstance(_devices_scanned, list) else []
     observed_specialists = 0
     for cluster in requested_clusters:
         for device in requested_devices:
