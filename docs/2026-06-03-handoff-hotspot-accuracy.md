@@ -19,12 +19,13 @@ chain see the project memory; this file is ECP-specific.
 - **The verification side is built**: a tiered visual-QA gate (vision agents look at each
   suspect hotspot crop and judge on-target/misplaced) + a deterministic Tier-0 analyzer +
   an auto-reanchor/flag repair loop with a diagnostic log.
+- **All four diagnosis fixes (#1–#4) are now in code.** #3 (hero-stack distribute + flag)
+  shipped this session as `de95dfa`; #4 is substantially covered by the placement_audit tool.
 - **One thing is blocked:** behavioral confirmation needs a single live `/ecp:audit`
-  (~45 min, needs an agent-browser machine). That **one audit verifies BOTH root causes** —
-  see the runbook below.
-- **The best audit-independent next step is diagnosis Fix #3** (renderer guard against the
-  `section-bottom-overlay / section_index=0` hero stack). It needs no live audit and is fully
-  unit-testable.
+  (~45 min, needs an agent-browser machine). That **one audit verifies both root causes** (and
+  lets you eyeball the Fix #3 distributed hero column) — see the runbook below.
+- **The best audit-independent next step is folding Fix #4's `weak_placements_count` into the
+  renderer summary / CI**, then wiring the visual-QA gate into the audit flow.
 
 ---
 
@@ -43,8 +44,11 @@ that contain the symptom and prevent silent recurrence.
 | --- | --- | --- |
 | #1 | Capture hero controls into `elements[]` / anchor candidates | **DONE** `5634e18` |
 | #2 | Mobile coverage tracks page height (contiguous tiling) | **DONE** `764d726` |
-| #3 | Renderer guard: reject `(section-bottom-overlay, section_index=0)` for hero-absent findings → force element anchor or unplaced | **PENDING** (next knockable) |
+| #3 | Hero absent-finding stack: distribute up the band + flag for manual review (operator chose "distribute + flag" over pure force-unplaced) | **DONE** `de95dfa` |
 | #4 | Surface placement confidence in the render summary so "0 unplaced" ≠ "all correct" | **MOSTLY DONE** via `placement_audit.py` + visual-QA gate; remaining = fold the signal into the renderer's own summary/CI |
+
+**All four diagnosis fixes are now in code.** The only thing left before a confident
+"hotspots are accurate" claim is the single live verification audit (runbook below).
 
 ---
 
@@ -146,26 +150,30 @@ the documented cost cap. If a real PDP exceeds that, options are (a) bump the co
 
 ## What's next (prioritized)
 
-**A. Diagnosis Fix #3 — renderer guard (BEST audit-independent knockable, do this next).**
-Reject `(source/kind = section-bottom-overlay, section_index = 0)` for hero "absent" findings.
-Diagnosis recommends option (a): force an element anchor, return `unplaced` if none (Strategy 4
-already surfaces manual-placement decisions safely) rather than collapsing to `y=77.737`.
-Fully unit-testable, no live audit needed. Renderer/business-rule layer
-(`scripts/report/v2_markers.py` / `scripts/assembly/business_rules.py`).
+**A. Run the verification audit** (runbook above) — the one remaining blocker on a confident
+"hotspots are accurate" claim. Verifies RC#1 + RC#2 in a single ~45-min run. Also eyeball that
+the hero stack now renders as a distributed, manual-flagged column (Fix #3) rather than one pin.
 
-**B. Run the verification audit** (section above) — unblocks the confidence claim on #1 + #2.
-
-**C. Diagnosis Fix #4 — placement confidence in the render summary.**
+**B. Diagnosis Fix #4 — placement confidence in the render summary.**
 Largely already built (`placement_audit.py` counts weak placements + flags ≥3-on-a-pixel
 stacks). Remaining: fold `weak_placements_count` into the renderer's own summary output / CI
-trace so "0 unplaced" can never read as "all correct" without running the gate.
+trace so "0 unplaced" can never read as "all correct" without running the gate. Audit-independent;
+the next knockable.
 
-**D. Wire the visual-QA gate into the audit flow.** Today it's standalone
+**C. Wire the visual-QA gate into the audit flow.** Today it's standalone
 (`.claude/workflows/ecp-visual-qa.js`); `workflows/audit.md` doesn't call it. Folding a
 `free`-tier Tier-0 pass into the audit (and `--visual` → `standard`/`deep`) makes placement
 QA automatic instead of a remembered manual step.
 
-**E. Residual long-mobile-page coverage** (>~10k px) — see RC#2 note. Low priority.
+**D. Residual long-mobile-page coverage** (>~10k px) — see RC#2 note. Low priority.
+
+**Fix #3 — how it landed (for the verification eyeball).** Absent findings that share the
+auto-injected `(section_index=0, section-bottom-overlay)` anchor are now spread up the section
+band by ordinal (`scripts/report/v2_markers.py:_distribute_stacked_section_markers`), relabeled
+`match_method="section_stacked_manual"` → finding `hotspot_confidence="needs-manual-marker"`
+(editor "Place manually" queue) with a valid `proposed_anchor_section` source. Markers still
+render at their distributed positions; nothing disappears. In the new audit, the hero band that
+used to show one stacked pin should show a vertical column of manual-flagged markers.
 
 ---
 
