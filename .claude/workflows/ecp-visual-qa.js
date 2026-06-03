@@ -73,13 +73,12 @@ const triage = await agent(
   `From the directory ${ROOT}, run these two commands with the project Python (python / py -3), then return the result.
 
 1. python scripts/report/placement_audit.py audit --engagement ${ENG} --device ${DEVICE}
-2. ${TIER === 'free' ? '(skip — free tier)' : `Make a fresh empty temp dir (e.g. under the system temp), then run:
-   python scripts/report/placement_audit.py crops --engagement ${ENG} --device ${DEVICE} --out <that_tmp_dir> --mix ${MIX}
-   then read <that_tmp_dir>/crops-manifest.json`}
+2. ${TIER === 'free' ? '(skip — free tier)' : `python scripts/report/placement_audit.py crops --engagement ${ENG} --device ${DEVICE} --out ${ENG}/.visual-qa-crops/triage --mix ${MIX}
+   then read ${ENG}/.visual-qa-crops/triage/crops-manifest.json`}
 
 Return the audit summary text in "summary" and total_weak = the WEAK count from the "[device] N markers -> X strong, Y weak" line. ${TIER === 'free'
     ? 'Return an empty "crops" array.'
-    : 'Return the manifest\'s "crops" array verbatim, but ensure each crop\'s "png" is an ABSOLUTE path.'}`,
+    : 'Return the manifest\'s "crops" array verbatim (the manifest png paths are already absolute).'}`,
   { schema: MANIFEST_SCHEMA, label: `triage:${DEVICE}`, phase: 'Triage' },
 )
 
@@ -117,7 +116,7 @@ const verified = await pipeline(
       const v = votes.filter(Boolean)
       const onTarget = v.filter((x) => x.verdict === 'on-target').length
       // majority must affirm on-target, else it's a placement problem
-      const status = v.length && onTarget > v.length / 2 ? 'on-target' : 'misplaced'
+      const status = onTarget > VOTES / 2 ? 'on-target' : 'misplaced' // vs configured VOTES, not survivors
       return { ...c, status, on_target_votes: onTarget, votes: v }
     }),
 )
@@ -143,9 +142,9 @@ Then read ${ENG}/placement-repair-log.json and return: re_anchored (array of {f_
   if (rep.re_anchored.length > 0) {
     const reRefs = rep.re_anchored.map((r) => r.f_ref).join(',')
     const recrop = await agent(
-      `From ${ROOT}, make a fresh temp dir and run with the project Python:
-  python scripts/report/placement_audit.py crops --engagement ${ENG} --device ${DEVICE} --review-state "${rep.repaired_path}" --out <tmp_dir> --f-refs "${reRefs}"
-Return the crops-manifest "crops" array with ABSOLUTE png paths.`,
+      `From ${ROOT}, run with the project Python:
+  python scripts/report/placement_audit.py crops --engagement ${ENG} --device ${DEVICE} --review-state "${rep.repaired_path}" --out ${ENG}/.visual-qa-crops/recrop --f-refs "${reRefs}"
+Then read ${ENG}/.visual-qa-crops/recrop/crops-manifest.json and return its "crops" array (png paths are already absolute).`,
       { schema: CROPS_SCHEMA, label: 'repair:recrop', phase: 'Repair' },
     )
     reverified = (await parallel(

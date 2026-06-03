@@ -258,7 +258,7 @@ def make_crop(engagement: Path, marker: dict, finding: dict | None,
     f = finding or {}
     return {
         "f_ref": fref,
-        "png": str(out_path),
+        "png": str(out_path.resolve()),  # absolute so callers never need to re-derive it
         "slide_id": marker.get("slide_id"),
         "severity": marker.get("severity"),
         "classification": classification,
