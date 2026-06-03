@@ -124,8 +124,12 @@ def derive_quick_wins(findings, valid_refs: set[str]) -> list[str]:
     out = []
     seen = set()
     for f in findings:
-        change_type = getattr(getattr(f, "effort", None), "change_type", None)
-        change_scope = getattr(getattr(f, "effort", None), "change_scope", None)
+        # Finding flattens the JSON effort.{change_type,change_scope} onto
+        # top-level fields (json_parser._finding_from_dict); there is no
+        # f.effort attribute. Reading f.effort.* silently yielded None and
+        # made quick_wins always empty.
+        change_type = f.change_type
+        change_scope = f.change_scope
         if change_type in QUICK_TYPES and change_scope in QUICK_SCOPES:
             ref = f"{f.cluster} F-{f.local_index:02d}"
             if ref in valid_refs and ref not in seen:
@@ -143,9 +147,12 @@ def derive_severity_manifest(findings, valid_refs: set[str]) -> list[str]:
         if ref not in valid_refs or ref in seen:
             continue
         seen.add(ref)
-        sev = getattr(f, "severity", None) or "?"
-        tier = getattr(f, "evidence_tier", None) or "Bronze"
-        conf = getattr(f, "confidence", None) or 0.5
+        # Finding renames the JSON 'severity'/'evidence_tier' to 'priority'/'tier'
+        # (json_parser._finding_from_dict). Reading f.severity/f.evidence_tier
+        # silently returned None, collapsing the sort to confidence-only.
+        sev = f.priority or "?"
+        tier = f.tier or "Bronze"
+        conf = f.confidence or 0.5
         rows.append((SEVERITY_RANK.get(sev, 0), TIER_RANK.get(tier, 0), conf, ref))
     rows.sort(key=lambda r: (-r[0], -r[1], -r[2]))
     return [r[3] for r in rows]
