@@ -11,6 +11,7 @@ import json
 import sys
 from pathlib import Path
 
+from cli_io import force_utf8_io
 from assembly.parser import load_all_cluster_files
 from assembly.dedup import deduplicate
 from assembly.scoring import score_groups
@@ -43,6 +44,7 @@ def _output_filename(device: str, devices_requested: list[str]) -> str:
 
 
 def main() -> None:
+    force_utf8_io()
     parser = argparse.ArgumentParser(
         description="Assemble ECP audit findings from cluster files into audit.md",
     )

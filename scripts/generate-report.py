@@ -23,6 +23,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from cli_io import force_utf8_io
 from report.html_builder import generate_report
 from report.v2_html_builder import generate_v2_report
 from assembly.review_state import (
@@ -38,6 +39,7 @@ def _engagement_has_v2_inputs(engagement_dir: Path) -> bool:
 
 
 def main() -> int:
+    force_utf8_io()
     parser = argparse.ArgumentParser(description="Generate E-Commerce Psychology visual report")
     parser.add_argument("--engagement", required=True, help="Path to engagement directory")
     parser.add_argument(
