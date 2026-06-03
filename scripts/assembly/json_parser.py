@@ -192,8 +192,12 @@ def parse_emission_file(
     path = Path(path)
     payload = json.loads(path.read_text(encoding="utf-8"))
 
-    if anchor_candidates_sidecar is not None:
+    if anchor_candidates_sidecar is not None and isinstance(payload, dict):
         # Lazy import to avoid pulling assembly.anchor_candidates into the
+        # (isinstance guard: a non-object payload — list/scalar — must fall
+        # through to validate_emission_payload, which raises a clean
+        # EmissionValidationError, rather than crashing the resolver with
+        # AttributeError before schema validation runs.)
         # critical schema-validation path when no sidecar is provided.
         from .anchor_candidates import resolve_candidate_ids_in_emission
         payload, _resolution_log = resolve_candidate_ids_in_emission(
