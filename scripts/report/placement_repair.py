@@ -173,22 +173,70 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
             "repaired_path": str(repaired_path), "log_path": str(log_path)}
 
 
+def finalize(engagement: Path, device: str, confirmed: list[str], reverted: list[str]) -> dict:
+    """Apply vision re-verify verdicts to the repaired review-state.
+
+    A re-anchor lands as the fail-safe "section-match" (check placement). After the
+    workflow re-verifies it, this persists the outcome: vision-confirmed re-anchors
+    become confident ("exact-selector"); vision-rejected OR never-verified ones
+    queue manual placement ("needs-manual-marker") — so a re-anchor is never adopted
+    confidently by omission.
+    """
+    rs_path = engagement / f"review-state-{device}.repaired.json"
+    rs = json.loads(rs_path.read_text(encoding="utf-8"))
+    if not isinstance(rs, dict):
+        raise ValueError(f"{rs_path} root is not a JSON object")
+    findings = {f["f_ref"]: f for f in rs.get("findings") or [] if isinstance(f, dict) and f.get("f_ref")}
+    up = down = 0
+    for fr in confirmed:
+        f = findings.get(fr)
+        if f is not None:
+            f["hotspot_confidence"] = "exact-selector"
+            up += 1
+    for fr in reverted:
+        f = findings.get(fr)
+        if f is not None:
+            f["hotspot_confidence"] = "needs-manual-marker"
+            down += 1
+    rs_path.write_text(json.dumps(rs, indent=2), encoding="utf-8")
+    return {"confirmed": up, "reverted": down, "repaired_path": str(rs_path)}
+
+
+def _csv(s: str | None) -> list[str]:
+    return [x.strip() for x in (s or "").split(",") if x.strip()]
+
+
 def main(argv: list[str] | None = None) -> int:
     force_utf8_io()
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--engagement", required=True, type=Path)
-    p.add_argument("--device", default="desktop", choices=["desktop", "mobile"])
-    p.add_argument("--misplaced", required=True, help="comma-separated f_refs flagged misplaced by the visual gate")
-    p.add_argument("--plugin-root", type=Path, default=_SCRIPTS.parent)
-    args = p.parse_args(argv)
+    sub = p.add_subparsers(dest="cmd", required=True)
 
-    misplaced = [x.strip() for x in args.misplaced.split(",") if x.strip()]
-    res = repair(args.engagement, args.device, misplaced, args.plugin_root)
-    print(f"Repair: {res['re_anchored']} re-anchored, {res['flagged']} flagged for manual\n")
-    for e in res["log"]:
-        print(f"  [{e['action']}] {e['f_ref']}: {e.get('reason', '')}")
-    print(f"\nWrote {res['repaired_path']}\nWrote {res['log_path']}")
-    return 0
+    r = sub.add_parser("repair", help="re-anchor / flag misplaced findings")
+    r.add_argument("--engagement", required=True, type=Path)
+    r.add_argument("--device", default="desktop", choices=["desktop", "mobile"])
+    r.add_argument("--misplaced", required=True, help="comma-separated f_refs flagged misplaced by the visual gate")
+    r.add_argument("--plugin-root", type=Path, default=_SCRIPTS.parent)
+
+    fz = sub.add_parser("finalize", help="apply vision re-verify verdicts to the repaired file")
+    fz.add_argument("--engagement", required=True, type=Path)
+    fz.add_argument("--device", default="desktop", choices=["desktop", "mobile"])
+    fz.add_argument("--confirmed", default="", help="comma-separated f_refs vision confirmed on-target")
+    fz.add_argument("--reverted", default="", help="comma-separated f_refs vision rejected or left unverified")
+
+    args = p.parse_args(argv)
+    if args.cmd == "repair":
+        res = repair(args.engagement, args.device, _csv(args.misplaced), args.plugin_root)
+        print(f"Repair: {res['re_anchored']} re-anchored, {res['flagged']} flagged for manual\n")
+        for e in res["log"]:
+            print(f"  [{e['action']}] {e['f_ref']}: {e.get('reason', '')}")
+        print(f"\nWrote {res['repaired_path']}\nWrote {res['log_path']}")
+        return 0
+    if args.cmd == "finalize":
+        res = finalize(args.engagement, args.device, _csv(args.confirmed), _csv(args.reverted))
+        print(f"Finalize: {res['confirmed']} confirmed -> exact-selector, "
+              f"{res['reverted']} reverted -> needs-manual-marker\nWrote {res['repaired_path']}")
+        return 0
+    return 1
 
 
 if __name__ == "__main__":

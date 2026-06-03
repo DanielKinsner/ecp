@@ -128,7 +128,7 @@ if (REPAIR && misplaced.length > 0) {
   const misplacedRefs = misplaced.map((r) => r.f_ref).join(',')
   const rep = await agent(
     `From ${ROOT}, run with the project Python (python / py -3):
-  python scripts/report/placement_repair.py --engagement ${ENG} --device ${DEVICE} --misplaced "${misplacedRefs}" --plugin-root ${ROOT}
+  python scripts/report/placement_repair.py repair --engagement ${ENG} --device ${DEVICE} --misplaced "${misplacedRefs}" --plugin-root ${ROOT}
 Then read ${ENG}/placement-repair-log.json and return: re_anchored (array of {f_ref} from log entries with action "re-anchored"), flagged (array of {f_ref, reason} from entries with action "flagged"), and repaired_path = the absolute path to ${ENG}/review-state-${DEVICE}.repaired.json.`,
     { schema: REPAIR_SCHEMA, label: 'repair', phase: 'Repair' },
   )
@@ -150,13 +150,29 @@ Return the crops-manifest "crops" array with ABSOLUTE png paths.`,
       ),
     )).filter(Boolean)
   }
-  const fixed = reverified.filter((r) => r.kept).map((r) => r.f_ref)
+  const confirmed = reverified.filter((r) => r.kept).map((r) => r.f_ref)
   const reverted = reverified.filter((r) => !r.kept)
-  log(`Repair: ${fixed.length} re-anchored+verified, ${reverted.length} reverted to manual, ${rep.flagged.length} flagged`)
+  // Reconcile: a re-anchor that got NO verdict (e.g. screenshot missing) must fail
+  // safe to manual — never adopted by omission.
+  const gotVerdict = new Set(reverified.map((r) => r.f_ref))
+  const noVerdict = rep.re_anchored.map((r) => r.f_ref).filter((fr) => !gotVerdict.has(fr))
+  const toManual = reverted.map((r) => r.f_ref).concat(noVerdict)
+
+  // Persist the verdicts into .repaired.json: confirmed -> confident, everything
+  // else -> needs-manual-marker. (repair() already left re-anchors at the safe
+  // "section-match" default, so even if this step is skipped nothing reads "Likely OK".)
+  await agent(
+    `From ${ROOT}, run with the project Python and report the one-line result:
+  python scripts/report/placement_repair.py finalize --engagement ${ENG} --device ${DEVICE} --confirmed "${confirmed.join(',')}" --reverted "${toManual.join(',')}"`,
+    { label: 'repair:finalize', phase: 'Repair' },
+  )
+
+  log(`Repair: ${confirmed.length} verified, ${reverted.length} reverted, ${noVerdict.length} no-verdict -> manual, ${rep.flagged.length} flagged`)
   repair = {
     repaired_path: rep.repaired_path,
-    re_anchored_verified: fixed,
+    re_anchored_verified: confirmed,
     re_anchored_reverted: reverted.map((r) => ({ f_ref: r.f_ref, verdict: r.verdict, evidence: r.evidence })),
+    no_verdict_forced_manual: noVerdict,
     flagged_for_manual: rep.flagged,
   }
 }

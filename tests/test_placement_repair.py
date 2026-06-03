@@ -12,7 +12,7 @@ import json  # noqa: E402
 import tempfile  # noqa: E402
 
 import assembly.review_state as _rs_mod  # noqa: E402
-from report.placement_repair import decide_match, _overlap, _query_tokens, repair  # noqa: E402
+from report.placement_repair import decide_match, _overlap, _query_tokens, repair, finalize  # noqa: E402
 
 
 def _t(label, e):
@@ -124,6 +124,22 @@ class TestRepairIntegration(unittest.TestCase):
     def test_duplicate_misplaced_processed_once(self):
         res = repair(self.eng, "desktop", ["pricing F-02", "pricing F-02"], _REPO)
         self.assertEqual(res["flagged"], 1)  # not 2
+
+
+class TestFinalize(unittest.TestCase):
+    def test_applies_verdicts_to_repaired_file(self):
+        eng = Path(tempfile.mkdtemp(prefix="ecp-finalize-"))
+        rs = {"findings": [
+            {"f_ref": "a F-1", "hotspot_confidence": "section-match"},
+            {"f_ref": "b F-2", "hotspot_confidence": "section-match"},
+        ], "markers": []}
+        (eng / "review-state-desktop.repaired.json").write_text(json.dumps(rs), encoding="utf-8")
+        res = finalize(eng, "desktop", ["a F-1"], ["b F-2"])
+        rf = {f["f_ref"]: f for f in
+              json.loads((eng / "review-state-desktop.repaired.json").read_text(encoding="utf-8"))["findings"]}
+        self.assertEqual(rf["a F-1"]["hotspot_confidence"], "exact-selector")       # confirmed
+        self.assertEqual(rf["b F-2"]["hotspot_confidence"], "needs-manual-marker")  # reverted/no-verdict
+        self.assertEqual((res["confirmed"], res["reverted"]), (1, 1))
 
 
 if __name__ == "__main__":
