@@ -339,8 +339,10 @@ def preprocess_device(
 
     dom_html = dom_path.read_text(encoding="utf-8", errors="replace")
     baton = json.loads(baton_path.read_text(encoding="utf-8"))
-    baton_sections = baton.get("sections") or []
-    elements = baton.get("elements") or []
+    baton_sections = baton.get("sections")
+    baton_sections = baton_sections if isinstance(baton_sections, list) else []
+    elements = baton.get("elements")
+    elements = elements if isinstance(elements, list) else []
     styles = baton.get("styles", {})
     baton_page_head = baton.get("page_head") or {}
     structured_data = (

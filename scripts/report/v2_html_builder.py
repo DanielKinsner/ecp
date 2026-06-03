@@ -45,11 +45,15 @@ def _build_evidence_anchors_html(finding: dict) -> str:
     Returns "" if the finding has no anchors so the caller can no-op.
     """
     anchors = finding.get("evidence_anchors") or []
+    if not isinstance(anchors, list):
+        anchors = []
     if not anchors:
         return ""
 
     items: list[str] = []
     for ea in anchors:
+        if not isinstance(ea, dict):
+            continue
         atype = (ea.get("type") or "").lower()
         ref = ea.get("reference") or ""
         scroll_y = ea.get("scroll_y")

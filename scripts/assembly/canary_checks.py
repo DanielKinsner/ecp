@@ -163,7 +163,16 @@ def check_ethics_findings_have_source_urls(
             detail={"parse_error": str(exc)},
         )
 
-    findings = data.get("findings") or []
+    if not isinstance(data, dict):
+        return CanaryResult(
+            name="ethics_findings_have_source_urls",
+            passed=False,
+            summary="ethics-findings.json root is not a JSON object",
+            detail={"root_type": type(data).__name__},
+        )
+    findings = data.get("findings")
+    if not isinstance(findings, list):
+        findings = []
     audited_host = _domain_of(audited_domain) if audited_domain else None
 
     actionable_findings = []
@@ -172,6 +181,8 @@ def check_ethics_findings_have_source_urls(
     clear_count = 0
 
     for f in findings:
+        if not isinstance(f, dict):
+            continue
         state = (f.get("ethics_state") or "").upper()
         if state in {"BLOCK", "ADJACENT"}:
             actionable_findings.append(f)

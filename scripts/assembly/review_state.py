@@ -188,6 +188,16 @@ def validate_review_state(review_state: dict[str, Any]) -> list[str]:
     return schema_errors + _validate_review_state_references(review_state)
 
 
+def _as_list(value: Any) -> list:
+    """Coerce a value to a list, or [] if it is not one.
+
+    Guards iteration over top-level review-state containers (findings/markers/
+    slides) that a hand-edited file may set to a scalar/object — iterating those
+    raises before any per-entry isinstance guard.
+    """
+    return value if isinstance(value, list) else []
+
+
 def _validate_review_state_lightweight(review_state: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if review_state.get("review_state_schema_version") != CURRENT_REVIEW_STATE_VERSION:
@@ -199,7 +209,7 @@ def _validate_review_state_lightweight(review_state: dict[str, Any]) -> list[str
         errors.append("findings must be an array")
     if not isinstance(review_state.get("markers"), list):
         errors.append("markers must be an array")
-    for i, finding in enumerate(review_state.get("findings", [])):
+    for i, finding in enumerate(_as_list(review_state.get("findings"))):
         if not isinstance(finding, dict):
             errors.append(f"findings[{i}] is not an object")
             continue
@@ -210,9 +220,9 @@ def _validate_review_state_lightweight(review_state: dict[str, Any]) -> list[str
 
 def _validate_review_state_references(review_state: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    marker_ids = {m.get("marker_id") for m in review_state.get("markers", []) if isinstance(m, dict)}
-    slide_ids = {s.get("slide_id") for s in review_state.get("slides", []) if isinstance(s, dict)}
-    for i, finding in enumerate(review_state.get("findings", [])):
+    marker_ids = {m.get("marker_id") for m in _as_list(review_state.get("markers")) if isinstance(m, dict)}
+    slide_ids = {s.get("slide_id") for s in _as_list(review_state.get("slides")) if isinstance(s, dict)}
+    for i, finding in enumerate(_as_list(review_state.get("findings"))):
         if not isinstance(finding, dict):
             continue
         if finding.get("marker_id") not in marker_ids:
@@ -220,7 +230,7 @@ def _validate_review_state_references(review_state: dict[str, Any]) -> list[str]
         callout_slide_id = finding.get("callout_slide_id")
         if callout_slide_id and callout_slide_id not in slide_ids:
             errors.append(f"findings[{i}].callout_slide_id does not reference slides[]")
-    for i, marker in enumerate(review_state.get("markers", [])):
+    for i, marker in enumerate(_as_list(review_state.get("markers"))):
         if not isinstance(marker, dict):
             continue
         if marker.get("shape") not in {"point", "rect", "ellipse", "polygon", "freeform", "snap-to-element"}:

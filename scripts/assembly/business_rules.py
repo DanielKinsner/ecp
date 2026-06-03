@@ -178,6 +178,16 @@ def _as_dict(value: object) -> dict:
     return value if isinstance(value, dict) else {}
 
 
+def _as_list(value: object) -> list:
+    """Coerce a value to a list, or ``[]`` if it is not one.
+
+    Guards iteration over emission fields the schema declares as arrays
+    (``reference_citations``, ``evidence_anchors``) but a malformed emission may
+    send as a scalar/object — iterating those raises before any per-entry guard.
+    """
+    return value if isinstance(value, list) else []
+
+
 def _as_finding_list(emission: dict) -> list[dict]:
     """Return ``emission['findings']`` as a list of dict findings.
 
@@ -349,7 +359,7 @@ def _baton_sections(*batons: dict | None) -> set[str]:
 def _check_evidence_tier(finding: dict, path: str) -> list[BusinessRuleViolation]:
     """Rule: evidence_tier == max(reference_citations[].tier)."""
     cites = [
-        c for c in (finding.get("reference_citations") or [])
+        c for c in _as_list(finding.get("reference_citations"))
         if isinstance(c, dict)
     ]
     declared = finding.get("evidence_tier", "")
@@ -716,7 +726,7 @@ def _check_evidence_anchor_consistency(
         return []  # Unresolved index handled elsewhere
     has_proposed_anchor = bool(finding.get("proposed_anchor"))
     out: list[BusinessRuleViolation] = []
-    for j, a in enumerate(finding.get("evidence_anchors") or []):
+    for j, a in enumerate(_as_list(finding.get("evidence_anchors"))):
         if not isinstance(a, dict):
             continue
         if a.get("type") != "dom":
@@ -748,7 +758,7 @@ def _check_anchor_resolution(
 ) -> list[BusinessRuleViolation]:
     """Rule: evidence_anchors[].reference resolves to baton element or screenshot."""
     out: list[BusinessRuleViolation] = []
-    for j, a in enumerate(finding.get("evidence_anchors") or []):
+    for j, a in enumerate(_as_list(finding.get("evidence_anchors"))):
         if not isinstance(a, dict):
             continue
         apath = f"{path}.evidence_anchors[{j}]"

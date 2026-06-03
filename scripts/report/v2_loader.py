@@ -989,7 +989,8 @@ def load_v2_priority_path(
     except (OSError, json.JSONDecodeError):
         return []
 
-    stories = (data.get("priority_path") or []) if isinstance(data, dict) else []
+    stories = data.get("priority_path") if isinstance(data, dict) else None
+    stories = stories if isinstance(stories, list) else []
     out: list[dict] = []
     for i, story in enumerate(stories, start=1):
         if not isinstance(story, dict):
