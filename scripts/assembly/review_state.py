@@ -178,7 +178,11 @@ def validate_review_state(review_state: dict[str, Any]) -> list[str]:
             f"{'.'.join(str(p) for p in error.absolute_path) or '(root)'}: {error.message}"
             for error in sorted(validator.iter_errors(review_state), key=lambda e: list(e.absolute_path))
         ]
-    except Exception:
+    except (ImportError, FileNotFoundError):
+        # Only the legitimately-degraded cases (jsonschema absent, schema file
+        # missing) fall back to the type-blind lightweight check. A malformed
+        # schema file (JSONDecodeError) or other error should surface loudly,
+        # not silently weaken validation.
         schema_errors = _validate_review_state_lightweight(review_state)
 
     return schema_errors + _validate_review_state_references(review_state)
@@ -196,6 +200,9 @@ def _validate_review_state_lightweight(review_state: dict[str, Any]) -> list[str
     if not isinstance(review_state.get("markers"), list):
         errors.append("markers must be an array")
     for i, finding in enumerate(review_state.get("findings", [])):
+        if not isinstance(finding, dict):
+            errors.append(f"findings[{i}] is not an object")
+            continue
         if finding.get("status") not in {"needs_review", "approved", "edited", "hidden", "tagged_for_ai_pass"}:
             errors.append(f"findings[{i}].status is invalid")
     return errors
@@ -206,12 +213,16 @@ def _validate_review_state_references(review_state: dict[str, Any]) -> list[str]
     marker_ids = {m.get("marker_id") for m in review_state.get("markers", []) if isinstance(m, dict)}
     slide_ids = {s.get("slide_id") for s in review_state.get("slides", []) if isinstance(s, dict)}
     for i, finding in enumerate(review_state.get("findings", [])):
+        if not isinstance(finding, dict):
+            continue
         if finding.get("marker_id") not in marker_ids:
             errors.append(f"findings[{i}].marker_id does not reference markers[]")
         callout_slide_id = finding.get("callout_slide_id")
         if callout_slide_id and callout_slide_id not in slide_ids:
             errors.append(f"findings[{i}].callout_slide_id does not reference slides[]")
     for i, marker in enumerate(review_state.get("markers", [])):
+        if not isinstance(marker, dict):
+            continue
         if marker.get("shape") not in {"point", "rect", "ellipse", "polygon", "freeform", "snap-to-element"}:
             errors.append(f"markers[{i}].shape is invalid")
         if marker.get("slide_id") not in slide_ids:
@@ -943,7 +954,7 @@ def _render_effects(review_state: dict[str, Any], slide_id: str) -> str:
     for effect in _visible_effects(edits):
         if effect.get("type") == "blur":
             r = effect.get("rect") or {}
-            feather = max(0.0, min(45.0, float(effect.get("feather_pct", 18) or 18)))
+            feather = _bounded_float(effect.get("feather_pct", 18), 18, 0.0, 45.0)
             if effect.get("mode", "outside") == "outside":
                 html_parts.append(_render_outside_blur(r, effect))
             else:
@@ -953,7 +964,7 @@ def _render_effects(review_state: dict[str, Any], slide_id: str) -> str:
                 )
         if effect.get("type") == "dim" and effect.get("rect"):
             r = effect.get("rect") or {}
-            opacity = max(0.0, min(0.95, float(effect.get("opacity", 0.38) or 0.38)))
+            opacity = _bounded_float(effect.get("opacity", 0.38), 0.38, 0.0, 0.95)
             html_parts.append(
                 f'<div class="dim-region-effect" style="left:{r.get("x_pct", 0)}%;top:{r.get("y_pct", 0)}%;'
                 f'width:{r.get("w_pct", 0)}%;height:{r.get("h_pct", 0)}%;--dim-opacity:{opacity};"></div>'
@@ -997,7 +1008,7 @@ def _render_spotlight(
     dims = [e for e in _visible_effects(edit) if e.get("type") == "dim" and not e.get("rect")]
     if not dims:
         return ""
-    opacity = max(max(0.0, min(0.95, float(dim.get("opacity", 0.5) or 0.5))) for dim in dims)
+    opacity = max(_bounded_float(dim.get("opacity", 0.5), 0.5, 0.0, 0.95) for dim in dims)
     scoped_refs = {str(dim.get("f_ref")) for dim in dims if dim.get("f_ref")}
     if scoped_refs:
         cutout_markers = [
