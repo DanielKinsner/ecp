@@ -24,6 +24,9 @@ chain see the project memory; this file is ECP-specific.
 - **One thing is blocked:** behavioral confirmation needs a single live `/ecp:audit`
   (~45 min, needs an agent-browser machine). That **one audit verifies both root causes** (and
   lets you eyeball the Fix #3 distributed hero column) — see the runbook below.
+- ⚠️ **Before running that audit, the `/ecp:audit` plugin MUST be re-pointed** — it currently
+  loads from a deleted directory (`ecommerce-conversion-psychology`) and would audit STALE code
+  without any of these fixes. See the boxed warning atop the runbook.
 - **The best audit-independent next step is folding Fix #4's `weak_placements_count` into the
   renderer summary / CI**, then wiring the visual-QA gate into the audit flow.
 
@@ -112,7 +115,25 @@ the documented cost cap. If a real PDP exceeds that, options are (a) bump the co
 
 ## THE verification runbook (one audit verifies both root causes)
 
-**Blocked on:** an agent-browser machine + interactive `/ecp:audit` (~45 min). When you can run it:
+> ⚠️ **STOP — the `/ecp:audit` slash command is mis-pointed and will run STALE code.**
+> The installed plugin `ecp@ecommerce-conversion-psychology` is a *directory*-source plugin
+> whose path (`Documents\GitHub\ecommerce-conversion-psychology`) **no longer exists** — it was
+> the pre-prune repo. It's pinned to commit `a0e49ec` (2026-05-05) and has **none** of this
+> session's fixes (RC#1/#2, Fix #3). All current code lives in `Documents\GitHub\ecp`
+> (`github.com/DanielKinsner/ecp`).
+>
+> **Before auditing, re-point the plugin at the `ecp` repo**, or the 45-min run verifies the OLD
+> acquirer/renderer and the result is meaningless:
+> 1. `claude plugin marketplace add "C:\Users\SM - Dan\Documents\GitHub\ecp"` (registers marketplace `ecp`)
+> 2. `/plugin` → install `ecp@ecp`; disable the dead `ecp@ecommerce-conversion-psychology`.
+> 3. Sanity check the live plugin has the fix: its `scripts/acquire_url.py` must contain
+>    `MAX_SCREENSHOTS_MOBILE`, and `scripts/report/v2_markers.py` must contain
+>    `_distribute_stacked_section_markers`.
+>
+> (The exact `/plugin` verbs weren't fully confirmed — verify via the claude-code-guide if unsure.)
+
+**Blocked on:** (a) re-pointing the plugin per the warning above, then (b) an agent-browser
+machine + interactive `/ecp:audit` (~45 min). When you can run it:
 
 1. **Run a fresh audit on a YMM/PDP page** (the canonical reproducer is a Shopify PDP with a
    Make/Model/Year gate — e.g. awdmods or slingmods):
