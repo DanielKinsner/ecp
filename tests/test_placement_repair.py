@@ -73,6 +73,11 @@ class TestDecideMatch(unittest.TestCase):
         d = decide_match({"add", "cart"}, [_t("Add to Cart", "e1")], current_slide="desktop-section-1")
         self.assertEqual(d["action"], "re-anchor")
 
+    def test_empty_targets_distinct_reason(self):
+        d = decide_match({"add", "cart"}, [])
+        self.assertEqual(d["action"], "flag")
+        self.assertIn("empty candidate set", d["reason"])
+
 
 class TestQueryTokens(unittest.TestCase):
     def test_pulls_from_finding_and_marker(self):

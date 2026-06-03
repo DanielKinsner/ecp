@@ -10,11 +10,13 @@ from pathlib import Path
 _REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO / "scripts"))
 
+from report import placement_audit as pa  # noqa: E402
 from report.placement_audit import (  # noqa: E402
     analyze_device,
     score_marker,
     _find_stacks,
     _screenshot_for,
+    _marker_id,
     make_crop,
 )
 
@@ -124,6 +126,67 @@ class TestCrashGuards(unittest.TestCase):
         entry = make_crop(eng, marker, {}, [], "weak", out)
         self.assertIsNotNone(entry)
         self.assertTrue(Path(entry["png"]).exists())
+
+
+class TestP3Hardening(unittest.TestCase):
+    def test_non_string_source_no_crash(self):
+        self.assertIsInstance(score_marker({"source": 123, "w_pct": 10, "h_pct": 10}), list)
+
+    def test_malformed_slide_id_returns_none(self):
+        eng = Path(tempfile.mkdtemp(prefix="ecp-slide-"))
+        (eng / "section-1.jpg").write_bytes(b"x")
+        self.assertIsNone(_screenshot_for(eng, "desktop-hero"))   # no trailing -section-<int>
+        self.assertIsNone(_screenshot_for(eng, "desktop-section-x"))
+
+    def test_marker_id_never_none(self):
+        self.assertTrue(_marker_id({}).startswith("_anon"))
+        self.assertEqual(_marker_id({"f_ref": "a F-1"}), "a F-1")
+
+    def test_make_crop_finding_none(self):
+        from PIL import Image
+        eng = Path(tempfile.mkdtemp(prefix="ecp-fn-"))
+        Image.new("RGB", (1000, 800), (200, 200, 200)).save(eng / "section-1.jpg", "JPEG")
+        out = Path(tempfile.mkdtemp(prefix="ecp-fn-out-"))
+        marker = {"f_ref": "x F-1", "slide_id": "desktop-section-1",
+                  "x_pct": 10, "y_pct": 10, "w_pct": 20, "h_pct": 10}
+        entry = make_crop(eng, marker, None, [], "weak", out)
+        self.assertIsNotNone(entry)
+        self.assertEqual(entry["finding_title"], "")
+
+    def test_large_crop_capped_to_900(self):
+        from PIL import Image
+        eng = Path(tempfile.mkdtemp(prefix="ecp-big-"))
+        Image.new("RGB", (3000, 2200), (200, 200, 200)).save(eng / "section-1.jpg", "JPEG")
+        out = Path(tempfile.mkdtemp(prefix="ecp-big-out-"))
+        marker = {"f_ref": "x F-1", "slide_id": "desktop-section-1",
+                  "x_pct": 5, "y_pct": 5, "w_pct": 90, "h_pct": 60}
+        entry = make_crop(eng, marker, {}, [], "weak", out)
+        self.assertLessEqual(max(Image.open(entry["png"]).size), 900)
+
+    def test_cli_audit_and_crops(self):
+        from PIL import Image
+        eng = Path(tempfile.mkdtemp(prefix="ecp-cli-"))
+        Image.new("RGB", (1000, 800), (200, 200, 200)).save(eng / "section-1.jpg", "JPEG")
+        rs = {"findings": [{"f_ref": "x F-1", "finding_title": "T"}], "markers": [
+            {"f_ref": "x F-1", "slide_id": "desktop-section-1", "source": "proposed_anchor_section",
+             "x_pct": 10, "y_pct": 10, "w_pct": 20, "h_pct": 10,
+             "visual_evidence": {"type": "proxy_element", "confidence": "low"}}]}
+        (eng / "review-state-desktop.json").write_text(json.dumps(rs), encoding="utf-8")
+        out = Path(tempfile.mkdtemp(prefix="ecp-cli-out-"))
+        self.assertEqual(pa.main(["audit", "--engagement", str(eng), "--device", "desktop",
+                                  "--json", str(eng / "a.json")]), 0)
+        self.assertEqual(pa.main(["crops", "--engagement", str(eng), "--device", "desktop",
+                                  "--out", str(out), "--f-refs", "x F-1"]), 0)
+
+
+class TestThresholdSync(unittest.TestCase):
+    """[V1] the duplicated thresholds must stay equal to visual_quality's source of truth."""
+
+    def test_thresholds_match_visual_quality(self):
+        from assembly import visual_quality as vq
+        self.assertEqual(pa.GIANT_WIDTH_PCT, vq.DEFAULT_GIANT_WIDTH_PCT)
+        self.assertEqual(pa.GIANT_HEIGHT_PCT, vq.DEFAULT_GIANT_HEIGHT_PCT)
+        self.assertEqual(pa.NON_EXACT_TYPES, vq.NON_EXACT_TYPES)
 
 
 if __name__ == "__main__":

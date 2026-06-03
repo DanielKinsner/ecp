@@ -23,6 +23,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -53,7 +54,8 @@ _DEVICES = ("desktop", "mobile")
 def score_marker(m: dict) -> list[str]:
     """Return a list of weak-placement reasons for a marker; empty == strong."""
     reasons: list[str] = []
-    source = m.get("source") or ""
+    src = m.get("source")
+    source = src if isinstance(src, str) else ""
     ve = m.get("visual_evidence") if isinstance(m.get("visual_evidence"), dict) else {}
     conf = ve.get("confidence")
     vtype = ve.get("type")
@@ -77,6 +79,12 @@ def score_marker(m: dict) -> list[str]:
     return reasons
 
 
+def _marker_id(m: dict) -> str:
+    """Stable id for a marker: f_ref > marker_id > a per-object anon key (never None),
+    so id-less markers dedup and stack-group consistently across helpers."""
+    return m.get("f_ref") or m.get("marker_id") or f"_anon{id(m)}"
+
+
 def _dedup_by_fref(markers: list[dict]) -> list[dict]:
     """Collapse AI-twin markers: one marker per f_ref (first wins)."""
     seen: set[str] = set()
@@ -84,7 +92,7 @@ def _dedup_by_fref(markers: list[dict]) -> list[dict]:
     for m in markers:
         if not isinstance(m, dict):
             continue
-        fref = m.get("f_ref") or m.get("marker_id") or id(m)
+        fref = _marker_id(m)
         if fref in seen:
             continue
         seen.add(fref)
@@ -101,7 +109,7 @@ def _find_stacks(markers: list[dict]) -> dict[tuple, list[str]]:
         if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
             continue
         key = (m.get("slide_id"), round(x, 1), round(y, 1))
-        fref = m.get("f_ref") or m.get("marker_id")
+        fref = _marker_id(m)
         if fref not in groups[key]:
             groups[key].append(fref)
     return {k: v for k, v in groups.items() if len(v) >= STACK_MIN}
@@ -127,7 +135,7 @@ def analyze_device(engagement: Path, device: str, review_state_path: Path | None
     strong_frefs: list[str] = []
     for m in markers:
         reasons = score_marker(m)
-        fref = m.get("f_ref") or m.get("marker_id")
+        fref = _marker_id(m)
         if fref in stacked_frefs:
             reasons.append(f"stacked: {stacked_frefs[fref]} findings on one pixel")
         if not reasons:
@@ -200,8 +208,11 @@ def _screenshot_for(engagement: Path, slide_id: str | None) -> Path | None:
     """Map a slide_id (e.g. 'mobile-section-2') to its section screenshot file."""
     if not slide_id:
         return None
-    n = slide_id.rsplit("-", 1)[-1]
-    name = f"section-{n}-mobile.jpg" if slide_id.startswith("mobile") else f"section-{n}.jpg"
+    mt = re.search(r"-section-(\d+)$", str(slide_id))
+    if not mt:
+        return None  # malformed slide_id -> clean None, not a bogus section-<text>.jpg
+    n = mt.group(1)
+    name = f"section-{n}-mobile.jpg" if str(slide_id).startswith("mobile") else f"section-{n}.jpg"
     cand = engagement / name
     return cand if cand.exists() else None
 
@@ -248,9 +259,11 @@ def make_crop(engagement: Path, marker: dict, finding: dict | None,
         s = 900 / max(crop.size)
         crop = crop.resize((int(crop.size[0] * s), int(crop.size[1] * s)))
 
-    fref = marker.get("f_ref") or "marker"
-    slug = re.sub(r"[^a-z0-9]+", "-", fref.lower()).strip("-")
-    out_path = out_dir / f"{marker.get('slide_id', 'slide')}__{slug}.png"
+    fref = str(marker.get("f_ref") or "marker")
+    slug = re.sub(r"[^a-z0-9]+", "-", fref.lower()).strip("-") or "marker"
+    slide_slug = re.sub(r"[^a-z0-9]+", "-", str(marker.get("slide_id") or "slide").lower()).strip("-") or "slide"
+    fhash = hashlib.sha1(fref.encode("utf-8")).hexdigest()[:6]  # avoid lossy-slug collisions
+    out_path = out_dir / f"{slide_slug}__{slug}-{fhash}.png"
     crop.save(out_path, "PNG")
 
     ve = marker.get("visual_evidence") if isinstance(marker.get("visual_evidence"), dict) else {}

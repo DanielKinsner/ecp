@@ -123,6 +123,8 @@ def decide_match(query_tokens: set[str], targets: list[dict], current_slide: str
 
     if not query_tokens:
         reason = "finding carries no anchorable element text (image/abstract finding) — manual placement"
+    elif not pool:
+        reason = "no captured elements available to anchor to (empty candidate set) — acquirer captured nothing usable"
     elif best_score == 0.0:
         reason = ("no baton element shares any subject text — intended element likely NOT captured "
                   "by the acquirer (element-capture gap)")
