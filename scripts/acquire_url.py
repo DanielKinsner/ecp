@@ -115,10 +115,17 @@ def _build_elements_js(expected_hostname: str) -> str:
    '[class*="newsletter"]', '[class*="subscribe"]',
    '[class*="payment"]', '[class*="pay"]',
    '[class*="countdown"]', '[class*="timer"]', '[class*="urgency"]',
-   '[class*="limited"]', '[class*="expire"]', '[class*="hurry"]'
+   '[class*="limited"]', '[class*="expire"]', '[class*="hurry"]',
+   /* targeted additions (2026-06-03): hero controls the fixed allowlist missed —
+      YMM dropdowns (native + JS-enhanced widgets), submit buttons, promo/announce
+      bars, gallery thumbnails, and accessible-named controls. */
+   'select', '[role="combobox"]', '[role="listbox"]',
+   'input[type="submit"]', 'input[type="button"]',
+   '[class*="dropdown"]', '[class*="gallery"]', '[class*="thumb"]',
+   '[class*="announce"]', '[class*="promo"]', '[aria-label]'
   ].flatMap(function(sel) {
     try {
-      return Array.from(document.querySelectorAll(sel)).slice(0, 5).map(function(el) {
+      return Array.from(document.querySelectorAll(sel)).slice(0, 10).map(function(el) {
         const r = el.getBoundingClientRect();
         const scrollY = window.scrollY || document.documentElement.scrollTop;
         if (r.width === 0 || r.height === 0) return null;
@@ -1071,7 +1078,7 @@ def _run_one_device(
                 continue
             element_rows.append(_dpr_scale_element_css_to_phys(item, dpr_i))
 
-    elements = _dedupe_elements_phys(element_rows, cap=100)
+    elements = _dedupe_elements_phys(element_rows, cap=140)
 
     styles_obj = _eval_json_object(agent_browser, session, f"JSON.stringify({_STYLES_JS})")
     if not isinstance(styles_obj, dict):
