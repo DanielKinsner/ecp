@@ -230,7 +230,7 @@ def make_crop(engagement: Path, marker: dict, finding: dict | None,
 
     def pct(k: str) -> float:
         v = marker.get(k)
-        return float(v) if isinstance(v, (int, float)) else 0.0
+        return max(0.0, min(100.0, float(v))) if isinstance(v, (int, float)) else 0.0
 
     left, top = pct("x_pct") / 100 * W, pct("y_pct") / 100 * H
     bw, bh = pct("w_pct") / 100 * W, pct("h_pct") / 100 * H
@@ -240,8 +240,10 @@ def make_crop(engagement: Path, marker: dict, finding: dict | None,
                    width=max(4, W // 240))
 
     margin = max(max(bw, bh) * 0.6, 220)
-    crop = img.crop((max(0, int(left - margin)), max(0, int(top - margin)),
-                     min(W, int(left + bw + margin)), min(H, int(top + bh + margin))))
+    cl, ct = max(0, int(left - margin)), max(0, int(top - margin))
+    cr, cb = min(W, int(left + bw + margin)), min(H, int(top + bh + margin))
+    cr, cb = max(cr, cl + 1), max(cb, ct + 1)  # never empty / inverted (PIL crop raises otherwise)
+    crop = img.crop((cl, ct, cr, cb))
     if max(crop.size) > 900:  # cap to keep vision-token cost low
         s = 900 / max(crop.size)
         crop = crop.resize((int(crop.size[0] * s), int(crop.size[1] * s)))

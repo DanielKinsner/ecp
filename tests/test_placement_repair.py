@@ -12,7 +12,9 @@ import json  # noqa: E402
 import tempfile  # noqa: E402
 
 import assembly.review_state as _rs_mod  # noqa: E402
-from report.placement_repair import decide_match, _overlap, _query_tokens, repair, finalize  # noqa: E402
+from report.placement_repair import (  # noqa: E402
+    decide_match, _overlap, _query_tokens, repair, finalize, _is_oversized,
+)
 
 
 def _t(label, e):
@@ -24,6 +26,14 @@ class TestOverlap(unittest.TestCase):
     def test_overlap_ignores_stopwords(self):
         self.assertGreater(_overlap("Add to Cart", {"add", "cart"}), 0.6)
         self.assertEqual(_overlap("", {"add"}), 0.0)
+
+
+class TestOversized(unittest.TestCase):
+    def test_offset_full_bleed_is_oversized(self):
+        self.assertTrue(_is_oversized({"x_pct": 20, "w_pct": 80, "h_pct": 10}))   # spans right edge, wide
+        self.assertTrue(_is_oversized({"x_pct": 0, "w_pct": 90, "h_pct": 10}))    # GIANT_W
+        self.assertFalse(_is_oversized({"x_pct": 10, "w_pct": 50, "h_pct": 10}))  # normal
+        self.assertFalse(_is_oversized({"x_pct": 80, "w_pct": 20, "h_pct": 10}))  # right-aligned but narrow
 
 
 class TestDecideMatch(unittest.TestCase):

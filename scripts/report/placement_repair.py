@@ -68,6 +68,19 @@ def _query_tokens(finding: dict, marker: dict) -> set[str]:
     return _tokens(" ".join(parts))
 
 
+def _is_oversized(t: dict) -> bool:
+    """A snap target too large to be a precise subject (likely a parent container).
+
+    Beyond the GIANT_W/GIANT_H thresholds, also reject offset full-bleed bands:
+    review_state clamps ``w_pct`` to ``100 - x_pct``, so a wide element offset past
+    ~15% never trips GIANT_W on width alone — catch it via right-edge + width.
+    """
+    w, h, x = t.get("w_pct", 0), t.get("h_pct", 0), t.get("x_pct", 0)
+    if w > GIANT_W or h > GIANT_H:
+        return True
+    return (x + w) >= 99 and w >= 60
+
+
 def _flatten_targets(snap: dict) -> list[dict]:
     out = []
     for slide_id, lst in (snap or {}).items():
@@ -136,7 +149,7 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
     markers = {m["f_ref"]: m for m in rs.get("markers") or [] if isinstance(m, dict) and m.get("f_ref")}
 
     targets = [t for t in _flatten_targets(_build_snap_targets(engagement, plugin_root, device))
-               if not (t.get("w_pct", 0) > GIANT_W or t.get("h_pct", 0) > GIANT_H)]
+               if not _is_oversized(t)]
 
     log: list[dict] = []
     re_anchored = flagged = 0

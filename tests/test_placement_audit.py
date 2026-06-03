@@ -114,6 +114,17 @@ class TestCrashGuards(unittest.TestCase):
         (eng / "review-state-desktop.json").write_text("[1, 2, 3]", encoding="utf-8")
         self.assertIsNone(analyze_device(eng, "desktop"))
 
+    def test_out_of_range_coords_no_crash(self):
+        from PIL import Image
+        eng = Path(tempfile.mkdtemp(prefix="ecp-oob-"))
+        Image.new("RGB", (1000, 800), (200, 200, 200)).save(eng / "section-1.jpg", "JPEG")
+        out = Path(tempfile.mkdtemp(prefix="ecp-oob-out-"))
+        marker = {"f_ref": "x F-1", "slide_id": "desktop-section-1",
+                  "x_pct": 150, "y_pct": 150, "w_pct": 40, "h_pct": 40}  # out of [0,100]
+        entry = make_crop(eng, marker, {}, [], "weak", out)
+        self.assertIsNotNone(entry)
+        self.assertTrue(Path(entry["png"]).exists())
+
 
 if __name__ == "__main__":
     unittest.main()
