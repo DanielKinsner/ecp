@@ -66,6 +66,24 @@ class TestDeriveProducerWins:
         assert result["type"] == "proxy_element"
         assert result["confidence"] == "medium"
 
+    def test_section_stacked_manual_overrides_stale_producer_evidence(self) -> None:
+        # Rule 0: a marker relabeled section_stacked_manual (hero-stack
+        # distribute, Fix#3) must be forced to section_absence/low even when it
+        # still carries stale producer {exact_element, high} from before the
+        # relabel — it is a manual-review-queued placement, not a confident
+        # exact one (adversarial review 2026-06-03 §1 Fix#3 NIT / §4 #9).
+        finding = {
+            "element": {"baton_index": "e7"},
+            "match_method": "section_stacked_manual",
+            "visual_evidence": {"type": "exact_element", "confidence": "high"},
+        }
+        result = derive_visual_evidence(finding)
+        assert (result["type"], result["confidence"]) == ("section_absence", "low")
+
+    def test_section_stacked_manual_via_kwarg_is_forced(self) -> None:
+        result = derive_visual_evidence(match_method="section_stacked_manual")
+        assert (result["type"], result["confidence"]) == ("section_absence", "low")
+
 
 class TestDeriveFromMatchMethod:
     """Rule 2: known match_method enum -> canonical type+confidence."""

@@ -139,6 +139,26 @@ def derive_visual_evidence(
     is populated with a short trace of which rule fired so debug surfaces
     can show the derivation path.
     """
+    # Rule 0 (overrides producer evidence): section_stacked_manual is a relabel
+    # of a collapsed hero-stack into a manual-review-queued distributed marker
+    # (diagnosis Fix #3). It is never a confident exact placement, so it MUST
+    # force section_absence/low even when the finding still carries the stale
+    # producer visual_evidence it had before the relabel (e.g. exact_element /
+    # high). Adversarial review 2026-06-03 §1 Fix#3 NIT / §4 #9.
+    effective_mm = match_method if match_method is not None else (
+        finding.get("match_method") if finding is not None else None
+    )
+    if effective_mm == "section_stacked_manual":
+        ve_type, confidence = _MATCH_METHOD_TO_TYPE["section_stacked_manual"]
+        return {
+            "type": ve_type,
+            "confidence": confidence,
+            "reason": (
+                "Forced from match_method=section_stacked_manual "
+                "(manual-review queue; overrides any stale producer evidence)"
+            ),
+        }
+
     if finding is not None:
         # Producer-authored visual_evidence always wins
         ve = finding.get("visual_evidence")
