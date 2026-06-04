@@ -23,10 +23,54 @@ from .geometry_validator import format_validation_report, validate_v2_hotspot_ge
 from .v2_loader import load_v2_engagement
 from .v2_markers import auto_map_markers_v2, compute_marker_positions_v2, merge_markers
 from . import html_builder as v1
+from .placement_audit import STACK_MIN
 from .templates.components import assign_cluster_indices
 from .templates.html_structure import assemble_html
 from .utils import aspect_ratio_value, get_device_frame_css, escape_html
 from .path_safety import resolve_within_base
+
+
+# Placement methods that anchor a hotspot to a concrete element. Everything else
+# that still receives a position is a "weak" placement — surfaced in the render
+# summary so "0 unplaced" is not mistaken for "all hotspots are correct"
+# (Fix #4, docs/2026-06-02-hotspot-placement-diagnosis.md).
+_STRONG_PLACEMENT_METHODS = frozenset(
+    {"e_index_lookup", "proposed_anchor_element", "operator_override"}
+)
+
+
+def _placement_qa(merged_mappings: list[dict], slide_markers: dict) -> dict:
+    """Deterministic Tier-0 placement-confidence summary, folded into the
+    renderer so the operator gets it for free (no separate placement_audit.py
+    run). Returns ``{"weak": int, "stacks": [{slide, x_pct, y_pct, count,
+    f_refs}]}``. A "stack" is >= ``STACK_MIN`` distinct findings resolving to
+    the same rendered pixel — the section-bottom-overlay collapse failure class.
+    """
+    from collections import defaultdict
+
+    weak = sum(
+        1
+        for m in merged_mappings
+        if m.get("match_method") not in _STRONG_PLACEMENT_METHODS
+        and m.get("match_method") != "unplaced"
+    )
+    groups: dict = defaultdict(set)
+    for slide_id, markers in slide_markers.items():
+        for mk in markers:
+            x, y = mk.get("x_pct"), mk.get("y_pct")
+            if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
+                continue
+            fref = mk.get("f_ref")
+            if fref is None:
+                continue
+            groups[(slide_id, round(float(x), 1), round(float(y), 1))].add(str(fref))
+    stacks = [
+        {"slide": k[0], "x_pct": k[1], "y_pct": k[2], "count": len(v), "f_refs": sorted(v)}
+        for k, v in groups.items()
+        if len(v) >= STACK_MIN
+    ]
+    stacks.sort(key=lambda s: (-s["count"], str(s["slide"]), s["x_pct"], s["y_pct"]))
+    return {"weak": weak, "stacks": stacks}
 
 
 def _build_evidence_anchors_html(finding: dict) -> str:
@@ -323,6 +367,11 @@ def generate_v2_report(
     pa_viewport = sum(
         1 for m in merged_mappings if m.get("match_method") == "proposed_anchor_viewport"
     )
+    ssm_count = sum(
+        1 for m in merged_mappings if m.get("match_method") == "section_stacked_manual"
+    )
+
+    qa = _placement_qa(merged_mappings, slide_markers)
 
     print(f"v2 report written to: {output_path}")
     print(f"  Device: {metadata['device_label']}")
@@ -332,9 +381,19 @@ def generate_v2_report(
     print(
         f"  Match methods: e_index={e_index_count} "
         f"proposed_anchor(element={pa_element} section={pa_section} viewport={pa_viewport}) "
-        f"section_centroid={section_count} unplaced={unplaced_count} banner={banner_count} "
-        f"operator={op_count}"
+        f"section_centroid={section_count} section_stacked_manual={ssm_count} "
+        f"unplaced={unplaced_count} banner={banner_count} operator={op_count}"
     )
+    # Tier-0 placement QA (folded in from placement_audit.py so "0 unplaced" is
+    # never mistaken for "all correct"): weak (non-element-anchored) placements
+    # and >=STACK_MIN-on-a-pixel stacks.
+    print(f"  Placement QA: weak_placements={qa['weak']} stacks={len(qa['stacks'])}")
+    for s in qa["stacks"]:
+        print(
+            f"    WARNING: stack of {s['count']} findings on slide {s['slide']} "
+            f"@ ({s['x_pct']}, {s['y_pct']}): {', '.join(s['f_refs'])}",
+            file=sys.stderr,
+        )
 
     return output_path
 
