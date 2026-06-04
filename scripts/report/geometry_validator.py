@@ -68,25 +68,16 @@ def element_rect_raw(element: dict[str, Any]) -> dict[str, float] | None:
 def backfill_screenshots_from_sections(baton: dict[str, Any]) -> None:
     """Populate v1-style screenshots[] from v2 sections[] when absent.
 
-    This mirrors the current renderer setup so the validator checks the same
-    marker inputs that the report renderer is about to consume.
+    Delegates to the canonical implementation in ``report.geometry`` (with no
+    ``engagement_dir`` — natural sizes fall back to viewport×DPR) so the
+    validator checks exactly the screenshots[] the renderer builds, instead of
+    a second, drifting copy. Consolidated per adversarial review 2026-06-03
+    §4 #9 (the prior local copy ignored DPR, so it disagreed with the renderer
+    on mobile).
     """
-    if baton.get("screenshots") or not baton.get("sections"):
-        return
-    viewport = baton.get("viewport") or {}
-    screenshots: list[dict[str, Any]] = []
-    for section in baton.get("sections") or []:
-        ref = section.get("screenshot_ref")
-        if not ref:
-            continue
-        screenshots.append({
-            "path": ref,
-            "scrollY": section.get("scroll_y_top", section.get("scrollY", 0)) or 0,
-            "naturalWidth": viewport.get("width", 1),
-            "naturalHeight": viewport.get("height", 1),
-        })
-    if screenshots:
-        baton["screenshots"] = screenshots
+    from report.geometry import backfill_screenshots_from_sections as _backfill
+
+    _backfill(baton, engagement_dir=None)
 
 
 def _css_envelope_height(
