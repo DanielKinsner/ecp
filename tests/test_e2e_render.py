@@ -627,19 +627,6 @@ class PriorityPathSidecarTests(unittest.TestCase):
         self.assertIn("Fix the Cart Button", titles)
         self.assertIn("Anchor the Price", titles)
 
-    @unittest.skip(
-        "Phase L exposed a pre-existing architectural inconsistency between "
-        "two F-NN numbering schemes: pipeline.assign_display_indices (now "
-        "content-hashed per Phase L) and report/templates/components.py:"
-        "assign_cluster_indices (positional). Pre-Phase-L both schemes "
-        "coincidentally produced 1, 2, 3 — they matched accidentally. After "
-        "L.D the renderer body uses positional F-NN while the Priority Path "
-        "sidecar uses content-hashed F-NN, causing Priority Path links to "
-        "resolve to '(not found)' in HTML. Fix: thread display_index from "
-        "the assembly sidecar into the renderer's body finding labels. "
-        "Scoped for Phase M (renderer architecture), not Phase L (specialist "
-        "tightening). Re-enable after Phase M.1 lands."
-    )
     def test_renderer_prefers_sidecar_over_mutated_markdown(self) -> None:
         """Mutate audit.md's Priority Path section to smuggle in a bogus
         F-N ref. The renderer MUST still produce a clean HTML (no "(not

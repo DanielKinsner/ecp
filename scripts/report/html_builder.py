@@ -122,6 +122,46 @@ def _load_priority_path_stories(engagement_path, device, audit_file):
     return parse_priority_path(engagement_path / audit_file)
 
 
+def _attach_display_indices(findings, engagement_path):
+    """Stamp each parsed finding with its canonical content-hashed
+    ``display_index`` from ``finding-groups.json``.
+
+    ``audit.md`` finding blocks carry no F-NN, so without this the renderer's
+    ``assign_cluster_indices`` falls back to a positional counter (F-01, F-02…)
+    while the validated Priority Path sidecar references the content-hashed
+    indices (F-49, F-69…). The two schemes diverge and Priority Path links
+    resolve to "(not found)" (Phase M.1 / adversarial review 2026-06-03 §2).
+
+    ``finding-groups.json`` is the pipeline's authoritative
+    ``(cluster, section) -> finding_indices`` map (``assign_display_indices``).
+    We match each parsed finding to its group by ``(cluster, section)`` and
+    assign indices in parse order within a group. Absent/malformed groups file
+    (legacy engagements) → no-op, positional fallback preserved.
+    """
+    fg_path = engagement_path / "finding-groups.json"
+    if not fg_path.exists():
+        return
+    try:
+        with open(fg_path, "r", encoding="utf-8") as f:
+            groups = json.load(f)
+    except (OSError, IOError, json.JSONDecodeError):
+        return
+    if not isinstance(groups, list):
+        return
+    from collections import defaultdict, deque
+    idx_by_key = defaultdict(deque)
+    for g in groups:
+        if not isinstance(g, dict):
+            continue
+        key = (g.get("cluster"), g.get("section"))
+        for i in g.get("finding_indices") or []:
+            idx_by_key[key].append(i)
+    for f in findings:
+        q = idx_by_key.get((f.get("cluster"), f.get("section")))
+        if q:
+            f["display_index"] = q.popleft()
+
+
 def _load_inputs(engagement_path, baton_file, audit_file, plugin_path, device):
     """Load plugin version, baton, meta, findings, pass findings, and priority path.
 
@@ -150,6 +190,9 @@ def _load_inputs(engagement_path, baton_file, audit_file, plugin_path, device):
             meta = json.load(f)
 
     findings = parse_findings(engagement_path / audit_file)
+    # Stamp canonical content-hashed indices so the rendered body F-NN match the
+    # validated Priority Path sidecar refs (prevents "(not found)" links).
+    _attach_display_indices(findings, engagement_path)
     priority_path_stories = _load_priority_path_stories(engagement_path, device, audit_file)
 
     # Extract the audited page URL so downstream stages (e.g., the ethics
