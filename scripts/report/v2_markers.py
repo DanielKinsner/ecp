@@ -550,6 +550,11 @@ def _resolve_proposed_anchor(
 # pin claiming section-match confidence on a pixel it didn't earn.
 SECTION_STACKED_MANUAL = "section_stacked_manual"
 _STACK_DISTRIBUTE_FLOOR_PCT = 15.0
+# Minimum vertical band (in % of slide) the distributed stack must span. Without
+# it, a thin hero (section captured short relative to the viewport, so the
+# resolved y_pct sits at/below the floor) collapses bottom onto top and every
+# marker re-stacks at the floor. (adversarial review 2026-06-03 §1 Fix#3)
+_STACK_DISTRIBUTE_MIN_SPAN_PCT = 8.0
 
 
 def _distribute_stacked_section_markers(mappings: list[dict]) -> None:
@@ -585,6 +590,12 @@ def _distribute_stacked_section_markers(mappings: list[dict]) -> None:
         n = len(group)
         bottom = max(_STACK_DISTRIBUTE_FLOOR_PCT, float(y_pct))
         top = _STACK_DISTRIBUTE_FLOOR_PCT
+        # When the band would be degenerate (thin hero: y_pct <= floor, so
+        # bottom == top), push top down to guarantee a minimum spread — else
+        # every marker re-stacks at the floor. Cases with an already-wide band
+        # (the motivating y_pct≈85 engagement) are unchanged.
+        if bottom - top < _STACK_DISTRIBUTE_MIN_SPAN_PCT:
+            top = max(0.0, bottom - _STACK_DISTRIBUTE_MIN_SPAN_PCT)
         for i, m in enumerate(group):
             # Spread evenly across [top, bottom], bottom-anchored at the original y.
             new_y = bottom - (bottom - top) * (i / (n - 1))

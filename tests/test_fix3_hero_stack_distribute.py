@@ -102,6 +102,42 @@ class TestStackIsDistributed(unittest.TestCase):
         self.assertEqual(a, b)
 
 
+class TestThinHeroDoesNotRecollapse(unittest.TestCase):
+    """Adversarial review 2026-06-03 §1 Fix#3 [MEDIUM]: when the resolved y_pct
+    sits at/below the distribute floor (a thin hero captured short relative to
+    the viewport), bottom collapsed onto top and every marker re-stacked at the
+    floor. The min-span guard must keep them distinct."""
+
+    def _thin_stack(self, n, y_pct):
+        from report.v2_markers import _distribute_stacked_section_markers
+        mappings = [
+            {
+                "f_ref": f"hero/F-{i+1:02d}",
+                "burn_number": i + 1,
+                "slide": 0,
+                "match_method": "proposed_anchor_section",
+                "fallback_position": {"x_pct": 50.0, "y_pct": float(y_pct)},
+            }
+            for i in range(n)
+        ]
+        _distribute_stacked_section_markers(mappings)
+        return mappings
+
+    def test_thin_hero_y_pct_below_floor_does_not_restack(self):
+        for y_pct in (0.0, 5.0, 10.0, 14.9):
+            mappings = self._thin_stack(4, y_pct)
+            ys = [round(m["fallback_position"]["y_pct"], 3) for m in mappings]
+            self.assertEqual(len(set(ys)), len(ys),
+                f"thin hero y_pct={y_pct} re-stacked all markers: {ys}")
+            self.assertTrue(all(0.0 <= y <= 100.0 for y in ys), ys)
+            self.assertTrue(all(m["match_method"] == SECTION_STACKED_MANUAL for m in mappings))
+
+    def test_thin_hero_band_spans_minimum(self):
+        from report.v2_markers import _STACK_DISTRIBUTE_MIN_SPAN_PCT
+        ys = [m["fallback_position"]["y_pct"] for m in self._thin_stack(4, 10.0)]
+        self.assertGreaterEqual(max(ys) - min(ys), _STACK_DISTRIBUTE_MIN_SPAN_PCT - 0.001)
+
+
 class TestNonStackUntouched(unittest.TestCase):
     def test_single_section_finding_not_relabeled(self):
         mappings = auto_map_markers_v2([_absent_section_finding(1, "hero/F-01")], _baton())
