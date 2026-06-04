@@ -202,6 +202,16 @@ Control whether a visual report (annotated HTML with screenshot markers, dark-mo
 - `--no-visual`: skip the prompt, markdown-only output. `meta.json` is still created silently.
 - Neither flag: prompt the user after the phase completes. In `--auto` mode, skip the prompt (no visual report unless `--visual` is explicitly set).
 
+**Placement-QA tier mapping.** Every `--v2` render emits a deterministic, zero-cost Tier-0 Placement QA summary (`weak_placements` + `≥3-on-a-pixel` stacks) — this is the `free` tier and always runs. `--visual` additionally escalates the `ecp-visual-qa` vision gate (`.claude/workflows/ecp-visual-qa.js`) per device:
+
+| Flags | Visual-QA tier |
+|---|---|
+| (none) / `--no-visual` | `free` (Tier-0 only, already in the render summary) |
+| `--visual` | `standard` (1 vision verifier on flagged crops) |
+| `--visual --deep` | `deep` (3-verifier majority on flagged crops) |
+
+The vision tiers cost tokens and are an operator opt-in. **`--auto` never runs a paid tier** (it stays `free`), consistent with the draft → client-verified gate (`product.md` §6). See `${CLAUDE_PLUGIN_ROOT}/contracts/report-export.md` "Post-render placement QA" for the full procedure.
+
 ---
 
 ## `--ab-scaffold`

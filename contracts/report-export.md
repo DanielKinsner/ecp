@@ -48,3 +48,38 @@ python --version 2>/dev/null && PYTHON_CMD=python || PYTHON_CMD=python3
 - Desktop: `visual-report-desktop.html`
 
 **Two-device mode:** Generate both reports by running the Python script twice sequentially (2-5 seconds each).
+
+---
+
+## Post-render placement QA (Tier-0 automatic + visual-QA gate escalation)
+
+A hotspot can be *placed* (it got a coordinate) yet *wrong* (the coordinate isn't on the element the finding describes). `generate-report.py --v2` therefore prints a deterministic, zero-token **Placement QA** line in its own render summary — no separate tool run, no remembered manual step:
+
+```
+Match methods: e_index=… proposed_anchor(element=… section=… viewport=…) section_centroid=… section_stacked_manual=… unplaced=… banner=… operator=…
+Placement QA: weak_placements=N stacks=M
+  WARNING: stack of K findings on slide S @ (x, y): <f_refs>   ← stderr, one per stack
+```
+
+- **`weak_placements`** — findings placed via a non-element anchor (section/viewport fallback, `section_centroid`, `section_stacked_manual`, `banner`). A high count means "0 unplaced" is hiding low-confidence placements.
+- **`stacks`** — `≥ STACK_MIN` (3) distinct findings resolving to the same rendered pixel (the section-bottom-overlay collapse class). Each stack is a stderr WARNING.
+
+The lead surfaces a non-zero `weak_placements`/`stacks` count at the audit checkpoint so the operator knows which hotspots to spot-check during the draft → client-verified pass (`product.md` §6). This is the **`free` tier** — it always runs, costs nothing, and is the CI-friendly regression signal.
+
+### Escalating to the visual-QA gate (vision verification)
+
+When the operator wants vision to confirm placement (not just the deterministic triage), escalate to the **`ecp-visual-qa`** Workflow (`.claude/workflows/ecp-visual-qa.js`). It re-runs Tier-0, crops the suspect markers onto their frozen screenshots, has a vision agent judge each crop (on-target / off-target / wrong-element / empty-region), optionally auto-re-anchors, and aggregates. It reads `review-state-{device}.json` and verifies against the captured screenshots (no live re-fetch). Invoke it via the `Workflow` tool, **once per device**:
+
+```
+Workflow(name="ecp-visual-qa", args={ engagement: "docs/ecp/{engagement-id}", device: "{device}", tier: "{tier}" })
+```
+
+**Tier is mapped from the audit flags** (see `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md` `--visual`):
+
+| Condition | Tier | What runs | Cost |
+| --- | --- | --- | --- |
+| no `--visual` (or `--no-visual`) | `free` | Tier-0 only — already emitted by the render summary above | $0 |
+| `--visual` | `standard` | + 1 vision verifier on flagged crops (MIX cap 8) | low |
+| `--visual --deep` | `deep` | + 3-verifier majority on flagged crops (MIX cap 40) | higher |
+
+The vision tiers spend tokens, so they are an **operator opt-in** — the audit never auto-escalates past `free` on its own, and `--auto` never runs a paid tier. Run `deep` for a client-facing verification pass; `free` is the default zero-cost signal already baked into every render.
