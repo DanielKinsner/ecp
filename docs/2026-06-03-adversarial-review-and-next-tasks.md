@@ -20,15 +20,22 @@ The three P0 HIGH themes and the P1 Fix#3 edge are fixed on `main` (TDD, suite g
 | **P0-1** RC#1 zero-sized `<select>` dropped | `ada9ec4` | `_build_elements_js` keeps zero-sized SELECT/INPUT/BUTTON by anchoring to the nearest sized ancestor rect. Real-chromium behavioral smoke test (`tests/acquire-element-capture-smoke.mjs`, pulls the canonical JS — no duplication) verified RED→GREEN; wired into `npm test`. |
 | **P0-3** v1 Priority Path `(not found)` | `a10ce2e` | The masked defect reproduced (v1 body used positional F-NN vs content-hashed sidecar refs). `html_builder._attach_display_indices` stamps each parsed finding with its canonical index from `finding-groups.json`; the skipped e2e test is re-enabled and passes. (v2 render path was already clean — verified 0 `(not found)` in the live audit.) |
 | **Fix#3** thin-hero re-collapse (P1-4) | `c9983c7` | `_distribute_stacked_section_markers` enforces an 8% min band so a thin hero (`y_pct ≤ floor`) no longer re-stacks at 15%. Thin-section regression test added; the motivating `y≈85` case is unchanged. |
+| **P1-5** Fix#4 fold-in | `39ba847` | `--v2` render summary now prints `section_stacked_manual=` + a `Placement QA: weak_placements=N stacks=M` line (deterministic, free Tier-0) with a stderr WARNING per `≥3-on-a-pixel` stack. Caught **2 real stacks** behind the awdmods report's "0 unplaced". Tests added. |
+| **P1-6** visual-QA gate wiring | `f515b4d` | `contracts/report-export.md` + `flags.md` + `SKILL.md` now document the automatic free Tier-0 pass and the `--visual`→`standard`/`deep` escalation to the `ecp-visual-qa` gate (`--auto` stays `free`). |
+| **P2** housekeeping | `662a12c` | Extracted `acquire_url.build_arg_parser()` (un-skips `TestCliDefault`); deleted the two leaked `agent-browser` temp files. |
+
+Suite: **1114 passed / 11 skipped**. All P0 + P1 items and part of P2 are done.
 
 **Note on P3 (verification audit):** effectively done — the awdmods run produced both markdown
 audits + visual reports with **25/25 hotspots placed per device, 0 unplaced, 0 fallback banners**,
 and all substantive canaries green. RC#1/RC#2 capture buckets can now be re-confirmed on mobile too
-via the fixed `capture_coverage compare`.
+via the fixed `capture_coverage compare`, and the new Placement QA line surfaced 2 stacks worth an
+operator eyeball.
 
-**Still open:** P1-5 (Fix#4 fold-in — weak-placement/stack warnings into the renderer CLI summary +
-determinism gate + `section_stacked_manual` in the match-method breakdown), P1-6 (wire the visual-QA
-gate into `workflows/audit.md`), and the remaining P2 cleanup (§4).
+**Still open (P2 polish, §4 #7–9):** handoff §3 corrections (RC#1 status now *verified*, runbook
+step-2 note, RC#2 reword), a "LANDED" table on `docs/2026-06-03-adversarial-placement-qa-findings.md`,
+one synthetic render fixture for live CI coverage, and consolidating the duplicate
+`backfill_screenshots_from_sections` helper.
 
 ---
 
