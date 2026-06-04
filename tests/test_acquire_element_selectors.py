@@ -29,6 +29,22 @@ class TestElementSelectors(unittest.TestCase):
     def test_per_selector_cap_raised(self):
         self.assertIn("slice(0, 10)", acquire_url._build_elements_js("example.com"))
 
+    def test_zero_sized_form_controls_are_kept(self):
+        """RC#1(a): a zero-sized native <select>/<input>/<button> must NOT be
+        dropped by the per-element size guard — it must resolve to a sized
+        ancestor rect instead. Locks the source-level fix; the behavioral proof
+        (real chromium) lives in tests/acquire-element-capture-smoke.mjs.
+        """
+        js = acquire_url._build_elements_js("example.com")
+        self.assertIn("isFormControl", js,
+            "form-control exception to the zero-size drop is missing")
+        # the bare unconditional zero-size drop must be gone
+        self.assertNotIn("if (r.width === 0 || r.height === 0) return null;", js,
+            "unconditional zero-size drop still present — form controls re-dropped")
+        # ancestor-rect resolution must be wired
+        self.assertIn("getBoundingClientRect", js)
+        self.assertIn("parentElement", js)
+
     def test_contamination_guard_and_hostname_intact(self):
         js = acquire_url._build_elements_js("example.com")
         self.assertIn("__contamination_detected", js)       # guard preserved

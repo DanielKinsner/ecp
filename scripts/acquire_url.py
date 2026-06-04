@@ -127,13 +127,32 @@ def _build_elements_js(expected_hostname: str) -> str:
   ].flatMap(function(sel) {
     try {
       return Array.from(document.querySelectorAll(sel)).slice(0, 10).map(function(el) {
-        const r = el.getBoundingClientRect();
+        let r = el.getBoundingClientRect();
         const scrollY = window.scrollY || document.documentElement.scrollTop;
-        if (r.width === 0 || r.height === 0) return null;
+        const tag = el.tagName.toLowerCase();
+        /* Native form controls (the YMM <select>, submit <input>, <button>)
+           routinely render at width:0/height:0/opacity:0 before JS enhancement.
+           Dropping them on size discards the exact control the hotspot needs
+           (2026-06-02 hotspot diagnosis RC#1). Keep a zero-sized form control by
+           anchoring it to its nearest sized ancestor (label/wrapper/enhanced
+           widget rect); only fall through to the drop when no sized ancestor
+           exists within 4 levels (truly invisible, nothing to pin). */
+        const isFormControl = (tag === 'select' || tag === 'input' || tag === 'button');
+        if (r.width === 0 || r.height === 0) {
+          if (!isFormControl) return null;
+          let anc = el.parentElement, ar = null, depth = 0;
+          while (anc && depth < 4) {
+            const pr = anc.getBoundingClientRect();
+            if (pr.width > 0 && pr.height > 0) { ar = pr; break; }
+            anc = anc.parentElement; depth++;
+          }
+          if (!ar) return null;
+          r = ar;
+        }
         if (r.bottom < 0 || r.top > window.innerHeight) return null;
         return {
           selector: sel,
-          tag: el.tagName.toLowerCase(),
+          tag: tag,
           text: (el.textContent || '').trim().slice(0, 60),
           class: (el.className || '').toString().slice(0, 80),
           x: Math.max(0, Math.round(r.left)),

@@ -13,7 +13,8 @@
     "serve:editor": "node scripts/serve-editor.cjs",
     "smoke:editor-server": "node tests/editor-server-render-smoke.mjs",
     "smoke:editor": "node tests/editor-smoke.mjs",
-    "test": "npm run check:editor && npm run check:python && npm run smoke:editor"
+    "smoke:acquire-capture": "node tests/acquire-element-capture-smoke.mjs",
+    "test": "npm run check:editor && npm run check:python && npm run smoke:acquire-capture && npm run smoke:editor"
   },
   "repository": {
     "type": "git",
