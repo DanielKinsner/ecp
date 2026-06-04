@@ -8,6 +8,30 @@
 
 ---
 
+## ✅ LANDED (2026-06-04) — P0 trio + Fix#3, verified against a live audit
+
+The three P0 HIGH themes and the P1 Fix#3 edge are fixed on `main` (TDD, suite green
+**1105 passed / 12 skipped**). A live dual-device `/ecp:audit` of awdmods.com homepage
+(engagement `2026-06-04-bf5f32e0`, v2 pipeline) was run first to ground the work.
+
+| Task | Commit | What landed |
+| --- | --- | --- |
+| **P0-2** coverage tool desktop-blind | `fbddec1` | `capture_coverage compare` pairs batons by their real `device` field, emits per-device deltas, warns on a missing canonical device. Can no longer mislabel mobile as desktop. |
+| **P0-1** RC#1 zero-sized `<select>` dropped | `ada9ec4` | `_build_elements_js` keeps zero-sized SELECT/INPUT/BUTTON by anchoring to the nearest sized ancestor rect. Real-chromium behavioral smoke test (`tests/acquire-element-capture-smoke.mjs`, pulls the canonical JS — no duplication) verified RED→GREEN; wired into `npm test`. |
+| **P0-3** v1 Priority Path `(not found)` | `a10ce2e` | The masked defect reproduced (v1 body used positional F-NN vs content-hashed sidecar refs). `html_builder._attach_display_indices` stamps each parsed finding with its canonical index from `finding-groups.json`; the skipped e2e test is re-enabled and passes. (v2 render path was already clean — verified 0 `(not found)` in the live audit.) |
+| **Fix#3** thin-hero re-collapse (P1-4) | `c9983c7` | `_distribute_stacked_section_markers` enforces an 8% min band so a thin hero (`y_pct ≤ floor`) no longer re-stacks at 15%. Thin-section regression test added; the motivating `y≈85` case is unchanged. |
+
+**Note on P3 (verification audit):** effectively done — the awdmods run produced both markdown
+audits + visual reports with **25/25 hotspots placed per device, 0 unplaced, 0 fallback banners**,
+and all substantive canaries green. RC#1/RC#2 capture buckets can now be re-confirmed on mobile too
+via the fixed `capture_coverage compare`.
+
+**Still open:** P1-5 (Fix#4 fold-in — weak-placement/stack warnings into the renderer CLI summary +
+determinism gate + `section_stacked_manual` in the match-method breakdown), P1-6 (wire the visual-QA
+gate into `workflows/audit.md`), and the remaining P2 cleanup (§4).
+
+---
+
 ## Bottom line up front
 
 | Commit | What it claims | Verdict |
