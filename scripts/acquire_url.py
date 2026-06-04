@@ -1244,7 +1244,11 @@ def _run_one_device(
     )
 
 
-def main() -> int:
+def build_arg_parser() -> argparse.ArgumentParser:
+    """Build the CLI arg parser. Extracted from ``main`` so the default
+    contract (e.g. ``--max-screenshots`` auto-sentinel = 0) is unit-testable
+    without invoking acquisition (adversarial review 2026-06-03 §1, un-skips
+    tests/test_acquire_scroll_tiling.py::TestCliDefault)."""
     parser = argparse.ArgumentParser(description="Bootstrap docs/ecp engagement for URL input (Cursor).")
     parser.add_argument("--url", required=True, help="https URL to load")
     parser.add_argument(
@@ -1304,7 +1308,11 @@ def main() -> int:
             "then rerun one stricter acquisition pass per failing device."
         ),
     )
-    args = parser.parse_args()
+    return parser
+
+
+def main() -> int:
+    args = build_arg_parser().parse_args()
 
     devices = _parse_devices(args)
     non_mobile = [d for d in devices if d in ("laptop", "desktop")]
