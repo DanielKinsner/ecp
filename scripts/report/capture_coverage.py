@@ -61,9 +61,74 @@ def coverage(engagement: Path, baton_file: str) -> dict | None:
             buckets[b] += 1
     return {
         "baton": baton_file,
+        # Prefer the baton's self-declared device; fall back to filename
+        # inference so a delta is never mislabeled by list position.
+        "device": data.get("device") or _device_for_baton(baton_file),
         "total": len(els),
         "tags": dict(Counter((e.get("tag") or "?") for e in els)),
         "controls": {b: buckets.get(b, 0) for b in _BUCKETS},
+    }
+
+
+def _device_for_baton(baton_file: str) -> str:
+    """Infer the device from a baton filename when the baton omits ``device``.
+
+    ``baton.json`` is the primary (non-mobile) capture; ``baton-mobile.json``
+    is mobile; ``baton-laptop.json`` / ``baton-desktop.json`` name themselves.
+    """
+    name = baton_file.lower()
+    if "mobile" in name:
+        return "mobile"
+    if "laptop" in name:
+        return "laptop"
+    return "desktop"
+
+
+def compare_coverage(before: Path, after: Path) -> dict:
+    """Per-device before/after control-coverage delta.
+
+    Pairs batons by their real ``device`` (never by list index), so BOTH
+    desktop and mobile are surfaced and a present-on-one-side-only device is
+    flagged rather than silently mislabeled. Closes the desktop-blind +
+    mislabel bugs (adversarial review 2026-06-03, §1 P0-2).
+    """
+    b_rep, a_rep = report(before), report(after)
+    b_by_dev = {c["device"]: c for c in b_rep["batons"]}
+    a_by_dev = {c["device"]: c for c in a_rep["batons"]}
+
+    def _present(maps: dict, dev: str) -> bool:
+        # laptop satisfies the non-mobile ("desktop") slot.
+        if dev == "desktop":
+            return "desktop" in maps or "laptop" in maps
+        return dev in maps
+
+    warnings: list[str] = []
+    for dev in ("desktop", "mobile"):
+        label = "desktop/laptop" if dev == "desktop" else dev
+        in_b, in_a = _present(b_by_dev, dev), _present(a_by_dev, dev)
+        if not in_b and not in_a:
+            warnings.append(
+                f"{label} baton absent in both engagements — this delta does not "
+                f"cover {label}"
+            )
+        elif in_a != in_b:
+            side, other = ("after", "before") if in_a else ("before", "after")
+            warnings.append(f"{label} baton present in '{side}' but absent in '{other}'")
+
+    devices: list[dict] = []
+    for dev in sorted(set(b_by_dev) | set(a_by_dev)):
+        b_ctl = b_by_dev.get(dev, {}).get("controls", {})
+        a_ctl = a_by_dev.get(dev, {}).get("controls", {})
+        devices.append({
+            "device": dev,
+            "baton": (a_by_dev.get(dev) or b_by_dev.get(dev) or {}).get("baton"),
+            "delta": {k: (b_ctl.get(k, 0), a_ctl.get(k, 0)) for k in _BUCKETS},
+        })
+    return {
+        "before": before.name,
+        "after": after.name,
+        "devices": devices,
+        "warnings": warnings,
     }
 
 
@@ -106,14 +171,19 @@ def main(argv: list[str] | None = None) -> int:
             args.json.write_text(json.dumps(rep, indent=2), encoding="utf-8")
         return 0
     if args.cmd == "compare":
-        before, after = report(args.before), report(args.after)
-        b0 = before["batons"][0]["controls"] if before["batons"] else {}
-        a0 = after["batons"][0]["controls"] if after["batons"] else {}
-        print(f"== Capture-coverage delta (desktop baton): {args.before.name} -> {args.after.name} ==")
-        for k in _BUCKETS:
-            bv, av = b0.get(k, 0), a0.get(k, 0)
-            arrow = "↑" if av > bv else ("↓" if av < bv else "=")
-            print(f"  {k:14s} {bv:3d} -> {av:3d}  {arrow}")
+        cmp = compare_coverage(args.before, args.after)
+        if not cmp["devices"]:
+            print(f"No baton*.json under {args.before} or {args.after}", file=sys.stderr)
+            return 2
+        print(f"== Capture-coverage delta: {cmp['before']} -> {cmp['after']} ==")
+        for w in cmp["warnings"]:
+            print(f"  WARNING: {w}", file=sys.stderr)
+        for d in cmp["devices"]:
+            print(f"\n[{d['device']}] ({d['baton']})")
+            for k in _BUCKETS:
+                bv, av = d["delta"][k]
+                arrow = "↑" if av > bv else ("↓" if av < bv else "=")
+                print(f"  {k:14s} {bv:3d} -> {av:3d}  {arrow}")
         return 0
     return 1
 
