@@ -32,10 +32,16 @@ and all substantive canaries green. RC#1/RC#2 capture buckets can now be re-conf
 via the fixed `capture_coverage compare`, and the new Placement QA line surfaced 2 stacks worth an
 operator eyeball.
 
-**Still open (P2 polish, §4 #7–9):** handoff §3 corrections (RC#1 status now *verified*, runbook
-step-2 note, RC#2 reword), a "LANDED" table on `docs/2026-06-03-adversarial-placement-qa-findings.md`,
-one synthetic render fixture for live CI coverage, and consolidating the duplicate
-`backfill_screenshots_from_sections` helper.
+**P2 polish — DONE (§4 #7–9):** handoff §3 corrections applied (RC#1 now *verified*, runbook
+step-2 note, RC#2 reword, test count), LANDED banner on `docs/2026-06-03-adversarial-placement-qa-findings.md`,
+live v2-render CI coverage via a committed fixture (`tests/test_v2_render_fixture.py`, `5c91964`),
+`section_stacked_manual` forced to `section_absence/low` (`ef14dc3`), `build_arg_parser()` factory +
+leaked-temp cleanup (`662a12c`), and the duplicate `backfill_screenshots_from_sections` consolidated
+(`be15dc5`).
+
+**Nothing from this review remains open.** P0 + P1 + P2 are all landed; suite **1118 passed / 11
+skipped**. The only forward action is the optional P3 live re-audit (now that the acquirer/render
+fixes are in) — which the operator runs.
 
 ---
 

@@ -7,6 +7,22 @@ Everything below serves that one goal.
 This is the rolling handoff for the placement/acquirer arc. For the broader AMS-style
 chain see the project memory; this file is ECP-specific.
 
+> **UPDATE 2026-06-04 — adversarial review acted on; P0+P1 (+most P2) landed.**
+> A live dual-device `/ecp:audit` of awdmods.com homepage grounded the work, then the
+> review's findings were fixed on `main` (see the LANDED table in
+> `docs/2026-06-03-adversarial-review-and-next-tasks.md`). Net changes to the claims below:
+> - **RC#1 is now behaviorally verified, not just "code".** The §3 caveat (native zero-sized
+>   `<select>` still dropped by the per-element size guard) was real and is now fixed — form
+>   controls anchor to a sized ancestor (`ada9ec4`), with a real-chromium smoke test
+>   (`tests/acquire-element-capture-smoke.mjs`, RED→GREEN).
+> - **The capture-coverage tool is no longer desktop-blind** (`fbddec1`) — runbook step 2 now
+>   substantiates RC#1 on **both** devices.
+> - **Fix #4 is DONE** (not "MOSTLY"): the render summary itself prints `Placement QA:
+>   weak_placements=N stacks=M` every run (`39ba847`); the visual-QA gate is wired into the
+>   runbook (`f515b4d`).
+> - **Suite is now 1118 passed / 11 skipped** (was 1085/13), with live v2-render CI coverage.
+> - RC#2 residual wording corrected below (mid-page gaps, not tail-clipping).
+
 ---
 
 ## TL;DR
@@ -45,10 +61,10 @@ that contain the symptom and prevent silent recurrence.
 
 | Fix | What | Status |
 | --- | --- | --- |
-| #1 | Capture hero controls into `elements[]` / anchor candidates | **DONE** `5634e18` |
+| #1 | Capture hero controls into `elements[]` / anchor candidates | **DONE + verified** `5634e18`, zero-sized form-control guard `ada9ec4` (behavioral test) |
 | #2 | Mobile coverage tracks page height (contiguous tiling) | **DONE** `764d726` |
-| #3 | Hero absent-finding stack: distribute up the band + flag for manual review (operator chose "distribute + flag" over pure force-unplaced) | **DONE** `de95dfa` |
-| #4 | Surface placement confidence in the render summary so "0 unplaced" ≠ "all correct" | **MOSTLY DONE** via `placement_audit.py` + visual-QA gate; remaining = fold the signal into the renderer's own summary/CI |
+| #3 | Hero absent-finding stack: distribute up the band + flag for manual review (operator chose "distribute + flag" over pure force-unplaced) | **DONE** `de95dfa`, thin-hero guard `c9983c7` |
+| #4 | Surface placement confidence in the render summary so "0 unplaced" ≠ "all correct" | **DONE** — folded into the renderer's own summary `39ba847`; gate wired `f515b4d` |
 
 **All four diagnosis fixes are now in code.** The only thing left before a confident
 "hotspots are accurate" claim is the single live verification audit (runbook below).
@@ -81,7 +97,7 @@ d1a9a59 feat(visual-qa): fold repair + re-verify into the workflow (one command)
 Plus the adversarial type-review batch that preceded it (30 type bugs + cross-OS
 `force_utf8_io()`; see `docs/2026-06-03-adversarial-type-review-findings.md`).
 
-Suite: **1085 passed, 13 skipped** (`python -m pytest tests/`). Run pytest, not
+Suite: **1118 passed, 11 skipped** (`python -m pytest tests/`). Run pytest, not
 `unittest discover` — the latter skips bare pytest-style funcs.
 
 ---
@@ -107,9 +123,11 @@ Fix (`scripts/acquire_url.py`):
 **Cost:** ~+6 mobile screenshots per audit (12 vs 6). Bounded and tunable via the two module
 constants — if 45 min creeps up, lower `MAX_SCREENSHOTS_MOBILE`, no code surgery.
 
-**Known residual:** mobile pages taller than ~10,100px (12 × 844) still clip beyond 12 tiles —
-the documented cost cap. If a real PDP exceeds that, options are (a) bump the constant or
-(b) a future full-page stitched capture. Not a blocker for typical Shopify PDPs.
+**Known residual:** on mobile pages taller than ~10,128px (12 × 844) the 12-tile cap means
+coverage is no longer contiguous — **mid-page gaps reopen** across the page (the page bottom is
+still captured; it does not tail-clip). The documented cost cap. If a real PDP exceeds that,
+options are (a) bump the constant or (b) a future full-page stitched capture. Not a blocker for
+typical Shopify PDPs.
 
 ---
 

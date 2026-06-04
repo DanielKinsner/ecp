@@ -12,7 +12,9 @@
 
 **Tally:** 28 candidates → **22 confirmed** + 7 net-new from the completeness critic; **6 refuted**, several downgraded on reachability. Consolidated below to **24 findings** (duplicates merged) + 2 verified-good claims.
 
-> **Status legend:** all findings are **proposed, not yet applied** — this doc is the review pass. Baseline today: **16/16 new tests pass**, feature is additive, no frozen-contract edits.
+> **Status legend (original):** all findings were **proposed, not yet applied** — this doc was the review pass. Baseline then: **16/16 new tests pass**, feature is additive, no frozen-contract edits.
+>
+> **✅ LANDED (verified 2026-06-03/04).** All 24 findings in this doc have since been **applied and verified** — the follow-up adversarial review (`docs/2026-06-03-adversarial-review-and-next-tasks.md` §2) spot-checked the placement-QA batch and confirmed they are "**genuinely fixed** — no false claims" (`placement_repair.py` finding-level confidence + re-anchor fail-safe, `geometry_validator` wiring, crash guards, type coercions). The Tier-0 signal is now also folded into the renderer's own summary (`39ba847`) and the visual-QA gate is wired into the audit runbook (`f515b4d`). Treat this doc as historical (what was found), not a backlog.
 
 **Re-verified by orchestrator against source (not just agent-reported):**
 - ✔ The editor confidence contract underpinning **[1]/[2]** — `editor.js` reads `f.hotspot_confidence` (finding-level) only, enum `["exact-selector","section-match","fallback-absence","needs-manual-marker"]` (`editor.js:16,252,266-271,284,463-464`; schema `review-state-v1.json:121-124`). `"low"` and marker-level confidence are inert; `placement_review_needed`/`repair_status` are not in the schema.
