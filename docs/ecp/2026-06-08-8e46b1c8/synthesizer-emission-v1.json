@@ -1,0 +1,506 @@
+{
+  "audit_documents": {
+    "desktop": "docs/ecp/2026-06-08-8e46b1c8/audit-desktop.md",
+    "mobile": "docs/ecp/2026-06-08-8e46b1c8/audit-mobile.md"
+  },
+  "completed_at": "2026-06-08T23:34:00.000Z",
+  "degraded_mode": false,
+  "dispatch_shape": "single",
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "humanized_findings": [
+    {
+      "f_ref": "visual-cta F-24",
+      "plain_english_action": "Add a short headline and one supporting line above the vehicle selector that names the cars you serve and your biggest reason to buy.",
+      "plain_english_summary": "The top of the desktop page is a large empty black area with only a vehicle-lookup form floating in it. A first-time visitor has nothing telling them what you sell, who it's for, or why to buy here, so cold traffic often leaves in the first few seconds before they ever scroll to your products."
+    },
+    {
+      "f_ref": "visual-cta F-13",
+      "plain_english_action": "Replace the icon-only square with a full, clearly labeled 'Find My Parts' button so the primary action is obvious.",
+      "plain_english_summary": "Your main call to action is a tiny square magnifying-glass icon at the end of the vehicle selector. It looks like a search button, not a 'find my parts' button, and most visitors who scan rather than read won't recognize it as the way forward."
+    },
+    {
+      "f_ref": "visual-cta F-08",
+      "plain_english_action": "Place a strong on-brand photo (a tuned WRX/STI or Focus RS, or installed parts) behind the vehicle selector.",
+      "plain_english_summary": "The hero area is a flat black band with no product photo, lifestyle shot, or build image — just empty space around the lookup form. The most-viewed part of your page is showing nothing about the cars or parts you sell, wasting the strongest first-impression moment."
+    },
+    {
+      "f_ref": "visual-cta F-38",
+      "plain_english_action": "Make one category's button stand out as the primary, or add a single 'Shop All' / 'Find My Parts' action above the row.",
+      "plain_english_summary": "The five category cards all use the same identical blue 'SHOP' button, so nothing tells the visitor where to start. With no clear primary path, shoppers have to weigh all five equally, which adds hesitation at the exact moment you want to point them somewhere."
+    },
+    {
+      "f_ref": "visual-cta F-27",
+      "plain_english_action": "Show a compact star rating with review count near the top of the page alongside the free-shipping bar.",
+      "plain_english_summary": "The only reassurance in the opening view is the free-shipping bar, which is about delivery cost, not whether your store can be trusted. A first-time visitor sizing up an unfamiliar parts retailer sees no rating, review count, or guarantee until they scroll deep into the page."
+    },
+    {
+      "f_ref": "visual-cta F-55",
+      "plain_english_action": "Keep this blue as your action color and reuse it for any new primary button.",
+      "plain_english_summary": "Your category 'SHOP' buttons use a bright blue that stands out cleanly against the dark cards, so they clearly read as clickable. This is working well and is worth keeping as you make other changes."
+    },
+    {
+      "f_ref": "trust-credibility F-23",
+      "plain_english_action": "Collect reviews after delivery, starting with your priciest items, and feature products that already have reviews.",
+      "plain_english_summary": "Most of the products you feature on the homepage show a price but no reviews at all — including the higher-priced intake and exhaust. Shoppers deciding whether to trust an unfamiliar store and an expensive part see no social proof at the moment it matters most."
+    },
+    {
+      "f_ref": "trust-credibility F-09",
+      "plain_english_action": "Keep gathering reviews from every buyer so the score and count look earned, and always show the review count next to the stars.",
+      "plain_english_summary": "The products that do show ratings all display a perfect 5.0 built on just two or three reviews. A flawless score on a tiny number of reviews reads as too good to be true, so it can actually make shoppers more skeptical rather than more confident."
+    },
+    {
+      "f_ref": "trust-credibility F-10",
+      "plain_english_action": "Add a short trust strip below the hero with a guarantee, easy returns, a real customers-served figure, and a support number.",
+      "plain_english_summary": "The homepage shows what you sell but never answers 'why should I trust this store?' There's no guarantee, returns promise, customer count, or support phone number anywhere — which is exactly the reassurance a specialty store without big-brand recognition needs most."
+    },
+    {
+      "f_ref": "trust-credibility F-62",
+      "plain_english_action": "Keep these logos, and repeat the strongest ones near the pay button when you build out checkout.",
+      "plain_english_summary": "Your footer shows recognized payment logos (Visa, Mastercard, PayPal, Apple Pay, and more), which reassures shoppers that paying is safe and routine. This is a trust signal you already get right."
+    },
+    {
+      "f_ref": "content-seo F-32",
+      "plain_english_action": "Rewrite the title to lead with what you sell and which cars it fits, then your brand once at the end.",
+      "plain_english_summary": "Your homepage's browser/search title is just 'AWDMods – AWDMods' — your brand name twice, with no mention of the parts or the cars you fit. Google has nothing to match against what shoppers actually search for, and it will usually rewrite a title this short on its own."
+    },
+    {
+      "f_ref": "content-seo F-74",
+      "plain_english_action": "Write a one-sentence description (about 150 characters) naming your catalog and the vehicles you cover.",
+      "plain_english_summary": "Your homepage has no meta description, so Google builds the search snippet from whatever scraps it can find on a page that's mostly menus and product thumbnails. You have no control over how your most important page is summarized in search results."
+    },
+    {
+      "f_ref": "content-seo F-60",
+      "plain_english_action": "Add a 1200x630 preview image (your logo over a build shot works well).",
+      "plain_english_summary": "When your homepage link is shared on social media or surfaced by an AI assistant, there's no preview image to show, so it appears as a bare text link next to competitors with branded thumbnails. The page even reserves a large image slot and then leaves it empty."
+    },
+    {
+      "f_ref": "content-seo F-61",
+      "plain_english_action": "Add product and rating markup to the product templates so search engines can read the prices and stars you already display.",
+      "plain_english_summary": "Your featured products show real prices and star ratings on screen, but none of that is written in the behind-the-scenes format Google and AI shopping tools read. So your ratings can't appear as stars in search results, and AI assistants can't recommend these products."
+    },
+    {
+      "f_ref": "content-seo F-27",
+      "plain_english_action": "Set each image's description from the product name at the template level so every card is fixed at once.",
+      "plain_english_summary": "Every product image's hidden description is a string of code (its CSS class) instead of a real description of the product. Screen readers read that gibberish aloud, and Google Images and Lens can't tell what the photo shows — so you lose both accessibility and visual-search traffic."
+    },
+    {
+      "f_ref": "content-seo F-64",
+      "plain_english_action": "Keep this as-is and apply the same standard to product and collection pages.",
+      "plain_english_summary": "Your homepage correctly tells search engines which web address is the official one, which keeps your ranking strength from being split across duplicate URLs. This is set up right and worth preserving."
+    },
+    {
+      "f_ref": "performance-ux F-37",
+      "plain_english_action": "Tell the browser to load the first category-tile image early, and serve the tiles in lighter modern image formats.",
+      "plain_english_summary": "The biggest image on your first desktop screen (the category tiles) isn't given any loading priority, so the browser fetches it late, behind fonts and stylesheets. Every visitor waits longer for the first screen to feel finished, and slower pages cost sales."
+    },
+    {
+      "f_ref": "performance-ux F-83",
+      "plain_english_action": "Fill the band with a value line above the selector and pull the category tiles up into the first screen.",
+      "plain_english_summary": "On a desktop screen, almost the entire top area is empty black space with just the lookup form floating in it. The most-visited screen on your site shows no products, no message, and nothing to catch the eye until the visitor scrolls down."
+    },
+    {
+      "f_ref": "performance-ux F-91",
+      "plain_english_action": "Remember the shopper's last vehicle and pre-fill the dropdowns on return.",
+      "plain_english_summary": "The vehicle finder asks every visitor to pick Make, Model, Year, and Trim from scratch each time, with no remembered or pre-filled values. Returning shoppers repeat all four steps every visit before they can see a single part."
+    },
+    {
+      "f_ref": "performance-ux F-24",
+      "plain_english_action": "Set fixed dimensions (or an aspect ratio) on the card images so the layout holds steady while photos load.",
+      "plain_english_summary": "Your product-grid images don't reserve their space before they load, so the price and title can jump down the page as each photo appears. That moving target causes mis-clicks right when the shopper is deciding to click."
+    },
+    {
+      "f_ref": "performance-ux F-52",
+      "plain_english_action": "Keep it, and extend the same early-loading treatment to your first above-the-fold image.",
+      "plain_english_summary": "Your fonts and logo are set to load early, so the brand and text paint quickly without a flash of unstyled content. This is good loading discipline that's already in place."
+    },
+    {
+      "f_ref": "pricing F-98",
+      "plain_english_action": "Show a crossed-out reference price above the live price on the rest of your products, and state the savings explicitly.",
+      "plain_english_summary": "Most featured prices appear as a single bare number with nothing to compare against, so a $1,766 part reads as expensive against nothing. The Borla card already shows a crossed-out original price, proving your store can do this — it's just used on only one of eight products."
+    },
+    {
+      "f_ref": "pricing F-97",
+      "plain_english_action": "Show a monthly installment amount under the price on items over about $150.",
+      "plain_english_summary": "Several featured items run well over $1,000 but show only the full price with no 'pay over time' option, even though your store already supports Shop Pay. Shoppers see the big four-figure number with no friendlier monthly framing beside it."
+    },
+    {
+      "f_ref": "pricing F-23",
+      "plain_english_action": "Show the same crossed-out price treatment on every discounted product, and a reference price on the rest.",
+      "plain_english_summary": "Only one product (the Borla exhaust) shows a 'was/now' sale price; the rest of the grid shows bare prices. Mixing one anchored price in with seven plain ones makes that lone discount look arbitrary and leaves value unstated on every other card."
+    },
+    {
+      "f_ref": "pricing F-16",
+      "plain_english_action": "Add a live progress message in the cart that shows the exact amount left to reach free shipping.",
+      "plain_english_summary": "Your free-shipping offer is stated as a flat '$75+' line in the top bar, but there's no live 'you're $18 away from free shipping' cue tied to the cart. The threshold informs shoppers but never actively nudges them to add one more item."
+    },
+    {
+      "f_ref": "category-navigation F-46",
+      "plain_english_action": "Give the button a clear text label like 'Find Parts' and style it differently from the site search.",
+      "plain_english_summary": "After a shopper picks their Make, Model, Year, and Trim, the button that shows compatible parts is just a magnifying-glass icon with no words. It looks like a generic search box and duplicates the separate site search, so high-intent shoppers hesitate at the final step."
+    },
+    {
+      "f_ref": "category-navigation F-52",
+      "plain_english_action": "Add a short directive headline above the finder and tighten the spacing so the finder and first category cards share the top screen.",
+      "plain_english_summary": "Your most valuable tool — the vehicle finder — sits alone in a big empty black band with lots of dead space around it, while the category cards that show what you sell are pushed down out of the prime view. The most-looked-at area of the page is mostly blank."
+    },
+    {
+      "f_ref": "category-navigation F-45",
+      "plain_english_action": "Make the homepage cards and the category menu list the same set of categories.",
+      "plain_english_summary": "Your five homepage category cards and your 'Shop by Category' menu list different categories — the 'Electronics' card has no menu match, and Drivetrain, Cooling, Wheels, and Accessories are in the menu but missing from the cards. Shoppers using each path get two different pictures of how your catalog is organized."
+    },
+    {
+      "f_ref": "category-navigation F-99",
+      "plain_english_action": "Keep the open wide search, and consider a more specific placeholder like 'Search parts, brands, or part numbers'.",
+      "plain_english_summary": "Your site search is an always-visible, wide box at the top of the page rather than hidden behind an icon, and it's roomy enough to hold long part queries. This protects your highest-intent shoppers' fastest path to a product."
+    },
+    {
+      "f_ref": "category-navigation F-29",
+      "plain_english_action": "Keep the pattern, and make each listed subcategory a clickable link if it isn't already.",
+      "plain_english_summary": "Each homepage category card lists its subcategories and has its own 'Shop' button, so a shopper can jump to a broad category or a specific one in a single step. This is a strong navigation pattern for a deep parts catalog."
+    },
+    {
+      "f_ref": "category-navigation F-41",
+      "plain_english_action": "Keep the lean menu, and make sure its category list matches the homepage cards.",
+      "plain_english_summary": "Your top menu keeps to four clear entries — Shop All, Shop by Category, Shop by Vehicle, Contact — instead of an overwhelming mega menu. The two natural ways to browse (by category, by vehicle) are obvious from the header."
+    },
+    {
+      "f_ref": "ethics F-16",
+      "plain_english_action": "Update the Privacy Policy link to your own awdmods.com address in your store's footer menu.",
+      "plain_english_summary": "Your footer Privacy Policy link points to a Shopify staging web address (e1520g-k3.myshopify.com) instead of your own awdmods.com. A shopper checking your privacy practices lands on an unbranded page that doesn't clearly belong to AWDMods, which creates avoidable legal exposure under California privacy law."
+    },
+    {
+      "f_ref": "visual-cta F-11",
+      "plain_english_action": "Add a short headline and one supporting line just above the first dropdown.",
+      "plain_english_summary": "The top of the mobile page goes straight from the search box into the vehicle dropdowns with no headline or sentence saying what you sell or who it's for. In the first five seconds a phone visitor sees a lookup form and a logo, but no reason to use them."
+    },
+    {
+      "f_ref": "visual-cta F-12",
+      "plain_english_action": "Make the button full-width with a bright white label so it's the easiest thing to tap.",
+      "plain_english_summary": "Your 'FIND PARTS' button — the only action in the hero — is the smallest thing on the screen, about 40% width while the dropdowns above it run full-width, and its grey label is dimmer than the white text above it. The most important action looks like a minor control."
+    },
+    {
+      "f_ref": "visual-cta F-67",
+      "plain_english_action": "Add a small sticky bar at the bottom that keeps the vehicle finder or a 'Shop All' action one tap away.",
+      "plain_english_summary": "On mobile the page runs several screens deep, but once the 'FIND PARTS' button scrolls away nothing replaces it. A shopper who decides to act while looking at products has to scroll all the way back to the top to find the way forward."
+    },
+    {
+      "f_ref": "visual-cta F-46",
+      "plain_english_action": "Also show the free-shipping line inside the page content near the products, and give its link a specific label.",
+      "plain_english_summary": "Your free-shipping message sits in a colored bar above the logo — the exact spot shoppers have learned to treat as an ad and skip. A genuine reason-to-buy is parked where most eyes route right past it."
+    },
+    {
+      "f_ref": "visual-cta F-16",
+      "plain_english_action": "Keep this style, and reuse it for the hero's 'FIND PARTS' button.",
+      "plain_english_summary": "Your 'SHOP PERFORMANCE' category button is a solid blue button with a clear white label that names exactly where it goes. It's easy to spot and act on, which keeps the category cards a working entry into your catalog."
+    },
+    {
+      "f_ref": "trust-credibility F-13",
+      "plain_english_action": "Show the review count next to every star rating, and display ratings consistently on all cards.",
+      "plain_english_summary": "On mobile the featured products show a perfect 5.0 rating with no review count beside it, and only on some cards. A bare 5.0 with no number gives shoppers nothing to weigh and reads as less believable than a 4.4 backed by a visible count."
+    },
+    {
+      "f_ref": "trust-credibility F-15",
+      "plain_english_action": "Add rating markup that mirrors the stars you already show, or turn it on in your review app.",
+      "plain_english_summary": "Your product ratings show on the page but aren't written in the behind-the-scenes format search engines read, so Google can't show star ratings in your search results. You pay the cost of displaying ratings without earning the search visibility they could buy."
+    },
+    {
+      "f_ref": "trust-credibility F-27",
+      "plain_english_action": "Add a short, confident reassurance like 'Fitment guaranteed or your money back' near the product cards.",
+      "plain_english_summary": "There's no returns, guarantee, or warranty message anywhere near your products. For a made-to-order $135.99 mat set, the shopper's real question is 'what if it doesn't fit my car?' and the page answers it nowhere they're actually deciding."
+    },
+    {
+      "f_ref": "trust-credibility F-28",
+      "plain_english_action": "Show two or three of the strongest payment logos near the products while keeping the full set in the footer.",
+      "plain_english_summary": "Every payment logo you accept sits only at the very bottom of the page, below the copyright. Those logos reassure shoppers most at the moment they decide to act — near the products and the Find Parts action — not after the decision is already made."
+    },
+    {
+      "f_ref": "trust-credibility F-31",
+      "plain_english_action": "Keep them, and extend a trimmed version of the payment row higher up near the products.",
+      "plain_english_summary": "Your footer carries recognized payment logos and links to real Facebook, Instagram, and YouTube profiles. These are exactly the brands shoppers trust, giving you a solid foundation to build a stronger trust presentation on."
+    },
+    {
+      "f_ref": "content-seo F-62",
+      "plain_english_action": "Add product and rating markup to the product templates that mirrors the prices and stars shoppers already see.",
+      "plain_english_summary": "Your featured products show ratings and prices on the phone screen, but none of it is written in the format Google Shopping and AI assistants read. So you can't earn star or price results in search, and AI shopping tools can't surface these products."
+    },
+    {
+      "f_ref": "content-seo F-76",
+      "plain_english_action": "Set each image's description from the product name at the template level.",
+      "plain_english_summary": "Your product images carry a string of code as their hidden description instead of a real one. Screen readers read that aloud, and Google Images and Lens can't tell what the photo shows — losing both accessibility and a large stream of visual-search shoppers."
+    },
+    {
+      "f_ref": "content-seo F-75",
+      "plain_english_action": "Add a one-sentence description naming your catalog and audience, plus a preview image.",
+      "plain_english_summary": "Your page has no real description for search results, your social-share description is just the word 'AWDMods', and there's no preview image. Search snippets, shared links, and AI previews all show no useful summary and no picture of what your store is."
+    },
+    {
+      "f_ref": "content-seo F-87",
+      "plain_english_action": "Add a short benefit-led intro below the vehicle selector naming your audience, your value, and what to do next.",
+      "plain_english_summary": "The homepage has almost no descriptive text — just a lookup form, category labels, product cards, and a newsletter prompt. A first-time visitor (and an AI shopping assistant) has no sentence telling them what you specialize in or why to buy here."
+    },
+    {
+      "f_ref": "content-seo F-63",
+      "plain_english_action": "Keep them, and apply the same pattern to product and collection pages.",
+      "plain_english_summary": "Your homepage correctly tells search engines the official web address and is set to render properly on phones. These are foundational technical signals, and both are done right."
+    },
+    {
+      "f_ref": "performance-ux F-76",
+      "plain_english_action": "Load the checkout scripts only on the cart and checkout pages, and prioritize your first visible image.",
+      "plain_english_summary": "Your homepage loads 74 checkout-related scripts before anyone is checking out, while giving no priority to the images people actually need to see. On a phone over cellular that wasted download competes with your real content and slows the first screen."
+    },
+    {
+      "f_ref": "performance-ux F-18",
+      "plain_english_action": "Pin a compact bar with search and cart so it stays reachable while scrolling.",
+      "plain_english_summary": "On mobile your header (with search, cart, and menu) scrolls away and never comes back. Once a shopper moves past the first screen, getting to search or the cart means scrolling all the way back to the top."
+    },
+    {
+      "f_ref": "performance-ux F-95",
+      "plain_english_action": "Tighten the spacing so the button fits the first screen, and reveal Year and Trim only after Make and Model are chosen.",
+      "plain_english_summary": "On a phone, the four vehicle dropdowns plus the FIND PARTS button stack tall enough that the button — the start of the whole shopping journey — falls below the first screen. The visitor must make four choices and scroll before they can even run the search."
+    },
+    {
+      "f_ref": "performance-ux F-17",
+      "plain_english_action": "Set fixed dimensions or an aspect ratio on the card images so the row stays stable while loading.",
+      "plain_english_summary": "Your featured product images on mobile don't reserve their space before they load, so the swipeable row can jump as photos arrive — and the quick-add badge can shift right as a thumb reaches for it. Small screens absorb that jump poorly."
+    },
+    {
+      "f_ref": "performance-ux F-13",
+      "plain_english_action": "Keep these sizes; just avoid crowding the hamburger and logo in the top-left corner.",
+      "plain_english_summary": "Your menu and cart icons and the vehicle dropdowns are all comfortably large enough to tap accurately on a phone. This keeps interaction error rates low and is already done right."
+    },
+    {
+      "f_ref": "pricing F-43",
+      "plain_english_action": "Show a crossed-out reference price above the live price, or frame it as the entry point into a higher-tier set.",
+      "plain_english_summary": "On mobile the featured floor-mat set shows a flat 'FROM $135.99' with nothing to compare it to, and the neighboring $49 card becomes the only reference — making the $135.99 item look expensive rather than premium. Shoppers have no anchor for whether that's a good price."
+    },
+    {
+      "f_ref": "pricing F-96",
+      "plain_english_action": "Show a 'pay in 4' or 'as low as $34' line under the price on items over about $50.",
+      "plain_english_summary": "The $135.99 item sits in the price range where 'pay over time' helps most, but the card shows only the lump sum. Shop Pay is already in your footer, so the option likely exists at checkout — but shoppers never see a friendlier monthly figure while they're deciding."
+    },
+    {
+      "f_ref": "pricing F-51",
+      "plain_english_action": "Add a live progress message in the cart showing the exact amount left to reach free shipping.",
+      "plain_english_summary": "Your free-shipping threshold is shown as a plain top-bar statement with no live 'you're $18 away' nudge tied to the cart. It tells shoppers the rule but never actively pulls them toward adding one more item."
+    },
+    {
+      "f_ref": "pricing F-68",
+      "plain_english_action": "Keep .99 endings on functional parts; reserve round numbers for any genuinely premium items.",
+      "plain_english_summary": "Your prices use .99 endings on utilitarian parts, which is the right format for this value-focused category and gives a small but reliable lift to purchase intent. This is done correctly."
+    },
+    {
+      "f_ref": "category-navigation F-50",
+      "plain_english_action": "Show a compact row of named category links right under the vehicle selector, above the fold.",
+      "plain_english_summary": "A shopper who doesn't already know their exact vehicle has no visible way to browse by category on the first mobile screen — the departments are hidden behind the unlabeled hamburger menu, and the category cards only start at the very bottom. Browse-minded visitors conclude the store is hard to shop and leave."
+    },
+    {
+      "f_ref": "category-navigation F-63",
+      "plain_english_action": "Show at least two full cards plus a peek of a third, or stack all the categories so the range is obvious.",
+      "plain_english_summary": "Your mobile category carousel shows only one card at a time, so a shopper sees 'Performance' and just a sliver of the next card. They have to swipe blindly to discover the rest, so the true breadth of your catalog stays invisible on first view."
+    },
+    {
+      "f_ref": "category-navigation F-05",
+      "plain_english_action": "Populate the Shop by Vehicle menu with all supported vehicles, or link it into the live finder results.",
+      "plain_english_summary": "Your 'Shop by Vehicle' menu lists only two vehicles, even though the lookup form implies you cover many more. A shopper who browses by vehicle lands on a near-empty page that suggests you may not carry parts for their car."
+    },
+    {
+      "f_ref": "category-navigation F-88",
+      "plain_english_action": "Keep the open search, and confirm it returns good matches for misspellings and abbreviations like 'cat-back'.",
+      "plain_english_summary": "On mobile your search is a real full-width box right under the logo, not hidden behind an icon, and it's wide enough to hold long part queries. This is the most reliable fast path for a high-intent shopper, and it's set up well."
+    },
+    {
+      "f_ref": "category-navigation F-03",
+      "plain_english_action": "Keep the finder up top, and make sure the chosen vehicle carries through to category pages.",
+      "plain_english_summary": "Your homepage leads with a vehicle Make/Model/Year/Trim finder, which is exactly right for an auto-parts store — it routes shoppers straight to parts that fit instead of guessing part names. This removes the top reason auto-parts shoppers abandon."
+    }
+  ],
+  "notes": [
+    "Single-shot synthesis. The two LCP/preload findings and the two CLS findings were surfaced once per device and carry distinct per-device canonical references (performance-ux F-37/F-76 and F-24/F-17); each renders into its own device document only and is not a cross-device synchronized ref.",
+    "Only content-seo F-32 (title tag) and the ADJACENT ethics F-16 (privacy-policy staging-domain link) are rendered byte-identically into both audit documents; all other page-level findings were caught by a single device's review and render into that one document.",
+    "Seven CLEAR ethics findings are not rendered (default rendering skips CLEAR); the Ethics Gate section lists only the single ADJACENT finding."
+  ],
+  "priority_path": [
+    {
+      "f_refs": [
+        "visual-cta F-24",
+        "visual-cta F-13",
+        "visual-cta F-08",
+        "performance-ux F-83",
+        "category-navigation F-46"
+      ],
+      "mode": "bundle",
+      "narrative": "The single most valuable screen on the site is doing almost no selling. On desktop the band from the navigation row down to the category tiles is a flat black void whose only occupants are four Make/Model/Year/Trim dropdowns floating at y=308 and a 59x59px magnifier button; on mobile the same hero offers no headline and pushes the FIND PARTS button below the fold. There is no headline, value statement, product, or supporting image, so a first-time visitor scanning the top-left in the natural F-pattern cannot answer what AWDMods sells or why to buy here. The de-facto primary action, the Find parts submit, is an unlabeled search icon that visually duplicates the separate top-of-page site search, so the main conversion control reads as a generic search affordance rather than a commit button. Add a concrete headline above the selector naming the offer and the cars, set an on-brand hero image behind the selector to fill the void, pull the category tiles up so they sit above the fold, and render the submit as a full, solid, labeled \"Find My Parts\" button. These are template-level edits to the hero section; no backend work is required.",
+      "severity": "HIGH",
+      "title": "Fill the empty above-fold band with a headline, hero media, and a labeled primary button"
+    },
+    {
+      "f_refs": [
+        "content-seo F-61",
+        "content-seo F-62",
+        "trust-credibility F-15"
+      ],
+      "mode": "severity",
+      "narrative": "The Featured Collection grid lists named products with brands, live prices, and visible 5.0-star ratings with counts, yet the page exposes none of this in structured data. The only JSON-LD blocks in the head are OnlineStore and WebSite, so the stars a shopper can see cannot become rich-result stars in Google, and AI shopping agents have no machine-readable product data to match or recommend. A controlled test attributed roughly a 20% organic-traffic uplift to review schema alone. Add ItemList JSON-LD wrapping each featured product as a Product with offers (price, priceCurrency, availability, url) and AggregateRating (ratingValue, ratingCount) drawn from the same fields already rendered on the cards, render it server-side, and validate with Google's Rich Results Test. AggregateRating values must mirror the real review data shown on the cards.",
+      "severity": "HIGH",
+      "title": "Add Product and AggregateRating structured data to the rated, priced featured products"
+    },
+    {
+      "f_refs": [
+        "pricing F-98",
+        "pricing F-97",
+        "pricing F-23",
+        "pricing F-43",
+        "pricing F-96"
+      ],
+      "mode": "bundle",
+      "narrative": "Across the Featured Collection, prices render as a single bare number with no MSRP strikethrough, no compare-at, and no installment framing on items well over $1,000. The Borla exhaust card on the same row proves the theme already supports a reference price: it shows FROM $1,649.99 over a struck-through $1,847.99. So the capability exists and is used on exactly one of eight cards, which teaches shoppers to expect an anchor and then withholds it everywhere else, and the lone discount reads as arbitrary. On mobile the $135.99 floor-mat set is judged against a neighboring $49 card and reads as the expensive option rather than the premium one. Populate the compare-at field on discounted SKUs so the theme renders the struck-through reference price uniformly, lead higher-ticket items with the saving stated explicitly, and surface a Shop Pay Installments or Affirm line beneath each live price for items roughly $150 and up — the store already supports Shop Pay, its mark is in the footer payment row. A four-figure exhaust reads very differently as a bare number versus \"$1,847.99 to $1,766.00, as low as $147/mo.\"",
+      "severity": "HIGH",
+      "title": "Anchor every featured price with a reference price and an installment line"
+    },
+    {
+      "f_refs": [
+        "content-seo F-32",
+        "content-seo F-74",
+        "content-seo F-60",
+        "content-seo F-27",
+        "content-seo F-76"
+      ],
+      "mode": "quick-wins",
+      "narrative": "Four of the highest-confidence findings resolve with copy or HTML-attribute edits inside the theme head and the product-card component. The title is AWDMods - AWDMods, the brand name duplicated at 17 characters with no category or fitment keyword; there is no meta description (the only fallback is the single word AWDMods); the head requests a large-image social card but supplies no og:image to fill it; and every product image carries its CSS class list as alt text instead of a description. Titles under 30 characters are rewritten by Google more than 95% of the time. Rewrite the title to front-load the offer and the cars, add a ~150-character meta description and matching og:description, add a 1200x630 og:image, and set each product image's alt from the product title at the card component level. None require new infrastructure or design review.",
+      "severity": "HIGH",
+      "title": "Rewrite the head: descriptive title, meta description, Open Graph image, and real image alt text"
+    },
+    {
+      "f_refs": [
+        "trust-credibility F-23",
+        "trust-credibility F-09",
+        "trust-credibility F-10",
+        "trust-credibility F-13",
+        "trust-credibility F-27"
+      ],
+      "mode": "severity",
+      "narrative": "The homepage answers what you sell but never answers why to trust you. The only above-fold trust-adjacent element is the free-shipping bar, which speaks to delivery cost, not credibility; there is no guarantee, returns promise, customer count, press mention, or aggregate-rating figure anywhere on the page, and on mobile no reassurance sits near the Made-to-Order products where the \"what if it doesn't fit my car\" question forms. Compounding this, most featured cards carry zero reviews, and the cards that do rate show a flawless 5.0 on just two or three reviews — a perfect average on a tiny count reads as too good to be true rather than reassuring. Add a compact trust strip below the hero (guarantee, easy returns, a real customers-served or aggregate-rating figure, a visible support number) plus a one-line returns reassurance near the product cards, keep collecting reviews from every buyer so featured products cross five reviews and the average settles into the trusted 4.0-4.7 band, and prefer featuring products that already carry reviews so the grid leads with proof instead of bare prices.",
+      "severity": "HIGH",
+      "title": "Add a trust block below the hero and stop shipping reviewless featured products"
+    }
+  ],
+  "quick_wins_manifest": [
+    "category-navigation F-03",
+    "category-navigation F-41",
+    "category-navigation F-46",
+    "category-navigation F-52",
+    "category-navigation F-63",
+    "category-navigation F-88",
+    "category-navigation F-99",
+    "content-seo F-27",
+    "content-seo F-32",
+    "content-seo F-60",
+    "content-seo F-63",
+    "content-seo F-64",
+    "content-seo F-74",
+    "content-seo F-75",
+    "content-seo F-76",
+    "content-seo F-87",
+    "ethics F-16",
+    "performance-ux F-13",
+    "performance-ux F-17",
+    "performance-ux F-18",
+    "performance-ux F-24",
+    "performance-ux F-37",
+    "performance-ux F-52",
+    "performance-ux F-76",
+    "performance-ux F-95",
+    "pricing F-43",
+    "pricing F-68",
+    "trust-credibility F-31",
+    "trust-credibility F-62",
+    "visual-cta F-12",
+    "visual-cta F-16",
+    "visual-cta F-24",
+    "visual-cta F-38",
+    "visual-cta F-46",
+    "visual-cta F-55"
+  ],
+  "schema_version": 1,
+  "scope_page_synchronized_refs": [
+    "content-seo F-32",
+    "ethics F-16"
+  ],
+  "severity_manifest": [
+    "content-seo F-32",
+    "content-seo F-61",
+    "pricing F-98",
+    "visual-cta F-11",
+    "visual-cta F-24",
+    "content-seo F-62",
+    "content-seo F-76",
+    "performance-ux F-76",
+    "performance-ux F-83",
+    "pricing F-97",
+    "trust-credibility F-23",
+    "visual-cta F-13",
+    "category-navigation F-50",
+    "trust-credibility F-13",
+    "performance-ux F-37",
+    "content-seo F-74",
+    "ethics F-16",
+    "content-seo F-60",
+    "content-seo F-75",
+    "category-navigation F-46",
+    "content-seo F-27",
+    "performance-ux F-18",
+    "pricing F-43",
+    "trust-credibility F-09",
+    "trust-credibility F-15",
+    "visual-cta F-08",
+    "visual-cta F-12",
+    "pricing F-23",
+    "category-navigation F-45",
+    "content-seo F-87",
+    "performance-ux F-95",
+    "pricing F-16",
+    "pricing F-96",
+    "trust-credibility F-10",
+    "category-navigation F-52",
+    "performance-ux F-91",
+    "performance-ux F-17",
+    "visual-cta F-27",
+    "performance-ux F-24",
+    "category-navigation F-63",
+    "trust-credibility F-28",
+    "category-navigation F-05",
+    "trust-credibility F-27",
+    "visual-cta F-38",
+    "visual-cta F-67",
+    "category-navigation F-03",
+    "category-navigation F-88",
+    "category-navigation F-99",
+    "performance-ux F-52",
+    "pricing F-68",
+    "visual-cta F-16",
+    "pricing F-51",
+    "visual-cta F-46",
+    "content-seo F-63",
+    "content-seo F-64",
+    "category-navigation F-29",
+    "category-navigation F-41",
+    "trust-credibility F-62",
+    "visual-cta F-55",
+    "performance-ux F-13",
+    "trust-credibility F-31"
+  ],
+  "started_at": "2026-06-08T23:05:00.000Z",
+  "status": "complete",
+  "synthesizer_model": {
+    "context_window": "1M",
+    "family": "opus",
+    "version": "4.8"
+  },
+  "telemetry": {
+    "baton_elements_kept_after_trim": 40,
+    "ethics_findings_count": 8,
+    "scope_device_desktop_count": 13,
+    "scope_device_mobile_count": 14,
+    "scope_page_count": 19
+  }
+}

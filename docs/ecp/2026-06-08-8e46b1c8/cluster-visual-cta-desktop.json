@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "visual-cta",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": 1000000
+  },
+  "started_at": "2026-06-08T00:00:00.000Z",
+  "completed_at": "2026-06-08T00:05:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Hero Band Has No Headline or Value Proposition",
+      "surface": "hero",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "Find parts",
+        "role": "button"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e117",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "A headline and one-line value proposition belong directly above the vehicle-selector row, where the hero is currently empty black space."
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "trust-strip",
+          "anchor_relative_to": "e117",
+          "placement": "above"
+        },
+        "reason": "No headline element exists in the hero; ghost text zone shown above the vehicle selector where the value proposition should render."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The top viewport renders a solid black band from roughly y=120 to y=400 containing only four 'Select Make / Select Model / Select Year / Select your Trim' dropdowns and a small magnifier button. There is no headline, no tagline, and no statement of what the store sells or why to buy here."
+        },
+        {
+          "type": "dom",
+          "reference": "e117",
+          "context": "The only interactive content in the hero band is the vehicle-selector submit control labelled 'Find parts'."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 1: The 5-Second Test",
+          "tier": "Gold"
+        },
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 4: Required Above-Fold Elements",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The first thing a visitor sees is a black hero band holding nothing but a four-field vehicle selector. There is no headline and no value proposition, so a first-time visitor cannot answer what the store sells or why to buy here in the opening seconds. The brand name AWDMods and the tiny 'Car parts, simplified.' line by the garage icon are the only clues, and neither sits in the hero as a clear promise. The minimum-viable hero needs a headline plus a supporting line; both are absent above the fold.",
+      "recommendation": "If the hero is going to lead with the vehicle selector, place a concrete headline directly above it that names the offer and the audience, for example 'Performance parts for your Subaru WRX/STI and Ford Focus RS/ST', with a one-line subheadline stating the differentiator (fitment guarantee, free shipping over $75, fast dispatch). Keep the headline to 6-12 words so it scans in the opening seconds.",
+      "why_this_matters": "Visitors form a stay-or-leave judgment within the first seconds on visual clarity; a hero with no headline or value proposition fails that test and pushes cold traffic to bounce before they ever reach the category grid.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Hero's Only CTA Is a 59px Icon-Only 'Find parts' Button",
+      "surface": "primary-cta",
+      "element": {
+        "baton_index": "e117",
+        "text_content": "Find parts",
+        "role": "button",
+        "tag": "button"
+      },
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The vehicle-selector submit control is the de-facto hero CTA but the candidate ranker classified only the offscreen cart 'Checkout' buttons (e7/e11) as primary-cta; e117 is the real above-fold conversion control the finding is about.",
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e117",
+          "selector_hint": "button[aria-label='Find parts']",
+          "text_quote": "Find parts"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "At the right end of the vehicle-selector row sits a small square magnifier button. Its visible label is just a search icon; the accessible name is 'Find parts'. It reads as a search affordance, not a primary call to action, and carries no action+outcome wording."
+        },
+        {
+          "type": "dom",
+          "reference": "e117",
+          "context": "Button e117 'Find parts' measures 59x59 px (rect w=59 h=59), an icon-sized control, not a primary conversion button."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 14: Specific Labels Outperform Generic Labels",
+          "tier": "Gold"
+        },
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 4: Fitts's Law",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The hero offers no full-width, clearly-worded primary button. The only actionable control is a 59x59 px magnifier button whose accessible name is 'Find parts' but which visually reads as a search icon, not a primary action. At that size it is an icon target rather than a conversion button, and an icon-only control gives a scanning visitor no read on what happens when they click it. The de-facto primary action on the page is therefore small, label-less, and easy to overlook.",
+      "recommendation": "If the vehicle selector is the intended primary path, render its submit as a full, solid, labelled button alongside the dropdowns, with text such as 'Find My Parts' on a high-contrast fill sized to match the 59px dropdown height. Naming the action and outcome on a button-shaped control, rather than a bare magnifier icon, makes the primary path unmistakable.",
+      "why_this_matters": "When the page's main action is an unlabelled icon, visitors who scan rather than read cannot find the path forward, and a smaller target is also slower to acquire; both suppress the share of visitors who engage the selector at all.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Hero Band Is Empty Black Space With No Supporting Media",
+      "surface": "hero-media",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "Find parts",
+        "role": "button"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e117",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "A supporting hero image or product-in-use visual should fill the empty black band that currently surrounds the vehicle-selector row."
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "video-tile",
+          "anchor_relative_to": "e117",
+          "placement": "above"
+        },
+        "reason": "No hero media element exists; ghost zone shown over the empty black band where a supporting image should render."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The hero region from roughly y=120 to y=400 is a flat black rectangle with no product photography, lifestyle image, or illustration; only the vehicle-selector dropdowns float in the void. The first real imagery (category-card photos) does not begin until y~430."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 7: Hero Image Types",
+          "tier": "Gold"
+        },
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 4: Required Above-Fold Elements",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The hero has no supporting image or video; it is a plain black band with the vehicle selector centered in empty space. A product-in-use or build-context visual is one of the minimum hero elements and is the single strongest first-fixation driver; here that slot is blank. The empty band also wastes roughly 280px of the most-viewed real estate on the page, real estate that currently communicates nothing about the products.",
+      "recommendation": "If a strong on-brand image exists (a tuned WRX/STI or Focus RS in context, or a hero shot of installed parts), set it as the hero background behind the vehicle selector and keep the selector legible with an overlay. A single high-quality in-context photo fills the dead space and gives the opening view a concrete subject instead of a black void.",
+      "why_this_matters": "The hero occupies the highest-attention zone on the page; leaving it as empty black space forfeits the first-fixation moment that authentic product imagery is proven to capture, weakening first impressions for every visitor.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Five Identical 'SHOP' Category CTAs Compete With No Primary",
+      "surface": "page-scroll-structure",
+      "element": {
+        "baton_index": "e29",
+        "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDr",
+        "role": "group",
+        "tag": "div"
+      },
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The category-card CTA cluster (Performance/Handling/Interior/Exterior/Electronics 'SHOP' buttons) is the page's de-facto primary action row; the ranker exposed these only as gallery-image candidates, so e29 (the leftmost card group) is the closest real anchor for the equal-weight-CTA finding.",
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e29",
+          "selector_hint": "div (Performance category card)",
+          "text_quote": "Performance"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Directly below the hero, five category cards each carry an identical blue 'SHOP PERFORMANCE / SHOP HANDLING / SHOP INTERIOR / SHOP EXTERIOR / SHOP ELECTRONICS' button at the same size, color, and weight. With no headline or CTA in the hero above them, these five equal buttons become the first conversion choice and none is positioned as the primary next step."
+        },
+        {
+          "type": "dom",
+          "reference": "e29",
+          "context": "Card group e29 ('Performance') is the leftmost of five equal-weight category cards spanning the row at y=544."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cta-design-and-placement.md",
+          "section": "Finding 3: CTA Color Differentiation Lifted Conversion 18.4%",
+          "tier": "Bronze"
+        },
+        {
+          "source": "eye-tracking-and-scan-patterns.md",
+          "section": "Finding 12: Size Is the Dominant Visual Hierarchy Factor",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "Because the hero contributes no headline or CTA, the first real call to action a visitor meets is the row of five category cards, and all five 'SHOP' buttons share the same blue fill, same size, and same weight. Nothing in this row claims to be the primary path; the visitor has to evaluate all five equally, which adds choice friction at the exact moment the page should be pointing them somewhere. When five actions carry identical visual weight, the layout offers no hierarchy for the eye to lock onto.",
+      "recommendation": "If one category drives the most revenue or matches the most common landing intent, give that card's CTA a heavier treatment (larger, or a distinct accent) and let the other four read as secondary. If all five are genuinely equal, anchor the row with a single dominant action above it (a 'Find My Parts' selector CTA or a 'Shop All' button) so the eye has one clear primary before the category split.",
+      "why_this_matters": "Differentiating the primary action from look-alike siblings is a low-effort change with measured add-to-cart and conversion-rate lift; five equal-weight CTAs leave the visitor to resolve the hierarchy themselves, which costs attention and engagement.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PARTIAL",
+      "title": "Only Above-Fold Trust Element Is a Shipping Promo, Not Credibility",
+      "surface": "trust-signal-strip",
+      "element": {
+        "baton_index": "e34",
+        "text_content": "FREE SHIPPING on most orders $75+ � Contiguous US only SHOP ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.75,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-1",
+          "selector_hint": "div announcement bar",
+          "text_quote": "FREE SHIPPING on most orders $75+"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The only above-fold trust-style element is the top announcement bar reading 'FREE SHIPPING on most orders $75+ Contiguous US only SHOP NOW'. There is no review aggregate, star rating, customer count, or guarantee badge anywhere in the opening view."
+        },
+        {
+          "type": "dom",
+          "reference": "e34",
+          "context": "Announcement bar e34 sits at y=0 and is the sole credibility-adjacent signal above the fold; it is a shipping promotion, not a social-proof or credibility marker."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "hero-section-psychology.md",
+          "section": "Finding 10: Trust Signal in Hero",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The opening view does carry one trust-adjacent line, the free-shipping announcement bar, so the page is not entirely bare of reassurance. But a shipping promo answers how much delivery will cost, not whether the store can be trusted. There is no review aggregate, star rating, customer count, or guarantee in the hero, which is the credibility signal a cold visitor evaluating an unfamiliar parts retailer needs first. Product cards lower down show star ratings, but none of that proof surfaces above the fold.",
+      "recommendation": "If the store has a meaningful review volume or rating, surface a compact aggregate near the top of the page, for example a star rating with review count beside the logo or under the vehicle selector. Pair it with the existing free-shipping bar so the opening view carries both a logistics reassurance and a credibility signal.",
+      "why_this_matters": "A single visible credibility signal in the hero measurably reduces the 'is this store real' hesitation that drives cold-traffic bounce; relying on a shipping promo alone leaves that skepticism unanswered at the moment it forms.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "visual-cta",
+      "device": "desktop",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Category 'SHOP' Buttons Use High-Contrast Blue Against Dark Cards",
+      "surface": "primary-cta",
+      "element": {
+        "baton_index": "e34",
+        "text_content": "FREE SHIPPING on most orders $75+ � Contiguous US only SHOP ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.7,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-1",
+          "selector_hint": "announcement bar / category CTA palette",
+          "text_quote": "FREE SHIPPING on most orders $75+"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The 'SHOP PERFORMANCE / SHOP HANDLING' etc. buttons use a saturated blue fill that stands out cleanly against the dark photographic category cards, and the free-shipping bar's white text on blue is easily legible. The CTA palette is a contrasting accent, not the dark brand background, so the buttons read as actionable."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "color-psychology.md",
+          "section": "Finding 2: Contrast and Visual Hierarchy Drive CTA Performance",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The category-card buttons get the color choice right: a saturated blue fill that contrasts cleanly with the dark photographic cards and the dark page chrome, so each button reads unmistakably as a clickable action rather than blending into the background.",
+      "recommendation": "Keep the contrasting blue CTA fill as the action color and reserve it for primary actions; if a single primary CTA is introduced in the hero, draw it from this same blue so the action color stays consistent across the page.",
+      "why_this_matters": "A CTA color that contrasts with the surrounding page is the most reliable lever for making buttons noticeable, and this page already satisfies it, worth preserving as other hierarchy fixes are made.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "The hero leads with a vehicle-fitment selector (Select Make/Model/Year/Trim) rather than a product hero, a reasonable pattern for a parts retailer, but it currently ships with no headline, value proposition, or supporting media wrapped around it.",
+    "Product cards in the Featured Collection carry 'Made to Order' badges and prices but no inline Add-to-Cart; treated as product-media/category scope and not emitted here.",
+    "The candidate registry classified only the offscreen cart-drawer 'Checkout' buttons (e7/e11, x=1920) as primary-cta; the actual above-fold conversion controls are the 'Find parts' selector button and the category 'SHOP' buttons, neither of which the ranker surfaced as a CTA candidate."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "cta-design-and-placement.md",
+      "color-psychology.md",
+      "eye-tracking-and-scan-patterns.md",
+      "hero-section-psychology.md",
+      "headline-copywriting.md",
+      "page-length-strategy.md",
+      "evidence-tiers.md"
+    ]
+  }
+}

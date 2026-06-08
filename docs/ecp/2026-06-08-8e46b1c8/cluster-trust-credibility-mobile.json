@@ -1,0 +1,398 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "trust-credibility",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": "1M",
+    "temperature": 0.1
+  },
+  "started_at": "2026-06-08T22:55:00.000Z",
+  "completed_at": "2026-06-08T22:59:20.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Featured Collection Cards Show 5.0/5.0 With No Review Count",
+      "surface": "star-rating-widget",
+      "element": {
+        "baton_index": "e90",
+        "text_content": "5.0 /\n                    5.0\n                \n\n            ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.82,
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The product-card rating widget (matched by a [class*=\"rating\"] selector) sits below the candidate ranker's trust-strip and price-block buckets, so it is not in the role registry; it is the verbatim element this finding names (the 5.0/5.0 rating shown on the Featured Collection cards).",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e90",
+          "selector_hint": "[class*=\"rating\"]",
+          "text_quote": "5.0 / 5.0"
+        },
+        "reason": "Tight rect on the rating widget inside the Featured Collection card; the 5.0/5.0 value is the finding's exact subject."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1424,
+          "viewport": "mobile",
+          "context": "The second Featured Collection card (REVO Design stripes) shows a row of five filled gold stars reading 5.0/5.0 above the $49.00 price, with no review-count number beside it. The first card (Lloyd Mats, $135.99) shows no rating at all, so the rating treatment is inconsistent across cards in the same row."
+        },
+        {
+          "type": "dom",
+          "reference": "e90",
+          "context": "Rating element text is '5.0 / 5.0' with no adjacent count such as '(12)' or 'based on N reviews'."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "social-proof-patterns.md",
+          "section": "Finding 1: The 4.0-4.7 Star Rating Sweet Spot",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 3: Five Reviews Increase Conversion by 270%",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Featured Collection cards display a perfect 5.0/5.0 star rating with no review count anywhere beside the stars, and the rating appears on some cards but not others in the same row. A bare 5.0 with no count gives a shopper nothing to weigh: they cannot tell whether the average rests on two ratings or two hundred, and a flawless 5.0 reads as less believable than a 4.4 backed by a visible count. Purchase likelihood peaks in the 4.0-4.7 range and declines as the average approaches 5.0, so a perfect score shown without the volume behind it works against the card rather than for it.",
+      "recommendation": "If the underlying products carry genuine ratings, render the review count next to every star row (for example '5.0 (8)' or '5.0 - 8 reviews') and show the rating on all cards consistently, not just some. If a product has fewer than five reviews, prioritize collecting more before featuring it, since the first five reviews carry the bulk of the conversion lift; if a product genuinely has only a handful of perfect ratings, showing the small count is more credible than showing a bare 5.0.",
+      "why_this_matters": "Products with five reviews convert at roughly 270% the rate of products with none, and that lift depends on the shopper seeing the volume; a perfect 5.0 shown with no count both withholds the volume signal and trips the 'too good to be true' skepticism that suppresses click-through on featured products.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Star Ratings Carry No AggregateRating Markup for Search Results",
+      "surface": "review-schema-markup",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No AggregateRating or Review schema in page structured data (only OnlineStore and WebSite present)",
+        "role": "group"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e86",
+        "placement": "after-element",
+        "viewport": "mobile",
+        "reason": "Review-rating markup belongs on the product cards under the Featured Collection heading, where the visible 5.0/5.0 ratings already render."
+      },
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "reviews-block",
+          "anchor_relative_to": "e86",
+          "placement": "below"
+        },
+        "reason": "No DOM element carries the rating markup; ghost overlay sits below the Featured Collection heading where the rated cards appear."
+      },
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e86",
+          "context": "Page structured data contains only OnlineStore and WebSite JSON-LD objects; there is no AggregateRating or Review markup, yet the Featured Collection cards visibly display a 5.0/5.0 star rating."
+        },
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1424,
+          "viewport": "mobile",
+          "context": "Visible gold-star rating on the Featured Collection card that has no corresponding machine-readable rating markup behind it."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ugc-reviews-seo.md",
+          "section": "Finding 7: Review Schema (AggregateRating) Produces ~20% Organic Traffic Uplift",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The product cards show a star rating on screen, but the page's structured data contains only store-level and website-level markup with no AggregateRating or Review schema behind those stars. That means the ratings are visible to a person scrolling the page but invisible to search engines, which cannot render star snippets in results for ratings they cannot read. A controlled split test found that adding AggregateRating markup alone lifted organic traffic by roughly 20%, so a rating that exists on the page but not in the markup leaves that lift on the table.",
+      "recommendation": "If the products carry genuine ratings, add AggregateRating JSON-LD to each rated product (and to the product objects surfaced on the homepage) with ratingValue plus a real ratingCount or reviewCount, mirroring exactly what the page displays. If a review app is already collecting the ratings, enable its schema output rather than hand-coding; verify the result in Google's Rich Results Test so the values match the visible stars.",
+      "why_this_matters": "Star snippets in search results are one of the highest-ROI organic-visibility wins available, and a ~20% organic-traffic uplift was measured from review schema alone; without the markup the store earns the trust cost of displaying ratings while forfeiting the search visibility those same ratings could buy.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Payment Badges Sit Only in Footer, Far From Any Buying Decision",
+      "surface": "trust-badge-cluster",
+      "element": {
+        "baton_index": "e134",
+        "text_content": "PayPal",
+        "role": "group",
+        "tag": "li"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-5",
+          "selector_hint": "[class*=\"payment\"]",
+          "text_quote": "PayPal"
+        },
+        "reason": "Anchors to the PayPal badge as a representative of the full footer payment-badge row."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 2152,
+          "viewport": "mobile",
+          "context": "The recognized payment marks (American Express, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) appear in a single row at the very bottom of the footer beneath the copyright line, with no equivalent trust row near the product cards or the Find Parts action higher up the page."
+        },
+        {
+          "type": "dom",
+          "reference": "e134",
+          "context": "Payment-badge list items live inside the footer (contentinfo) region, the last block on the page."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 8: Trust Badge Proximity to CTA Matters More Than Presence",
+          "tier": "Silver"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 10: PayPal Seal Attracts Most Visual Attention (67% Notice Rate)",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "Every recognized payment mark the store accepts is confined to one row at the bottom of the footer, below the copyright. The brands themselves are strong (PayPal carries the highest eye-tracking notice rate of the common seals, and Visa and Mastercard are universally recognized), so the asset is good, but placement is doing little work. A badge in the footer reads as decoration; a badge shown at the point where the shopper is deciding to act reassures them at the exact moment the question 'is this store legitimate and safe to pay?' arises. On this homepage the trust-anchoring moments are the Find Parts action and the Featured Collection cards, and neither carries a payment or security cue.",
+      "recommendation": "If the goal is to make the payment marks earn trust rather than just sit in the footer, mirror two or three of the strongest ones (PayPal, Visa, Mastercard) into a compact row near the Featured Collection cards or beneath the Find Parts action, while keeping the full set in the footer. Cap the surfaced set at two or three so the row reads as reassurance rather than clutter.",
+      "why_this_matters": "Shoppers form their judgment of whether a store is safe to buy from at the moment of action, not at the bottom of the page most never reach; payment marks placed only in the footer waste their strongest brands by showing them after the buying decision has already been made.",
+      "evidence_tier": "Silver"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "No Guarantee or Return-Policy Reassurance Near the Products",
+      "surface": "guarantee-policy-block",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No money-back guarantee, returns badge, or warranty reassurance shown near products; only a free-shipping bar and footer payment marks exist",
+        "role": "group"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e89",
+        "placement": "after-element",
+        "viewport": "mobile",
+        "reason": "A returns or guarantee reassurance belongs adjacent to the product price on the cards, where the shopper weighs the purchase risk."
+      },
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "trust-strip",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No element carries a guarantee or return cue; ghost trust strip sits beneath the card price where the reassurance should appear."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1406,
+          "viewport": "mobile",
+          "context": "The Lloyd Mats card shows 'FROM $135.99' and a 'Made to Order' pill but no returns, guarantee, or warranty reassurance; the only store-wide trust cue is the 'FREE SHIPPING on most orders $75+' bar at the top of the page (section-1) and the payment marks in the footer (section-4)."
+        },
+        {
+          "type": "dom",
+          "reference": "e89",
+          "context": "Price block text is 'Regular price From $135.99' with no adjacent policy or guarantee copy."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 15: Money-Back Guarantee Increased Sales by 21-26% (Positive Framing Critical)",
+          "tier": "Bronze"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 20: 77% of European Consumers Base Purchase Decisions on Return Policy",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The homepage carries exactly two trust cues: a free-shipping bar pinned to the top and a payment-mark row buried in the footer. There is no money-back guarantee, no returns reassurance, and no warranty cue anywhere near the products themselves. For an automotive-parts store where a Made-to-Order floor mat set runs $135.99, the shopper's live question is 'what happens if this doesn't fit my car?' and the page gives no answer at the point of consideration. A short returns or guarantee statement near the price answers that question where it is being asked.",
+      "recommendation": "If the store offers returns, a fit guarantee, or a warranty, surface a one-line reassurance near the product cards and the Find Parts action (for example 'Easy 30-day returns' or 'Fitment guaranteed or your money back'). Frame it as a confident promise rather than a conditional escape clause, since positive framing converts better; keep the full policy linked from the footer as it is today.",
+      "why_this_matters": "Return-policy and guarantee visibility is one of the strongest purchase-decision factors for online shoppers and a documented driver of conversion lift; for fitment-sensitive automotive parts at this price point, the absence of any reassurance near the product leaves the shopper's biggest objection unanswered exactly when they would act.",
+      "evidence_tier": "Bronze"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "FAIL",
+      "title": "Card Ratings Show No Verified-Buyer or Real-Customer Evidence",
+      "surface": "verified-buyer-marker",
+      "element": {
+        "baton_index": "e90",
+        "text_content": "5.0 /\n                    5.0\n                \n\n            ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.78,
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The product-card rating widget (matched by [class*=\"rating\"]) is the element this finding names but falls outside the ranker's trust-strip/price-block buckets, so it is not in the candidate registry; it is the only on-page locus of the missing verified-buyer evidence.",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e90",
+          "selector_hint": "[class*=\"rating\"]",
+          "text_quote": "5.0 / 5.0"
+        },
+        "reason": "Anchors to the card rating widget, the place the missing verified-buyer and review evidence would attach."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1424,
+          "viewport": "mobile",
+          "context": "The rated card shows only a bare row of stars: no reviewer name, no 'Verified Buyer' label, no customer photo, and no link through to review text. The rating floats with no evidence that real purchasers stand behind it."
+        },
+        {
+          "type": "dom",
+          "reference": "e90",
+          "context": "Rating element contains only the numeric value '5.0 / 5.0'; no sibling verified-buyer marker or review text is present in the captured content."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 12: Verified Buyer Reviews Increase Purchase Likelihood by 15%",
+          "tier": "Gold"
+        },
+        {
+          "source": "eeat-product-pages.md",
+          "section": "Finding 3: Verified Purchase Reviews Are the Strongest Experience Signal",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The star rating on the cards stands completely alone: there is no 'Verified Buyer' label, no reviewer attribution, no customer photo, and no path to the underlying review text. A number with no evidence behind it carries far less weight than the same number attached to a confirmed purchaser, and it is the verified-buyer signal specifically that lifts purchase likelihood by about 15% over an identical anonymous rating. Real-customer photos and verified labels are also the firsthand-experience evidence that both shoppers and search quality systems look for, and none of it is present here.",
+      "recommendation": "If the ratings come from real orders, attach a 'Verified Buyer' marker to them and let shoppers tap through to the review text and any customer photos, sourcing the verified status from order data rather than self-declaration. If genuine customer photos exist, surface a couple of them alongside the card or in the review view so the rating is backed by visible real-world use.",
+      "why_this_matters": "A verified-buyer signal raises purchase likelihood roughly 15% over an unverified rating of the same value, and firsthand-customer evidence (verified labels plus real photos) is the trust signal both buyers and search engines weight most; a bare unverified 5.0 forfeits that lift and reads as an assertion rather than proof.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Recognized Payment Brands and Social Links Present in Footer",
+      "surface": "trust-badge-cluster",
+      "element": {
+        "baton_index": "e136",
+        "text_content": "Visa",
+        "role": "group",
+        "tag": "li"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-7",
+          "selector_hint": "[class*=\"payment\"]",
+          "text_quote": "Visa"
+        },
+        "reason": "Anchors to the Visa badge as a representative of the footer payment-mark row."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 2152,
+          "viewport": "mobile",
+          "context": "Footer shows Facebook, Instagram, and YouTube icons above a full row of recognized payment marks (Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, Visa) and a clean '© 2026, AWDMods.' line."
+        }
+      ],
+      "reference_citations": [],
+      "observation": "The footer leans on recognized, high-trust brands: the payment row carries Visa, Mastercard, PayPal, Apple Pay, Google Pay, Shop Pay, Discover, and Amex, and the social links point to real Facebook, Instagram, and YouTube profiles. These are exactly the marks shoppers recognize, and presenting the genuine accepted methods is a solid baseline trust foundation to build on.",
+      "recommendation": "Keep the recognized payment marks and the real social links in place; the strongest next step is to extend a trimmed version of this row higher up the page near the products.",
+      "why_this_matters": "Recognized payment and social brands are the trust signals shoppers respond to most, so having the genuine set already in the footer means the raw assets for a stronger trust presentation are present and only need better placement.",
+      "evidence_tier": "Bronze"
+    }
+  ],
+  "notes": [
+    "Product-card images carry non-empty alt text (captured selector 'img[alt]:not([alt=\"\"])' on e23-e31 and the logo e100 with alt 'AWDMods'), so no alt-text failure is emitted; alt-text quality could not be measured from the captured data.",
+    "Only one section was routed in sections[] (the above-fold header), but the trust-relevant content (Featured Collection ratings, footer payment marks, free-shipping bar) was available through the captured element list and footer_html, so the audit proceeded on the full set rather than skipping.",
+    "The bare 5.0/5.0 ratings with empty surrounding evidence may also be of interest to the ethics review for FTC Consumer Review Rule purposes (16 CFR Part 465); described here only in conversion terms per cluster scope.",
+    "No customer-photo gallery or UGC exists on the homepage; UGC placement findings were not forced since a homepage is not the natural surface for a product UGC gallery."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "trust-and-credibility.md",
+      "social-proof-patterns.md",
+      "eeat-product-pages.md",
+      "review-collection.md",
+      "ugc-integration.md",
+      "ugc-reviews-seo.md",
+      "accessibility.md",
+      "evidence-tiers.md"
+    ],
+    "baton_elements_referenced": ["e86", "e89", "e90", "e134", "e136"],
+    "findings_by_verdict": {"FAIL": 3, "PARTIAL": 1, "PASS": 1, "PASS_total": 1}
+  }
+}

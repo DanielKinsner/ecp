@@ -1,0 +1,31 @@
+{
+  "device": "mobile",
+  "elements_kept": 22,
+  "elements_total": 140,
+  "kept_e_indexes": [
+    "e2",
+    "e3",
+    "e4",
+    "e15",
+    "e17",
+    "e21",
+    "e22",
+    "e23",
+    "e36",
+    "e41",
+    "e53",
+    "e69",
+    "e74",
+    "e84",
+    "e86",
+    "e89",
+    "e90",
+    "e100",
+    "e105",
+    "e134",
+    "e135",
+    "e136"
+  ],
+  "referenced_count": 22,
+  "source": "baton-mobile.json"
+}

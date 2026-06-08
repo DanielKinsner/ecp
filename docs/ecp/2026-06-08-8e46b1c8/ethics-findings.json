@@ -1,0 +1,417 @@
+{
+  "cluster": "ethics",
+  "completed_at": "2026-06-08T22:44:00.000Z",
+  "device": "page",
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "findings": [
+    {
+      "cluster": "ethics",
+      "confidence": 0.95,
+      "device": "page",
+      "effort": {
+        "change_scope": "component",
+        "change_type": "copy"
+      },
+      "element": {
+        "baton_index": "e4",
+        "role": "contentinfo",
+        "text_content": "Information\n                        \n  \n\n                   "
+      },
+      "ethics_state": "ADJACENT",
+      "evidence_anchors": [
+        {
+          "context": "Footer 'Information' block contains a Privacy Policy link pointing to https://e1520g-k3.myshopify.com/policies/privacy-policy — the internal Shopify development domain — rather than https://www.awdmods.com/policies/privacy-policy or a first-party canonical URL. The Terms and Conditions link correctly uses /pages/terms-of-service on the canonical domain.",
+          "reference": "e4",
+          "type": "dom"
+        },
+        {
+          "context": "Footer visible with Privacy Policy link rendered under the Information column. The link text reads 'Privacy Policy' but href resolves to the staging myshopify.com domain.",
+          "reference": "section-3.jpg",
+          "scroll_y": 2600,
+          "type": "visual",
+          "viewport": "desktop"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 1,
+      "observation": "The Privacy Policy footer link points to https://e1520g-k3.myshopify.com/policies/privacy-policy — a Shopify development/staging domain — rather than a canonical first-party URL on awdmods.com. A visitor clicking through to review the store's data practices lands on a page hosted under an unbranded third-party domain with no visible relationship to AWDMods. This creates regulatory chain-of-disclosure ambiguity: CCPA requires that the privacy notice be clearly attributable to the business collecting the data (Cal. Civ. Code § 1798.100 et seq.). A policy hosted on a staging domain does not clearly identify AWDMods as the data controller, and a regulator or class-action plaintiff could argue the required notice was not 'conspicuously posted' by the correct entity. The Terms and Conditions link correctly uses the canonical /pages/terms-of-service path, confirming this is a configuration oversight rather than intentional design.",
+      "recommendation": "Update the Privacy Policy footer link href from https://e1520g-k3.myshopify.com/policies/privacy-policy to the canonical first-party URL (https://www.awdmods.com/policies/privacy-policy or the relative path /policies/privacy-policy). In Shopify admin, navigate to Online Store → Navigation → Footer menu and update the link destination. This is a one-minute configuration change. Confirm the policy page itself loads correctly at the canonical URL before publishing.",
+      "reference_citations": [
+        {
+          "section": "PART 6: CROSS-CUTTING REGULATORY LANDSCAPE — Regulatory Disclosure Chain",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "MEDIUM",
+      "source_url": "https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?division=3.&part=4.&lawCode=CIV&title=1.81.5",
+      "surface": "footer-policy-links",
+      "title": "Privacy Policy Links to Staging Domain, Not Canonical Store",
+      "verdict": "FAIL",
+      "why_this_matters": "CCPA/CPRA (Cal. Civ. Code § 1798.100 et seq.) requires businesses to make their privacy notice 'reasonably accessible' and clearly attributable to the collecting entity. A staging-domain URL breaks the chain of attribution — a consumer reading the policy sees e1520g-k3.myshopify.com, not AWDMods. While the risk is currently ADJACENT rather than a confirmed BLOCK (the policy content may be correct, just mis-linked), it creates unnecessary exposure in the event of a CCPA enforcement inquiry or class action. Fixing it costs nothing and removes the ambiguity entirely."
+    },
+    {
+      "cluster": "ethics",
+      "confidence": 0.99,
+      "device": "page",
+      "effort": {
+        "change_scope": "not_applicable",
+        "change_type": "not_applicable"
+      },
+      "element": {
+        "baton_index": "e22",
+        "role": "banner",
+        "text_content": "Shop All\n                    \n                      \n      \n"
+      },
+      "ethics_state": "CLEAR",
+      "evidence_anchors": [
+        {
+          "context": "Announcement bar at top of page reads 'FREE SHIPPING on most orders $75+ — Contiguous US only SHOP NOW' on desktop. Mobile bar reads 'FREE SHIPPING on most orders $75+'. Disclosure is above-fold on both devices.",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "desktop"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 2,
+      "observation": "The announcement bar displays 'FREE SHIPPING on most orders $75+ — Contiguous US only' above the fold on desktop and mobile. Shipping threshold and geographic scope (Contiguous US only) are disclosed before any pricing is encountered. CA SB-478 explicitly excludes shipping costs from its mandatory fee disclosure requirement, and the FTC Junk Fees Rule (16 CFR Part 464) is narrowly scoped to ticketing and lodging. This pattern passes the shipping-disclosure check cleanly.",
+      "recommendation": "Maintain the above-fold free shipping disclosure through any redesigns. The 'Contiguous US only' qualifier is important for compliance — keep it visible, particularly on desktop where it is currently shown.",
+      "reference_citations": [
+        {
+          "section": "PART 3: PRICING ETHICS — §3.1 Drip Pricing / Hidden Fees (Shipping-costs distinction)",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "LOW",
+      "surface": "announcement-bar",
+      "title": "Free Shipping Threshold Disclosed Upfront in Announcement Bar",
+      "verdict": "PASS",
+      "why_this_matters": "Upfront shipping disclosure reduces cart abandonment (39–48% of abandonment is cost-reveal-at-checkout) and satisfies best-practice standards. The current disclosure is compliant and effective."
+    },
+    {
+      "cluster": "ethics",
+      "confidence": 0.98,
+      "device": "page",
+      "effort": {
+        "change_scope": "not_applicable",
+        "change_type": "not_applicable"
+      },
+      "element": {
+        "baton_index": "absent",
+        "role": "none",
+        "text_content": ""
+      },
+      "ethics_state": "CLEAR",
+      "evidence_anchors": [
+        {
+          "context": "No countdown timers, 'Only X left' inventory claims, or 'X people viewing' indicators visible anywhere on the desktop homepage across all three screenshot sections.",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "desktop"
+        },
+        {
+          "context": "No countdown timers or fabricated scarcity claims visible on mobile across all four mobile screenshot sections.",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "mobile"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 3,
+      "observation": "The homepage contains no countdown timers, no 'Only X left in stock' scarcity claims, no 'X people viewing this' social proof counters, and no fabricated urgency copy. Both device captures and batons confirm no timer elements. FTC § 5 fabricated-urgency check is clean.",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "section-bottom-overlay",
+        "reason": "auto-injected by emission_autofix: specialist omitted proposed_anchor on absent finding; operator must verify or replace in editor",
+        "section_index": 0,
+        "viewport": "desktop"
+      },
+      "recommendation": "If urgency messaging is added in the future, ensure any countdown is tied to a real, fixed deadline (e.g., sale end date) and any inventory claim reflects actual current stock levels.",
+      "reference_citations": [
+        {
+          "section": "PART 1: CRO / PAGE-LEVEL DARK PATTERNS — §1.1 Urgency / Scarcity",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "LOW",
+      "surface": "primary-cta",
+      "title": "No Fabricated Urgency or Countdown Timers Detected",
+      "verdict": "PASS",
+      "why_this_matters": "Fabricated urgency is an active FTC enforcement target under § 5, with civil penalties up to $53,088 per violation. The current absence of such patterns eliminates this exposure entirely."
+    },
+    {
+      "cluster": "ethics",
+      "confidence": 0.95,
+      "device": "page",
+      "effort": {
+        "change_scope": "not_applicable",
+        "change_type": "not_applicable"
+      },
+      "element": {
+        "baton_index": "e3",
+        "role": "group",
+        "text_content": "Join Our Newsletter!\n\n        New parts, new builds, exclusi"
+      },
+      "ethics_state": "CLEAR",
+      "evidence_anchors": [
+        {
+          "context": "Featured Collection product cards display filled star ratings with explicit review counts: Revo Designs Rocker Stripes shows '5.0 / 5.0 (2)' (2 total reviews), Tufskinz Gauge Cluster Accent Kit shows '5.0 / 5.0 (3)' (3 total reviews), Tufskinz Carbon Fiber Mirror Flag shows '5.0 / 5.0 (3)' (3 total reviews). Each card uses aria-label='5.0 out of 5.0 stars' with an explicit visually-hidden review count. No product card displays filled stars with a zero count.",
+          "reference": "e3",
+          "type": "dom"
+        },
+        {
+          "context": "Featured Collection grid visible with filled gold star ratings and numeric counts (2), (3) displayed below product titles. Stars are filled (not empty outlines), consistent with genuine ratings backed by real review counts.",
+          "reference": "section-2.jpg",
+          "scroll_y": 800,
+          "type": "visual",
+          "viewport": "desktop"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 4,
+      "observation": "Product cards in the Featured Collection display filled star ratings (5.0 out of 5.0) alongside explicit numeric review counts ((2) and (3)). The filled-star display is appropriate because real reviews back each rating — this is not a phantom-social-proof pattern. The FTC Fake Reviews Rule (16 CFR Part 465) targets fabricated, incentivized, suppressed, or AI-generated reviews, not a truthful display of a small but genuine 5-star rating set. No product card shows filled stars against a zero review count.",
+      "recommendation": "Maintain the review count alongside star ratings. As the catalog grows, monitor for any products where the star widget displays without a review count — that edge case (filled stars, no count visible) would require a check against the phantom-social-proof rule.",
+      "reference_citations": [
+        {
+          "section": "PART 1: CRO / PAGE-LEVEL DARK PATTERNS — §1.3 Reviews / Social Proof (Phantom Social Proof)",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "LOW",
+      "surface": "product-card-grid",
+      "title": "Product Card Star Ratings Display Genuine Review Counts",
+      "verdict": "PASS",
+      "why_this_matters": "Displaying genuine star ratings with honest review counts is both legally safe and conversion-positive. The FTC Fake Reviews enforcement wave (10 warning letters, Dec 2025) targeted fabricated reviews, not honest displays of small review sets."
+    },
+    {
+      "cluster": "ethics",
+      "confidence": 0.92,
+      "device": "page",
+      "effort": {
+        "change_scope": "not_applicable",
+        "change_type": "not_applicable"
+      },
+      "element": {
+        "baton_index": "e21",
+        "role": "form",
+        "text_content": "Join Our Newsletter!\n\n        New parts, new builds, exclusi"
+      },
+      "ethics_state": "CLEAR",
+      "evidence_anchors": [
+        {
+          "context": "Newsletter section heading reads 'Join Our Newsletter!' with body copy 'New parts, new builds, exclusive deals. Be the first to know when something drops for your Focus RS, Focus ST, WRX, or STI.' Email input field and submit button visible. Purpose of the list (product updates, deals) is disclosed in the section copy adjacent to the form.",
+          "reference": "section-3.jpg",
+          "scroll_y": 2100,
+          "type": "visual",
+          "viewport": "desktop"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 5,
+      "observation": "The newsletter signup form is clearly labeled 'Join Our Newsletter!' with body copy that discloses what subscribers will receive ('New parts, new builds, exclusive deals'). The commercial nature of the communications is apparent from context. CAN-SPAM requires that the subject of commercial emails not be deceptive — the description of newsletter content (parts updates, deals) aligns with what a reasonable subscriber would expect to receive. No pre-checked boxes or hidden opt-in language detected.",
+      "recommendation": "Consider adding a one-line disclosure below the email field (e.g., 'By subscribing, you agree to receive marketing emails from AWDMods. Unsubscribe anytime.') — this is a best practice rather than a legal requirement at this time, but strengthens the consent record if CAN-SPAM compliance is ever questioned.",
+      "reference_citations": [
+        {
+          "section": "PART 4: EMAIL / SMS ETHICS — §4.1 CAN-SPAM Act Requirements",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "LOW",
+      "surface": "newsletter-form",
+      "title": "Newsletter Signup Purpose Clearly Disclosed at Point of Collection",
+      "verdict": "PASS",
+      "why_this_matters": "Transparent newsletter signup reduces unsubscribe rates and spam complaints, and creates a defensible consent record if a CAN-SPAM inquiry arises."
+    },
+    {
+      "cluster": "ethics",
+      "confidence": 0.97,
+      "device": "page",
+      "effort": {
+        "change_scope": "not_applicable",
+        "change_type": "not_applicable"
+      },
+      "element": {
+        "baton_index": "e4",
+        "role": "contentinfo",
+        "text_content": "Information\n                        \n  \n\n                   "
+      },
+      "ethics_state": "CLEAR",
+      "evidence_anchors": [
+        {
+          "context": "Footer Information section contains a 'Your Privacy Choices' link (href='/pages/data-sharing-opt-out') with the California Consumer Privacy Act opt-out icon (the official blue/white toggle icon per Cal. Civ. Code § 1798.135(a)(1)). This satisfies the CCPA/CPRA requirement to provide a conspicuous 'Do Not Sell or Share My Personal Information' opt-out link.",
+          "reference": "e4",
+          "type": "dom"
+        },
+        {
+          "context": "Footer visible with 'Your Privacy Choices' link accompanied by the CCPA opt-out icon in the Information column.",
+          "reference": "section-3.jpg",
+          "scroll_y": 2600,
+          "type": "visual",
+          "viewport": "desktop"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 6,
+      "observation": "The footer contains a 'Your Privacy Choices' link at /pages/data-sharing-opt-out accompanied by the official CCPA opt-out icon, satisfying the Cal. Civ. Code § 1798.135(a)(1) requirement to display a conspicuous 'Do Not Sell or Share My Personal Information' link. The icon and label are consistent with Shopify's CCPA compliance tooling. The link uses a canonical first-party relative path.",
+      "recommendation": "Maintain the CCPA opt-out link and confirm the destination page (/pages/data-sharing-opt-out) provides a functional opt-out mechanism. Review the linked page annually as CPRA ADMT regulations phase in through 2027–2028.",
+      "reference_citations": [
+        {
+          "section": "PART 6: CROSS-CUTTING REGULATORY LANDSCAPE — §6.3 CCPA/CPRA",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "LOW",
+      "surface": "footer-policy-links",
+      "title": "CCPA Privacy Choices Opt-Out Link Present in Footer",
+      "verdict": "PASS",
+      "why_this_matters": "Cal. Civ. Code § 1798.135 requires covered businesses to display a 'Do Not Sell or Share My Personal Information' link. The store is correctly compliant on this surface."
+    },
+    {
+      "cluster": "ethics",
+      "confidence": 0.9,
+      "device": "page",
+      "effort": {
+        "change_scope": "not_applicable",
+        "change_type": "not_applicable"
+      },
+      "element": {
+        "baton_index": "absent",
+        "role": "none",
+        "text_content": ""
+      },
+      "ethics_state": "CLEAR",
+      "evidence_anchors": [
+        {
+          "context": "Page head contains lang='en' with no hreflang tags for EU locales. Footer copy reads '© 2026, AWDMods.' Announcement bar states 'Contiguous US only' for shipping. No EUR pricing, no EU entity in footer, no EU-language variants detected. No cookie consent banner present.",
+          "reference": "absent",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 7,
+      "observation": "The page targets US consumers exclusively: lang='en', no EU hreflang, Contiguous US shipping restriction disclosed in the announcement bar, USD pricing, no EU entity identified in footer, no consent management platform visible. Under the jurisdiction-matching rule, EU ePrivacy Directive Art 5(3) and GDPR cookie consent obligations do not apply to a US-only targeted store. The absence of a cookie consent banner is appropriate for this audience. If the store expands to EU traffic (e.g., EU hreflang added, EU shipping enabled, DDP EU pricing), a consent management platform would become necessary.",
+      "proposed_anchor": {
+        "kind": "section",
+        "placement": "section-bottom-overlay",
+        "reason": "auto-injected by emission_autofix: specialist omitted proposed_anchor on absent finding; operator must verify or replace in editor",
+        "section_index": 0,
+        "viewport": "desktop"
+      },
+      "recommendation": "If the store adds EU shipping or hreflang EU targeting, implement a GDPR/ePrivacy-compliant consent management platform (e.g., Shopify's built-in cookie banner, OneTrust, Cookiebot, or Termly) before going live to EU traffic. The current US-only configuration does not require one.",
+      "reference_citations": [
+        {
+          "section": "PART 7: EXPANDED CLUSTER COVERAGE — §7.2 EU ePrivacy Art 5(3) — Cookie Consent Timing",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "LOW",
+      "surface": "page-head",
+      "title": "No EU Cookie Consent Required — US-Only Targeting Confirmed",
+      "verdict": "PASS",
+      "why_this_matters": "Correctly identifying jurisdiction prevents false-positive GDPR BLOCK findings on US-only pages and ensures that if EU expansion occurs, the compliance gap is identified at the right time."
+    },
+    {
+      "cluster": "ethics",
+      "confidence": 0.93,
+      "device": "page",
+      "effort": {
+        "change_scope": "not_applicable",
+        "change_type": "not_applicable"
+      },
+      "element": {
+        "baton_index": "e2",
+        "role": "group",
+        "text_content": "Join Our Newsletter!\n\n        New parts, new builds, exclusi"
+      },
+      "ethics_state": "CLEAR",
+      "evidence_anchors": [
+        {
+          "context": "Newsletter section background shows two cars (a Subaru WRX/STI and a Ford Focus RS) in a dramatic nighttime warehouse/industrial setting. The image functions as an atmospheric background for the email capture form — no specific product is depicted, no installation or performance claims are made. The same imagery is visible on mobile (section-4-mobile.jpg).",
+          "reference": "section-3.jpg",
+          "scroll_y": 2100,
+          "type": "visual",
+          "viewport": "desktop"
+        },
+        {
+          "context": "Newsletter section on mobile shows the same two-car atmospheric background. Heading 'Join Our Newsletter!' and email capture field overlay the image.",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 3200,
+          "type": "visual",
+          "viewport": "mobile"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 8,
+      "observation": "The newsletter section uses an automotive lifestyle background image (two cars in a dramatic setting) as a decorative hero behind the email capture form. Under ethics-gate.md §5.3's materiality distinction, decorative/atmospheric imagery that does not depict or imply specific product properties is not subject to the AI-generated imagery BLOCK rule — a reasonable consumer would not make a purchasing decision about a specific AWDMods product based on this background. All product images in the Featured Collection use real product photography (exhaust systems, floor mats, accent kits with descriptive alt text and product-specific filenames). The materiality threshold for deceptive imagery is not met on this page.",
+      "recommendation": "No action required. If AI-generated images are added to actual product listing pages in the future, apply the materiality test: images depicting product capabilities, installation scenarios, or customer use require real-photography substantiation or disclosure.",
+      "reference_citations": [
+        {
+          "section": "PART 5: PRODUCT MEDIA ETHICS — §5.3 AI-Generated Fake Lifestyle Photos (Materiality distinction — product vs. decorative imagery)",
+          "source": "ethics-gate.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "page",
+      "severity": "LOW",
+      "surface": "newsletter-form",
+      "title": "Newsletter Hero Background Is Decorative Automotive Imagery, Not Product Misrepresentation",
+      "verdict": "PASS",
+      "why_this_matters": "FTC Operation AI Comply (Sep 2024) targeted deceptive AI capability claims, not decorative website backgrounds. The current imagery is within safe harbor for atmospheric/lifestyle use."
+    }
+  ],
+  "notes": [
+    "Cookie consent banner absent — consistent with US-only store targeting confirmed via announcement bar ('Contiguous US only'), no EU hreflang, USD pricing. No ePrivacy/GDPR BLOCK emitted. If EU targeting is ever added, a consent management platform becomes mandatory before first EU page load.",
+    "Strikethrough pricing on the Borla Cat-Back ATAK Exhaust ('From $1,649.99' vs. '$1,847.99') could not be independently verified as a real prior selling price from homepage context alone. No BLOCK emitted — the pricing specialist cluster is better positioned to verify price history. Ethics gate does not fire on unverifiable reference prices; a BLOCK would require affirmative evidence the reference price was fabricated.",
+    "No subscription or auto-renewal patterns detected on this homepage. ROSCA / CA ARL checks are not applicable to this page type.",
+    "The 'Your Privacy Choices' opt-out icon (CCPA) correctly uses a first-party relative URL (/pages/data-sharing-opt-out). The Privacy Policy link (Finding 1) is the only footer link using a non-canonical domain."
+  ],
+  "schema_version": 1,
+  "specialist_model": {
+    "family": "sonnet",
+    "version": "4.6"
+  },
+  "started_at": "2026-06-08T22:30:00.000Z",
+  "status": "complete",
+  "telemetry": {
+    "baton_files_read": [
+      "docs/ecp/2026-06-08-8e46b1c8/baton.json",
+      "docs/ecp/2026-06-08-8e46b1c8/baton-mobile.json"
+    ],
+    "dom_files_read": [
+      "docs/ecp/2026-06-08-8e46b1c8/dom.html",
+      "docs/ecp/2026-06-08-8e46b1c8/dom-mobile.html"
+    ],
+    "findings_count": {
+      "ADJACENT": 1,
+      "BLOCK": 0,
+      "CLEAR": 7
+    },
+    "reference_files_read": [
+      "ethics-gate.md",
+      "evidence-tiers.md"
+    ],
+    "screenshots_reviewed": [
+      "section-1.jpg",
+      "section-2.jpg",
+      "section-3.jpg",
+      "section-1-mobile.jpg",
+      "section-4-mobile.jpg"
+    ]
+  }
+}

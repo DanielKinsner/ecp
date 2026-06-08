@@ -1,0 +1,1406 @@
+{
+  "candidate_to_e_index": {
+    "footer-region-1": "e12",
+    "gallery-image-1": "e100",
+    "gallery-image-10": "e28",
+    "gallery-image-11": "e29",
+    "gallery-image-12": "e30",
+    "gallery-image-13": "e31",
+    "gallery-image-2": "e101",
+    "gallery-image-3": "e102",
+    "gallery-image-4": "e103",
+    "gallery-image-5": "e23",
+    "gallery-image-6": "e24",
+    "gallery-image-7": "e25",
+    "gallery-image-8": "e26",
+    "gallery-image-9": "e27",
+    "navigation-1": "e1",
+    "navigation-2": "e4",
+    "navigation-3": "e7",
+    "navigation-4": "e10",
+    "price-block-1": "e89",
+    "search-1": "e53",
+    "search-2": "e56",
+    "search-3": "e57",
+    "search-4": "e60",
+    "search-5": "e61",
+    "search-6": "e64",
+    "search-7": "e65",
+    "search-8": "e68",
+    "subheading-1": "e82",
+    "subheading-2": "e86",
+    "subheading-3": "e87",
+    "subheading-4": "e88",
+    "trust-strip-1": "e130",
+    "trust-strip-10": "e139",
+    "trust-strip-11": "e69",
+    "trust-strip-12": "e72",
+    "trust-strip-13": "e73",
+    "trust-strip-14": "e83",
+    "trust-strip-2": "e131",
+    "trust-strip-3": "e132",
+    "trust-strip-4": "e133",
+    "trust-strip-5": "e134",
+    "trust-strip-6": "e135",
+    "trust-strip-7": "e136",
+    "trust-strip-8": "e137",
+    "trust-strip-9": "e138",
+    "variant-selector-1": "e0",
+    "variant-selector-2": "e2",
+    "variant-selector-3": "e3",
+    "variant-selector-4": "e5",
+    "variant-selector-5": "e6",
+    "variant-selector-6": "e8",
+    "variant-selector-7": "e9",
+    "variant-selector-8": "e11"
+  },
+  "candidates_by_role": {
+    "footer-region": [
+      {
+        "accessible_name_truncated": "Information\n                        \n  \n\n                   ",
+        "candidate_id": "footer-region-1",
+        "e_index": "e12",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.9,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.0918,
+        "rect": {
+          "height": 1122.0,
+          "width": 1170.0,
+          "x": 0.0,
+          "y": 5793.0
+        },
+        "role": "contentinfo",
+        "tag": "footer",
+        "text_content_truncated": "Information\n                        \n  \n\n                   "
+      }
+    ],
+    "gallery-image": [
+      {
+        "accessible_name_truncated": "header__heading-logo motion-reduce",
+        "candidate_id": "gallery-image-1",
+        "e_index": "e100",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 117.0,
+          "width": 210.0,
+          "x": 195.0,
+          "y": 171.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "header__heading-logo motion-reduce",
+        "candidate_id": "gallery-image-2",
+        "e_index": "e101",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 117.0,
+          "width": 210.0,
+          "x": 195.0,
+          "y": 1509.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "header__heading-logo motion-reduce",
+        "candidate_id": "gallery-image-3",
+        "e_index": "e102",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 117.0,
+          "width": 210.0,
+          "x": 195.0,
+          "y": 2970.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "header__heading-logo motion-reduce",
+        "candidate_id": "gallery-image-4",
+        "e_index": "e103",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 117.0,
+          "width": 210.0,
+          "x": 195.0,
+          "y": 4431.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-5",
+        "e_index": "e23",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 66.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-6",
+        "e_index": "e24",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 921.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-7",
+        "e_index": "e25",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 1776.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-8",
+        "e_index": "e26",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 2631.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-9",
+        "e_index": "e27",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 3486.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-10",
+        "e_index": "e28",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 4341.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-11",
+        "e_index": "e29",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 5196.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-12",
+        "e_index": "e30",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 6051.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-13",
+        "e_index": "e31",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.084,
+        "rect": {
+          "height": 798.0,
+          "width": 798.0,
+          "x": 6906.0,
+          "y": 3000.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      }
+    ],
+    "navigation": [
+      {
+        "accessible_name_truncated": "Shop All\n                    \n                      \n      \n",
+        "candidate_id": "navigation-1",
+        "e_index": "e1",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.1445,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 303.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n                    \n                      \n      \n"
+      },
+      {
+        "accessible_name_truncated": "Shop All\n                    \n                      \n      \n",
+        "candidate_id": "navigation-2",
+        "e_index": "e4",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.0867,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 1641.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n                    \n                      \n      \n"
+      },
+      {
+        "accessible_name_truncated": "Shop All\n                    \n                      \n      \n",
+        "candidate_id": "navigation-3",
+        "e_index": "e7",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.0867,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 3102.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n                    \n                      \n      \n"
+      },
+      {
+        "accessible_name_truncated": "Shop All\n                    \n                      \n      \n",
+        "candidate_id": "navigation-4",
+        "e_index": "e10",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.0867,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 4563.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n                    \n                      \n      \n"
+      }
+    ],
+    "price-block": [
+      {
+        "accessible_name_truncated": "Regular price\n          \n            From $135.99\n          ",
+        "candidate_id": "price-block-1",
+        "e_index": "e89",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.9,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.2295,
+        "rect": {
+          "height": 84.0,
+          "width": 672.0,
+          "x": 129.0,
+          "y": 4218.0
+        },
+        "role": "group",
+        "tag": "div",
+        "text_content_truncated": "Regular price\n          \n            From $135.99\n          "
+      }
+    ],
+    "search": [
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-1",
+        "e_index": "e53",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.475,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 330.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-2",
+        "e_index": "e56",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.475,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 330.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-3",
+        "e_index": "e57",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 1668.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-4",
+        "e_index": "e60",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 1668.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-5",
+        "e_index": "e61",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 3129.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-6",
+        "e_index": "e64",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 3129.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-7",
+        "e_index": "e65",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 4590.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-8",
+        "e_index": "e68",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 165.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 4590.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      }
+    ],
+    "subheading": [
+      {
+        "accessible_name_truncated": "Join Our Newsletter!",
+        "candidate_id": "subheading-1",
+        "e_index": "e82",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.21,
+        "rect": {
+          "height": 105.0,
+          "width": 918.0,
+          "x": 126.0,
+          "y": 5040.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "Join Our Newsletter!"
+      },
+      {
+        "accessible_name_truncated": "Featured Collection",
+        "candidate_id": "subheading-2",
+        "e_index": "e86",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.21,
+        "rect": {
+          "height": 105.0,
+          "width": 600.0,
+          "x": 63.0,
+          "y": 2814.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "Featured Collection"
+      },
+      {
+        "accessible_name_truncated": "Information",
+        "candidate_id": "subheading-3",
+        "e_index": "e87",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.21,
+        "rect": {
+          "height": 60.0,
+          "width": 981.0,
+          "x": 63.0,
+          "y": 5898.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "Information"
+      },
+      {
+        "accessible_name_truncated": "My Account",
+        "candidate_id": "subheading-4",
+        "e_index": "e88",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.21,
+        "rect": {
+          "height": 60.0,
+          "width": 981.0,
+          "x": 63.0,
+          "y": 6087.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "My Account"
+      }
+    ],
+    "trust-strip": [
+      {
+        "accessible_name_truncated": "Apple Pay",
+        "candidate_id": "trust-strip-1",
+        "e_index": "e130",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 210.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Apple Pay"
+      },
+      {
+        "accessible_name_truncated": "Discover",
+        "candidate_id": "trust-strip-2",
+        "e_index": "e131",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 354.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Discover"
+      },
+      {
+        "accessible_name_truncated": "Google Pay",
+        "candidate_id": "trust-strip-3",
+        "e_index": "e132",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 501.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Google Pay"
+      },
+      {
+        "accessible_name_truncated": "Mastercard",
+        "candidate_id": "trust-strip-4",
+        "e_index": "e133",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 645.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Mastercard"
+      },
+      {
+        "accessible_name_truncated": "PayPal",
+        "candidate_id": "trust-strip-5",
+        "e_index": "e134",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 792.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "PayPal"
+      },
+      {
+        "accessible_name_truncated": "Shop Pay",
+        "candidate_id": "trust-strip-6",
+        "e_index": "e135",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 936.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Shop Pay"
+      },
+      {
+        "accessible_name_truncated": "Visa",
+        "candidate_id": "trust-strip-7",
+        "e_index": "e136",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 63.0,
+          "y": 6558.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Visa"
+      },
+      {
+        "accessible_name_truncated": "Apple Pay",
+        "candidate_id": "trust-strip-8",
+        "e_index": "e137",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 210.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Apple Pay"
+      },
+      {
+        "accessible_name_truncated": "Discover",
+        "candidate_id": "trust-strip-9",
+        "e_index": "e138",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 354.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Discover"
+      },
+      {
+        "accessible_name_truncated": "Google Pay",
+        "candidate_id": "trust-strip-10",
+        "e_index": "e139",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.48,
+        "rect": {
+          "height": 105.0,
+          "width": 147.0,
+          "x": 501.0,
+          "y": 6456.0
+        },
+        "role": "group",
+        "tag": "li",
+        "text_content_truncated": "Google Pay"
+      },
+      {
+        "accessible_name_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "candidate_id": "trust-strip-11",
+        "e_index": "e69",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.34,
+        "rect": {
+          "height": 123.0,
+          "width": 1170.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "role": "group",
+        "tag": "div",
+        "text_content_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      },
+      {
+        "accessible_name_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "candidate_id": "trust-strip-12",
+        "e_index": "e72",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.34,
+        "rect": {
+          "height": 120.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 0.0
+        },
+        "role": "group",
+        "tag": "slideshow-component",
+        "text_content_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      },
+      {
+        "accessible_name_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "candidate_id": "trust-strip-13",
+        "e_index": "e73",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.34,
+        "rect": {
+          "height": 120.0,
+          "width": 1044.0,
+          "x": 63.0,
+          "y": 0.0
+        },
+        "role": "group",
+        "tag": "slideshow-component",
+        "text_content_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      },
+      {
+        "accessible_name_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "candidate_id": "trust-strip-14",
+        "e_index": "e83",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.34,
+        "rect": {
+          "height": 120.0,
+          "width": 618.0,
+          "x": 276.0,
+          "y": 0.0
+        },
+        "role": "group",
+        "tag": "div",
+        "text_content_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      }
+    ],
+    "variant-selector": [
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-1",
+        "e_index": "e0",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.17,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 303.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-2",
+        "e_index": "e2",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.17,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 303.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-3",
+        "e_index": "e3",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.102,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 1641.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-4",
+        "e_index": "e5",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.102,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 1641.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-5",
+        "e_index": "e6",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.102,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 3102.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-6",
+        "e_index": "e8",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.102,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 3102.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-7",
+        "e_index": "e9",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.102,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 4563.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "button-control--no-colors color-foreground",
+        "candidate_id": "variant-selector-8",
+        "e_index": "e11",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.102,
+        "rect": {
+          "height": 4059.0,
+          "width": 420.0,
+          "x": 171.0,
+          "y": 4563.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": ""
+      }
+    ]
+  },
+  "counts": {
+    "baton_elements": 140,
+    "by_role": {
+      "footer-region": 1,
+      "gallery-image": 13,
+      "navigation": 4,
+      "price-block": 1,
+      "search": 8,
+      "subheading": 4,
+      "trust-strip": 14,
+      "variant-selector": 8
+    },
+    "total_candidates": 53
+  },
+  "device": "mobile",
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "expected_overlay_templates": {
+    "breadcrumb-bar": {
+      "default_kind": "element",
+      "default_placement": "before-element",
+      "description": "Ghost breadcrumb row representing missing navigation context. Place above the product title."
+    },
+    "faq-section": {
+      "default_kind": "section",
+      "default_placement": "after-section",
+      "description": "Ghost section representing missing FAQ markup. Place after the product description."
+    },
+    "msrp-anchor": {
+      "default_kind": "element",
+      "default_placement": "before-element",
+      "description": "Ghost text representing a missing MSRP strikethrough. Place immediately above the live price element."
+    },
+    "payment-badges": {
+      "default_kind": "element",
+      "default_placement": "after-element",
+      "description": "Ghost strip of payment-method icons (Visa/MC/PayPal/Apple Pay). Place inside the purchase zone, immediately below the CTA."
+    },
+    "reviews-block": {
+      "default_kind": "section",
+      "default_placement": "after-section",
+      "description": "Ghost panel representing a missing reviews section. Place below the product description or above the related-products row."
+    },
+    "sticky-cta": {
+      "default_kind": "viewport",
+      "default_placement": "viewport-bottom-sticky",
+      "default_viewport_trigger": "after_primary_cta_offscreen",
+      "description": "Ghost rectangle pinned at the bottom of the mobile viewport representing a missing sticky Add-to-Cart bar. Use for 'no sticky CTA after scroll' findings."
+    },
+    "trust-strip": {
+      "default_kind": "element",
+      "default_placement": "after-element",
+      "description": "Ghost row of trust signals (guarantee, free shipping, secure checkout). Place adjacent to the price block or CTA."
+    },
+    "video-tile": {
+      "default_kind": "element",
+      "default_placement": "inside-element-bottom",
+      "description": "Ghost tile inside the gallery thumbnail strip representing a missing product video. Place adjacent to the first gallery image."
+    }
+  }
+}

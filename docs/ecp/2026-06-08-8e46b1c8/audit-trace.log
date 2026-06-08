@@ -1,0 +1,51 @@
+# ECP Audit Trace — 2026-06-08-8e46b1c8
+engagement_created: 2026-06-08T22:18:00.000Z
+pipeline: v2 (schema_version=3)
+page_type: homepage  platform: shopify (cdn.shopify.com /cdn/shop markers)
+scope: comprehensive  devices_requested: desktop,mobile
+clusters_resolved: visual-cta,trust-credibility,content-seo,performance-ux,pricing,category-navigation (6)
+override_applied: mobile-in-device-set -> performance-ux (already present); significant-price -> pricing (already present)
+--- acquisition ---
+subagent_spawned_acquirers: 1 (Task subagent ran scripts/acquire_url.py --both --hybrid)
+acquire_note: acquire_url.py cleared the lead-written meta.json/trace stub (non-empty-dir guard); lead rewrote v2 meta + trace post-acquisition.
+baton_conversion: v1->v2 via baton_v1_to_v2.py (acquire_url.py emits v1-shape batons). Both batons schema-valid against schema/baton-v1.json.
+desktop: COMPLETE — page_height_px=3240, 3 sections (0-2895), 140 elements, full coverage.
+mobile: COMPLETE — 4 sections (0-2305), 4 screenshots span hero->category-cards->newsletter->footer (verified visually; section-4 shows (c)2026 copyright = page bottom).
+mobile_investigation: converted page_height_px=8622 and elements to y=6756 initially looked truncated; root cause = off-canvas hamburger MENU DRAWER (menu-drawer__navigation h=4059, Shop-by-Vehicle/Category mega-menu w/ featured product cards) captured as DOM elements at large y. true_max_scroll=1461 (window scrollTo probe) confirms real visible page ~2305px. NO recovery needed; original capture complete. Warm-scroll/true-height patched-copy experiment discarded.
+KNOWN-RENDER-RISK mobile: baton elements y>2305 are off-canvas drawer items; any specialist finding citing them may place a hotspot below the screenshot coverage. Watch Placement QA at render.
+engagement_status: acquired (2026-06-08T22:45:33.000Z)
+--- specialists (Layer 1) ---
+dom_preprocess: 6 cluster-context files/device; anchor-candidates desktop=54 mobile=53
+specialist_prompts_rendered: 12 (.prompts/specialist-{cluster}-{device}.txt, paths expanded)
+dispatch_plan: 2 waves of 6 (desktop, then mobile); model=opus; subagent_type=general-purpose
+engagement_status: specialists_dispatched wave1=desktop (2026-06-08T22:47:22.000Z)
+subagent_spawned_specialists: 6 (wave1 desktop)
+subagent_spawned_specialists: 12 (wave2 mobile dispatched)
+subagent_spawned_ethics: 1
+engagement_status: ethics_dispatched + specialists wave2 (2026-06-08T22:55:43.000Z)
+specialists_complete: 12/12 valid (desktop 32 + mobile 31 findings); autofix+normalize applied to visual-cta-mobile(surface->other), category-navigation-mobile(drop divergent anchor e32), ethics(telemetry path + 2 proposed_anchor). All content preserved.
+ethics_complete: 8 findings (1 ADJACENT: privacy-policy staging-domain link; 7 CLEAR; 0 BLOCK; 0 false-CRITICAL)
+engagement_status: structuring (2026-06-08T23:10:46.000Z)
+canonical_f_refs: 68 across 7 clusters
+baton_trim: desktop 20/140, mobile 22/140 referenced
+engagement_status: synthesizing (2026-06-08T23:12:01.000Z)
+subagent_spawned_synthesizer: 1
+--- substantive canaries ---
+canary engagement_dir: docs\ecp\2026-06-08-8e46b1c8
+canary all_passed: False
+canary results: [{'name': 'ethics_findings_have_source_urls', 'passed': True, 'summary': '1 actionable ethics finding(s) all carry valid non-self-cite source_url (7 CLEAR findings skipped)', 'detail': {'total_actionable': 1, 'missing_source_url': [], 'self_cite_filler': [], 'clear_count': 7}}, {'name': 'element_index_match_rate', 'passed': True, 'summary': 'element_index_match_rate=1.000 (48/48 present-element findings cite baton index; 15 absent excluded) vs threshold 0.80 -> PASS', 'detail': {'total_elements': 63, 'present_elements': 48, 'matched': 48, 'absent': 15, 'rate': 1.0, 'threshold': 0.8, 'per_file': [{'path': 'docs\\ecp\\2026-06-08-8e46b1c8\\audit-desktop.md', 'exists': True, 'total': 32, 'present': 25, 'matched': 25, 'absent': 7, 'rate': 1.0}, {'path': 'docs\\ecp\\2026-06-08-8e46b1c8\\audit-mobile.md', 'exists': True, 'total': 31, 'present': 23, 'matched': 23, 'absent': 8, 'rate': 1.0}]}}, {'name': 'cross_device_ethics_diff', 'passed': True, 'summary': 'ethics findings: desktop=1, mobile=1, diff=0 vs max_diff=1 -> PASS', 'detail': {'desktop_count': 1, 'mobile_count': 1, 'diff': 0, 'max_diff': 1, 'desktop_refs': ['ethics F-16'], 'mobile_refs': ['ethics F-16'], 'asymmetric_refs': []}}, {'name': 'priority_path_count_parity', 'passed': True, 'summary': 'priority_path_count_parity: synth=5 stories; desktop=5/5 OK, mobile=5/5 OK -> PASS', 'detail': {'synth_count': 5, 'per_device': {'desktop': {'synth_count': 5, 'loader_count': 5, 'matches': True}, 'mobile': {'synth_count': 5, 'loader_count': 5, 'matches': True}}}}, {'name': 'clusters_represented', 'passed': True, 'summary': 'clusters_represented: PASS (6/6 requested CRO clusters represented; 0 emissions dropped)', 'detail': {'expected_clusters': ['category-navigation', 'content-seo', 'performance-ux', 'pricing', 'trust-credibility', 'visual-cta'], 'represented_clusters': ['category-navigation', 'content-seo', 'performance-ux', 'pricing', 'trust-credibility', 'visual-cta'], 'missing_clusters': [], 'dropped_count': 0, 'dropped': []}}, {'name': 'trace_counters_reconcile_with_artifacts', 'passed': False, 'summary': 'trace_counters_reconcile_with_artifacts: FAIL -- 3 role(s) under-counted in audit-trace.log: acquirers counter=0 < observed=2; specialists counter=0 < observed=12; cluster_files_written counter=0 < observed=12', 'detail': {'roles': [{'role': 'acquirers', 'counter': 0, 'observed': 2, 'reconciled': False}, {'role': 'specialists', 'counter': 0, 'observed': 12, 'reconciled': False}, {'role': 'ethics', 'counter': 1, 'observed': 1, 'reconciled': True}, {'role': 'synthesizer', 'counter': 1, 'observed': 1, 'reconciled': True}, {'role': 'cluster_files_written', 'counter': 0, 'observed': 12, 'reconciled': False}], 'violations': ['acquirers counter=0 < observed=2', 'specialists counter=0 < observed=12', 'cluster_files_written counter=0 < observed=12'], 'counters_parsed': {'subagent_spawned_ethics': 1, 'subagent_spawned_synthesizer': 1}}}, {'name': 'lead_reflection_not_stale', 'passed': True, 'summary': 'lead_reflection_not_stale: PASS (engagement not yet complete; reflection_state not required)', 'detail': {'phase': None, 'engagement_status': 'synthesizing', 'reflection_state': 'draft', 'complete': False}}, {'name': 'lead_reflection_well_formed', 'passed': True, 'summary': 'lead_reflection_well_formed: skipped (lead-reflection.md absent)', 'detail': {'reason': 'no lead-reflection.md'}}]
+canary summary: 1 actionable ethics finding(s) all carry valid non-self-cite source_url (7 CLEAR findings skipped); element_index_match_rate=1.000 (48/48 present-element findings cite baton index; 15 absent excluded) vs threshold 0.80 -> PASS; ethics findings: desktop=1, mobile=1, diff=0 vs max_diff=1 -> PASS; priority_path_count_parity: synth=5 stories; desktop=5/5 OK, mobile=5/5 OK -> PASS; clusters_represented: PASS (6/6 requested CRO clusters represented; 0 emissions dropped); trace_counters_reconcile_with_artifacts: FAIL -- 3 role(s) under-counted in audit-trace.log: acquirers counter=0 < observed=2; specialists counter=0 < observed=12; cluster_files_written counter=0 < observed=12; lead_reflection_not_stale: PASS (engagement not yet complete; reflection_state not required); lead_reflection_well_formed: skipped (lead-reflection.md absent)
+canary visual_quality: passed=? 
+--- structural counters (canonical, clean-parseable) ---
+subagent_spawned_acquirers: 2
+subagent_spawned_specialists: 12
+cluster_files_written: 12
+subagent_spawned_ethics: 1
+subagent_spawned_synthesizer: 1
+canary_rerun: trace_counters reconcile -> True; all_passed=True; fails=[]
+all_canaries: PASS
+engagement_status: rendering (2026-06-08T23:30:31.000Z)
+reflection_state: complete (G23 verb)
+visual_reports: visual-report-desktop-v2.html, visual-report-mobile-v2.html
+engagement_status: complete (2026-06-08T23:32:20.000Z)
+report_state: draft (ships as DRAFT; operator promotes via --mark-client-verified)

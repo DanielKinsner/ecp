@@ -1,0 +1,34 @@
+# Lead Reflection — engagement 2026-06-08-8e46b1c8
+
+**Engagement timeline:** 2026-06-08T22:18:00Z to 2026-06-08T23:50:00Z (approx)
+**Pipeline:** v2 (schema_version=3)
+**Phase reached:** complete
+**Soft-canary results:** 8 pass, 0 fail (after counter-format + drift fixes; see audit-trace.log)
+
+Target: AWDMods.com homepage · Shopify · desktop(1920x1080)+mobile(390x844) · comprehensive scope (6 clusters: visual-cta, trust-credibility, content-seo, performance-ux, pricing, category-navigation) · deliverables = markdown + visual HTML reports.
+
+## Deviations observed
+
+- **acquire_url.py emits v1-shape batons.** The canonical deterministic acquirer wrote flat-field v1 batons (no e_index/rect/page_head/capture_state). Ran `baton_v1_to_v2.py --device both` to convert; both batons then validated against schema/baton-v1.json. Known behavior (matches the standing acquire_url v1-baton note).
+- **acquire_url.py clobbered the lead-written v2 meta.json.** The script refuses a non-empty engagement dir, so the dispatched acquirer subagent cleared the lead's meta.json + audit-trace.log to proceed, then acquire_url wrote its own quick-scan-shape meta.json. Lead rebuilt the v2 meta.json (schema_version=3, engagement_status, clusters_used, scope, report_state/reflection_state=draft) and the trace log post-acquisition. Follow-up below.
+- **3 specialist/ethics emissions failed first validation; repaired without re-dispatch.** ethics (telemetry path-form entry + 2 absent-findings missing proposed_anchor) was fixed by `test-specialist.py autofix` (4 repairs) plus dropping one non-reference `contracts/...` telemetry entry. visual-cta-mobile F[3] used an invalid surface slug `trust-strip-11` -> normalized to `other` + surface_note. category-navigation-mobile F[2] had a secondary evidence anchor (e32) diverging from element e105 -> dropped the divergent anchor. In all three, client-facing finding content (title/observation/recommendation/why/severity/verdict) was preserved byte-for-byte; only schema/placement metadata changed. Chose surgical normalization over full opus re-dispatch to avoid regressing the other good findings; logged here per the no-silent-edit principle.
+- **F-32 citation unified to clear a drift-gate false positive.** The cross-device drift gate failed at 0.1108 > 0.10 on the page-scope finding content-seo F-32 (title tag). Observation/recommendation/why were byte-identical across devices; the only divergence was the trailing reference-citation line (desktop cited "Finding 4: Front-Loading...", mobile cited "Finding 3: Google Rewrites...", both Gold from title-formulas-serp-psychology.md), which the why-slice wrongly absorbs (known citation/methodology slice false-positive class). Unified the citation to the desktop line in audit-mobile.md; drift re-ran at 0.0000. Appropriate because a page-scope synced finding should render identically including its citation.
+- **Trace counters reformatted for the reconcile canary.** Initial counter lines carried trailing parentheticals (e.g. `specialists: 12 (wave2...)`) which the int-parser skips, so `trace_counters_reconcile_with_artifacts` read 0 and failed. Appended clean `key: <int>` counter lines (acquirers=2, specialists=12, cluster_files_written=12, ethics=1, synthesizer=1); canary then PASS.
+
+## Rationalizations caught
+
+- Caught an early over-confident conclusion that the mobile capture was truncated. The converted baton's page_height_px=8622 and elements to y=6756 looked like the mobile screenshots (top ~2305px) were missing ~73% of the page. Built and ran a patched copy of acquire_url.py (warm-scroll, then a true-scrollable-height probe) to recover. The probe returned `true_max_scroll=1461` and visual inspection of section-4-mobile.jpg showed the footer + "(c) 2026 AWDMods." copyright (the real page bottom). The mobile homepage genuinely is ~2305px tall; the high-y elements are the OFF-CANVAS hamburger menu drawer (menu-drawer__navigation h=4059, Shop-by-Vehicle/Category mega-menu) captured as DOM elements but hidden until tapped. No recovery was needed; the original capture was complete. Discarded the patched-copy experiment. Lesson: trust true_max_scroll (window scroll probe) over converter page_height_px, which off-canvas elements inflate.
+
+## Anomalies
+
+- **Operator-impacting side effect:** during browser-state cleanup after the patched-copy experiment, a process kill matched `chrome` too broadly and likely closed the user's regular Chrome (not just Playwright's headless instances, which share the process name). Chrome restores tabs on relaunch. Future cleanup should target only the Playwright cache path / agent-browser daemon, never a bare `chrome` name match.
+- Placement QA (Tier-0, free): desktop weak_placements=1, stacks=2; mobile weak_placements=3, stacks=1. The stacks are head/meta findings with no distinct on-page element (title/meta-description/og:image cluster near the logo at top; a price/trust cluster on the featured grid). 0 unplaced hotspots on either device. Operator should spread the stacked head-meta markers in editor.html during the client-verified pass.
+- All 12 specialist emissions + ethics validated; element_index_match_rate=1.000 (48/48 present-element findings cite a real baton index); cross_device_ethics_diff=0.
+
+- **visual_evidence_proxy_overload (soft WARN):** desktop 64% / mobile 71% of findings use non-exact visual_evidence (proxy_element / generated_expected_zone) vs the 40% advisory threshold. Expected for this page: a homepage audit is dominated by absent-element findings (no hero headline, no meta description, no og:image, no Product/AggregateRating schema, no trust block, no sticky CTA, no MSRP/BNPL), which legitimately anchor to ghost zones or nearby proxy elements rather than exact elements. All HARD substantive canaries pass (element_index_match_rate=1.000, ethics source_urls valid, cross_device_ethics_diff=0, priority_path parity 5/5, clusters_represented 6/6, trace counters reconcile). Recorded as advisory, not a blocker.
+
+## Follow-ups for next run
+
+- acquire_url.py: (1) it emits v1-shape batons that always need baton_v1_to_v2 conversion, and (2) its non-empty-dir guard forces a subagent to delete the lead's meta.json. Consider having the audit lead create the engagement dir AFTER acquisition, or teach acquire_url to merge rather than refuse, or run conversion inside the acquirer. Either removes a fragile step.
+- acquire_url's mobile scroll plan measures document height once before scrolling; on a lazy/short page this is fine, but on a genuinely tall lazy-load mobile page it would truncate. The true-scrollable-height probe (scrollTo end -> read scrollY, loop until stable) used in the discarded patched copy is the robust fix worth upstreaming.
+- Browser cleanup helper should kill only `chrome` processes whose command line points at the ms-playwright cache, never all `chrome`.

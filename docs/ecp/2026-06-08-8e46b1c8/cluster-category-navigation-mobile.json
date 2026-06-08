@@ -1,0 +1,261 @@
+{
+  "cluster": "category-navigation",
+  "completed_at": "2026-06-08T22:52:00.000Z",
+  "device": "mobile",
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "findings": [
+    {
+      "cluster": "category-navigation",
+      "confidence": 0.9,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "single-file",
+        "change_type": "css"
+      },
+      "element": {
+        "baton_index": "e53",
+        "role": "textbox",
+        "tag": "input",
+        "text_content": ""
+      },
+      "evidence_anchors": [
+        {
+          "context": "A full-width search field labelled 'Search' with a magnifier icon sits directly under the logo bar, occupying the whole content width before any other element.",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "mobile"
+        },
+        {
+          "reference": "e53",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 1,
+      "observation": "Search is exposed as a real, full-width text input directly below the logo rather than hidden behind an icon-only toggle. The field spans the entire content width, so a typical multi-word query such as 'focus rs cat back exhaust' stays visible while it is typed and edited.",
+      "recommendation": "Keep the open search input as the primary affordance. Confirm against your own search logs that the field width holds the 25-30 character queries most shoppers type, and that the predictive-search dropdown returns relevant matches for one-character misspellings and abbreviations like 'cat-back'.",
+      "reference_citations": [
+        {
+          "section": "Finding 17: Search Box Width Must Accommodate the Typical Query",
+          "source": "search-and-filter-ux.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "device",
+      "severity": "LOW",
+      "surface": "search-bar",
+      "title": "Search Box Is a Visible Full-Width Input at Page Top",
+      "verdict": "PASS",
+      "why_this_matters": "An always-visible, wide search box is the single most reliable way for a high-intent visitor to reach a specific part fast; hiding it behind an icon or clipping the query both suppress the highest-converting traffic on the site."
+    },
+    {
+      "cluster": "category-navigation",
+      "confidence": 0.88,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "single-file",
+        "change_type": "css"
+      },
+      "element": {
+        "baton_index": "e84",
+        "role": "button",
+        "tag": "button",
+        "text_content": "Find parts"
+      },
+      "evidence_anchors": [
+        {
+          "context": "Stacked Select Make / Select Model / Select Year / Select your Trim dropdowns feed a blue 'FIND PARTS' button, all rendered within the first scroll of the homepage.",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "mobile"
+        },
+        {
+          "reference": "e84",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 2,
+      "observation": "For an auto-parts catalogue, fitment is the primary conversion lever, and the homepage leads with it: a Make / Model / Year / Trim cascade resolving to a 'FIND PARTS' button sits in the first viewport. This routes shoppers straight to compatible results instead of forcing them to guess part names in free-text search.",
+      "recommendation": "Keep the fitment selector in its top-of-page position. Ensure each dropdown disables impossible combinations as the prior field is chosen, and that the saved vehicle persists into category pages so the compatibility constraint carries through the whole browse, not just this entry point.",
+      "reference_citations": [
+        {
+          "section": "Finding 5: Compatibility Filters — Only 35% Task Success",
+          "source": "search-and-filter-ux.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "device",
+      "severity": "LOW",
+      "surface": "filter-panel",
+      "title": "Vehicle Fitment Selector Anchors the Compatibility Path",
+      "verdict": "PASS",
+      "why_this_matters": "Sites selling compatibility-dependent products see roughly 65% task failure without a fitment filter; surfacing it on the homepage removes the dominant reason auto-parts shoppers abandon before they reach a product."
+    },
+    {
+      "cluster": "category-navigation",
+      "confidence": 0.82,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "component",
+        "change_type": "component"
+      },
+      "element": {
+        "baton_index": "e105",
+        "role": "group",
+        "tag": "summary",
+        "text_content": ""
+      },
+      "evidence_anchors": [
+        {
+          "context": "The first viewport shows the hamburger icon, logo, search box, and the fitment dropdowns; no category names ('Performance', 'Exterior', 'Interior') are visible as tappable links. The category cards only begin appearing at the very bottom of this screenshot, below the FIND PARTS button.",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "mobile"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The hamburger menu trigger (summary element opening the off-canvas drawer) is the natural anchor for 'category browse is hidden behind the drawer', but the candidate ranker did not classify it into a navigation/menu role, so it is absent from the registry.",
+      "local_id": 3,
+      "observation": "A shopper who does not already know their exact vehicle has no visible way to browse the catalogue by category in the first screen. The departments — Performance, Handling & Brakes, Interior, Exterior, Electronics — live entirely inside the off-canvas drawer behind the hamburger icon, plus a card carousel that only starts at the bottom edge of the first viewport. Browse-oriented visitors must either tap an unlabelled hamburger or scroll past the entire fitment form before any category name appears.",
+      "recommendation": "If the homepage is meant to serve discovery shoppers as well as fitment shoppers, surface a compact row of named category links or tiles (Performance, Exterior, Interior, Handling, Electronics) directly beneath the fitment selector, above the fold. Keep the drawer as the exhaustive menu, but do not make it the only first-screen route into the catalogue.",
+      "reference_citations": [
+        {
+          "section": "Finding 3: 40% of Users Cannot Locate Filtering Options",
+          "source": "search-and-filter-ux.md",
+          "tier": "Gold"
+        },
+        {
+          "section": "Finding 8: Subcategory Navigation Tiles Improve Discovery for Large Category Hierarchies",
+          "source": "merchandising-psychology.md",
+          "tier": "Silver"
+        }
+      ],
+      "scope": "device",
+      "severity": "HIGH",
+      "surface": "subcategory-tiles",
+      "title": "Only Category Path in First Viewport Is the Hidden Hamburger Drawer",
+      "verdict": "FAIL",
+      "why_this_matters": "Around 40% of shoppers fail to locate navigation that is hidden behind a non-obvious control; an auto-parts buyer who cannot find their category in the first screen concludes the store is hard to shop and leaves before reaching a product grid."
+    },
+    {
+      "cluster": "category-navigation",
+      "confidence": 0.8,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "component",
+        "change_type": "css"
+      },
+      "element": {
+        "baton_index": "e15",
+        "role": "group",
+        "tag": "ul",
+        "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDr"
+      },
+      "evidence_anchors": [
+        {
+          "context": "The 'Performance' card fills almost the full width with only a thin sliver of the next card visible at the right edge; a two-segment scrollbar under the carousel signals more cards exist but none are readable. Subcategory links (Intakes, Exhaust, Cooling, Drivetrain upgrades) and a SHOP PERFORMANCE button sit inside the single visible card.",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 487,
+          "type": "visual",
+          "viewport": "mobile"
+        },
+        {
+          "reference": "e15",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Silver",
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The category-card list (Performance tile, e15) is the subject of the breadth finding but the ranker classified card content as gallery/section material, not a navigation tile role, so it is outside the candidate registry.",
+      "local_id": 4,
+      "observation": "The on-page category navigation is a horizontal carousel that displays one full card at a time — 'Performance' dominates the viewport while only a thin edge of the next card peeks in. The five departments (Performance, Handling & Brakes, Interior, Exterior, Electronics) exist in the markup, but a shopper sees just one and must swipe blindly to discover the rest. The whole range never appears together, so the breadth of the catalogue is invisible on first view.",
+      "recommendation": "If the goal is to show shoppers the full department range at a glance, replace the one-card-at-a-time carousel with a 2-column tile grid or a peeking carousel that shows at least two cards plus a visible slice of a third, so the eye registers that multiple categories exist. Label the scroll affordance or show all five tiles stacked to make the breadth explicit.",
+      "reference_citations": [
+        {
+          "section": "Finding 1: Products in First 1-2 Rows Receive 2-3x More Clicks Than Later Positions",
+          "source": "merchandising-psychology.md",
+          "tier": "Silver"
+        },
+        {
+          "section": "Finding 8: Subcategory Navigation Tiles Improve Discovery for Large Category Hierarchies",
+          "source": "merchandising-psychology.md",
+          "tier": "Silver"
+        }
+      ],
+      "scope": "device",
+      "severity": "MEDIUM",
+      "surface": "subcategory-tiles",
+      "title": "Category Carousel Reveals Roughly One Tile, Hiding Catalog Breadth",
+      "verdict": "FAIL",
+      "why_this_matters": "Position primacy means the first tile captures the bulk of attention and the rest are rarely reached; when a shopper cannot see that Interior, Exterior, and Electronics also exist, they assume the store is narrower than it is and self-route less effectively into the categories they actually want."
+    },
+    {
+      "cluster": "category-navigation",
+      "confidence": 0.78,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "component",
+        "change_type": "component"
+      },
+      "element": {
+        "baton_index": "e36",
+        "role": "group",
+        "tag": "summary",
+        "text_content": "Shop by Vehicle"
+      },
+      "evidence_anchors": [
+        {
+          "context": "The drawer's Shop by Vehicle submenu contains only two vehicle links — Subaru WRX / STI and Ford Focus RS / ST — even though the homepage fitment selector offers a full Make/Model/Year/Trim cascade implying a much larger vehicle catalogue.",
+          "reference": "e36",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Silver",
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The 'Shop by Vehicle' drawer submenu (summary e36) is the subject of this hub-breadth finding; it is an off-canvas drawer navigation node the candidate ranker does not classify into a navigation role, so it is not in the registry.",
+      "local_id": 5,
+      "observation": "Inside the menu drawer, the 'Shop by Vehicle' browse path expands to just two destinations — Subaru WRX / STI and Ford Focus RS / ST. The fitment selector on the same page presents a full Make / Model / Year / Trim cascade, so a shopper who chooses to browse by vehicle instead of using the dropdowns lands on a near-empty hub that contradicts the catalogue depth the selector promises.",
+      "recommendation": "If the catalogue covers more platforms than these two, populate the Shop by Vehicle drawer with the full set of supported vehicle collections, or replace the static two-item list with a link into the dynamic fitment results. Either way, the by-vehicle browse path should reflect the same vehicle coverage the FIND PARTS selector implies.",
+      "reference_citations": [
+        {
+          "section": "Finding 2: Hub-and-Spoke Taxonomy Consolidates Topic Authority",
+          "source": "collection-page-architecture.md",
+          "tier": "Silver"
+        }
+      ],
+      "scope": "page",
+      "severity": "MEDIUM",
+      "surface": "subcategory-tiles",
+      "title": "Shop by Vehicle Drawer Lists Only Two Vehicles",
+      "verdict": "FAIL",
+      "why_this_matters": "A vehicle hub that lists only two platforms both wastes internal-linking value for the rest of the vehicle collections and tells browse-mode shoppers the store may not carry parts for their car, pushing them to leave rather than search."
+    }
+  ],
+  "notes": [
+    "Page type is the storefront homepage; hierarchy/history breadcrumbs were not evaluated as findings because the homepage is the breadcrumb root and carries no category-path context to display.",
+    "The baton repeats the header, search input, hamburger, and cart at four y-offsets (e.g. search input at y=330/1668/3129/4590); these are mobile per-section tiling artifacts of a single sticky-looking header, not four distinct controls. Sticky-on-scroll behaviour was therefore not asserted since the baton marks every header instance is_sticky=false.",
+    "Search is implemented as a predictive-search component, so autocomplete is present in markup; suggestion relevance and misspelling tolerance could not be exercised from a static capture and were not emitted as a finding.",
+    "Filter/sort controls, product grid column counts, pagination, and zero-results states are not present on the homepage and were out of scope here; they belong to the collection-page and search-results audits."
+  ],
+  "schema_version": 1,
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8"
+  },
+  "started_at": "2026-06-08T22:40:00.000Z",
+  "status": "complete",
+  "telemetry": {
+    "reference_files_read": [
+      "search-and-filter-ux.md",
+      "merchandising-psychology.md",
+      "collection-page-architecture.md",
+      "breadcrumbs.md",
+      "evidence-tiers.md"
+    ]
+  }
+}

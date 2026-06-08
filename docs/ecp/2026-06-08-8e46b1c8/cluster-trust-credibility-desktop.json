@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "trust-credibility",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": "1M",
+    "temperature": 0.1
+  },
+  "started_at": "2026-06-08T22:46:00.000Z",
+  "completed_at": "2026-06-08T22:52:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Featured Collection Cards Show Perfect 5.0/5.0 on Only 2-3 Reviews",
+      "surface": "star-rating-widget",
+      "element": {
+        "baton_index": "e105",
+        "text_content": "5.0 /\n                    5.0\n                \n\n            ",
+        "role": "group",
+        "tag": "div"
+      },
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The product-card star-rating widget (e105, '5.0 / 5.0' in the Featured Collection grid) is the verbatim subject of this finding but the candidate ranker classified only price-block, product-title, and gallery-image roles for this grid — no reviews-widget candidate was registered for these cards.",
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 1100,
+          "viewport": "desktop",
+          "context": "In the Featured Collection grid, the cards that carry a star rating all show a solid 5.0 in gold stars with tiny counts in parentheses: REVO DESIGNS '(2)', the two TUFSKINZ cards '(3)'. No card displays anything other than a perfect 5.0."
+        },
+        {
+          "type": "dom",
+          "reference": "e105",
+          "context": "Rating widget text_content is '5.0 / 5.0'; a sibling widget e106 also reads '5.0 / 5.0'."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "social-proof-patterns.md",
+          "section": "Finding 1: The 4.0-4.7 Star Rating Sweet Spot",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 5: Perfect 5-Star Ratings Reduce Trust; 4.0-4.7 Is Optimal",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Every rated card in the Featured Collection shows a flawless 5.0 out of 5.0, and the review counts beside them are tiny: '(2)' on the Revo Designs decal kit and '(3)' on both Tufskinz cards. A perfect average built on two or three reviews reads as 'too good to be true' to a shopper, who has no critical review to weigh against the praise. Purchase likelihood peaks when the displayed average sits in the 4.0-4.7 range; a uniform 5.0 across the grid actively suppresses that confidence rather than building it, and the very low counts compound the doubt because the rating could swing on a single new review.",
+      "recommendation": "If these products have genuinely earned only 5-star reviews, keep collecting from every buyer (not just satisfied ones) so the average settles into the trusted 4.0-4.7 band and the count climbs past five, where most of the conversion lift lands. Display the actual review count prominently next to the stars and surface a star-distribution breakdown so the rating reads as earned rather than curated.",
+      "why_this_matters": "A clean 5.0 on two or three reviews converts worse than a 4.4 on twenty: shoppers discount perfect ratings as manipulated, and on an automotive store where parts carry real fitment risk, that skepticism directly suppresses add-to-cart on the highest-intent visitors who actually read the stars.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Most Featured Collection Cards Carry Zero Reviews",
+      "surface": "review-block",
+      "element": {
+        "baton_index": "e104",
+        "text_content": "Regular price\n          \n            From $135.99\n          ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 1180,
+          "viewport": "desktop",
+          "context": "The Lloyd Mats Velourtex card ('FROM $135.99'), the Injen intake ('$437.91'), the Borla exhaust, the Magnaflow exhaust, and the Lloyd Mats trunk mat all display a price and a 'Made to Order' tag but no star rating and no review count at all — only four of the visible cards show any rating."
+        },
+        {
+          "type": "dom",
+          "reference": "e104",
+          "context": "Price block 'Regular price From $135.99' belongs to the Lloyd Mats card, which has no adjacent rating widget."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "social-proof-patterns.md",
+          "section": "Finding 3: Five Reviews = 270% Conversion Lift (With Diminishing Returns)",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 3: Five Reviews Increase Conversion by 270%",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The majority of cards in the Featured Collection display a price and a 'Made to Order' tag but carry no stars and no review count whatsoever — the Lloyd Mats Velourtex mats at 'FROM $135.99', the Injen intake at '$437.91', the Borla exhaust, the Magnaflow exhaust, and the Lloyd Mats trunk mat. These are the products the homepage chose to feature, yet they show no social proof at the exact moment a shopper is deciding whether the store and the part are credible. Getting a product from zero to five reviews is the single largest documented jump in purchase likelihood, and the higher-priced items here (a $437.91 intake, an exhaust system) are where that gap costs the most.",
+      "recommendation": "If these featured products have any order history, run a post-purchase review request triggered by delivery confirmation and prioritize the highest-priced SKUs first, where the review lift is largest. Until each featured card crosses five reviews, consider featuring products that already have reviews so the homepage grid leads with social proof instead of bare prices.",
+      "why_this_matters": "Products with five reviews convert at roughly 270% the rate of products with zero, and the effect is strongest on higher-priced items; featuring review-less parts on the homepage spends prime real estate on cards that give a first-time visitor no reason to trust either the part or the store.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Displayed Ratings Have No AggregateRating Schema",
+      "surface": "review-schema-markup",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No AggregateRating or Review JSON-LD present; page head carries only OnlineStore and WebSite schema",
+        "role": "other"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e104",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "AggregateRating schema belongs on the product cards that already display star ratings, anchored at the featured-collection price block."
+      },
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "reviews-block",
+          "anchor_relative_to": "e104",
+          "placement": "above"
+        },
+        "observed_anchor": {
+          "candidate_id": "price-block-1",
+          "selector_hint": "[class*=\"price\"]",
+          "text_quote": "From $135.99"
+        },
+        "reason": "No DOM element carries the missing schema; ghost overlay sits at the featured-collection card where ratings already render."
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e105",
+          "context": "Star-rating widgets ('5.0 / 5.0') render on the page, but the page-head JSON-LD contains only OnlineStore and WebSite types — no AggregateRating or Review schema accompanies the visible ratings."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ugc-reviews-seo.md",
+          "section": "Finding 7: Review Schema (AggregateRating) Produces ~20% Organic Traffic Uplift",
+          "tier": "Gold"
+        },
+        {
+          "source": "eeat-product-pages.md",
+          "section": "Finding 9: Structured Data and E-E-A-T Are Complementary",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Star ratings render visibly on the featured product cards, but the structured data in the page head is limited to OnlineStore and WebSite types — there is no AggregateRating or Review markup describing those ratings. That means the stars a shopper sees on the page cannot appear as rich-result stars in Google search, and the review signal that already exists on the page is invisible to search engines. A controlled split test attributed roughly a 20% organic-traffic uplift to AggregateRating schema on pages that have genuine reviews.",
+      "recommendation": "If the products carry real ratings (they already display them), add AggregateRating JSON-LD to the product templates with ratingValue plus ratingCount or reviewCount, ensuring every value matches the rating shown on the card. On Shopify this is typically a setting in the review app (Judge.me, Yotpo, Loox) or a small product-template edit; validate with Google's Rich Results Test before shipping.",
+      "why_this_matters": "Review stars in search results reliably lift click-through; leaving the existing ratings unmarked forgoes a documented ~20% organic-traffic gain and lets competitors with identical parts but proper schema win the SERP star real estate.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Homepage Has No Company-Credibility or Aggregate Trust Block",
+      "surface": "trust-badge-cluster",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No 'As seen in', press logos, total-reviews/customer count, money-back guarantee, or returns reassurance block anywhere on the homepage",
+        "role": "other"
+      },
+      "proposed_anchor": {
+        "kind": "section",
+        "section_index": 0,
+        "placement": "after-section",
+        "viewport": "desktop",
+        "reason": "A homepage trust strip (guarantee, returns, total customers served, press) belongs in the gap below the hero and category cards, before the product grid."
+      },
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "trust-strip",
+          "anchor_relative_to": "section-0",
+          "placement": "after-section"
+        },
+        "reason": "No element carries homepage-level trust signals; ghost trust strip sits in the gap below the hero/category band."
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Above the fold carries the vehicle selector, search, and category cards but no trust signals beyond the 'FREE SHIPPING on most orders $75+' bar. No guarantee, returns promise, customer-count, press mention, or 'why buy from us' block appears anywhere on the homepage."
+        },
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 2600,
+          "viewport": "desktop",
+          "context": "The footer lists Information and My Account link columns and a payment-icon strip, but no money-back guarantee, returns reassurance, or social-proof summary; there is no visible customer-service phone number."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 18: Unknown Brands Need More Trust Signals Than Established Brands",
+          "tier": "Gold"
+        },
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 21: NNGroup Identifies 53 Trust Guidelines from 350+ Site Tests",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The homepage answers 'what do you sell' well but never answers 'why should I trust you'. Aside from the 'FREE SHIPPING on most orders $75+' bar, there is no money-back guarantee, no returns promise, no 'as seen in' or press mention, no total-customers-served or aggregate-reviews figure, and no prominent 'why buy from us' block — and the footer offers link columns and payment icons but no customer-service phone number. For a specialist automotive store competing without the brand equity of a major retailer, the browsing-stage anxiety is squarely 'is this a real company that will stand behind these parts', and nothing on the page addresses it.",
+      "recommendation": "If the store offers a guarantee, easy returns, fitment support, or has served a meaningful number of customers, surface those as a compact trust strip below the hero and category band: a money-back or fitment guarantee, a returns promise, a total-orders or aggregate-rating figure, and a visible support phone number. Lead with the strongest genuine claim rather than stacking generic seals.",
+      "why_this_matters": "Trust signals lift conversion most for stores without established brand recognition; a homepage that shows products but no company credibility leaves first-time visitors to resolve 'is this legit' on their own, and many resolve it by leaving.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "trust-credibility",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Recognized Payment Badges Present in Footer",
+      "surface": "trust-badge-cluster",
+      "element": {
+        "baton_index": "e81",
+        "text_content": "American Express\n\n                  \n                    App",
+        "role": "group",
+        "tag": "ul"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 2841,
+          "viewport": "desktop",
+          "context": "Footer displays a row of recognized payment-method icons: American Express, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "trust-and-credibility.md",
+          "section": "Finding 10: PayPal Seal Attracts Most Visual Attention",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The footer carries a clean row of widely recognized payment marks — Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop Pay, and Visa. These are consumer-familiar brands (PayPal and the card networks carry the strongest trust-by-recognition effect), and they signal accepted, legitimate payment without resorting to obscure security seals.",
+      "recommendation": "Keep these recognized marks. When you build out a checkout or purchase zone, repeat the strongest of them (PayPal and the card networks) adjacent to the pay button, where proximity to the moment of payment anxiety adds the most reassurance.",
+      "why_this_matters": "Familiar payment logos reassure shoppers that payment is safe and routine; retaining them protects a trust signal the store already gets right.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "Only the global above-the-fold section was routed to trust-credibility for this homepage; the trust-relevant surfaces audited (product-card ratings, review schema, footer payment badges, the missing trust block) span the full captured page via the baton element index rather than that single routed slice.",
+    "The 'FREE SHIPPING on most orders $75+ — Contiguous US only' announcement bar (e34/e52, trust-strip candidates) is a present shipping-trust signal; not emitted as its own finding because it is the only such signal and is folded into the homepage-trust-block gap finding (F-4).",
+    "Card image accessible_name fields in the baton report CSS class strings ('card__image motion-reduce object-center object-contain') rather than alt text, and the page head shows the logo carries a real alt ('AWDMods'). Because the baton appears to capture className rather than the alt attribute here, an alt-text accessibility FAIL could not be resolved with confidence and was not emitted.",
+    "No 'Verified Buyer'/'Verified Purchase' markers are visible on the rated cards, but homepage product cards rarely surface that label; the verified-buyer gap is better assessed on the product detail page than on this grid, so it was not emitted as a separate finding."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "trust-and-credibility.md",
+      "social-proof-patterns.md",
+      "eeat-product-pages.md",
+      "review-collection.md",
+      "ugc-integration.md",
+      "ugc-reviews-seo.md",
+      "accessibility.md"
+    ],
+    "sections_routed_to_cluster": 1,
+    "baton_elements_referenced": ["e81", "e104", "e105"],
+    "findings_by_verdict": {
+      "FAIL": 4,
+      "PARTIAL": 0,
+      "PASS": 1
+    }
+  }
+}

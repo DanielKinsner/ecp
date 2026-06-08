@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "content-seo",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": "1M",
+    "temperature": 0.1
+  },
+  "started_at": "2026-06-08T22:30:00.000Z",
+  "completed_at": "2026-06-08T22:38:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Title Tag Is Just the Brand Name Repeated Twice",
+      "surface": "title-tag",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "AWDMods – AWDMods",
+        "role": "title"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e100",
+        "placement": "before-element",
+        "viewport": "mobile",
+        "reason": "The browser/SERP title corresponds to the logo/brand region at the top of the page"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e100",
+          "context": "Page <title> resolves to 'AWDMods – AWDMods' — the brand name duplicated with a separator, roughly 17 characters and carrying no product, category, or fitment keywords."
+        },
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The homepage is a vehicle-parts catalog (Select Make/Model/Year, Performance/Intakes/Exhaust) yet the title carries none of those terms."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "title-formulas-serp-psychology.md",
+          "section": "Finding 3: Google Rewrites 61-76% of Title Tags",
+          "tier": "Gold"
+        },
+        {
+          "source": "title-formulas-serp-psychology.md",
+          "section": "Finding 2: Optimal Title Length Is 51-60 Characters",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The homepage title tag reads 'AWDMods – AWDMods' — the store name repeated on both sides of the separator, about 17 characters total. It contains no description of what the store sells (performance parts and accessories for Subaru WRX/STI and Ford Focus RS/ST vehicles) and no high-intent keywords. Titles under 30 characters are rewritten by Google more than 95% of the time, so Google will almost always substitute its own guess, and the duplicated brand wastes the most valuable space in the SERP.",
+      "recommendation": "If the homepage is meant to rank for category and brand-discovery queries, rewrite the title to a descriptive 51-60 character formula such as 'Performance Parts for WRX, STI, Focus RS & ST | AWDMods'. Lead with what the store sells so the first 2-3 words carry the keyword, and keep the brand once at the end rather than on both sides of the dash.",
+      "why_this_matters": "The title is the single largest CTR lever in search and the headline shown in social and AI shopping previews; a brand-only, sub-30-character title forfeits ranking relevance for category queries and gets overwritten by Google's own version, costing click-through on every impression.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Featured Product Images Use CSS Class Names as Alt Text",
+      "surface": "image-alt-text",
+      "element": {
+        "baton_index": "e23",
+        "text_content": "",
+        "role": "image",
+        "tag": "img"
+      },
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img[alt]:not([alt=\"\"])",
+          "text_quote": "card__image motion-reduce object-center"
+        }
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e23",
+          "context": "The Featured Collection product image exposes the accessible name 'card__image motion-reduce object-center object-contain' — that string is the element's CSS class list, not a description of the product. The same pattern repeats across the collection images (e23 through e31)."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 487,
+          "viewport": "mobile",
+          "context": "The 'Velourtex Fitted Carpet Floor Mats for the Ford Focus RS / ST' product image is clearly a specific, describable product, but the only alt-equivalent text is a CSS class string."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "image-seo-alt-text.md",
+          "section": "Finding 11: WCAG 2.1 Success Criterion 1.1.1 Is the Legally-Cited Alt Text Standard",
+          "tier": "Gold"
+        },
+        {
+          "source": "image-seo-alt-text.md",
+          "section": "Finding 2: Alt Text Must Be Descriptive",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Featured Collection product images carry their CSS class list ('card__image motion-reduce object-center object-contain') as their accessible name instead of descriptive alt text. A screen reader announces the class string, and Google Images and Google Lens have no readable subject for the image. Visually these are specific, identifiable products — the Velourtex fitted carpet floor mats and the wheel/stripe kit — so the absence of real alt text is both an accessibility gap and a lost visual-search opportunity.",
+      "recommendation": "If these images render through a collection-card component, set the alt attribute from the product title field so each image gets descriptive text following the [Product Name] [Key Attribute] [View] pattern, for example 'Velourtex fitted carpet floor mats for Ford Focus RS / ST, set of 4, black with blue trim'. Fixing it at the component level corrects every card on the page at once.",
+      "why_this_matters": "Missing descriptive alt text is the most commonly cited WCAG 2.1 SC 1.1.1 violation in ADA web-accessibility lawsuits (3,948 US federal filings in 2025) and it makes product images invisible to Google Lens, which handles roughly 5 billion commercially-intentful visual searches a month.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "Star Ratings and Prices Shown but No Product Schema",
+      "surface": "product-schema",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No Product/ProductGroup or AggregateRating JSON-LD; only OnlineStore + WebSite present",
+        "role": "other"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e89",
+        "placement": "before-element",
+        "viewport": "mobile",
+        "reason": "Product and AggregateRating markup should describe the priced, star-rated featured products shown here"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "cross-cutting"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e90",
+          "context": "The featured products render a visible '5.0 / 5.0' star rating (e90) and prices like 'From $135.99' (e89) and '$49.00', but the page's structured data contains only OnlineStore and WebSite blocks — no Product, ProductGroup, Offer, or AggregateRating markup for those products."
+        },
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 974,
+          "viewport": "mobile",
+          "context": "Featured Collection card shows 'FROM $135.99' and a 5-star rating on the adjacent card, yet none of this is expressed in structured data."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 10: Review Schema Alone Produces ~20% Organic Traffic Uplift",
+          "tier": "Gold"
+        },
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 1: Two Markup Paths - Product Snippets vs. Merchant Listings",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The featured products display a 5.0-star rating and live prices ('From $135.99', '$49.00') in the page, but the structured data only declares OnlineStore and WebSite — there is no Product, Offer, or AggregateRating markup. The rating, price, and availability that customers can already see are not expressed in a form Google Shopping, ChatGPT Shopping, or Perplexity can read, so the page cannot earn rating-star or price rich results for these items.",
+      "recommendation": "If these products carry genuine reviews and prices, add server-rendered JSON-LD on the product templates (and ideally an ItemList on this homepage) including Product/Offer with price, priceCurrency, and availability plus AggregateRating with ratingValue and ratingCount. AggregateRating must reflect real, unsuppressed review data. A controlled test found review schema alone lifted organic traffic about 20%.",
+      "why_this_matters": "Without Product and AggregateRating markup the store forfeits star and price rich results that materially raise click-through, and it stays invisible to AI shopping agents that match products by structured Schema.org data plus identifiers.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Meta Description and Social Preview Are Placeholder Brand Text",
+      "surface": "meta-description",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "meta_description: null; og:description 'AWDMods'; og_image: null",
+        "role": "other"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e100",
+        "placement": "before-element",
+        "viewport": "mobile",
+        "reason": "Meta description and Open Graph preview represent the page's brand/identity region at the top"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e100",
+          "context": "The page head has no meta description at all, the Open Graph description is the single word 'AWDMods', and there is no og:image — so search snippets, link previews, and AI thumbnails have no descriptive text or image to draw from."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "ai-search-agentic-discovery.md",
+          "section": "Finding 10: Schema.org Product Markup Is the Single Highest-ROI AI Commerce Action",
+          "tier": "Gold"
+        },
+        {
+          "source": "ai-search-agentic-discovery.md",
+          "section": "Finding 4: AI-Referred Traffic Shows Higher Purchase Intent Signals",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The homepage has no meta description, its Open Graph description is just the word 'AWDMods', and there is no Open Graph image. Search engines therefore generate a snippet from whatever fragment they find, social shares and AI shopping previews show no descriptive summary, and there is no thumbnail for an AI agent or messaging app to display. None of these surfaces is given a single sentence describing that this is a performance-parts store for WRX, STI, Focus RS, and ST vehicles.",
+      "recommendation": "If the store wants control over how it appears in search and shared links, add a 140-155 character meta description and a matching og:description that name the catalog and audience, for example 'Performance and styling parts for Subaru WRX/STI and Ford Focus RS/ST - shop by vehicle and find the right fit fast.' Add an og:image (the logo on a branded background works) so previews and AI thumbnails render an image.",
+      "why_this_matters": "Descriptive metadata is what search snippets, social cards, and AI shopping previews show to qualify a click; leaving it null or as a bare brand word cedes that messaging to algorithms and removes the thumbnail that AI-referred traffic - which converts at higher intent - relies on.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "FAIL",
+      "title": "Homepage Has Almost No Descriptive or Benefit-First Copy",
+      "surface": "description-block",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No descriptive body copy; only nav labels, 'Featured Collection', and newsletter prompt",
+        "role": "other"
+      },
+      "proposed_anchor": {
+        "kind": "section",
+        "section_index": 1,
+        "placement": "after-section",
+        "viewport": "mobile",
+        "reason": "An intro/value-proposition content block belongs below the vehicle-selector hero, before the category cards"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Above the fold is a search box, four 'Select' dropdowns, and a FIND PARTS button — no headline or sentence stating what the store sells or why to buy here."
+        },
+        {
+          "type": "visual",
+          "reference": "section-4-mobile.jpg",
+          "scroll_y": 1461,
+          "viewport": "mobile",
+          "context": "The only prose on the lower page is the newsletter blurb ('New parts, new builds, exclusive deals... for your Focus RS, Focus ST, WRX, or STI'); the rest is category labels, product cards, and footer links."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "benefit-first-descriptions.md",
+          "section": "Finding 2: Information Incompleteness Causes 20% of Purchase Task Failures",
+          "tier": "Gold"
+        },
+        {
+          "source": "ai-search-agentic-discovery.md",
+          "section": "Finding 8: Q&A-Structured Content Improves AI Query Matching",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The homepage carries almost no descriptive text. The hero is a search field plus four 'Select Make/Model/Year/Trim' dropdowns and a FIND PARTS button with no headline or value statement; the lower page is category labels ('Performance', 'Intakes', 'Exhaust'), product cards, and a newsletter prompt. There is no sentence that tells a first-time visitor — or an AI shopping assistant — what the store specializes in, which vehicles it fits, or why to buy here. The one descriptive line on the page is the newsletter blurb naming Focus RS/ST and WRX/STI.",
+      "recommendation": "If this page is expected to convert cold traffic and be readable by AI assistants, add a short benefit-first intro block beneath the vehicle selector: one headline and two or three sentences naming the audience (WRX/STI, Focus RS/ST owners), the value (verified fitment, curated performance and styling parts), and what to do next. Lead with the outcome, then the specifics, so the copy both reassures shoppers and gives crawlers extractable content.",
+      "why_this_matters": "Insufficient on-page information drives roughly 20% of purchase task failures, and a homepage with no descriptive copy gives AI shopping agents nothing to extract when a shopper asks what the store sells, suppressing both human conversion and AI-referred discovery.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "content-seo",
+      "device": "mobile",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Canonical and Mobile Viewport Tags Are Correctly Set",
+      "surface": "canonical-url",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "canonical https://www.awdmods.com/; viewport width=device-width,initial-scale=1",
+        "role": "other"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e100",
+        "placement": "before-element",
+        "viewport": "mobile",
+        "reason": "Canonical and viewport are page-head signals tied to the site identity region at the top"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e100",
+          "context": "Head declares a self-referencing canonical 'https://www.awdmods.com/' (absolute, HTTPS, lowercase) and viewport 'width=device-width,initial-scale=1'."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "canonical-duplicate-content.md",
+          "section": "Finding 12: Self-Referencing Canonicals Are Best Practice for All Pages",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The homepage declares a correct self-referencing canonical — 'https://www.awdmods.com/', absolute, HTTPS, and lowercase — and a proper mobile viewport meta ('width=device-width, initial-scale=1'). The canonical consolidates signals to the preferred root URL and the viewport tag confirms the page is built to render correctly on the 390-wide mobile viewport.",
+      "recommendation": "Keep the self-referencing canonical and viewport meta as they are. When product and collection templates are reviewed, confirm they follow the same pattern — each canonical pointing to its own /products/[handle] URL rather than a collection-prefixed duplicate.",
+      "why_this_matters": "A correct canonical prevents duplicate-URL signal dilution, and the viewport meta is a precondition for mobile rendering and mobile-first indexing — both are foundational technical signals the rest of the SEO work builds on.",
+      "evidence_tier": "Silver"
+    }
+  ],
+  "notes": [
+    "Page type is the Shopify homepage (Ignite theme), not a PDP — so per-product schema, alt text, and descriptions live on linked product/collection templates; findings 2, 3, and 5 should be read as catalog-wide template issues surfaced on this homepage rather than single-page defects.",
+    "The OnlineStore JSON-LD sameAs array contains several empty strings interleaved with the real Facebook/Instagram/YouTube URLs. This is harmless but sloppy; trimming the empty entries would clean up the organization markup. Not emitted as a client-facing finding.",
+    "The free-shipping announcement bar reads 'FREE SHIPPING on most orders $75+ — Contiguous US only', which is an accurate, qualified disclosure; flagged here only so the synthesizer can correlate with any pricing/trust signals, not as a content-seo defect.",
+    "hreflang is empty, which is correct for a single US-market store; no international canonical/hreflang finding applies."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "canonical-duplicate-content.md",
+      "schema-product-markup.md",
+      "image-seo-alt-text.md",
+      "url-structure-information-architecture.md",
+      "title-formulas-serp-psychology.md",
+      "content-freshness-signals.md",
+      "ai-search-agentic-discovery.md",
+      "benefit-first-descriptions.md"
+    ],
+    "sections_routed_to_cluster": 3,
+    "findings_by_verdict": {
+      "FAIL": 5,
+      "PARTIAL": 0,
+      "PASS": 1
+    }
+  }
+}

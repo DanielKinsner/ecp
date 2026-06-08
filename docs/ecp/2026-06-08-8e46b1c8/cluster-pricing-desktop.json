@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "pricing",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": "1M",
+    "temperature": 0.1
+  },
+  "started_at": "2026-06-08T22:30:00.000Z",
+  "completed_at": "2026-06-08T22:38:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Featured Collection Prices Run With No Reference Anchor",
+      "surface": "price-block",
+      "element": {
+        "baton_index": "e104",
+        "text_content": "Regular price\n          \n            From $135.99\n          ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "price-block-1",
+          "selector_hint": "div[class*=\"price\"]",
+          "text_quote": "From $135.99"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 931,
+          "viewport": "desktop",
+          "context": "Featured Collection grid. Seven of the eight visible products render a single bare price with no strikethrough or compare-at reference: Lloyd Mats 'FROM $135.99', Revo Designs '$49.00', Injen '$437.91', Tufskinz '$19.99', Tufskinz mirror flag 'FROM $59.99', Magnaflow '$1,766.00', Lloyd trunk mat 'FROM $135.99', Foamskinz '$64.99'. Only the Borla exhaust carries a was/now pair."
+        },
+        {
+          "type": "dom",
+          "reference": "e104",
+          "context": "Captured price element reads 'Regular price From $135.99' with no adjacent reference price."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 2: Advertised Reference Price Effects on Internal Reference Price Formation",
+          "tier": "Gold"
+        },
+        {
+          "source": "pricing-psychology.md",
+          "section": "Finding 25: Advertised Reference Price Effects on Internal Reference Price Formation",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Across the Featured Collection grid, prices appear as a single number with no reference price beside them — 'FROM $135.99', '$437.91', '$1,766.00', and the rest show no MSRP strikethrough, no 'compare at', and no 'was/now' pair. A visitor evaluating $437.91 or $1,766.00 in isolation has nothing to measure the number against, so the price anchors against whatever they last saw rather than against the product's market value. The Borla exhaust on the same row proves the theme already supports a reference price (it shows 'FROM $1,649.99' over a struck-through '$1,847.99'), so this is unused capability rather than a platform limit.",
+      "recommendation": "If a SKU has a manufacturer MSRP or a documented prior selling price, populate the compare-at field so the theme renders the reference price struck through above the live price, exactly as the Borla card already does. Apply it first to the higher-ticket items ($135.99 and up) where the absolute savings figure carries the most weight, and state the saving explicitly ('Save $198') so the deal magnitude is unmissable rather than left for the shopper to compute.",
+      "why_this_matters": "An advertised reference price raises the shopper's internal sense of the product's normal value before they even calculate the discount, lifting both perceived quality and deal attractiveness; without it a $1,766 part reads as expensive against nothing, suppressing click-through from the homepage into the product page.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "PARTIAL",
+      "title": "Was/Now Anchor Shown On One Product But Not The Grid",
+      "surface": "msrp-anchor",
+      "element": {
+        "baton_index": "e104",
+        "text_content": "Regular price\n          \n            From $135.99\n          ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.82,
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "price-block-1",
+          "selector_hint": "div[class*=\"price\"]",
+          "text_quote": "From $135.99"
+        },
+        "reason": "Captured price block stands in for the wider grid; the Borla was/now pair the finding praises is visible in section-2.jpg but was not individually captured."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 931,
+          "viewport": "desktop",
+          "context": "The Borla Cat-Back ATAK Exhaust card shows 'FROM $1,649.99' in red over a struck-through '$1,847.99' — a credible was/now reference framing. The seven sibling cards on the same and following row show no equivalent treatment."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 1: Comparative Price Advertising — Acquisition Value vs. Transaction Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Borla exhaust card does the anchoring job well: it pairs a live 'FROM $1,649.99' against a struck-through '$1,847.99', which signals both the product's worth and the quality of the deal. The problem is consistency — that treatment appears on exactly one of eight visible products, so the same grid teaches shoppers to expect a reference price and then withholds it everywhere else. A discount shown on one tile and absent on the next reads as arbitrary rather than as a coherent value story across the collection.",
+      "recommendation": "If other SKUs in the collection are genuinely discounted from a prior price, surface the was/now pair on those cards the same way the Borla card does, so the savings framing is uniform across the grid. Where a product is not on sale, lead instead with a credible MSRP reference rather than leaving the price bare, so every card communicates value on the same footing.",
+      "why_this_matters": "Comparative price framing works through two channels — the product's perceived worth and the perceived quality of the deal — and both require a credible reference price; a grid that anchors one product and not its neighbors leaves most of that conversion lift on the table and makes the lone discount look less believable.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No Installment Pricing On Items Over $1,000",
+      "surface": "bnpl-marker",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No installment / pay-in-4 messaging present at any price block",
+        "role": "text"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e104",
+        "placement": "after-element",
+        "viewport": "desktop",
+        "reason": "Installment messaging belongs immediately under each live price in the collection grid"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "payment-badges",
+          "anchor_relative_to": "e104",
+          "placement": "below"
+        },
+        "reason": "No installment marker exists at any price; ghost overlay sits under the captured price block where a 'pay in 4' line would render."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 931,
+          "viewport": "desktop",
+          "context": "High-ticket products carry no installment line: Borla 'FROM $1,649.99' and Magnaflow Cat-Back '$1,766.00' show only the price, with no Shop Pay Installments / Affirm / Klarna 'as low as $X/mo' messaging near the number."
+        },
+        {
+          "type": "visual",
+          "reference": "section-3.jpg",
+          "scroll_y": 1815,
+          "viewport": "desktop",
+          "context": "Footer payment row shows a Shop Pay mark alongside Visa/Mastercard/PayPal, confirming Shop Pay is enabled on the store — but it appears only as a static checkout badge in the footer, not as installment messaging at the price."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 1: BNPL Increases Basket Size 10% — Large-Scale Peer-Reviewed Evidence",
+          "tier": "Gold"
+        },
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 4: BNPL Display Optimization — Where and How to Show Installment Pricing",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "Several products in the Featured Collection sit well above $1,000 — the Borla exhaust at 'FROM $1,649.99' and the Magnaflow cat-back at '$1,766.00' — yet no price carries an installment option such as 'as low as $146/mo' or 'pay in 4'. The store clearly supports Shop Pay (its mark sits in the footer payment row next to Visa and PayPal), so the installment rail exists but is never surfaced where the buying decision is forming. Shoppers see the full four-figure number with no smaller, more approachable framing beside it.",
+      "recommendation": "If Shop Pay Installments (or Affirm/Klarna) is available on these SKUs, render the per-installment amount directly beneath each live price for items roughly $150 and up, with the provider logo for trust transfer. Lead with the installment figure and keep the full price visible in the same block, so a $1,766 part also reads as a manageable monthly commitment at the moment the shopper is weighing it.",
+      "why_this_matters": "A large-scale field study found installment availability raises purchase amounts by about 10% and purchase incidence by about 9%, with the effect concentrated on mid-to-high-ticket items; surfacing installments only at the footer instead of at the price forfeits that lift precisely on the four-figure parts where the immediate cost is the biggest barrier.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PARTIAL",
+      "title": "Free Shipping Bar States Threshold Without Progress Cue",
+      "surface": "shipping-threshold",
+      "element": {
+        "baton_index": "e34",
+        "text_content": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-1",
+          "selector_hint": "div[class*=\"announce\"]",
+          "text_quote": "FREE SHIPPING on most orders $75+ — Contiguous US only"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Top announcement bar reads 'FREE SHIPPING on most orders $75+ — Contiguous US only SHOP NOW'. The $75 threshold is stated as a flat condition; there is no progress indicator or 'you're $X away' cue tied to the visitor's cart."
+        },
+        {
+          "type": "dom",
+          "reference": "e34",
+          "context": "Announcement bar element carries the static threshold copy only."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 1: Goal-Gradient Effect — Scientific Foundation for Free Shipping Progress Bars",
+          "tier": "Gold"
+        },
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 5: Zero-Price Effect — Why \"Free\" Shipping Is Worth More Than Its Monetary Value",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The store communicates its free-shipping offer up front — 'FREE SHIPPING on most orders $75+ — Contiguous US only' sits in the persistent top bar, which correctly puts the offer in front of shoppers early. What is missing is any sense of progress toward it: the $75 figure is a flat statement, not a goal the shopper can see themselves approaching, and once items are in the cart there is no 'you're $18 away from free shipping' cue to convert the threshold into a basket-building target.",
+      "recommendation": "If the cart can read the running subtotal, add a dynamic progress message that names the specific remaining amount ('You're $18 away from FREE shipping') and updates as items are added, rather than only stating the flat $75 condition. Keep the existing header bar so the offer stays visible early, and pair it with add-on suggestions that would carry a near-qualifying order over the line.",
+      "why_this_matters": "The goal-gradient effect shows shoppers accelerate spend as they see themselves nearing a reward, and 'free' itself carries disproportionate pull beyond its dollar value; a naked threshold surfaces the offer but captures none of that basket-building motion that a live progress cue would convert into higher average order value.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "Degraded input: the element index captured only one price block (e104, 'From $135.99') despite the Featured Collection screenshot showing eight priced products, including a was/now pair on the Borla exhaust ('FROM $1,649.99' over '$1,847.99'). Findings 1-3 rely on the section-2 screenshot as primary evidence for the wider grid; the Borla was/now treatment and the four-figure SKUs are visible there but not individually indexed.",
+    "Price endings are mixed across the grid (.99, .00, .91, e.g. '$49.00', '$437.91', '$1,766.00'). For utilitarian auto parts the charm-vs-round distinction is near-neutral per the meta-analytic evidence, so this was observed but not emitted as a finding; the inconsistency is cosmetic rather than a conversion defect on this category.",
+    "Shipping cost itself is NOT flagged as a deceptive or drip-pricing issue — the $75 free-shipping threshold is disclosed up front and CA SB-478 / the FTC junk-fee rule exclude shipping. Any disclosure judgment on the 'most orders' / 'Contiguous US only' carve-out language is left to the separate ethics review."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "pricing-psychology.md",
+      "price-anchoring.md",
+      "free-shipping.md",
+      "bnpl-payment.md",
+      "evidence-tiers.md"
+    ],
+    "baton_elements_referenced": ["e34", "e104"],
+    "sections_routed_to_cluster": 1,
+    "findings_by_verdict": {"FAIL": 2, "PARTIAL": 2, "PASS": 0}
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "pricing",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": "1M",
+    "temperature": 0.1
+  },
+  "started_at": "2026-06-08T22:30:00.000Z",
+  "completed_at": "2026-06-08T22:38:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Featured \"From $135.99\" Price Carries No MSRP or Compare-At Anchor",
+      "surface": "price-block",
+      "element": {
+        "baton_index": "e89",
+        "text_content": "Regular price\n          \n            From $135.99\n          ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "price-block-1",
+          "selector_hint": "div[class*=\"price\"]",
+          "text_quote": "From $135.99"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1406,
+          "viewport": "mobile",
+          "context": "The Velourtex floor-mats card on the featured collection shows the price as a bare 'FROM $135.99' with a 'Made to Order' badge beside it. No strikethrough MSRP, no 'compare at', and no savings figure appear above or beside the number."
+        },
+        {
+          "type": "dom",
+          "reference": "e89",
+          "context": "Price group renders 'Regular price ... From $135.99' with no sibling compare-at or sale-price element."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "price-anchoring.md",
+          "section": "Finding 2: Advertised Reference Price Effects on Internal Reference Price Formation",
+          "tier": "Gold"
+        },
+        {
+          "source": "pricing-psychology.md",
+          "section": "anchoring",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The featured floor-mats listing prices at a flat 'FROM $135.99' with nothing to anchor it against — no manufacturer MSRP, no strikethrough 'regular price', and no stated savings. A shopper landing on the homepage sees a three-figure number for a floor mat with no reference point telling them whether that is a strong price or a steep one. The neighboring card ($49.00) sets the only on-page comparison, and it is roughly a third of the price, which makes the $135.99 item read as the expensive option rather than the premium one.",
+      "recommendation": "If these SKUs carry a manufacturer list price or a documented prior selling price, render it as a strikethrough above the live price (e.g. 'MSRP $169.99 — From $135.99') and state the savings in both dollars and percent. If no defensible reference price exists, anchor the mat against a complete-the-set framing — show the per-pair price next to the full-vehicle kit price — so the $135.99 reads as the entry point into a higher-tier purchase rather than a bare number.",
+      "why_this_matters": "An advertised reference price raises the buyer's internal 'normal' price for the item before they even calculate savings, lifting both perceived quality and deal attractiveness. Without one, a $135.99 part is judged against whatever the shopper last saw — here, a $49 item — and reads as expensive, suppressing click-through into the product page.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Installment / Pay-in-4 Pricing Shown Beside the $135.99 Item",
+      "surface": "bnpl-marker",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No installment price near From $135.99",
+        "role": "group"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e89",
+        "placement": "after-element",
+        "viewport": "mobile",
+        "reason": "Installment price (e.g. '4 payments of $34') belongs immediately below the live price on the product card"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "msrp-anchor",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No installment element exists on the card; ghost text below the price shows where a pay-in-4 line would render."
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1406,
+          "viewport": "mobile",
+          "context": "The 'FROM $135.99' card shows only the single price and a 'Made to Order' badge. No 'as low as $X/mo', no Shop Pay / Affirm / Klarna installment line appears anywhere near the price, on the card, or in the footer beyond the static Shop Pay wallet icon."
+        },
+        {
+          "type": "dom",
+          "reference": "e135",
+          "context": "Shop Pay appears only as a static wallet badge in the footer payment row, not as installment messaging on the price."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 1: BNPL Increases Basket Size 10% — Large-Scale Peer-Reviewed Evidence",
+          "tier": "Gold"
+        },
+        {
+          "source": "bnpl-payment.md",
+          "section": "Finding 4: BNPL Display Optimization — Where and How to Show Installment Pricing",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The $135.99 floor-mat set sits squarely in the mid-ticket band ($50-$500) where installment messaging does the most work, yet the card shows only the lump-sum price. Shop Pay is present as a wallet icon in the footer, so installment infrastructure is almost certainly already available at checkout, but the shopper never sees a 'pay in 4' or 'as low as $34' line at the point where purchase intent forms. The decoupled installment figure is the number that makes a three-figure part feel affordable, and it is absent.",
+      "recommendation": "If Shop Pay Installments (or Affirm/Klarna) is enabled on the store, surface the installment line on the product card and product page directly beneath the price — 'or 4 interest-free payments of $34.00' with the provider logo. Gate it to items above ~$50 so the installment amount stays meaningful, and always keep the full price visible alongside it for disclosure.",
+      "why_this_matters": "Large-scale peer-reviewed retail data shows adding BNPL lifts basket size about 10% and purchase incidence about 9%, with the gain concentrated on mid-ticket items exactly like this one. Showing the installment price only at checkout forfeits that lift, because the affordability reframe has to land before the buy decision is made, not after.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Free-Shipping Threshold Stated as a Static Banner With No Progress Framing",
+      "surface": "shipping-threshold",
+      "element": {
+        "baton_index": "e69",
+        "text_content": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "feature",
+        "change_scope": "component"
+      },
+      "confidence": 0.78,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-11",
+          "selector_hint": "div[class*=\"announce\"]",
+          "text_quote": "FREE SHIPPING on most orders $75+"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "The top announcement bar reads 'FREE SHIPPING on most orders $75+ — Contiguous US only'. The threshold is disclosed clearly and upfront, but it is a flat one-line banner; there is no progress indicator or 'you are $X away from free shipping' framing tied to the cart."
+        },
+        {
+          "type": "dom",
+          "reference": "e69"
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "free-shipping.md",
+          "section": "Finding 1: Goal-Gradient Effect — Scientific Foundation for Free Shipping Progress Bars",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The store states its free-shipping threshold plainly in the top bar — 'FREE SHIPPING on most orders $75+ — Contiguous US only' — which is the right disclosure and avoids cost-surprise later. What it does not do is convert that threshold into a moving target. The number is a static announcement; there is no progress framing such as 'You are $18 away from free shipping' that updates as items are added, so the threshold informs but never actively pulls basket size upward.",
+      "recommendation": "If the cart tracks order subtotal, add a goal-gradient progress line that names the exact remaining amount — 'You are $18.01 away from FREE shipping' — in the cart and mini-cart, updating live as items are added. Frame it from the shopper's current subtotal as a head start ('you have added $57 — $18 more for free shipping') rather than from zero, which sharpens the pull toward the threshold.",
+      "why_this_matters": "The goal-gradient effect — people accelerate effort as a goal comes into view — is the validated mechanism behind free-shipping progress bars, and specific remaining-amount framing measurably lifts average order value. A static threshold tells shoppers the rule; a live progress cue is what actually moves more carts past it.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "pricing",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Charm Pricing Used Correctly on Utilitarian Parts",
+      "surface": "price-block",
+      "element": {
+        "baton_index": "e89",
+        "text_content": "Regular price\n          \n            From $135.99\n          ",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-3-mobile.jpg",
+          "scroll_y": 1406,
+          "viewport": "mobile",
+          "context": "Featured prices use .99 / .00 endings ('From $135.99', '$49.00') consistent with the utilitarian auto-parts category."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "charm-pricing.md",
+          "section": "Finding 1: Meta-Analytic Evidence for Just-Below Pricing Effects",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Prices use .99 endings on utilitarian auto parts, which is the correct format for this value-positioned, non-luxury category — just-below pricing lifts purchase intent here without any quality-perception penalty. No change needed.",
+      "recommendation": "Keep .99 endings on functional parts. Reserve round pricing only for any genuinely premium or gift-style SKUs where round numbers read as more intentional.",
+      "why_this_matters": "Charm pricing is a low-cost micro-optimization that the meta-analytic evidence supports for non-luxury goods; using it correctly here means the page is not leaving the small but reliable just-below lift on the table.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "The 'most orders $75+ — Contiguous US only' shipping threshold is disclosed upfront in the site-wide bar; the shipping charge itself is not treated as a deceptive or drip-pricing concern (CA SB-478 excludes carriage charges and the threshold is visible before checkout). Any regulatory read belongs to the ethics evaluation, not this pricing lens.",
+    "Footer payment row shows Shop Pay among the wallet badges (e135), indicating installment infrastructure is likely available even though no installment messaging is surfaced on the price — see F-02.",
+    "Only one product price was captured on this homepage ('From $135.99', e89); a second visible card ('$49.00') had no separate price element in the captured index, so anchoring/BNPL findings are emitted at page scope to mirror the desktop view rather than per-card."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "pricing-psychology.md",
+      "price-anchoring.md",
+      "charm-pricing.md",
+      "free-shipping.md",
+      "bnpl-payment.md",
+      "price-transparency.md",
+      "evidence-tiers.md"
+    ],
+    "baton_elements_referenced": [
+      "e69",
+      "e89",
+      "e135"
+    ],
+    "sections_routed_to_cluster": 1,
+    "findings_by_verdict": {
+      "FAIL": 2,
+      "PARTIAL": 1,
+      "PASS": 1
+    }
+  }
+}

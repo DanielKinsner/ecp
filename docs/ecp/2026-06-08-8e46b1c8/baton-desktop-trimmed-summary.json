@@ -1,0 +1,29 @@
+{
+  "device": "desktop",
+  "elements_kept": 20,
+  "elements_total": 140,
+  "kept_e_indexes": [
+    "e2",
+    "e3",
+    "e4",
+    "e21",
+    "e22",
+    "e28",
+    "e29",
+    "e33",
+    "e34",
+    "e35",
+    "e40",
+    "e58",
+    "e79",
+    "e81",
+    "e86",
+    "e88",
+    "e104",
+    "e105",
+    "e113",
+    "e117"
+  ],
+  "referenced_count": 20,
+  "source": "baton.json"
+}

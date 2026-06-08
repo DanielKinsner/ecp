@@ -1,0 +1,2494 @@
+{
+  "review_state_schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "ai_draft_artifact": "visual-report-mobile-v2.html",
+  "created_at": "2026-06-08T23:30:32Z",
+  "updated_at": "2026-06-08T23:30:32Z",
+  "device": "mobile",
+  "findings": [
+    {
+      "f_ref": "category-navigation F-05",
+      "status": "needs_review",
+      "cluster": "category-navigation",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Shop by Vehicle Drawer Lists Only Two Vehicles",
+      "finding_title_override": null,
+      "finding_body": "Your 'Shop by Vehicle' menu lists only two vehicles, even though the lookup form implies you cover many more. A shopper who browses by vehicle lands on a near-empty page that suggests you may not carry parts for their car.",
+      "finding_body_override": null,
+      "observation": "Inside the menu drawer, the \"Shop by Vehicle\" browse path expands to just two destinations — Subaru WRX / STI and Ford Focus RS / ST. The fitment selector on the same page presents a full Make / Model / Year / Trim cascade, so a shopper who chooses to browse by vehicle instead of using the dropdowns lands on a near-empty hub that contradicts the catalogue depth the selector promises.",
+      "observation_override": null,
+      "recommendation": "Populate the Shop by Vehicle drawer with the full set of supported vehicle collections, or replace the static two-item list with a link into the dynamic fitment results. Either way, the by-vehicle browse path should reflect the same vehicle coverage the FIND PARTS selector implies.",
+      "recommendation_override": null,
+      "why_this_matters": "A vehicle hub that lists only two platforms both wastes internal-linking value for the rest of the vehicle collections and tells browse-mode shoppers the store may not carry parts for their car, pushing them to leave rather than search.",
+      "why_this_matters_override": null,
+      "callout_title": "Shop by Vehicle Drawer Lists Only Two Vehicles",
+      "callout_title_override": null,
+      "callout_body": "Populate the Shop by Vehicle menu with all supported vehicles, or link it into the live finder results.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 22.615000000000002,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-category-navigation-f-05",
+      "ai_suggested_marker_id": "marker-category-navigation-f-05-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 1,
+        "baton_index": "e36",
+        "match_method": "e_index_lookup",
+        "element": "`summary` (\"Shop by Vehicle\" drawer submenu) at e36 (y=757, height=467 CSS px)",
+        "section": "header-nav"
+      }
+    },
+    {
+      "f_ref": "category-navigation F-50",
+      "status": "needs_review",
+      "cluster": "category-navigation",
+      "severity": "HIGH",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Only Category Path in First Viewport Is the Hidden Hamburger Drawer",
+      "finding_title_override": null,
+      "finding_body": "A shopper who doesn't already know their exact vehicle has no visible way to browse by category on the first mobile screen — the departments are hidden behind the unlabeled hamburger menu, and the category cards only start at the very bottom. Browse-minded visitors conclude the store is hard to shop and leave.",
+      "finding_body_override": null,
+      "observation": "A shopper who does not already know their exact vehicle has no visible way to browse the catalogue by category in the first screen. The departments — Performance, Handling & Brakes, Interior, Exterior, Electronics — live entirely inside the off-canvas drawer behind the hamburger icon, plus a card carousel that only starts at the bottom edge of the first viewport. Browse-oriented visitors must either tap an unlabeled hamburger or scroll past the entire fitment form before any category name appears.",
+      "observation_override": null,
+      "recommendation": "Surface a compact row of named category links or tiles (Performance, Exterior, Interior, Handling, Electronics) directly beneath the fitment selector, above the fold. Keep the drawer as the exhaustive menu, but do not make it the only first-screen route into the catalogue.",
+      "recommendation_override": null,
+      "why_this_matters": "Around 40% of shoppers fail to locate navigation that is hidden behind a non-obvious control; an auto-parts buyer who cannot find their category in the first screen concludes the store is hard to shop and leaves before reaching a product grid.",
+      "why_this_matters_override": null,
+      "callout_title": "Only Category Path in First Viewport Is the Hidden Hamburger Drawer",
+      "callout_title_override": null,
+      "callout_body": "Show a compact row of named category links right under the vehicle selector, above the fold.",
+      "callout_color": "#F97316",
+      "callout_slide_id": "mobile-section-1",
+      "callout_position": {
+        "x_pct": 10.821,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-category-navigation-f-50",
+      "ai_suggested_marker_id": "marker-category-navigation-f-50-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 2,
+        "baton_index": "e105",
+        "match_method": "e_index_lookup",
+        "element": "`summary` (hamburger menu trigger) at e105 (y=54, height=46 CSS px)",
+        "section": "header-nav"
+      }
+    },
+    {
+      "f_ref": "category-navigation F-63",
+      "status": "needs_review",
+      "cluster": "category-navigation",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Category Carousel Reveals Roughly One Tile, Hiding Catalog Breadth",
+      "finding_title_override": null,
+      "finding_body": "Your mobile category carousel shows only one card at a time, so a shopper sees 'Performance' and just a sliver of the next card. They have to swipe blindly to discover the rest, so the true breadth of your catalog stays invisible on first view.",
+      "finding_body_override": null,
+      "observation": "The on-page category navigation is a horizontal carousel that displays one full card at a time — \"Performance\" dominates the viewport while only a thin edge of the next card peeks in. The five departments (Performance, Handling & Brakes, Interior, Exterior, Electronics) exist in the markup, but a shopper sees just one and must swipe blindly to discover the rest. The whole range never appears together, so the breadth of the catalogue is invisible on first view.",
+      "observation_override": null,
+      "recommendation": "Replace the one-card-at-a-time carousel with a 2-column tile grid or a peeking carousel that shows at least two cards plus a visible slice of a third, so the eye registers that multiple categories exist. Label the scroll affordance or show all five tiles stacked to make the breadth explicit.",
+      "recommendation_override": null,
+      "why_this_matters": "Position primacy means the first tile captures the bulk of attention and the rest are rarely reached; when a shopper cannot see that Interior, Exterior, and Electronics also exist, they assume the store is narrower than it is and self-route less effectively into the categories they actually want.",
+      "why_this_matters_override": null,
+      "callout_title": "Category Carousel Reveals Roughly One Tile, Hiding Catalog Breadth",
+      "callout_title_override": null,
+      "callout_body": "Show at least two full cards plus a peek of a third, or stack all the categories so the range is obvious.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-2",
+      "callout_position": {
+        "x_pct": 8.0,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-category-navigation-f-63",
+      "ai_suggested_marker_id": "marker-category-navigation-f-63-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/35%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 3,
+        "baton_index": "e15",
+        "match_method": "e_index_lookup",
+        "element": "`ul` (Performance category card list) at e15 (y=565, height=296 CSS px)",
+        "section": "subcategory-tiles"
+      }
+    },
+    {
+      "f_ref": "content-seo F-32",
+      "status": "needs_review",
+      "cluster": "content-seo",
+      "severity": "HIGH",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Title Tag Is Just the Brand Name Repeated Twice",
+      "finding_title_override": null,
+      "finding_body": "Your homepage's browser/search title is just 'AWDMods – AWDMods' — your brand name twice, with no mention of the parts or the cars you fit. Google has nothing to match against what shoppers actually search for, and it will usually rewrite a title this short on its own.",
+      "finding_body_override": null,
+      "observation": "The homepage title tag reads \"AWDMods – AWDMods\" — the brand name repeated, 17 characters total, with the second half wasted on a duplicate. There is no product category, no vehicle fitment (Focus RS/ST, WRX/STI), and no keyword a shopper would type. Titles under 30 characters get rewritten by Google more than 95% of the time, so even this thin title is unlikely to survive into the search result. The 51–60 character range that earns the most clicks is left almost entirely empty.",
+      "observation_override": null,
+      "recommendation": "Rewrite the title to front-load what AWDMods sells and which cars it fits, then close with the brand — for example \"Focus RS/ST & WRX/STI Performance Parts | AWDMods\" (around 49 characters). Keep the primary keyword in the first two to three words so it survives the F-pattern scan, and drop the duplicated brand name. This is a single-file change in the theme head.",
+      "recommendation_override": null,
+      "why_this_matters": "The title tag is the single biggest CTR lever for a page that already ranks. A title that is just the brand name twice gives Google nothing to match against a buyer's query and forfeits the 51–60 character window that drives the most clicks.",
+      "why_this_matters_override": null,
+      "callout_title": "Title Tag Is Just the Brand Name Repeated Twice",
+      "callout_title_override": null,
+      "callout_body": "Rewrite the title to lead with what you sell and which cars it fits, then your brand once at the end.",
+      "callout_color": "#F97316",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 16.718,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-content-seo-f-32",
+      "ai_suggested_marker_id": "marker-content-seo-f-32-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "breadcrumb-bar",
+          "anchor_relative_to": "e113",
+          "placement": "above"
+        },
+        "reason": "Title tag lives in the document head with no on-page element; ghost marker placed near the logo/brand mark"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 4,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_element",
+        "element": "`<title>` (`AWDMods – AWDMods`) at e100 (head element near the logo at y=171 CSS px)",
+        "section": "title-tag"
+      }
+    },
+    {
+      "f_ref": "content-seo F-62",
+      "status": "needs_review",
+      "cluster": "content-seo",
+      "severity": "HIGH",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Star Ratings and Prices Shown but No Product Schema",
+      "finding_title_override": null,
+      "finding_body": "Your featured products show ratings and prices on the phone screen, but none of it is written in the format Google Shopping and AI assistants read. So you can't earn star or price results in search, and AI shopping tools can't surface these products.",
+      "finding_body_override": null,
+      "observation": "The featured products display a 5.0-star rating and live prices (\"From $135.99\", \"$49.00\") in the page, but the structured data only declares `OnlineStore` and `WebSite` — there is no `Product`, `Offer`, or `AggregateRating` markup. The rating, price, and availability that customers can already see are not expressed in a form Google Shopping, ChatGPT Shopping, or Perplexity can read, so the page cannot earn rating-star or price rich results for these items.",
+      "observation_override": null,
+      "recommendation": "Add server-rendered JSON-LD on the product templates (and ideally an `ItemList` on this homepage) including `Product`/`Offer` with price, priceCurrency, and availability plus `AggregateRating` with ratingValue and ratingCount. `AggregateRating` must reflect real, unsuppressed review data. A controlled test found review schema alone lifted organic traffic about 20%.",
+      "recommendation_override": null,
+      "why_this_matters": "Without `Product` and `AggregateRating` markup the store forfeits star and price rich results that materially raise click-through, and it stays invisible to AI shopping agents that match products by structured Schema.org data plus identifiers.",
+      "why_this_matters_override": null,
+      "callout_title": "Star Ratings and Prices Shown but No Product Schema",
+      "callout_title_override": null,
+      "callout_body": "Add product and rating markup to the product templates that mirrors the prices and stars shoppers already see.",
+      "callout_color": "#F97316",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 47.744,
+        "y_pct": 40.341,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-content-seo-f-62",
+      "ai_suggested_marker_id": "marker-content-seo-f-62-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 5,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_element",
+        "element": "Product / AggregateRating JSON-LD (absent — proposed location: describing the priced, star-rated featured products, before e89 at y=1406 CSS px)",
+        "section": "product-schema"
+      }
+    },
+    {
+      "f_ref": "content-seo F-75",
+      "status": "needs_review",
+      "cluster": "content-seo",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Meta Description and Social Preview Are Placeholder Brand Text",
+      "finding_title_override": null,
+      "finding_body": "Your page has no real description for search results, your social-share description is just the word 'AWDMods', and there's no preview image. Search snippets, shared links, and AI previews all show no useful summary and no picture of what your store is.",
+      "finding_body_override": null,
+      "observation": "The homepage has no meta description, its Open Graph description is just the word \"AWDMods\", and there is no Open Graph image. Search engines therefore generate a snippet from whatever fragment they find, social shares and AI shopping previews show no descriptive summary, and there is no thumbnail for an AI agent or messaging app to display. None of these surfaces is given a single sentence describing that this is a performance-parts store for WRX, STI, Focus RS, and ST vehicles.",
+      "observation_override": null,
+      "recommendation": "Add a 140–155 character meta description and a matching `og:description` that name the catalog and audience — for example \"Performance and styling parts for Subaru WRX/STI and Ford Focus RS/ST — shop by vehicle and find the right fit fast.\" Add an `og:image` (the logo on a branded background works) so previews and AI thumbnails render an image.",
+      "recommendation_override": null,
+      "why_this_matters": "Descriptive metadata is what search snippets, social cards, and AI shopping previews show to qualify a click; leaving it null or as a bare brand word cedes that messaging to algorithms and removes the thumbnail that AI-referred traffic — which converts at higher intent — relies on.",
+      "why_this_matters_override": null,
+      "callout_title": "Meta Description and Social Preview Are Placeholder Brand Text",
+      "callout_title_override": null,
+      "callout_body": "Add a one-sentence description naming your catalog and audience, plus a preview image.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-1",
+      "callout_position": {
+        "x_pct": 33.641,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-content-seo-f-75",
+      "ai_suggested_marker_id": "marker-content-seo-f-75-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 6,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_element",
+        "element": "`meta[name=\"description\"]` (absent; `og:description` = \"AWDMods\") at e100 (head element near the logo at y=171 CSS px)",
+        "section": "meta-description"
+      }
+    },
+    {
+      "f_ref": "content-seo F-76",
+      "status": "needs_review",
+      "cluster": "content-seo",
+      "severity": "HIGH",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Featured Product Images Use CSS Class Names as Alt Text",
+      "finding_title_override": null,
+      "finding_body": "Your product images carry a string of code as their hidden description instead of a real one. Screen readers read that aloud, and Google Images and Lens can't tell what the photo shows — losing both accessibility and a large stream of visual-search shoppers.",
+      "finding_body_override": null,
+      "observation": "The Featured Collection product images carry their CSS class list (\"card__image motion-reduce object-center object-contain\") as their accessible name instead of descriptive alt text. A screen reader announces the class string, and Google Images and Google Lens have no readable subject for the image. Visually these are specific, identifiable products — the Velourtex fitted carpet floor mats and the wheel/stripe kit — so the absence of real alt text is both an accessibility gap and a lost visual-search opportunity. The same pattern repeats across the collection images (e23 through e31).",
+      "observation_override": null,
+      "recommendation": "Set the alt attribute from the product title field so each image gets descriptive text following the [Product Name] [Key Attribute] [View] pattern — for example \"Velourtex fitted carpet floor mats for Ford Focus RS / ST, set of 4, black with blue trim\". Fixing it at the card component level corrects every card on the page at once.",
+      "recommendation_override": null,
+      "why_this_matters": "Missing descriptive alt text is the most commonly cited WCAG 2.1 SC 1.1.1 violation in ADA web-accessibility lawsuits (3,948 US federal filings in 2025) and it makes product images invisible to Google Lens, which handles roughly 5 billion commercially-intentful visual searches a month.",
+      "why_this_matters_override": null,
+      "callout_title": "Featured Product Images Use CSS Class Names as Alt Text",
+      "callout_title_override": null,
+      "callout_body": "Set each image's description from the product name at the template level.",
+      "callout_color": "#F97316",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 13.641,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-content-seo-f-76",
+      "ai_suggested_marker_id": "marker-content-seo-f-76-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img[alt]:not([alt=\"\"])",
+          "text_quote": "card__image motion-reduce object-center",
+          "baton_index": "e23"
+        }
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 7,
+        "baton_index": "e23",
+        "match_method": "e_index_lookup",
+        "element": "`img[alt]:not([alt=\"\"])` (Velourtex floor-mats image) at e23 (y=1000, height=266 CSS px)",
+        "section": "image-alt-text"
+      }
+    },
+    {
+      "f_ref": "content-seo F-87",
+      "status": "needs_review",
+      "cluster": "content-seo",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Homepage Has Almost No Descriptive or Benefit-First Copy",
+      "finding_title_override": null,
+      "finding_body": "The homepage has almost no descriptive text — just a lookup form, category labels, product cards, and a newsletter prompt. A first-time visitor (and an AI shopping assistant) has no sentence telling them what you specialize in or why to buy here.",
+      "finding_body_override": null,
+      "observation": "The homepage carries almost no descriptive text. The hero is a search field plus four \"Select Make/Model/Year/Trim\" dropdowns and a FIND PARTS button with no headline or value statement; the lower page is category labels (\"Performance\", \"Intakes\", \"Exhaust\"), product cards, and a newsletter prompt. There is no sentence that tells a first-time visitor — or an AI shopping assistant — what the store specializes in, which vehicles it fits, or why to buy here. The one descriptive line on the page is the newsletter blurb naming Focus RS/ST and WRX/STI.",
+      "observation_override": null,
+      "recommendation": "Add a short benefit-first intro block beneath the vehicle selector: one headline and two or three sentences naming the audience (WRX/STI, Focus RS/ST owners), the value (verified fitment, curated performance and styling parts), and what to do next. Lead with the outcome, then the specifics, so the copy both reassures shoppers and gives crawlers extractable content.",
+      "recommendation_override": null,
+      "why_this_matters": "Insufficient on-page information drives roughly 20% of purchase task failures, and a homepage with no descriptive copy gives AI shopping agents nothing to extract when a shopper asks what the store sells, suppressing both human conversion and AI-referred discovery.",
+      "why_this_matters_override": null,
+      "callout_title": "Homepage Has Almost No Descriptive or Benefit-First Copy",
+      "callout_title_override": null,
+      "callout_body": "Add a short benefit-led intro below the vehicle selector naming your audience, your value, and what to do next.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-2",
+      "callout_position": {
+        "x_pct": 58.0,
+        "y_pct": 48.28,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-content-seo-f-87",
+      "ai_suggested_marker_id": "marker-content-seo-f-87-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "section-match",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "reason": "Derived from proposed_anchor.kind=section, placement=after-section (baton_index=absent)"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 8,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_section",
+        "element": "intro/value-proposition block (absent — proposed location: below the vehicle-selector hero, before the category cards)",
+        "section": "description-block"
+      }
+    },
+    {
+      "f_ref": "ethics F-16",
+      "status": "needs_review",
+      "cluster": "ethics",
+      "severity": "MEDIUM",
+      "ethics_state": "ADJACENT",
+      "verdict": "FAIL",
+      "finding_title": "Privacy Policy Links to Staging Domain, Not Canonical Store",
+      "finding_title_override": null,
+      "finding_body": "Your footer Privacy Policy link points to a Shopify staging web address (e1520g-k3.myshopify.com) instead of your own awdmods.com. A shopper checking your privacy practices lands on an unbranded page that doesn't clearly belong to AWDMods, which creates avoidable legal exposure under California privacy law.",
+      "finding_body_override": null,
+      "observation": "The Privacy Policy footer link points to `https://e1520g-k3.myshopify.com/policies/privacy-policy` — a Shopify development/staging domain — rather than a canonical first-party URL on awdmods.com. A visitor clicking through to review the store's data practices lands on a page hosted under an unbranded third-party domain with no visible relationship to AWDMods. CCPA/CPRA (Cal. Civ. Code § 1798.100 et seq.) requires that the privacy notice be reasonably accessible and clearly attributable to the business collecting the data; a policy hosted on a staging domain does not clearly identify AWDMods as the data controller. The Terms and Conditions link correctly uses the canonical `/pages/terms-of-service` path, confirming this is a configuration oversight rather than intentional design.",
+      "observation_override": null,
+      "recommendation": "Update the Privacy Policy footer link `href` from `https://e1520g-k3.myshopify.com/policies/privacy-policy` to the canonical first-party URL (`https://www.awdmods.com/policies/privacy-policy` or the relative path `/policies/privacy-policy`). In Shopify admin, navigate to Online Store → Navigation → Footer menu and update the link destination. Confirm the policy page loads correctly at the canonical URL before publishing.",
+      "recommendation_override": null,
+      "why_this_matters": "A staging-domain URL breaks the chain of attribution — a consumer reading the policy sees `e1520g-k3.myshopify.com`, not AWDMods — and creates unnecessary exposure in the event of a CCPA enforcement inquiry or class action. The fix costs nothing and removes the ambiguity entirely.",
+      "why_this_matters_override": null,
+      "callout_title": "Privacy Policy Links to Staging Domain, Not Canonical Store",
+      "callout_title_override": null,
+      "callout_body": "Update the Privacy Policy link to your own awdmods.com address in your store's footer menu.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 22.615000000000002,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-ethics-f-16",
+      "ai_suggested_marker_id": "marker-ethics-f-16-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 36%w/160%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 9,
+        "baton_index": "e4",
+        "match_method": "e_index_lookup",
+        "element": "`footer` (Information block, Privacy Policy link) at e4 (footer region, last block on the page)",
+        "section": "footer-policy-links"
+      }
+    },
+    {
+      "f_ref": "performance-ux F-17",
+      "status": "needs_review",
+      "cluster": "performance-ux",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "PARTIAL",
+      "finding_title": "Featured Collection Product Images Carry No Explicit Dimensions for CLS",
+      "finding_title_override": null,
+      "finding_body": "Your featured product images on mobile don't reserve their space before they load, so the swipeable row can jump as photos arrive — and the quick-add badge can shift right as a thumb reaches for it. Small screens absorb that jump poorly.",
+      "finding_body_override": null,
+      "observation": "The Featured Collection product images sit below the fold in a horizontally swipeable row and are lazy-loaded, which is correct for off-screen media. What is missing is the safeguard: if these card images do not carry explicit width and height (or a CSS `aspect-ratio` reserving their square footprint), the cards have no reserved space until each image arrives, so the row can reflow as a phone slowly pulls them in over cellular. On mobile the small screen absorbs layout shift poorly, and the orange quick-add badge overlapping each image is a tap target that can jump as the card settles.",
+      "observation_override": null,
+      "recommendation": "Add explicit `width` and `height` attributes or a CSS `aspect-ratio` on the card image so the browser holds the space before the image loads. This keeps the Featured Collection row stable as the visitor swipes and prevents the quick-add badge from shifting under a thumb.",
+      "recommendation_override": null,
+      "why_this_matters": "Cumulative layout shift causes misclicks and erodes trust, and its impact is proportionally larger on mobile because the screen has less room to absorb a reflow; a shifting product row at the moment a visitor reaches for the quick-add badge directly costs add-to-cart actions.",
+      "why_this_matters_override": null,
+      "callout_title": "Featured Collection Product Images Carry No Explicit Dimensions for CLS",
+      "callout_title_override": null,
+      "callout_body": "Set fixed dimensions or an aspect ratio on the card images so the row stays stable while loading.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 13.641,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-performance-ux-f-17",
+      "ai_suggested_marker_id": "marker-performance-ux-f-17-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img.card__image",
+          "text_quote": "Featured Collection product card image",
+          "baton_index": "e23"
+        },
+        "reason": "Anchored on the first Featured Collection card image; the CLS risk applies to the whole lazy-loaded card row."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 10,
+        "baton_index": "e23",
+        "match_method": "e_index_lookup",
+        "element": "`img.card__image` at e23 (y=1000, height=266 CSS px)",
+        "section": "product-card-grid"
+      }
+    },
+    {
+      "f_ref": "performance-ux F-18",
+      "status": "needs_review",
+      "cluster": "performance-ux",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "No Sticky Header or Cart Once the Visitor Scrolls Past the First Screen",
+      "finding_title_override": null,
+      "finding_body": "On mobile your header (with search, cart, and menu) scrolls away and never comes back. Once a shopper moves past the first screen, getting to search or the cart means scrolling all the way back to the top.",
+      "finding_body_override": null,
+      "observation": "The header that holds search, the cart, and the menu sits at the top and scrolls away with the page — it is not pinned. Once a mobile visitor moves past the first screen into the category carousel and the Featured Collection, there is no persistent way to search, open the cart, or jump back to the vehicle finder without scrolling back to the very top. On a phone, where the natural easy-reach zone is the bottom of the screen, the most-used actions live in the hard-to-reach top corners and then disappear entirely.",
+      "observation_override": null,
+      "recommendation": "Pin a compact sticky bar — logo, search, and cart — to the top or bottom of the mobile viewport so it stays reachable on scroll. A bottom bar keeps these actions in the natural thumb zone and shows a cart count badge for ongoing context.",
+      "recommendation_override": null,
+      "why_this_matters": "Hidden or disappearing navigation consistently depresses engagement on mobile; when the cart and search vanish on scroll, every return trip costs the visitor a full-page scroll, which is exactly the friction that pushes phone shoppers to abandon.",
+      "why_this_matters_override": null,
+      "callout_title": "No Sticky Header or Cart Once the Visitor Scrolls Past the First Screen",
+      "callout_title_override": null,
+      "callout_body": "Pin a compact bar with search and cart so it stays reachable while scrolling.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-2",
+      "callout_position": {
+        "x_pct": 58.0,
+        "y_pct": 82,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-performance-ux-f-18",
+      "ai_suggested_marker_id": "marker-performance-ux-f-18-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "section-match",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "sticky-cta",
+          "anchor_relative_to": "viewport",
+          "placement": "sticky-viewport-bottom"
+        },
+        "reason": "No element exists for the missing persistent bar; ghost overlay at the viewport bottom shows where a sticky search/cart bar should live."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 11,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_viewport",
+        "element": "sticky header/cart bar (absent — proposed location: viewport-bottom-sticky, reachable in the thumb zone once the header scrolls away)",
+        "section": "header-nav"
+      }
+    },
+    {
+      "f_ref": "performance-ux F-76",
+      "status": "needs_review",
+      "cluster": "performance-ux",
+      "severity": "HIGH",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "No Above-Fold Image Preload; 74 Checkout Scripts Prefetched on Home Load",
+      "finding_title_override": null,
+      "finding_body": "Your homepage loads 74 checkout-related scripts before anyone is checking out, while giving no priority to the images people actually need to see. On a phone over cellular that wasted download competes with your real content and slows the first screen.",
+      "finding_body_override": null,
+      "observation": "The page head fires 74 prefetch tags for the Shopify checkout bundle (polyfills, OnePage, Google Pay, PayPal, address autocomplete, and dozens more) on the homepage, where no one is checking out yet. On a phone over cellular, that network contention competes with the assets the visitor actually needs to see and act on. At the same time the head carries no preload for any above-fold image, so the browser discovers and prioritizes the visible content late. The first mobile viewport is the free-shipping bar over a dark vehicle finder with no prioritized imagery to settle the layout quickly.",
+      "observation_override": null,
+      "recommendation": "Gate the checkout-web bundle so it only fires on the cart and checkout routes, not the homepage. If a specific element is the mobile LCP target (the logo or the first category tile), add a matching `rel=\"preload\" as=\"image\"` with `fetchpriority=\"high\"` in the head so the browser starts fetching it before it parses down to the markup.",
+      "recommendation_override": null,
+      "why_this_matters": "Each 0.1s of mobile load time tracks to roughly 8% retail conversion, and prefetching the entire checkout codebase on a page no one is checking out from is pure latency tax paid by every mobile visitor. Slow first paint also reads as an untrustworthy store before the visitor has evaluated a single product.",
+      "why_this_matters_override": null,
+      "callout_title": "No Above-Fold Image Preload; 74 Checkout Scripts Prefetched on Home Load",
+      "callout_title_override": null,
+      "callout_body": "Load the checkout scripts only on the cart and checkout pages, and prioritize your first visible image.",
+      "callout_color": "#F97316",
+      "callout_slide_id": "mobile-section-1",
+      "callout_position": {
+        "x_pct": 8.0,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-performance-ux-f-76",
+      "ai_suggested_marker_id": "marker-performance-ux-f-76-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e69",
+          "selector_hint": "div[class*=announce]",
+          "text_quote": "FREE SHIPPING on most orders $75+"
+        },
+        "reason": "Anchored on the topmost above-fold element since the cost is a head-level loading-priority problem with no single visual element."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 12,
+        "baton_index": "e69",
+        "match_method": "e_index_lookup",
+        "element": "`div[class*=\"announce\"]` (free-shipping bar) at e69 (y=0, height=41 CSS px)",
+        "section": "third-party-scripts"
+      }
+    },
+    {
+      "f_ref": "performance-ux F-95",
+      "status": "needs_review",
+      "cluster": "performance-ux",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "PARTIAL",
+      "finding_title": "Vehicle Finder Pushes Two of Four Dropdowns and Find Parts Below the Fold",
+      "finding_title_override": null,
+      "finding_body": "On a phone, the four vehicle dropdowns plus the FIND PARTS button stack tall enough that the button — the start of the whole shopping journey — falls below the first screen. The visitor must make four choices and scroll before they can even run the search.",
+      "finding_body_override": null,
+      "observation": "The vehicle finder is the page's primary task, but on a 390-wide phone its four sequential dropdowns (Make, Model, Year, Trim) plus the FIND PARTS button stack vertically and the action button lands below the first screen — Year, Trim, and the button are all flagged below the fold. The visitor has to make four ordered selections and scroll before they can run the search. None of the four dropdowns shows a pre-selected default, so every field is an active decision from a cold start.",
+      "observation_override": null,
+      "recommendation": "Tighten the vertical rhythm so at least Make, Model, and the FIND PARTS button fit the first mobile screen, and pre-select the most common Make or collapse Year and Trim until Make and Model are chosen. Sequential disclosure (reveal Year only after Model is set) reduces the number of choices visible at once and keeps the action in view.",
+      "recommendation_override": null,
+      "why_this_matters": "When the only action that starts the shopping journey sits below the fold behind four cold-start decisions, a share of mobile visitors never reach it; each added equally-weighted choice raises decision time and the odds of a silent bounce before the first product is ever seen.",
+      "why_this_matters_override": null,
+      "callout_title": "Vehicle Finder Pushes Two of Four Dropdowns and Find Parts Below the Fold",
+      "callout_title_override": null,
+      "callout_body": "Tighten the spacing so the button fits the first screen, and reveal Year and Trim only after Make and Model are chosen.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-2",
+      "callout_position": {
+        "x_pct": 25.949,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-performance-ux-f-95",
+      "ai_suggested_marker_id": "marker-performance-ux-f-95-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e84",
+          "selector_hint": "button",
+          "text_quote": "Find parts"
+        },
+        "reason": "Anchored on the FIND PARTS button, the conversion action that falls below the first mobile screen."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 13,
+        "baton_index": "e84",
+        "match_method": "e_index_lookup",
+        "element": "`button` (\"Find parts\") at e84 (y=466, height=55 CSS px)",
+        "section": "fitment-guide"
+      }
+    },
+    {
+      "f_ref": "pricing F-43",
+      "status": "needs_review",
+      "cluster": "pricing",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Featured \"From $135.99\" Price Carries No MSRP or Compare-At Anchor",
+      "finding_title_override": null,
+      "finding_body": "On mobile the featured floor-mat set shows a flat 'FROM $135.99' with nothing to compare it to, and the neighboring $49 card becomes the only reference — making the $135.99 item look expensive rather than premium. Shoppers have no anchor for whether that's a good price.",
+      "finding_body_override": null,
+      "observation": "The featured floor-mats listing prices at a flat \"FROM $135.99\" with nothing to anchor it against — no manufacturer MSRP, no strikethrough \"regular price\", and no stated savings. A shopper landing on the homepage sees a three-figure number for a floor mat with no reference point telling them whether that is a strong price or a steep one. The neighboring card ($49.00) sets the only on-page comparison, and it is roughly a third of the price, which makes the $135.99 item read as the expensive option rather than the premium one.",
+      "observation_override": null,
+      "recommendation": "Render any manufacturer list price or documented prior selling price as a strikethrough above the live price (e.g. \"MSRP $169.99 — From $135.99\") and state the savings in both dollars and percent. If no defensible reference price exists, anchor the mat against a complete-the-set framing — show the per-pair price next to the full-vehicle kit price — so the $135.99 reads as the entry point into a higher-tier purchase rather than a bare number.",
+      "recommendation_override": null,
+      "why_this_matters": "An advertised reference price raises the buyer's internal \"normal\" price for the item before they even calculate savings, lifting both perceived quality and deal attractiveness. Without one, a $135.99 part is judged against whatever the shopper last saw — here, a $49 item — and reads as expensive, suppressing click-through into the product page.",
+      "why_this_matters_override": null,
+      "callout_title": "Featured \"From $135.99\" Price Carries No MSRP or Compare-At Anchor",
+      "callout_title_override": null,
+      "callout_body": "Show a crossed-out reference price above the live price, or frame it as the entry point into a higher-tier set.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 19.026,
+        "y_pct": 43.185,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-pricing-f-43",
+      "ai_suggested_marker_id": "marker-pricing-f-43-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "price-block-1",
+          "selector_hint": "div[class*=\"price\"]",
+          "text_quote": "From $135.99",
+          "baton_index": "e89"
+        }
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 14,
+        "baton_index": "e89",
+        "match_method": "e_index_lookup",
+        "element": "`div[class*=\"price\"]` (\"From $135.99\") at e89 (y=1406, height=28 CSS px)",
+        "section": "price-block"
+      }
+    },
+    {
+      "f_ref": "pricing F-51",
+      "status": "needs_review",
+      "cluster": "pricing",
+      "severity": "LOW",
+      "ethics_state": "",
+      "verdict": "PARTIAL",
+      "finding_title": "Free-Shipping Threshold Stated as a Static Banner With No Progress Framing",
+      "finding_title_override": null,
+      "finding_body": "Your free-shipping threshold is shown as a plain top-bar statement with no live 'you're $18 away' nudge tied to the cart. It tells shoppers the rule but never actively pulls them toward adding one more item.",
+      "finding_body_override": null,
+      "observation": "The store states its free-shipping threshold plainly in the top bar — \"FREE SHIPPING on most orders $75+ — Contiguous US only\" — which is the right disclosure and avoids cost-surprise later. What it does not do is convert that threshold into a moving target. The number is a static announcement; there is no progress framing such as \"You are $18 away from free shipping\" that updates as items are added, so the threshold informs but never actively pulls basket size upward.",
+      "observation_override": null,
+      "recommendation": "Add a goal-gradient progress line that names the exact remaining amount — \"You are $18.01 away from FREE shipping\" — in the cart and mini-cart, updating live as items are added. Frame it from the shopper's current subtotal as a head start (\"you have added $57 — $18 more for free shipping\") rather than from zero, which sharpens the pull toward the threshold.",
+      "recommendation_override": null,
+      "why_this_matters": "The goal-gradient effect — people accelerate effort as a goal comes into view — is the validated mechanism behind free-shipping progress bars, and specific remaining-amount framing measurably lifts average order value. A static threshold tells shoppers the rule; a live progress cue is what actually moves more carts past it.",
+      "why_this_matters_override": null,
+      "callout_title": "Free-Shipping Threshold Stated as a Static Banner With No Progress Framing",
+      "callout_title_override": null,
+      "callout_body": "Add a live progress message in the cart showing the exact amount left to reach free shipping.",
+      "callout_color": "#60A5FA",
+      "callout_slide_id": "mobile-section-1",
+      "callout_position": {
+        "x_pct": 8.0,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-pricing-f-51",
+      "ai_suggested_marker_id": "marker-pricing-f-51-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/5%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 15,
+        "baton_index": "e69",
+        "match_method": "e_index_lookup",
+        "element": "`div[class*=\"announce\"]` (free-shipping bar) at e69 (y=0, height=41 CSS px)",
+        "section": "shipping-threshold"
+      }
+    },
+    {
+      "f_ref": "pricing F-96",
+      "status": "needs_review",
+      "cluster": "pricing",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "No Installment / Pay-in-4 Pricing Shown Beside the $135.99 Item",
+      "finding_title_override": null,
+      "finding_body": "The $135.99 item sits in the price range where 'pay over time' helps most, but the card shows only the lump sum. Shop Pay is already in your footer, so the option likely exists at checkout — but shoppers never see a friendlier monthly figure while they're deciding.",
+      "finding_body_override": null,
+      "observation": "The $135.99 floor-mat set sits squarely in the mid-ticket band ($50–$500) where installment messaging does the most work, yet the card shows only the lump-sum price. Shop Pay is present as a wallet icon in the footer, so installment infrastructure is almost certainly already available at checkout, but the shopper never sees a \"pay in 4\" or \"as low as $34\" line at the point where purchase intent forms. The decoupled installment figure is the number that makes a three-figure part feel affordable, and it is absent.",
+      "observation_override": null,
+      "recommendation": "Surface the installment line on the product card and product page directly beneath the price — \"or 4 interest-free payments of $34.00\" with the provider logo. Gate it to items above ~$50 so the installment amount stays meaningful, and always keep the full price visible alongside it for disclosure.",
+      "recommendation_override": null,
+      "why_this_matters": "Large-scale peer-reviewed retail data shows adding BNPL lifts basket size about 10% and purchase incidence about 9%, with the gain concentrated on mid-ticket items exactly like this one. Showing the installment price only at checkout forfeits that lift, because the affordability reframe has to land before the buy decision is made, not after.",
+      "why_this_matters_override": null,
+      "callout_title": "No Installment / Pay-in-4 Pricing Shown Beside the $135.99 Item",
+      "callout_title_override": null,
+      "callout_body": "Show a 'pay in 4' or 'as low as $34' line under the price on items over about $50.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 47.744,
+        "y_pct": 49.346,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-pricing-f-96",
+      "ai_suggested_marker_id": "marker-pricing-f-96-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "msrp-anchor",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No installment element exists on the card; ghost text below the price shows where a pay-in-4 line would render."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 16,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_element",
+        "element": "installment line (absent — proposed location: immediately below the live price on the product card, after e89 at y=1406 CSS px)",
+        "section": "price-block"
+      }
+    },
+    {
+      "f_ref": "trust-credibility F-13",
+      "status": "needs_review",
+      "cluster": "trust-credibility",
+      "severity": "HIGH",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Featured Collection Cards Show 5.0/5.0 With No Review Count",
+      "finding_title_override": null,
+      "finding_body": "On mobile the featured products show a perfect 5.0 rating with no review count beside it, and only on some cards. A bare 5.0 with no number gives shoppers nothing to weigh and reads as less believable than a 4.4 backed by a visible count.",
+      "finding_body_override": null,
+      "observation": "The Featured Collection cards display a perfect 5.0/5.0 star rating with no review count anywhere beside the stars, and the rating appears on some cards but not others in the same row. A bare 5.0 with no count gives a shopper nothing to weigh: they cannot tell whether the average rests on two ratings or two hundred, and a flawless 5.0 reads as less believable than a 4.4 backed by a visible count. Purchase likelihood peaks in the 4.0–4.7 range and declines as the average approaches 5.0, so a perfect score shown without the volume behind it works against the card rather than for it.",
+      "observation_override": null,
+      "recommendation": "Render the review count next to every star row (for example \"5.0 (8)\" or \"5.0 — 8 reviews\") and show the rating on all cards consistently, not just some. If a product has fewer than five reviews, prioritize collecting more before featuring it, since the first five reviews carry the bulk of the conversion lift; if a product genuinely has only a handful of perfect ratings, showing the small count is more credible than showing a bare 5.0.",
+      "recommendation_override": null,
+      "why_this_matters": "Products with five reviews convert at roughly 270% the rate of products with none, and that lift depends on the shopper seeing the volume; a perfect 5.0 shown with no count both withholds the volume signal and trips the \"too good to be true\" skepticism that suppresses click-through on featured products.",
+      "why_this_matters_override": null,
+      "callout_title": "Featured Collection Cards Show 5.0/5.0 With No Review Count",
+      "callout_title_override": null,
+      "callout_body": "Show the review count next to every star rating, and display ratings consistently on all cards.",
+      "callout_color": "#F97316",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 74,
+        "y_pct": 45.318,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-trust-credibility-f-13",
+      "ai_suggested_marker_id": "marker-trust-credibility-f-13-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e90",
+          "selector_hint": "[class*=\"rating\"]",
+          "text_quote": "5.0 / 5.0"
+        },
+        "reason": "Tight rect on the rating widget inside the Featured Collection card; the 5.0/5.0 value is the finding's exact subject."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 17,
+        "baton_index": "e90",
+        "match_method": "e_index_lookup",
+        "element": "`div[class*=\"rating\"]` (\"5.0 / 5.0\") at e90 (y=1424, height=21 CSS px)",
+        "section": "star-rating-widget"
+      }
+    },
+    {
+      "f_ref": "trust-credibility F-15",
+      "status": "needs_review",
+      "cluster": "trust-credibility",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Star Ratings Carry No AggregateRating Markup for Search Results",
+      "finding_title_override": null,
+      "finding_body": "Your product ratings show on the page but aren't written in the behind-the-scenes format search engines read, so Google can't show star ratings in your search results. You pay the cost of displaying ratings without earning the search visibility they could buy.",
+      "finding_body_override": null,
+      "observation": "The product cards show a star rating on screen, but the page's structured data contains only store-level and website-level markup with no `AggregateRating` or `Review` schema behind those stars. That means the ratings are visible to a person scrolling the page but invisible to search engines, which cannot render star snippets in results for ratings they cannot read. A controlled split test found that adding `AggregateRating` markup alone lifted organic traffic by roughly 20%, so a rating that exists on the page but not in the markup leaves that lift on the table.",
+      "observation_override": null,
+      "recommendation": "Add `AggregateRating` JSON-LD to each rated product (and to the product objects surfaced on the homepage) with `ratingValue` plus a real `ratingCount` or `reviewCount`, mirroring exactly what the page displays. If a review app is already collecting the ratings, enable its schema output rather than hand-coding; verify the result in Google's Rich Results Test so the values match the visible stars.",
+      "recommendation_override": null,
+      "why_this_matters": "Star snippets in search results are one of the highest-ROI organic-visibility wins available, and a ~20% organic-traffic uplift was measured from review schema alone; without the markup the store earns the trust cost of displaying ratings while forfeiting the search visibility those same ratings could buy.",
+      "why_this_matters_override": null,
+      "callout_title": "Star Ratings Carry No AggregateRating Markup for Search Results",
+      "callout_title_override": null,
+      "callout_body": "Add rating markup that mirrors the stars you already show, or turn it on in your review app.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-2",
+      "callout_position": {
+        "x_pct": 39.025999999999996,
+        "y_pct": 52.427,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-trust-credibility-f-15",
+      "ai_suggested_marker_id": "marker-trust-credibility-f-15-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "reviews-block",
+          "anchor_relative_to": "e86",
+          "placement": "below"
+        },
+        "reason": "No DOM element carries the rating markup; ghost overlay sits below the Featured Collection heading where the rated cards appear."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 18,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_element",
+        "element": "AggregateRating JSON-LD (absent — proposed location: on the product cards under the Featured Collection heading e86 at y=938 CSS px)",
+        "section": "review-schema-markup"
+      }
+    },
+    {
+      "f_ref": "trust-credibility F-27",
+      "status": "needs_review",
+      "cluster": "trust-credibility",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "No Guarantee or Return-Policy Reassurance Near the Products",
+      "finding_title_override": null,
+      "finding_body": "There's no returns, guarantee, or warranty message anywhere near your products. For a made-to-order $135.99 mat set, the shopper's real question is 'what if it doesn't fit my car?' and the page answers it nowhere they're actually deciding.",
+      "finding_body_override": null,
+      "observation": "The homepage carries exactly two trust cues: a free-shipping bar pinned to the top and a payment-mark row buried in the footer. There is no money-back guarantee, no returns reassurance, and no warranty cue anywhere near the products themselves. For an automotive-parts store where a Made-to-Order floor mat set runs $135.99, the shopper's live question is \"what happens if this doesn't fit my car?\" and the page gives no answer at the point of consideration. A short returns or guarantee statement near the price answers that question where it is being asked.",
+      "observation_override": null,
+      "recommendation": "Surface a one-line reassurance near the product cards and the Find Parts action (for example \"Easy 30-day returns\" or \"Fitment guaranteed or your money back\"). Frame it as a confident promise rather than a conditional escape clause, since positive framing converts better; keep the full policy linked from the footer as it is today.",
+      "recommendation_override": null,
+      "why_this_matters": "Return-policy and guarantee visibility is one of the strongest purchase-decision factors for online shoppers and a documented driver of conversion lift; for fitment-sensitive automotive parts at this price point, the absence of any reassurance near the product leaves the shopper's biggest objection unanswered exactly when they would act.",
+      "why_this_matters_override": null,
+      "callout_title": "No Guarantee or Return-Policy Reassurance Near the Products",
+      "callout_title_override": null,
+      "callout_body": "Add a short, confident reassurance like 'Fitment guaranteed or your money back' near the product cards.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-3",
+      "callout_position": {
+        "x_pct": 47.744,
+        "y_pct": 49.346,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-trust-credibility-f-27",
+      "ai_suggested_marker_id": "marker-trust-credibility-f-27-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "trust-strip",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No element carries a guarantee or return cue; ghost trust strip sits beneath the card price where the reassurance should appear."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 19,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_element",
+        "element": "guarantee/returns cue (absent — proposed location: adjacent to the product price, after e89 at y=1406 CSS px)",
+        "section": "guarantee-policy-block"
+      }
+    },
+    {
+      "f_ref": "trust-credibility F-28",
+      "status": "needs_review",
+      "cluster": "trust-credibility",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "PARTIAL",
+      "finding_title": "Payment Badges Sit Only in Footer, Far From Any Buying Decision",
+      "finding_title_override": null,
+      "finding_body": "Every payment logo you accept sits only at the very bottom of the page, below the copyright. Those logos reassure shoppers most at the moment they decide to act — near the products and the Find Parts action — not after the decision is already made.",
+      "finding_body_override": null,
+      "observation": "Every recognized payment mark the store accepts is confined to one row at the bottom of the footer, below the copyright. The brands themselves are strong (PayPal carries the highest eye-tracking notice rate of the common seals, and Visa and Mastercard are universally recognized), so the asset is good, but placement is doing little work. A badge in the footer reads as decoration; a badge shown where the shopper is deciding to act reassures them at the exact moment the question \"is this store legitimate and safe to pay?\" arises. On this homepage the trust-anchoring moments are the Find Parts action and the Featured Collection cards, and neither carries a payment or security cue.",
+      "observation_override": null,
+      "recommendation": "Mirror two or three of the strongest payment marks (PayPal, Visa, Mastercard) into a compact row near the Featured Collection cards or beneath the Find Parts action, while keeping the full set in the footer. Cap the surfaced set at two or three so the row reads as reassurance rather than clutter.",
+      "recommendation_override": null,
+      "why_this_matters": "Shoppers form their judgment of whether a store is safe to buy from at the moment of action, not at the bottom of the page most never reach; payment marks placed only in the footer waste their strongest brands by showing them after the buying decision has already been made.",
+      "why_this_matters_override": null,
+      "callout_title": "Payment Badges Sit Only in Footer, Far From Any Buying Decision",
+      "callout_title_override": null,
+      "callout_body": "Show two or three of the strongest payment logos near the products while keeping the full set in the footer.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-4",
+      "callout_position": {
+        "x_pct": 74,
+        "y_pct": 73.872,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-trust-credibility-f-28",
+      "ai_suggested_marker_id": "marker-trust-credibility-f-28-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-5",
+          "selector_hint": "[class*=\"payment\"]",
+          "text_quote": "PayPal",
+          "baton_index": "e134"
+        },
+        "reason": "Anchors to the PayPal badge as a representative of the full footer payment-badge row."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 20,
+        "baton_index": "e134",
+        "match_method": "e_index_lookup",
+        "element": "`li[class*=\"payment\"]` (PayPal badge) at e134 (y=2152, height=35 CSS px)",
+        "section": "footer"
+      }
+    },
+    {
+      "f_ref": "visual-cta F-11",
+      "status": "needs_review",
+      "cluster": "visual-cta",
+      "severity": "HIGH",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "No Hero Headline or Value Proposition Above the Vehicle Selector",
+      "finding_title_override": null,
+      "finding_body": "The top of the mobile page goes straight from the search box into the vehicle dropdowns with no headline or sentence saying what you sell or who it's for. In the first five seconds a phone visitor sees a lookup form and a logo, but no reason to use them.",
+      "finding_body_override": null,
+      "observation": "The top of the mobile homepage jumps straight from the search bar into four \"Select Make / Model / Year / Trim\" dropdowns and a \"FIND PARTS\" button, with no headline or value-proposition sentence anywhere above the fold. A first-time visitor who lands here in the first five seconds sees the brand name in the logo and a vehicle-lookup form, but nothing that states what AWDMods sells, who it is for, or why to buy here rather than a competitor. The dropdown labels do the page's only talking, and they describe the tool, not the offer.",
+      "observation_override": null,
+      "recommendation": "Add a short headline and one supporting line in the empty band directly above the Select Make dropdown — for example a benefit-led headline naming the audience and category (\"Performance and styling parts for your WRX, STI, and Focus RS/ST\") with a one-line subhead on fitment confidence. Keep the headline to roughly two lines so it does not push the \"FIND PARTS\" button further down the first screen.",
+      "recommendation_override": null,
+      "why_this_matters": "Within the first five seconds a visitor decides whether the page is relevant; with no headline answering \"what is this and is it for me,\" shoppers who are not already sold on the brand bounce before they ever engage the vehicle selector, and the entire hero rests on a tool the visitor has no stated reason to use.",
+      "why_this_matters_override": null,
+      "callout_title": "No Hero Headline or Value Proposition Above the Vehicle Selector",
+      "callout_title_override": null,
+      "callout_body": "Add a short headline and one supporting line just above the first dropdown.",
+      "callout_color": "#F97316",
+      "callout_slide_id": "mobile-section-1",
+      "callout_position": {
+        "x_pct": 58.0,
+        "y_pct": 13.209,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-visual-cta-f-11",
+      "ai_suggested_marker_id": "marker-visual-cta-f-11-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 21,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_element",
+        "element": "headline block (absent — proposed location: above the Select Make dropdown, before e74 at y=203 CSS px)",
+        "section": "hero"
+      }
+    },
+    {
+      "f_ref": "visual-cta F-12",
+      "status": "needs_review",
+      "cluster": "visual-cta",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "FIND PARTS Button Is Undersized, Not Full-Width, and Its Label Reads Low-Contrast Grey",
+      "finding_title_override": null,
+      "finding_body": "Your 'FIND PARTS' button — the only action in the hero — is the smallest thing on the screen, about 40% width while the dropdowns above it run full-width, and its grey label is dimmer than the white text above it. The most important action looks like a minor control.",
+      "finding_body_override": null,
+      "observation": "The \"FIND PARTS\" button is the single conversion action in the hero, yet it is the smallest interactive target on the first screen: it spans roughly 40 percent of the width while the four dropdowns above it are nearly full-width, and it sits left-aligned rather than anchored across the thumb zone. Its label and search icon render in a muted grey on the blue fill instead of white, so the button text is lower-contrast than the plain white dropdown labels directly above it — the most important action on the screen is visually quieter than the form fields that feed it.",
+      "observation_override": null,
+      "recommendation": "Make \"FIND PARTS\" a full-width button matching the width of the dropdowns above it and set the label and icon to white for a strong contrast against the blue fill. Sizing the primary action at least as large as the inputs it submits keeps it the easiest target to tap and the clearest next step after the dropdowns are filled.",
+      "recommendation_override": null,
+      "why_this_matters": "Larger, edge-anchored buttons are acquired faster and more reliably by thumbs, and a primary CTA that is smaller and lower-contrast than its own form fields signals it is a minor control; on mobile, where the selector is the main conversion path, a quiet undersized submit button costs completed lookups.",
+      "why_this_matters_override": null,
+      "callout_title": "FIND PARTS Button Is Undersized, Not Full-Width, and Its Label Reads Low-Contrast Grey",
+      "callout_title_override": null,
+      "callout_body": "Make the button full-width with a bright white label so it's the easiest thing to tap.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-2",
+      "callout_position": {
+        "x_pct": 25.949,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-visual-cta-f-12",
+      "ai_suggested_marker_id": "marker-visual-cta-f-12-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 22,
+        "baton_index": "e84",
+        "match_method": "e_index_lookup",
+        "element": "`button` (\"Find parts\") at e84 (y=466, height=55 CSS px)",
+        "section": "primary-cta"
+      }
+    },
+    {
+      "f_ref": "visual-cta F-46",
+      "status": "needs_review",
+      "cluster": "visual-cta",
+      "severity": "LOW",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "Top FREE SHIPPING / SHOP NOW Bar Sits in the Banner-Blindness Zone",
+      "finding_title_override": null,
+      "finding_body": "Your free-shipping message sits in a colored bar above the logo — the exact spot shoppers have learned to treat as an ad and skip. A genuine reason-to-buy is parked where most eyes route right past it.",
+      "finding_body_override": null,
+      "observation": "The free-shipping message and its \"SHOP NOW\" link live in a full-width colored bar pinned above the logo — the exact slot users have learned to treat as a promotional banner and skip. The free-shipping threshold is a genuine reason-to-buy signal, but presenting it as a top promo strip with an embedded generic \"SHOP NOW\" link means a large share of visitors scan straight past both the offer and the link to the content below.",
+      "observation_override": null,
+      "recommendation": "Surface the free-shipping threshold as plain text inside the content flow near the hero or the conversion path, not only in the top banner, and give the embedded link a destination-specific label instead of generic \"SHOP NOW\". Repeating the shipping promise where the eye actually lands keeps it working even when the banner is ignored.",
+      "recommendation_override": null,
+      "why_this_matters": "Content styled as a top promotional banner is reliably skipped, so a real purchase incentive parked there does little work; pulling the free-shipping message into the content flow recovers a trust-and-value signal that is currently spent on a slot most shoppers' eyes route around.",
+      "why_this_matters_override": null,
+      "callout_title": "Top FREE SHIPPING / SHOP NOW Bar Sits in the Banner-Blindness Zone",
+      "callout_title_override": null,
+      "callout_body": "Also show the free-shipping line inside the page content near the products, and give its link a specific label.",
+      "callout_color": "#60A5FA",
+      "callout_slide_id": "mobile-section-1",
+      "callout_position": {
+        "x_pct": 8.0,
+        "y_pct": 4,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-visual-cta-f-46",
+      "ai_suggested_marker_id": "marker-visual-cta-f-46-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "exact-selector",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/5%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 23,
+        "baton_index": "e69",
+        "match_method": "e_index_lookup",
+        "element": "`div[class*=\"announce\"]` (free-shipping bar) at e69 (y=0, height=41 CSS px)",
+        "section": "announcement-bar"
+      }
+    },
+    {
+      "f_ref": "visual-cta F-67",
+      "status": "needs_review",
+      "cluster": "visual-cta",
+      "severity": "MEDIUM",
+      "ethics_state": "",
+      "verdict": "FAIL",
+      "finding_title": "No Sticky CTA After the Find Parts Button Scrolls Out of View",
+      "finding_title_override": null,
+      "finding_body": "On mobile the page runs several screens deep, but once the 'FIND PARTS' button scrolls away nothing replaces it. A shopper who decides to act while looking at products has to scroll all the way back to the top to find the way forward.",
+      "finding_body_override": null,
+      "observation": "The mobile homepage runs roughly four screens deep — hero, category cards, Featured Collection, newsletter, footer — but the only conversion action, the hero \"FIND PARTS\" button, disappears after the first screen and nothing replaces it. As the visitor scrolls through the category carousel and featured products there is no pinned bar offering to jump back into the vehicle selector or to shop, so a shopper who decides to act mid-page has to scroll all the way back up to the hero or hunt for the search bar.",
+      "observation_override": null,
+      "recommendation": "Add a compact sticky bottom bar that appears once the hero button scrolls off — surfacing either the vehicle-selector entry point or a \"Shop All\" action — so the primary path stays one tap away at any scroll depth. Keep the bar to roughly 50–60px tall so it does not crowd the content it floats over.",
+      "recommendation_override": null,
+      "why_this_matters": "On multi-screen mobile pages the primary action scrolls out of view quickly, and persistent bottom CTAs recover conversions from shoppers who become ready to act below the fold; without one, intent that builds mid-page leaks away while the visitor reorients to find the next step.",
+      "why_this_matters_override": null,
+      "callout_title": "No Sticky CTA After the Find Parts Button Scrolls Out of View",
+      "callout_title_override": null,
+      "callout_body": "Add a small sticky bar at the bottom that keeps the vehicle finder or a 'Shop All' action one tap away.",
+      "callout_color": "#FACC15",
+      "callout_slide_id": "mobile-section-2",
+      "callout_position": {
+        "x_pct": 58.0,
+        "y_pct": 82,
+        "w_pct": 22,
+        "h_pct": 8,
+        "anchor": "auto"
+      },
+      "callout_visible": true,
+      "marker_id": "marker-visual-cta-f-67",
+      "ai_suggested_marker_id": "marker-visual-cta-f-67-ai",
+      "lint_violations": [],
+      "hotspot_confidence": "section-match",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "reason": "Derived from proposed_anchor.kind=viewport, placement=viewport-bottom-sticky (baton_index=absent)"
+      },
+      "review_notes": "",
+      "tagged_for_ai_pass": false,
+      "ai_pass_instruction": null,
+      "reviewed_at": null,
+      "reviewed_by": null,
+      "raw": {
+        "index": 24,
+        "baton_index": "absent",
+        "match_method": "proposed_anchor_viewport",
+        "element": "sticky CTA bar (absent — proposed location: viewport-bottom-sticky, appearing after the hero Find Parts button scrolls offscreen)",
+        "section": "sticky-cta"
+      }
+    }
+  ],
+  "markers": [
+    {
+      "marker_id": "marker-category-navigation-f-05",
+      "f_ref": "category-navigation F-05",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 14.615,
+      "y_pct": 0.0,
+      "w_pct": 35.897,
+      "h_pct": 55.332,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 36,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      }
+    },
+    {
+      "marker_id": "marker-category-navigation-f-05-ai",
+      "f_ref": "category-navigation F-05",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 14.615,
+      "y_pct": 0.0,
+      "w_pct": 35.897,
+      "h_pct": 55.332,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 36,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      }
+    },
+    {
+      "marker_id": "marker-category-navigation-f-50",
+      "f_ref": "category-navigation F-50",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 2.821,
+      "y_pct": 6.398,
+      "w_pct": 11.795,
+      "h_pct": 5.45,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 105,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      }
+    },
+    {
+      "marker_id": "marker-category-navigation-f-50-ai",
+      "f_ref": "category-navigation F-50",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 2.821,
+      "y_pct": 6.398,
+      "w_pct": 11.795,
+      "h_pct": 5.45,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 105,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      }
+    },
+    {
+      "marker_id": "marker-category-navigation-f-63",
+      "f_ref": "category-navigation F-63",
+      "slide_id": "mobile-section-2",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 9.242,
+      "w_pct": 100.0,
+      "h_pct": 35.071,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 15,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/35%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-category-navigation-f-63-ai",
+      "f_ref": "category-navigation F-63",
+      "slide_id": "mobile-section-2",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 9.242,
+      "w_pct": 100.0,
+      "h_pct": 35.071,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 15,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/35%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-32",
+      "f_ref": "content-seo F-32",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 8.718,
+      "cy_pct": 0.0,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "breadcrumb-bar",
+          "anchor_relative_to": "e113",
+          "placement": "above"
+        },
+        "reason": "Title tag lives in the document head with no on-page element; ghost marker placed near the logo/brand mark"
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-32-ai",
+      "f_ref": "content-seo F-32",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 8.718,
+      "cy_pct": 0.0,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "breadcrumb-bar",
+          "anchor_relative_to": "e113",
+          "placement": "above"
+        },
+        "reason": "Title tag lives in the document head with no on-page element; ghost marker placed near the logo/brand mark"
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-62",
+      "f_ref": "content-seo F-62",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 39.744,
+      "cy_pct": 48.341,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-62-ai",
+      "f_ref": "content-seo F-62",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 39.744,
+      "cy_pct": 48.341,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-75",
+      "f_ref": "content-seo F-75",
+      "slide_id": "mobile-section-1",
+      "shape": "point",
+      "cx_pct": 25.641,
+      "cy_pct": 3.91,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-75-ai",
+      "f_ref": "content-seo F-75",
+      "slide_id": "mobile-section-1",
+      "shape": "point",
+      "cx_pct": 25.641,
+      "cy_pct": 3.91,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-76",
+      "f_ref": "content-seo F-76",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 5.641,
+      "y_pct": 3.081,
+      "w_pct": 68.205,
+      "h_pct": 31.517,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 23,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img[alt]:not([alt=\"\"])",
+          "text_quote": "card__image motion-reduce object-center",
+          "baton_index": "e23"
+        }
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-76-ai",
+      "f_ref": "content-seo F-76",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 5.641,
+      "y_pct": 3.081,
+      "w_pct": 68.205,
+      "h_pct": 31.517,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 23,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img[alt]:not([alt=\"\"])",
+          "text_quote": "card__image motion-reduce object-center",
+          "baton_index": "e23"
+        }
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-87",
+      "f_ref": "content-seo F-87",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 56.28,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_section",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "reason": "Derived from proposed_anchor.kind=section, placement=after-section (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-content-seo-f-87-ai",
+      "f_ref": "content-seo F-87",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 56.28,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_section",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "reason": "Derived from proposed_anchor.kind=section, placement=after-section (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-ethics-f-16",
+      "f_ref": "ethics F-16",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 14.615,
+      "y_pct": 0.0,
+      "w_pct": 35.897,
+      "h_pct": 100.0,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 4,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 36%w/160%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-ethics-f-16-ai",
+      "f_ref": "ethics F-16",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 14.615,
+      "y_pct": 0.0,
+      "w_pct": 35.897,
+      "h_pct": 100.0,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 4,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 36%w/160%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-17",
+      "f_ref": "performance-ux F-17",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 5.641,
+      "y_pct": 3.081,
+      "w_pct": 68.205,
+      "h_pct": 31.517,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 23,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img.card__image",
+          "text_quote": "Featured Collection product card image",
+          "baton_index": "e23"
+        },
+        "reason": "Anchored on the first Featured Collection card image; the CLS risk applies to the whole lazy-loaded card row."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-17-ai",
+      "f_ref": "performance-ux F-17",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 5.641,
+      "y_pct": 3.081,
+      "w_pct": 68.205,
+      "h_pct": 31.517,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 23,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img.card__image",
+          "text_quote": "Featured Collection product card image",
+          "baton_index": "e23"
+        },
+        "reason": "Anchored on the first Featured Collection card image; the CLS risk applies to the whole lazy-loaded card row."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-18",
+      "f_ref": "performance-ux F-18",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 92.0,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_viewport",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "sticky-cta",
+          "anchor_relative_to": "viewport",
+          "placement": "sticky-viewport-bottom"
+        },
+        "reason": "No element exists for the missing persistent bar; ghost overlay at the viewport bottom shows where a sticky search/cart bar should live."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-18-ai",
+      "f_ref": "performance-ux F-18",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 92.0,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_viewport",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "sticky-cta",
+          "anchor_relative_to": "viewport",
+          "placement": "sticky-viewport-bottom"
+        },
+        "reason": "No element exists for the missing persistent bar; ghost overlay at the viewport bottom shows where a sticky search/cart bar should live."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-76",
+      "f_ref": "performance-ux F-76",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 0.0,
+      "w_pct": 100.0,
+      "h_pct": 4.858,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 69,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e69",
+          "selector_hint": "div[class*=announce]",
+          "text_quote": "FREE SHIPPING on most orders $75+"
+        },
+        "reason": "Anchored on the topmost above-fold element since the cost is a head-level loading-priority problem with no single visual element."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-76-ai",
+      "f_ref": "performance-ux F-76",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 0.0,
+      "w_pct": 100.0,
+      "h_pct": 4.858,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 69,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e69",
+          "selector_hint": "div[class*=announce]",
+          "text_quote": "FREE SHIPPING on most orders $75+"
+        },
+        "reason": "Anchored on the topmost above-fold element since the cost is a head-level loading-priority problem with no single visual element."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-95",
+      "f_ref": "performance-ux F-95",
+      "slide_id": "mobile-section-2",
+      "shape": "rect",
+      "x_pct": 17.949,
+      "y_pct": 0.0,
+      "w_pct": 37.949,
+      "h_pct": 6.517,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 84,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e84",
+          "selector_hint": "button",
+          "text_quote": "Find parts"
+        },
+        "reason": "Anchored on the FIND PARTS button, the conversion action that falls below the first mobile screen."
+      }
+    },
+    {
+      "marker_id": "marker-performance-ux-f-95-ai",
+      "f_ref": "performance-ux F-95",
+      "slide_id": "mobile-section-2",
+      "shape": "rect",
+      "x_pct": 17.949,
+      "y_pct": 0.0,
+      "w_pct": 37.949,
+      "h_pct": 6.517,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 84,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e84",
+          "selector_hint": "button",
+          "text_quote": "Find parts"
+        },
+        "reason": "Anchored on the FIND PARTS button, the conversion action that falls below the first mobile screen."
+      }
+    },
+    {
+      "marker_id": "marker-pricing-f-43",
+      "f_ref": "pricing F-43",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 11.026,
+      "y_pct": 51.185,
+      "w_pct": 57.436,
+      "h_pct": 3.318,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 89,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "price-block-1",
+          "selector_hint": "div[class*=\"price\"]",
+          "text_quote": "From $135.99",
+          "baton_index": "e89"
+        }
+      }
+    },
+    {
+      "marker_id": "marker-pricing-f-43-ai",
+      "f_ref": "pricing F-43",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 11.026,
+      "y_pct": 51.185,
+      "w_pct": 57.436,
+      "h_pct": 3.318,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 89,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "price-block-1",
+          "selector_hint": "div[class*=\"price\"]",
+          "text_quote": "From $135.99",
+          "baton_index": "e89"
+        }
+      }
+    },
+    {
+      "marker_id": "marker-pricing-f-51",
+      "f_ref": "pricing F-51",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 0.0,
+      "w_pct": 100.0,
+      "h_pct": 4.858,
+      "stroke": "#60A5FA",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 69,
+      "severity": "LOW",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/5%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-pricing-f-51-ai",
+      "f_ref": "pricing F-51",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 0.0,
+      "w_pct": 100.0,
+      "h_pct": 4.858,
+      "stroke": "#60A5FA",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 69,
+      "severity": "LOW",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/5%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-pricing-f-96",
+      "f_ref": "pricing F-96",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 39.744,
+      "cy_pct": 57.346,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "msrp-anchor",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No installment element exists on the card; ghost text below the price shows where a pay-in-4 line would render."
+      }
+    },
+    {
+      "marker_id": "marker-pricing-f-96-ai",
+      "f_ref": "pricing F-96",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 39.744,
+      "cy_pct": 57.346,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "medium",
+        "expected_overlay": {
+          "template_id": "msrp-anchor",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No installment element exists on the card; ghost text below the price shows where a pay-in-4 line would render."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-13",
+      "f_ref": "trust-credibility F-13",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 84.103,
+      "y_pct": 53.318,
+      "w_pct": 15.897,
+      "h_pct": 2.488,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 90,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e90",
+          "selector_hint": "[class*=\"rating\"]",
+          "text_quote": "5.0 / 5.0"
+        },
+        "reason": "Tight rect on the rating widget inside the Featured Collection card; the 5.0/5.0 value is the finding's exact subject."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-13-ai",
+      "f_ref": "trust-credibility F-13",
+      "slide_id": "mobile-section-3",
+      "shape": "rect",
+      "x_pct": 84.103,
+      "y_pct": 53.318,
+      "w_pct": 15.897,
+      "h_pct": 2.488,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 90,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e90",
+          "selector_hint": "[class*=\"rating\"]",
+          "text_quote": "5.0 / 5.0"
+        },
+        "reason": "Tight rect on the rating widget inside the Featured Collection card; the 5.0/5.0 value is the finding's exact subject."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-15",
+      "f_ref": "trust-credibility F-15",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 31.026,
+      "cy_pct": 60.427,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "reviews-block",
+          "anchor_relative_to": "e86",
+          "placement": "below"
+        },
+        "reason": "No DOM element carries the rating markup; ghost overlay sits below the Featured Collection heading where the rated cards appear."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-15-ai",
+      "f_ref": "trust-credibility F-15",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 31.026,
+      "cy_pct": 60.427,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "reviews-block",
+          "anchor_relative_to": "e86",
+          "placement": "below"
+        },
+        "reason": "No DOM element carries the rating markup; ghost overlay sits below the Featured Collection heading where the rated cards appear."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-27",
+      "f_ref": "trust-credibility F-27",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 39.744,
+      "cy_pct": 57.346,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "trust-strip",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No element carries a guarantee or return cue; ghost trust strip sits beneath the card price where the reassurance should appear."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-27-ai",
+      "f_ref": "trust-credibility F-27",
+      "slide_id": "mobile-section-3",
+      "shape": "point",
+      "cx_pct": 39.744,
+      "cy_pct": 57.346,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "trust-strip",
+          "anchor_relative_to": "e89",
+          "placement": "below"
+        },
+        "reason": "No element carries a guarantee or return cue; ghost trust strip sits beneath the card price where the reassurance should appear."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-28",
+      "f_ref": "trust-credibility F-28",
+      "slide_id": "mobile-section-4",
+      "shape": "rect",
+      "x_pct": 67.692,
+      "y_pct": 81.872,
+      "w_pct": 12.564,
+      "h_pct": 4.147,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 134,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-5",
+          "selector_hint": "[class*=\"payment\"]",
+          "text_quote": "PayPal",
+          "baton_index": "e134"
+        },
+        "reason": "Anchors to the PayPal badge as a representative of the full footer payment-badge row."
+      }
+    },
+    {
+      "marker_id": "marker-trust-credibility-f-28-ai",
+      "f_ref": "trust-credibility F-28",
+      "slide_id": "mobile-section-4",
+      "shape": "rect",
+      "x_pct": 67.692,
+      "y_pct": 81.872,
+      "w_pct": 12.564,
+      "h_pct": 4.147,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 134,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "trust-strip-5",
+          "selector_hint": "[class*=\"payment\"]",
+          "text_quote": "PayPal",
+          "baton_index": "e134"
+        },
+        "reason": "Anchors to the PayPal badge as a representative of the full footer payment-badge row."
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-11",
+      "f_ref": "visual-cta F-11",
+      "slide_id": "mobile-section-1",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 21.209,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-11-ai",
+      "f_ref": "visual-cta F-11",
+      "slide_id": "mobile-section-1",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 21.209,
+      "stroke": "#F97316",
+      "stroke_width": 3,
+      "source": "proposed_anchor_element",
+      "snapped_baton_index": null,
+      "severity": "HIGH",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "reason": "Derived from proposed_anchor.kind=element, placement=before-element (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-12",
+      "f_ref": "visual-cta F-12",
+      "slide_id": "mobile-section-2",
+      "shape": "rect",
+      "x_pct": 17.949,
+      "y_pct": 0.0,
+      "w_pct": 37.949,
+      "h_pct": 6.517,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 84,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-12-ai",
+      "f_ref": "visual-cta F-12",
+      "slide_id": "mobile-section-2",
+      "shape": "rect",
+      "x_pct": 17.949,
+      "y_pct": 0.0,
+      "w_pct": 37.949,
+      "h_pct": 6.517,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 84,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "reason": "Derived from match_method=e_index_lookup"
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-46",
+      "f_ref": "visual-cta F-46",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 0.0,
+      "w_pct": 100.0,
+      "h_pct": 4.858,
+      "stroke": "#60A5FA",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 69,
+      "severity": "LOW",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/5%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-46-ai",
+      "f_ref": "visual-cta F-46",
+      "slide_id": "mobile-section-1",
+      "shape": "rect",
+      "x_pct": 0.0,
+      "y_pct": 0.0,
+      "w_pct": 100.0,
+      "h_pct": 4.858,
+      "stroke": "#60A5FA",
+      "stroke_width": 3,
+      "source": "e_index_lookup",
+      "snapped_baton_index": 69,
+      "severity": "LOW",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "low",
+        "reason": "Auto-down-ranked from exact_element: baton rect is 100%w/5%h of the viewport (> 85%w/70%h) — likely a parent container, not the subject element (product.md §4.2 precision-first)."
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-67",
+      "f_ref": "visual-cta F-67",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 92.0,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_viewport",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "reason": "Derived from proposed_anchor.kind=viewport, placement=viewport-bottom-sticky (baton_index=absent)"
+      }
+    },
+    {
+      "marker_id": "marker-visual-cta-f-67-ai",
+      "f_ref": "visual-cta F-67",
+      "slide_id": "mobile-section-2",
+      "shape": "point",
+      "cx_pct": 50.0,
+      "cy_pct": 92.0,
+      "stroke": "#FACC15",
+      "stroke_width": 3,
+      "source": "proposed_anchor_viewport",
+      "snapped_baton_index": null,
+      "severity": "MEDIUM",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "reason": "Derived from proposed_anchor.kind=viewport, placement=viewport-bottom-sticky (baton_index=absent)"
+      }
+    }
+  ],
+  "slides": [
+    {
+      "slide_id": "mobile-section-1",
+      "source": "section-1-mobile.jpg",
+      "viewport": "mobile",
+      "device": "mobile",
+      "section_index": 0,
+      "section_label": "Above the fold (hero, navigation, and primary CTA)",
+      "scroll_y_top": 0,
+      "scroll_y_bottom": 486,
+      "natural_width": 1170,
+      "natural_height": 2532,
+      "user_imported": false
+    },
+    {
+      "slide_id": "mobile-section-2",
+      "source": "section-2-mobile.jpg",
+      "viewport": "mobile",
+      "device": "mobile",
+      "section_index": 1,
+      "section_label": "Primary content block 2",
+      "scroll_y_top": 487,
+      "scroll_y_bottom": 973,
+      "natural_width": 1170,
+      "natural_height": 2532,
+      "user_imported": false
+    },
+    {
+      "slide_id": "mobile-section-3",
+      "source": "section-3-mobile.jpg",
+      "viewport": "mobile",
+      "device": "mobile",
+      "section_index": 2,
+      "section_label": "Lower page section 3",
+      "scroll_y_top": 974,
+      "scroll_y_bottom": 1460,
+      "natural_width": 1170,
+      "natural_height": 2532,
+      "user_imported": false
+    },
+    {
+      "slide_id": "mobile-section-4",
+      "source": "section-4-mobile.jpg",
+      "viewport": "mobile",
+      "device": "mobile",
+      "section_index": 3,
+      "section_label": "Lower page section 4",
+      "scroll_y_top": 1461,
+      "scroll_y_bottom": 2305,
+      "natural_width": 1170,
+      "natural_height": 2532,
+      "user_imported": false
+    }
+  ],
+  "slide_edits": [
+    {
+      "slide_id": "mobile-section-1",
+      "crop": {
+        "x_pct": 0,
+        "y_pct": 0,
+        "w_pct": 100,
+        "h_pct": 100
+      },
+      "transform": {
+        "scale": 1.0,
+        "rotate_deg": 0,
+        "translate_x_pct": 0,
+        "translate_y_pct": 0
+      },
+      "effects": []
+    },
+    {
+      "slide_id": "mobile-section-2",
+      "crop": {
+        "x_pct": 0,
+        "y_pct": 0,
+        "w_pct": 100,
+        "h_pct": 100
+      },
+      "transform": {
+        "scale": 1.0,
+        "rotate_deg": 0,
+        "translate_x_pct": 0,
+        "translate_y_pct": 0
+      },
+      "effects": []
+    },
+    {
+      "slide_id": "mobile-section-3",
+      "crop": {
+        "x_pct": 0,
+        "y_pct": 0,
+        "w_pct": 100,
+        "h_pct": 100
+      },
+      "transform": {
+        "scale": 1.0,
+        "rotate_deg": 0,
+        "translate_x_pct": 0,
+        "translate_y_pct": 0
+      },
+      "effects": []
+    },
+    {
+      "slide_id": "mobile-section-4",
+      "crop": {
+        "x_pct": 0,
+        "y_pct": 0,
+        "w_pct": 100,
+        "h_pct": 100
+      },
+      "transform": {
+        "scale": 1.0,
+        "rotate_deg": 0,
+        "translate_x_pct": 0,
+        "translate_y_pct": 0
+      },
+      "effects": []
+    }
+  ],
+  "imported_assets": [],
+  "audit_metadata": {
+    "engagement_id": "2026-06-08-8e46b1c8",
+    "url": "https://www.awdmods.com/",
+    "page_type": "homepage",
+    "executive_summary": "",
+    "ethics_summary": ""
+  }
+}

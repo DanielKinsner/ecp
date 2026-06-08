@@ -1,0 +1,35 @@
+{
+  "engagement": "docs\\ecp\\2026-06-08-8e46b1c8",
+  "source_emission": "docs\\ecp\\2026-06-08-8e46b1c8\\ethics-findings.json",
+  "repairs_count": 4,
+  "repairs": [
+    {
+      "finding_local_id": null,
+      "field": "telemetry.reference_files_read[]",
+      "before": "references/ethics-gate.md",
+      "after": "ethics-gate.md",
+      "why": "Path-form telemetry entry; the schema expects bare references-relative filenames (e.g., 'ethics-gate.md', not 'references/ethics-gate.md')."
+    },
+    {
+      "finding_local_id": null,
+      "field": "telemetry.reference_files_read[]",
+      "before": "references/evidence-tiers.md",
+      "after": "evidence-tiers.md",
+      "why": "Path-form telemetry entry; the schema expects bare references-relative filenames (e.g., 'ethics-gate.md', not 'references/ethics-gate.md')."
+    },
+    {
+      "finding_local_id": 3,
+      "field": "proposed_anchor",
+      "before": "<missing>",
+      "after": "auto-injected schema-valid section variant (section_index=0, section-bottom-overlay, viewport=desktop)",
+      "why": "absent-anchored finding lacks the schema-required proposed_anchor; injected a section-bottom-overlay default at section_index=0 with an auto-inject marker so the operator must verify placement in the editor's 'Place manually' queue."
+    },
+    {
+      "finding_local_id": 7,
+      "field": "proposed_anchor",
+      "before": "<missing>",
+      "after": "auto-injected schema-valid section variant (section_index=0, section-bottom-overlay, viewport=desktop)",
+      "why": "absent-anchored finding lacks the schema-required proposed_anchor; injected a section-bottom-overlay default at section_index=0 with an auto-inject marker so the operator must verify placement in the editor's 'Place manually' queue."
+    }
+  ]
+}

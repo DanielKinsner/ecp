@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "performance-ux",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": "1M",
+    "temperature": 0.1
+  },
+  "started_at": "2026-06-08T22:24:40.000Z",
+  "completed_at": "2026-06-08T22:49:46.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Above-Fold Image Preload; Category Tile Is an Unprioritized LCP Element",
+      "surface": "lcp-element",
+      "element": {
+        "baton_index": "e35",
+        "text_content": "",
+        "role": "image",
+        "tag": "img"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-4",
+          "selector_hint": "img.card__image",
+          "text_quote": "Performance category tile image"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The five full-bleed category tile photos (Performance, Handling & Brakes, Interior, Exterior, Electronics) sit at y=544 and are the largest images in the opening viewport — the de facto Largest Contentful Paint candidate. They render edge-to-edge across the row."
+        },
+        {
+          "type": "dom",
+          "reference": "e35",
+          "context": "Category tile image element captured at x=240, y=989, 271x271 rendered footprint within the tile row; no preload hint reaches it before the parser arrives at the tag."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 1: Product Hero Image Is the LCP Element — Requires fetchpriority=\"high\" and Preload",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 6: Never Lazy-Load the LCP Hero Image",
+          "tier": "Gold"
+        },
+        {
+          "source": "page-performance-psychology.md",
+          "section": "Finding 17",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The opening viewport carries no preloaded above-fold image. The page head preloads two web fonts with fetchpriority=\"high\" but issues no <link rel=\"preload\" as=\"image\"> for any visual element. The largest paint in the first screen is the row of five full-bleed category tile photos at y=544; without a fetchpriority signal or a preload, the browser discovers and ranks those images at its default priority, behind the font and stylesheet requests it already prioritized. On a page whose first screen is otherwise a flat black band, those tiles are the Largest Contentful Paint, and they are the slowest thing the browser has been told to care about.",
+      "recommendation": "If the category tiles are the first meaningful paint, add a <link rel=\"preload\" as=\"image\" fetchpriority=\"high\"> in the head for the first (left-most) tile image and set fetchpriority=\"high\" on that tile's <img>. Serve the tile art through a <picture> element offering AVIF then WebP so the LCP byte cost drops 30-50 percent. Leave the remaining four tiles at default priority so they do not compete with the first paint.",
+      "why_this_matters": "Vodafone's controlled A/B test tied a 31 percent LCP improvement to 8 percent more sales, and Deloitte measured 8.4 percent higher retail conversion per 0.1s of mobile speed. When the LCP element loads at default priority behind fonts, every visitor waits longer for the first screen to feel finished, which compounds directly into lost add-to-cart starts.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Empty Black Band Wastes the Entire Above-Fold Zone on Desktop",
+      "surface": "cognitive-load-block",
+      "element": {
+        "baton_index": "e88",
+        "text_content": "Select Year",
+        "role": "combobox",
+        "tag": "select"
+      },
+      "severity": "HIGH",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The vehicle-selector dropdowns are the only content floating inside the empty above-fold band, so they are the natural anchor for the wasted-real-estate finding. The candidate ranker classified the header search inputs but did not register the Make/Model/Year/Trim selects, so the correct anchor sits outside the registry.",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e88",
+          "selector_hint": "select (Select Year)",
+          "text_quote": "Select Year"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "From the bottom of the nav row (~y=160) to the category tiles (y=544) the entire 1920px-wide band is solid black with nothing but the four vehicle-selector dropdowns floating mid-screen at y=308. No headline, no value proposition, no product, no price is visible above the fold."
+        },
+        {
+          "type": "dom",
+          "reference": "e88",
+          "context": "Select Year dropdown captured at x=923, y=308 — one of four selects that are the sole occupants of the otherwise empty above-fold band."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cognitive-load-management.md",
+          "section": "Finding 6: The F-Pattern -- How Users Scan Product Pages",
+          "tier": "Gold"
+        },
+        {
+          "source": "page-performance-psychology.md",
+          "section": "Finding 9: Above-the-Fold Content Loading Priority",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "At 1920x1080 the opening viewport is almost entirely a black void. Below the navigation row and above the category tiles, the band from roughly y=160 to y=544 holds nothing except the four Make/Model/Year/Trim dropdowns floating in the middle. A visitor scanning the top-left of the page in the natural F-pattern lands on empty space — there is no store headline, no merchandising, no proof, and no product until they scroll past the fold to reach the tiles and the Featured Collection. The single most valuable screen on the site is doing almost no selling.",
+      "recommendation": "If the goal of the opening screen is vehicle-fit confidence, fill the black band with a compact value line above the selector (for example a one-line headline plus the free-shipping proof that already exists in the announcement bar) and pull the category tiles or a featured build up into the first viewport so the screen carries merchandising. Reduce the vertical black padding so the selector and the first tile row both sit above the fold.",
+      "why_this_matters": "Users form a credibility judgment in the first seconds and scan the top-left first; a screen that shows only an empty band signals nothing to buy and gives the F-pattern nothing to catch. Above-fold emptiness on the highest-traffic screen suppresses engagement before the shopper ever reaches a product.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Vehicle Finder Stacks Four Sequential Native Dropdowns With No Default",
+      "surface": "form-fields",
+      "element": {
+        "baton_index": "e86",
+        "text_content": "Select Make\n                  \n                \n            ",
+        "role": "combobox",
+        "tag": "select"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.78,
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The Make/Model/Year/Trim selects are the primary above-fold interaction but the candidate ranker registered only the header search inputs, not these vehicle-finder selects, so the correct anchor is outside the registry.",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e86",
+          "selector_hint": "select (Select Make)",
+          "text_quote": "Select Make"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Four equally-weighted dropdowns labeled Select Make, Select Model, Select Year, Select your Trim sit in a single row, each empty, followed by a search-magnifier button. All four must be set in sequence before the finder returns parts."
+        },
+        {
+          "type": "dom",
+          "reference": "e86",
+          "context": "Select Make rendered as a native <select> at x=490, y=308; e87 Select Model, e88 Select Year, e89 Select your Trim follow at the same height — four native selects, none pre-filled."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "cognitive-load-management.md",
+          "section": "Finding 1: Hick-Hyman Law -- Decision Time Scales Logarithmically with Choices",
+          "tier": "Gold"
+        },
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 5: Mobile Form Optimization Techniques",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The vehicle finder is the primary action in the opening screen and it asks the visitor to complete four sequential native dropdowns — Make, then Model, then Year, then Trim — before it will return anything. Each select opens its own long option list, and none carries a sensible default or recently-used state, so a returning shopper repeats the full four-step sequence every visit. Native selects are the slowest of the available input patterns and the four-step gate stands between the visitor and every fitment-filtered result.",
+      "recommendation": "If the finder must collect all four attributes, persist the visitor's last vehicle (the header already exposes a clear-saved-vehicle control, so the state exists) and pre-fill the selects on return so repeat shoppers skip the gate. Where an attribute has a dominant value, default to it and let the shopper change it, which removes one or more of the four decisions from the common path.",
+      "why_this_matters": "Decision time rises with each added choice step, and a four-select gate in front of the catalog is friction every fitment shopper pays before seeing a single part; persisting the vehicle and defaulting common values shortens the path to relevant products and recovers shoppers who would otherwise abandon the finder.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PARTIAL",
+      "title": "Featured Collection Product Images Show No Reserved Aspect Ratio",
+      "surface": "cls-source",
+      "element": {
+        "baton_index": "e40",
+        "text_content": "",
+        "role": "image",
+        "tag": "img"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.7,
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-9",
+          "selector_hint": "img.card__image",
+          "text_quote": "Featured Collection product card image"
+        }
+      },
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 931,
+          "viewport": "desktop",
+          "context": "The Featured Collection grid renders product photos in card tiles; the cards stand on white with the image area above the brand, title, and price text that loads beneath each photo."
+        },
+        {
+          "type": "dom",
+          "reference": "e40",
+          "context": "card__image element at x=240, y=942, 271x271 rendered box; the captured image carries the card__image class but the slice exposes no explicit width/height pairing reserving the box before load."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 5: Explicit Width and Height Attributes Prevent Cumulative Layout Shift (CLS)",
+          "tier": "Gold"
+        },
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 12: CLS — Reserve Space for All Dynamic Elements",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The Featured Collection product images sit above the brand, title, and price text in each card. Where an image area is not given a reserved aspect ratio or matching width and height before it loads, the text below it is pushed down as each photo paints, and the price and Add-context elements shift under the cursor. The category tiles and the product grid both rely on full-bleed photography, which is exactly the content type that reflows the layout when dimensions are not declared.",
+      "recommendation": "If the card image containers do not already reserve their box, add explicit width and height attributes (or a CSS aspect-ratio on the image container) matching each photo's rendered ratio so the browser holds the space before the image arrives. Pair this with the lazy-load already appropriate for the below-fold grid so the reserved box and the deferred fetch work together.",
+      "why_this_matters": "Layout shift causes misclicks and erodes trust as content jumps during load; Swappie cut CLS by 91 percent and saw a 42 percent mobile revenue increase. Unreserved image boxes in a product grid shift the price and title under the shopper at the moment they are deciding to click, which is the costliest moment to move the target.",
+      "evidence_tier": "Gold"
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Fonts Preloaded and Logo Eager-Loaded in the Head",
+      "surface": "image-loading",
+      "element": {
+        "baton_index": "e113",
+        "text_content": "",
+        "role": "image",
+        "tag": "img"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e113",
+          "context": "Header logo at x=239, y=56 is served with loading=\"eager\" and a width-based srcset; the head preloads both Roboto Condensed and Open Sans Condensed woff2 files with fetchpriority=\"high\"."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 12: fetchpriority Is Baseline-Supported",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The critical web fonts are correctly preloaded with fetchpriority=\"high\" and crossorigin in the head, and the header logo is eager-loaded with a responsive srcset rather than lazy-loaded — the brand mark paints without deferral.",
+      "recommendation": "Keep the font preloads and the eager logo as they are; extend the same preload discipline to the first above-fold image so the visible LCP element gets the same head-start the fonts already enjoy.",
+      "why_this_matters": "Preloaded fonts avoid a flash of unstyled text that would itself shift layout, and an eager logo paints the brand immediately — both reduce the perceived time to a finished first screen, which supports the speed-trust relationship at first impression.",
+      "evidence_tier": "Gold"
+    }
+  ],
+  "notes": [
+    "Cluster context routed only the above-the-fold header slice to this specialist; the category-tile and product-grid image elements were not in the slice, so loading/format attributes for those images could not be read from the DOM directly. The LCP, CLS, and above-fold findings are grounded in the section screenshots plus baton element geometry rather than per-image attribute inspection — treat them as evidence-from-render, and confirm against the live theme markup.",
+    "The top announcement bar (FREE SHIPPING on most orders $75+) is a rotating slideshow-component (e34/e52/e53). A JS-driven rotating bar at y=0 is a candidate INP/CLS source if it injects or reflows after hydration; this could not be confirmed from the static slice and is flagged for the synthesizer rather than emitted as a finding.",
+    "No <script type=\"speculationrules\"> is present in the head. For a homepage that funnels to collection and product pages, prerendering likely-next pages is an advanced enhancement opportunity (Ray-Ban A/B test: +156% desktop PDP conversion), not a baseline defect — noted here per cluster guidance rather than emitted as a FAIL.",
+    "Consent-timing of the announcement/marketing surfaces is out of this cluster's scope; left for the ethics subagent."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "mobile-conversion.md",
+      "cognitive-load-management.md",
+      "page-performance-psychology.md",
+      "core-web-vitals.md",
+      "media-performance-optimization.md"
+    ],
+    "sections_routed_to_cluster": 1,
+    "baton_elements_referenced": ["e35", "e40", "e86", "e88", "e113"],
+    "findings_by_verdict": {"FAIL": 2, "PARTIAL": 2, "PASS": 1}
+  }
+}

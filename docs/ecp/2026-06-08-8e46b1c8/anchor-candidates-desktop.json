@@ -1,0 +1,1434 @@
+{
+  "candidate_to_e_index": {
+    "footer-region-1": "e4",
+    "gallery-image-1": "e113",
+    "gallery-image-10": "e41",
+    "gallery-image-11": "e42",
+    "gallery-image-12": "e43",
+    "gallery-image-13": "e44",
+    "gallery-image-2": "e115",
+    "gallery-image-3": "e116",
+    "gallery-image-4": "e35",
+    "gallery-image-5": "e36",
+    "gallery-image-6": "e37",
+    "gallery-image-7": "e38",
+    "gallery-image-8": "e39",
+    "gallery-image-9": "e40",
+    "navigation-1": "e18",
+    "navigation-2": "e19",
+    "navigation-3": "e28",
+    "navigation-4": "e20",
+    "price-block-1": "e104",
+    "primary-cta-1": "e7",
+    "primary-cta-2": "e11",
+    "product-title-1": "e79",
+    "product-title-2": "e80",
+    "search-1": "e58",
+    "search-2": "e60",
+    "search-3": "e65",
+    "search-4": "e67",
+    "search-5": "e68",
+    "search-6": "e70",
+    "subheading-1": "e107",
+    "subheading-10": "e133",
+    "subheading-11": "e134",
+    "subheading-12": "e135",
+    "subheading-13": "e110",
+    "subheading-14": "e111",
+    "subheading-15": "e112",
+    "subheading-16": "e136",
+    "subheading-17": "e137",
+    "subheading-18": "e138",
+    "subheading-19": "e139",
+    "subheading-2": "e108",
+    "subheading-20": "e72",
+    "subheading-21": "e77",
+    "subheading-22": "e78",
+    "subheading-3": "e109",
+    "subheading-4": "e127",
+    "subheading-5": "e128",
+    "subheading-6": "e129",
+    "subheading-7": "e130",
+    "subheading-8": "e131",
+    "subheading-9": "e132",
+    "trust-strip-1": "e34",
+    "trust-strip-2": "e52",
+    "trust-strip-3": "e53"
+  },
+  "candidates_by_role": {
+    "footer-region": [
+      {
+        "accessible_name_truncated": "Information\n                        \n  \n\n                   ",
+        "candidate_id": "footer-region-1",
+        "e_index": "e4",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.9,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.0918,
+        "rect": {
+          "height": 310.0,
+          "width": 1905.0,
+          "x": 0.0,
+          "y": 2585.0
+        },
+        "role": "contentinfo",
+        "tag": "footer",
+        "text_content_truncated": "Information\n                        \n  \n\n                   "
+      }
+    ],
+    "gallery-image": [
+      {
+        "accessible_name_truncated": "header__heading-logo motion-reduce",
+        "candidate_id": "gallery-image-1",
+        "e_index": "e113",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 45.0,
+          "width": 80.0,
+          "x": 239.0,
+          "y": 56.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "header__heading-logo motion-reduce",
+        "candidate_id": "gallery-image-2",
+        "e_index": "e115",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 45.0,
+          "width": 80.0,
+          "x": 283.0,
+          "y": 899.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "header__heading-logo motion-reduce",
+        "candidate_id": "gallery-image-3",
+        "e_index": "e116",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 45.0,
+          "width": 80.0,
+          "x": 283.0,
+          "y": 1830.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-4",
+        "e_index": "e35",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 240.0,
+          "y": 989.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-5",
+        "e_index": "e36",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 528.0,
+          "y": 989.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-6",
+        "e_index": "e37",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 817.0,
+          "y": 989.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-7",
+        "e_index": "e38",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 1106.0,
+          "y": 989.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-8",
+        "e_index": "e39",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 1395.0,
+          "y": 989.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-9",
+        "e_index": "e40",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 240.0,
+          "y": 942.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-10",
+        "e_index": "e41",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 528.0,
+          "y": 942.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-11",
+        "e_index": "e42",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 817.0,
+          "y": 942.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-12",
+        "e_index": "e43",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 1106.0,
+          "y": 942.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "card__image motion-reduce object-center\n                   object-contain",
+        "candidate_id": "gallery-image-13",
+        "e_index": "e44",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.35,
+        "rect": {
+          "height": 271.0,
+          "width": 271.0,
+          "x": 1395.0,
+          "y": 942.0
+        },
+        "role": "image",
+        "tag": "img",
+        "text_content_truncated": ""
+      }
+    ],
+    "navigation": [
+      {
+        "accessible_name_truncated": "Shop All\n                    \n                      \n      \n",
+        "candidate_id": "navigation-1",
+        "e_index": "e18",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.3612,
+        "rect": {
+          "height": 1414.0,
+          "width": 140.0,
+          "x": 227.0,
+          "y": 52.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n                    \n                      \n      \n"
+      },
+      {
+        "accessible_name_truncated": "Shop All\n                    \n                      \n      \n",
+        "candidate_id": "navigation-2",
+        "e_index": "e19",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.3612,
+        "rect": {
+          "height": 1414.0,
+          "width": 140.0,
+          "x": 282.0,
+          "y": 895.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n                    \n                      \n      \n"
+      },
+      {
+        "accessible_name_truncated": "Shop All\n              \n                \n                  \n",
+        "candidate_id": "navigation-3",
+        "e_index": "e28",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.3612,
+        "rect": {
+          "height": 47.0,
+          "width": 1918.0,
+          "x": 0.0,
+          "y": 115.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n              \n                \n                  \n"
+      },
+      {
+        "accessible_name_truncated": "Shop All\n                    \n                      \n      \n",
+        "candidate_id": "navigation-4",
+        "e_index": "e20",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.85,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.2167,
+        "rect": {
+          "height": 1414.0,
+          "width": 140.0,
+          "x": 282.0,
+          "y": 1826.0
+        },
+        "role": "navigation",
+        "tag": "nav",
+        "text_content_truncated": "Shop All\n                    \n                      \n      \n"
+      }
+    ],
+    "price-block": [
+      {
+        "accessible_name_truncated": "Regular price\n          \n            From $135.99\n          ",
+        "candidate_id": "price-block-1",
+        "e_index": "e104",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.9,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.459,
+        "rect": {
+          "height": 26.0,
+          "width": 229.0,
+          "x": 261.0,
+          "y": 1346.0
+        },
+        "role": "group",
+        "tag": "div",
+        "text_content_truncated": "Regular price\n          \n            From $135.99\n          "
+      }
+    ],
+    "primary-cta": [
+      {
+        "accessible_name_truncated": "Checkout",
+        "candidate_id": "primary-cta-1",
+        "e_index": "e7",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.19,
+        "rect": {
+          "height": 1080.0,
+          "width": 483.0,
+          "x": 1920.0,
+          "y": 884.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": "Checkout"
+      },
+      {
+        "accessible_name_truncated": "Checkout",
+        "candidate_id": "primary-cta-2",
+        "e_index": "e11",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.2,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.114,
+        "rect": {
+          "height": 1080.0,
+          "width": 483.0,
+          "x": 1920.0,
+          "y": 1815.0
+        },
+        "role": "button",
+        "tag": "button",
+        "text_content_truncated": "Checkout"
+      }
+    ],
+    "product-title": [
+      {
+        "accessible_name_truncated": "Featured Collection",
+        "candidate_id": "product-title-1",
+        "e_index": "e79",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.9,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.9,
+        "rect": {
+          "height": 50.0,
+          "width": 286.0,
+          "x": 239.0,
+          "y": 906.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "Featured Collection"
+      },
+      {
+        "accessible_name_truncated": "Featured Collection",
+        "candidate_id": "product-title-2",
+        "e_index": "e80",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.9,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.9,
+        "rect": {
+          "height": 50.0,
+          "width": 286.0,
+          "x": 239.0,
+          "y": 859.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "Featured Collection"
+      }
+    ],
+    "search": [
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-1",
+        "e_index": "e58",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.475,
+        "rect": {
+          "height": 55.0,
+          "width": 929.0,
+          "x": 367.0,
+          "y": 51.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-2",
+        "e_index": "e60",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.475,
+        "rect": {
+          "height": 55.0,
+          "width": 929.0,
+          "x": 367.0,
+          "y": 51.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-3",
+        "e_index": "e65",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.475,
+        "rect": {
+          "height": 55.0,
+          "width": 887.0,
+          "x": 410.0,
+          "y": 894.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-4",
+        "e_index": "e67",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.475,
+        "rect": {
+          "height": 55.0,
+          "width": 887.0,
+          "x": 410.0,
+          "y": 894.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-5",
+        "e_index": "e68",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 55.0,
+          "width": 887.0,
+          "x": 410.0,
+          "y": 1825.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      },
+      {
+        "accessible_name_truncated": "search__input field__input visible-placeholder",
+        "candidate_id": "search-6",
+        "e_index": "e70",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.95,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.285,
+        "rect": {
+          "height": 55.0,
+          "width": 887.0,
+          "x": 410.0,
+          "y": 1825.0
+        },
+        "role": "textbox",
+        "tag": "input",
+        "text_content_truncated": ""
+      }
+    ],
+    "subheading": [
+      {
+        "accessible_name_truncated": "Ford Focus RS / ST",
+        "candidate_id": "subheading-1",
+        "e_index": "e107",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 190.0,
+          "x": 1011.0,
+          "y": 196.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Ford Focus RS / ST"
+      },
+      {
+        "accessible_name_truncated": "Subaru WRX / STI",
+        "candidate_id": "subheading-2",
+        "e_index": "e108",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 190.0,
+          "x": 1011.0,
+          "y": 390.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Subaru WRX / STI"
+      },
+      {
+        "accessible_name_truncated": "Ford Focus RS / ST",
+        "candidate_id": "subheading-3",
+        "e_index": "e109",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 190.0,
+          "x": 1011.0,
+          "y": 1039.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Ford Focus RS / ST"
+      },
+      {
+        "accessible_name_truncated": "Performance",
+        "candidate_id": "subheading-4",
+        "e_index": "e127",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 191.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Performance"
+      },
+      {
+        "accessible_name_truncated": "Exterior",
+        "candidate_id": "subheading-5",
+        "e_index": "e128",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 326.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Exterior"
+      },
+      {
+        "accessible_name_truncated": "Interior",
+        "candidate_id": "subheading-6",
+        "e_index": "e129",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 413.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Interior"
+      },
+      {
+        "accessible_name_truncated": "Handling & Brakes",
+        "candidate_id": "subheading-7",
+        "e_index": "e130",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 549.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Handling & Brakes"
+      },
+      {
+        "accessible_name_truncated": "Drivetrain",
+        "candidate_id": "subheading-8",
+        "e_index": "e131",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 660.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Drivetrain"
+      },
+      {
+        "accessible_name_truncated": "Cooling",
+        "candidate_id": "subheading-9",
+        "e_index": "e132",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 771.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Cooling"
+      },
+      {
+        "accessible_name_truncated": "Electronics",
+        "candidate_id": "subheading-10",
+        "e_index": "e133",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 858.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Electronics"
+      },
+      {
+        "accessible_name_truncated": "Accessories",
+        "candidate_id": "subheading-11",
+        "e_index": "e134",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 946.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Accessories"
+      },
+      {
+        "accessible_name_truncated": "Performance",
+        "candidate_id": "subheading-12",
+        "e_index": "e135",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.7,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 1034.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Performance"
+      },
+      {
+        "accessible_name_truncated": "Subaru WRX / STI",
+        "candidate_id": "subheading-13",
+        "e_index": "e110",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 19.0,
+          "width": 190.0,
+          "x": 1011.0,
+          "y": 1234.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Subaru WRX / STI"
+      },
+      {
+        "accessible_name_truncated": "Ford Focus RS / ST",
+        "candidate_id": "subheading-14",
+        "e_index": "e111",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 19.0,
+          "width": 190.0,
+          "x": 1011.0,
+          "y": 1970.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Ford Focus RS / ST"
+      },
+      {
+        "accessible_name_truncated": "Subaru WRX / STI",
+        "candidate_id": "subheading-15",
+        "e_index": "e112",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 19.0,
+          "width": 190.0,
+          "x": 1011.0,
+          "y": 2165.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Subaru WRX / STI"
+      },
+      {
+        "accessible_name_truncated": "Exterior",
+        "candidate_id": "subheading-16",
+        "e_index": "e136",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 1169.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Exterior"
+      },
+      {
+        "accessible_name_truncated": "Interior",
+        "candidate_id": "subheading-17",
+        "e_index": "e137",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 1257.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Interior"
+      },
+      {
+        "accessible_name_truncated": "Handling & Brakes",
+        "candidate_id": "subheading-18",
+        "e_index": "e138",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 1392.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Handling & Brakes"
+      },
+      {
+        "accessible_name_truncated": "Drivetrain",
+        "candidate_id": "subheading-19",
+        "e_index": "e139",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 1.0,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.42,
+        "rect": {
+          "height": 19.0,
+          "width": 120.0,
+          "x": 848.0,
+          "y": 1503.0
+        },
+        "role": "heading",
+        "tag": "h3",
+        "text_content_truncated": "Drivetrain"
+      },
+      {
+        "accessible_name_truncated": "Join Our Newsletter!",
+        "candidate_id": "subheading-20",
+        "e_index": "e72",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.21,
+        "rect": {
+          "height": 50.0,
+          "width": 483.0,
+          "x": 281.0,
+          "y": 2158.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "Join Our Newsletter!"
+      },
+      {
+        "accessible_name_truncated": "Information",
+        "candidate_id": "subheading-21",
+        "e_index": "e77",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.21,
+        "rect": {
+          "height": 21.0,
+          "width": 690.0,
+          "x": 239.0,
+          "y": 2612.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "Information"
+      },
+      {
+        "accessible_name_truncated": "My Account",
+        "candidate_id": "subheading-22",
+        "e_index": "e78",
+        "is_above_fold": false,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 0.6,
+          "classification_confidence": 0.7,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 1.0
+        },
+        "rank_score": 0.21,
+        "rect": {
+          "height": 21.0,
+          "width": 690.0,
+          "x": 977.0,
+          "y": 2612.0
+        },
+        "role": "heading",
+        "tag": "h2",
+        "text_content_truncated": "My Account"
+      }
+    ],
+    "trust-strip": [
+      {
+        "accessible_name_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "candidate_id": "trust-strip-1",
+        "e_index": "e34",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.34,
+        "rect": {
+          "height": 41.0,
+          "width": 1905.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "role": "group",
+        "tag": "div",
+        "text_content_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      },
+      {
+        "accessible_name_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "candidate_id": "trust-strip-2",
+        "e_index": "e52",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.34,
+        "rect": {
+          "height": 40.0,
+          "width": 1338.0,
+          "x": 239.0,
+          "y": 0.0
+        },
+        "role": "group",
+        "tag": "slideshow-component",
+        "text_content_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      },
+      {
+        "accessible_name_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "candidate_id": "trust-strip-3",
+        "e_index": "e53",
+        "is_above_fold": true,
+        "is_sticky": false,
+        "rank_factors": {
+          "above_fold": 1.0,
+          "classification_confidence": 0.8,
+          "has_accessible_name": 1.0,
+          "rect_size_specificity": 0.5,
+          "text_richness": 0.85
+        },
+        "rank_score": 0.34,
+        "rect": {
+          "height": 40.0,
+          "width": 1338.0,
+          "x": 239.0,
+          "y": 0.0
+        },
+        "role": "group",
+        "tag": "slideshow-component",
+        "text_content_truncated": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      }
+    ]
+  },
+  "counts": {
+    "baton_elements": 140,
+    "by_role": {
+      "footer-region": 1,
+      "gallery-image": 13,
+      "navigation": 4,
+      "price-block": 1,
+      "primary-cta": 2,
+      "product-title": 2,
+      "search": 6,
+      "subheading": 22,
+      "trust-strip": 3
+    },
+    "total_candidates": 54
+  },
+  "device": "desktop",
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "expected_overlay_templates": {
+    "breadcrumb-bar": {
+      "default_kind": "element",
+      "default_placement": "before-element",
+      "description": "Ghost breadcrumb row representing missing navigation context. Place above the product title."
+    },
+    "faq-section": {
+      "default_kind": "section",
+      "default_placement": "after-section",
+      "description": "Ghost section representing missing FAQ markup. Place after the product description."
+    },
+    "msrp-anchor": {
+      "default_kind": "element",
+      "default_placement": "before-element",
+      "description": "Ghost text representing a missing MSRP strikethrough. Place immediately above the live price element."
+    },
+    "payment-badges": {
+      "default_kind": "element",
+      "default_placement": "after-element",
+      "description": "Ghost strip of payment-method icons (Visa/MC/PayPal/Apple Pay). Place inside the purchase zone, immediately below the CTA."
+    },
+    "reviews-block": {
+      "default_kind": "section",
+      "default_placement": "after-section",
+      "description": "Ghost panel representing a missing reviews section. Place below the product description or above the related-products row."
+    },
+    "sticky-cta": {
+      "default_kind": "viewport",
+      "default_placement": "viewport-bottom-sticky",
+      "default_viewport_trigger": "after_primary_cta_offscreen",
+      "description": "Ghost rectangle pinned at the bottom of the mobile viewport representing a missing sticky Add-to-Cart bar. Use for 'no sticky CTA after scroll' findings."
+    },
+    "trust-strip": {
+      "default_kind": "element",
+      "default_placement": "after-element",
+      "description": "Ghost row of trust signals (guarantee, free shipping, secure checkout). Place adjacent to the price block or CTA."
+    },
+    "video-tile": {
+      "default_kind": "element",
+      "default_placement": "inside-element-bottom",
+      "description": "Ghost tile inside the gallery thumbnail strip representing a missing product video. Place adjacent to the first gallery image."
+    }
+  }
+}

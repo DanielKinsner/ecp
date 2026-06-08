@@ -1,0 +1,454 @@
+{
+  "capture_state": {
+    "hydration": "post-hydration",
+    "overlays_detected": [],
+    "page_height_px": 3240
+  },
+  "captured_at": "2026-06-08T22:24:34.000Z",
+  "device": "desktop",
+  "elements": [
+    {
+      "accessible_name": "Join Our Newsletter!\n\n        New parts, new builds, exclusi",
+      "e_index": "e2",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 512.0,
+        "width": 1905.0,
+        "x": 0.0,
+        "y": 2073.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"newsletter\"]",
+      "tag": "section",
+      "text_content": "Join Our Newsletter!\n\n        New parts, new builds, exclusi"
+    },
+    {
+      "accessible_name": "Join Our Newsletter!\n\n        New parts, new builds, exclusi",
+      "e_index": "e3",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 510.0,
+        "width": 1533.0,
+        "x": 186.0,
+        "y": 2074.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Join Our Newsletter!\n\n        New parts, new builds, exclusi"
+    },
+    {
+      "accessible_name": "Information\n                        \n  \n\n                   ",
+      "e_index": "e4",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 310.0,
+        "width": 1905.0,
+        "x": 0.0,
+        "y": 2585.0
+      },
+      "role": "contentinfo",
+      "scroll_y_at_capture": 0,
+      "selector": "footer",
+      "tag": "footer",
+      "text_content": "Information\n                        \n  \n\n                   "
+    },
+    {
+      "accessible_name": "Join Our Newsletter!\n\n        New parts, new builds, exclusi",
+      "e_index": "e21",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 256.0,
+        "width": 567.0,
+        "x": 239.0,
+        "y": 2126.0
+      },
+      "role": "form",
+      "scroll_y_at_capture": 0,
+      "selector": "form",
+      "tag": "form",
+      "text_content": "Join Our Newsletter!\n\n        New parts, new builds, exclusi"
+    },
+    {
+      "accessible_name": "Shop All\n                    \n                      \n      \n",
+      "e_index": "e22",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 74.0,
+        "width": 1533.0,
+        "x": 186.0,
+        "y": 41.0
+      },
+      "role": "banner",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"search\"]",
+      "tag": "header",
+      "text_content": "Shop All\n                    \n                      \n      \n"
+    },
+    {
+      "accessible_name": "Shop All\n              \n                \n                  \n",
+      "e_index": "e28",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 47.0,
+        "width": 1918.0,
+        "x": 0.0,
+        "y": 115.0
+      },
+      "role": "navigation",
+      "scroll_y_at_capture": 0,
+      "selector": "nav",
+      "tag": "nav",
+      "text_content": "Shop All\n              \n                \n                  \n"
+    },
+    {
+      "accessible_name": "Performance \n\n\n                      IntakesExhaustCoolingDr",
+      "e_index": "e29",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302.0,
+        "width": 273.0,
+        "x": 239.0,
+        "y": 544.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDr"
+    },
+    {
+      "accessible_name": "Electronics\n\n\n                      LightingWiringInfotainme",
+      "e_index": "e33",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 302.0,
+        "width": 273.0,
+        "x": 1394.0,
+        "y": 544.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"star\"]",
+      "tag": "div",
+      "text_content": "Electronics\n\n\n                      LightingWiringInfotainme"
+    },
+    {
+      "accessible_name": "FREE SHIPPING on most orders $75+ â€” Contiguous US only SHOP ",
+      "e_index": "e34",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 41.0,
+        "width": 1905.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"announce\"]",
+      "tag": "div",
+      "text_content": "FREE SHIPPING on most orders $75+ â€” Contiguous US only SHOP "
+    },
+    {
+      "accessible_name": "card__image motion-reduce object-center\n                   object-contain",
+      "e_index": "e35",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 271.0,
+        "width": 271.0,
+        "x": 240.0,
+        "y": 989.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "card__image motion-reduce object-center\n                   object-contain",
+      "e_index": "e40",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 271.0,
+        "width": 271.0,
+        "x": 240.0,
+        "y": 942.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "search__input field__input visible-placeholder",
+      "e_index": "e58",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 55.0,
+        "width": 929.0,
+        "x": 367.0,
+        "y": 51.0
+      },
+      "role": "textbox",
+      "scroll_y_at_capture": 0,
+      "selector": "input[type=\"search\"]",
+      "tag": "input",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Featured Collection",
+      "e_index": "e79",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 50.0,
+        "width": 286.0,
+        "x": 239.0,
+        "y": 906.0
+      },
+      "role": "heading",
+      "scroll_y_at_capture": 0,
+      "selector": "h2",
+      "tag": "h2",
+      "text_content": "Featured Collection"
+    },
+    {
+      "accessible_name": "American Express\n\n                  \n                    App",
+      "e_index": "e81",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 35.0,
+        "width": 388.0,
+        "x": 338.0,
+        "y": 2841.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"payment\"]",
+      "tag": "ul",
+      "text_content": "American Express\n\n                  \n                    App"
+    },
+    {
+      "accessible_name": "Select Make\n                  \n                \n            ",
+      "e_index": "e86",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 59.0,
+        "width": 206.0,
+        "x": 490.0,
+        "y": 308.0
+      },
+      "role": "combobox",
+      "scroll_y_at_capture": 0,
+      "selector": "select",
+      "tag": "select",
+      "text_content": "Select Make\n                  \n                \n            "
+    },
+    {
+      "accessible_name": "Select Year\n                  \n                \n            ",
+      "e_index": "e88",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 59.0,
+        "width": 206.0,
+        "x": 923.0,
+        "y": 308.0
+      },
+      "role": "combobox",
+      "scroll_y_at_capture": 0,
+      "selector": "select",
+      "tag": "select",
+      "text_content": "Select Year\n                  \n                \n            "
+    },
+    {
+      "accessible_name": "Regular price\n          \n            From $135.99\n          ",
+      "e_index": "e104",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 26.0,
+        "width": 229.0,
+        "x": 261.0,
+        "y": 1346.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"price\"]",
+      "tag": "div",
+      "text_content": "Regular price\n          \n            From $135.99\n          "
+    },
+    {
+      "accessible_name": "5.0 /\n                    5.0\n                \n\n            ",
+      "e_index": "e105",
+      "is_above_fold": false,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 21.0,
+        "width": 229.0,
+        "x": 549.0,
+        "y": 1362.0
+      },
+      "role": "group",
+      "scroll_y_at_capture": 0,
+      "selector": "[class*=\"rating\"]",
+      "tag": "div",
+      "text_content": "5.0 /\n                    5.0\n                \n\n            "
+    },
+    {
+      "accessible_name": "header__heading-logo motion-reduce",
+      "e_index": "e113",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 45.0,
+        "width": 80.0,
+        "x": 239.0,
+        "y": 56.0
+      },
+      "role": "image",
+      "scroll_y_at_capture": 0,
+      "selector": "img[alt]:not([alt=\"\"])",
+      "tag": "img",
+      "text_content": ""
+    },
+    {
+      "accessible_name": "Find parts",
+      "e_index": "e117",
+      "is_above_fold": true,
+      "is_offscreen": false,
+      "is_sticky": false,
+      "rect": {
+        "height": 59.0,
+        "width": 59.0,
+        "x": 1357.0,
+        "y": 308.0
+      },
+      "role": "button",
+      "scroll_y_at_capture": 0,
+      "selector": "button",
+      "tag": "button",
+      "text_content": "Find parts"
+    }
+  ],
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "page_head": {
+    "canonical": "https://www.awdmods.com/",
+    "hreflang": [],
+    "meta_description": null,
+    "og_image": null,
+    "schema_jsonld": [
+      {
+        "@context": "https://schema.org",
+        "@type": "OnlineStore",
+        "logo": "https://www.awdmods.com/cdn/shop/files/awd_big_3cb61c8f-fcd9-403e-9e96-dc294bd03a36.png?v=1771344724&width=500",
+        "name": "AWDMods",
+        "sameAs": [
+          "",
+          "https://www.facebook.com/awdmods",
+          "",
+          "https://www.instagram.com/awdmods",
+          "",
+          "",
+          "",
+          "https://www.youtube.com/@AWDMods",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "url": "https://www.awdmods.com"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AWDMods",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "query-input": "required name=search_term_string",
+          "target": "https://www.awdmods.com/search?q={search_term_string}"
+        },
+        "url": "https://www.awdmods.com"
+      }
+    ],
+    "title": "AWDMods â€“ AWDMods",
+    "viewport_meta": "width=device-width,initial-scale=1"
+  },
+  "schema_version": 1,
+  "sections": [
+    {
+      "clusters": [
+        "visual-cta"
+      ],
+      "label": "Above the fold (hero, navigation, and primary CTA)",
+      "screenshot_ref": "section-1.jpg",
+      "scroll_y_bottom": 930,
+      "scroll_y_top": 0,
+      "slug": "above-the-fold-hero-navigation-and-primary-cta"
+    },
+    {
+      "clusters": [
+        "visual-cta"
+      ],
+      "label": "Primary content block 2",
+      "screenshot_ref": "section-2.jpg",
+      "scroll_y_bottom": 1814,
+      "scroll_y_top": 931,
+      "slug": "primary-content-block-2"
+    },
+    {
+      "clusters": [
+        "visual-cta"
+      ],
+      "label": "Lower page section 3",
+      "screenshot_ref": "section-3.jpg",
+      "scroll_y_bottom": 2895,
+      "scroll_y_top": 1815,
+      "slug": "lower-page-section-3"
+    }
+  ],
+  "url": "https://www.awdmods.com/",
+  "viewport": {
+    "dpr_actual": 1.0,
+    "dpr_requested": 1.0,
+    "height": 1080,
+    "width": 1920
+  }
+}

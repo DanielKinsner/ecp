@@ -1,0 +1,754 @@
+{
+  "engagement": "docs\\ecp\\2026-06-08-8e46b1c8",
+  "entries": [
+    {
+      "f_ref": "category-navigation F-03",
+      "cluster": "category-navigation",
+      "display_index": 3,
+      "title": "Vehicle Fitment Selector Anchors the Compatibility Path",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "category-navigation F-05",
+      "cluster": "category-navigation",
+      "display_index": 5,
+      "title": "Shop by Vehicle Drawer Lists Only Two Vehicles",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "category-navigation F-29",
+      "cluster": "category-navigation",
+      "display_index": 29,
+      "title": "Category Cards Expose Subcategories Plus Dedicated CTAs",
+      "severity": "LOW",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "category-navigation F-41",
+      "cluster": "category-navigation",
+      "display_index": 41,
+      "title": "Top Navigation Is Lean and Clearly Labeled",
+      "severity": "LOW",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "category-navigation F-45",
+      "cluster": "category-navigation",
+      "display_index": 45,
+      "title": "Category Cards Don't Match the Shop-by-Category Menu Taxonomy",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "category-navigation F-46",
+      "cluster": "category-navigation",
+      "display_index": 46,
+      "title": "Vehicle Selector Submit Is an Icon-Only Square With No Label",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "category-navigation F-50",
+      "cluster": "category-navigation",
+      "display_index": 50,
+      "title": "Only Category Path in First Viewport Is the Hidden Hamburger Drawer",
+      "severity": "HIGH",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "category-navigation F-52",
+      "cluster": "category-navigation",
+      "display_index": 52,
+      "title": "Fitment Selector Floats in an Empty Black Band Above the Fold",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "category-navigation F-63",
+      "cluster": "category-navigation",
+      "display_index": 63,
+      "title": "Category Carousel Reveals Roughly One Tile, Hiding Catalog Breadth",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "category-navigation F-88",
+      "cluster": "category-navigation",
+      "display_index": 88,
+      "title": "Search Box Is a Visible Full-Width Input at Page Top",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "category-navigation F-99",
+      "cluster": "category-navigation",
+      "display_index": 99,
+      "title": "Site Search Is Prominent, Wide, and Top-Positioned",
+      "severity": "LOW",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "content-seo F-27",
+      "cluster": "content-seo",
+      "display_index": 27,
+      "title": "Product Card Images Use CSS Class Names as Alt Text",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "content-seo F-32",
+      "cluster": "content-seo",
+      "display_index": 32,
+      "title": "Title Tag Is Just the Brand Name Repeated Twice",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop",
+        "mobile"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "content-seo F-60",
+      "cluster": "content-seo",
+      "display_index": 60,
+      "title": "No Open Graph Image for Social and AI Previews",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "content-seo F-61",
+      "cluster": "content-seo",
+      "display_index": 61,
+      "title": "Featured Products Carry No Product or Rating Schema",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "content-seo F-62",
+      "cluster": "content-seo",
+      "display_index": 62,
+      "title": "Star Ratings and Prices Shown but No Product Schema",
+      "severity": "HIGH",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "content-seo F-63",
+      "cluster": "content-seo",
+      "display_index": 63,
+      "title": "Canonical and Mobile Viewport Tags Are Correctly Set",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "content-seo F-64",
+      "cluster": "content-seo",
+      "display_index": 64,
+      "title": "Self-Referencing HTTPS Canonical on the Homepage",
+      "severity": "LOW",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "content-seo F-74",
+      "cluster": "content-seo",
+      "display_index": 74,
+      "title": "Homepage Has No Meta Description At All",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "content-seo F-75",
+      "cluster": "content-seo",
+      "display_index": 75,
+      "title": "Meta Description and Social Preview Are Placeholder Brand Text",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "content-seo F-76",
+      "cluster": "content-seo",
+      "display_index": 76,
+      "title": "Featured Product Images Use CSS Class Names as Alt Text",
+      "severity": "HIGH",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "content-seo F-87",
+      "cluster": "content-seo",
+      "display_index": 87,
+      "title": "Homepage Has Almost No Descriptive or Benefit-First Copy",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "ethics F-16",
+      "cluster": "ethics",
+      "display_index": 16,
+      "title": "Privacy Policy Links to Staging Domain, Not Canonical Store",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "ethics F-30",
+      "cluster": "ethics",
+      "display_index": 30,
+      "title": "Newsletter Signup Purpose Clearly Disclosed at Point of Collection",
+      "severity": "LOW",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "ethics F-37",
+      "cluster": "ethics",
+      "display_index": 37,
+      "title": "CCPA Privacy Choices Opt-Out Link Present in Footer",
+      "severity": "LOW",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "ethics F-46",
+      "cluster": "ethics",
+      "display_index": 46,
+      "title": "Product Card Star Ratings Display Genuine Review Counts",
+      "severity": "LOW",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "ethics F-56",
+      "cluster": "ethics",
+      "display_index": 56,
+      "title": "Newsletter Hero Background Is Decorative Automotive Imagery, Not Product Misrepresentation",
+      "severity": "LOW",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "ethics F-64",
+      "cluster": "ethics",
+      "display_index": 64,
+      "title": "No EU Cookie Consent Required \u2014 US-Only Targeting Confirmed",
+      "severity": "LOW",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "ethics F-67",
+      "cluster": "ethics",
+      "display_index": 67,
+      "title": "No Fabricated Urgency or Countdown Timers Detected",
+      "severity": "LOW",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "ethics F-69",
+      "cluster": "ethics",
+      "display_index": 69,
+      "title": "Free Shipping Threshold Disclosed Upfront in Announcement Bar",
+      "severity": "LOW",
+      "devices_present": [
+        "page"
+      ],
+      "device": "page"
+    },
+    {
+      "f_ref": "performance-ux F-13",
+      "cluster": "performance-ux",
+      "display_index": 13,
+      "title": "Header Tap Targets and Native Dropdowns Meet Mobile Sizing",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "performance-ux F-17",
+      "cluster": "performance-ux",
+      "display_index": 17,
+      "title": "Featured Collection Product Images Carry No Explicit Dimensions for CLS",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "performance-ux F-18",
+      "cluster": "performance-ux",
+      "display_index": 18,
+      "title": "No Sticky Header or Cart Once the Visitor Scrolls Past the First Screen",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "performance-ux F-24",
+      "cluster": "performance-ux",
+      "display_index": 24,
+      "title": "Featured Collection Product Images Show No Reserved Aspect Ratio",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "performance-ux F-37",
+      "cluster": "performance-ux",
+      "display_index": 37,
+      "title": "No Above-Fold Image Preload; Category Tile Is an Unprioritized LCP Element",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "performance-ux F-52",
+      "cluster": "performance-ux",
+      "display_index": 52,
+      "title": "Fonts Preloaded and Logo Eager-Loaded in the Head",
+      "severity": "LOW",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "performance-ux F-76",
+      "cluster": "performance-ux",
+      "display_index": 76,
+      "title": "No Above-Fold Image Preload; 74 Checkout Scripts Prefetched on Home Load",
+      "severity": "HIGH",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "performance-ux F-83",
+      "cluster": "performance-ux",
+      "display_index": 83,
+      "title": "Empty Black Band Wastes the Entire Above-Fold Zone on Desktop",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "performance-ux F-91",
+      "cluster": "performance-ux",
+      "display_index": 91,
+      "title": "Vehicle Finder Stacks Four Sequential Native Dropdowns With No Default",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "performance-ux F-95",
+      "cluster": "performance-ux",
+      "display_index": 95,
+      "title": "Vehicle Finder Pushes Two of Four Dropdowns and Find Parts Below the Fold",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "pricing F-16",
+      "cluster": "pricing",
+      "display_index": 16,
+      "title": "Free Shipping Bar States Threshold Without Progress Cue",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "pricing F-23",
+      "cluster": "pricing",
+      "display_index": 23,
+      "title": "Was/Now Anchor Shown On One Product But Not The Grid",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "pricing F-43",
+      "cluster": "pricing",
+      "display_index": 43,
+      "title": "Featured \"From $135.99\" Price Carries No MSRP or Compare-At Anchor",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "pricing F-51",
+      "cluster": "pricing",
+      "display_index": 51,
+      "title": "Free-Shipping Threshold Stated as a Static Banner With No Progress Framing",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "pricing F-68",
+      "cluster": "pricing",
+      "display_index": 68,
+      "title": "Charm Pricing Used Correctly on Utilitarian Parts",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "pricing F-96",
+      "cluster": "pricing",
+      "display_index": 96,
+      "title": "No Installment / Pay-in-4 Pricing Shown Beside the $135.99 Item",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "pricing F-97",
+      "cluster": "pricing",
+      "display_index": 97,
+      "title": "No Installment Pricing On Items Over $1,000",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "pricing F-98",
+      "cluster": "pricing",
+      "display_index": 98,
+      "title": "Featured Collection Prices Run With No Reference Anchor",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "trust-credibility F-09",
+      "cluster": "trust-credibility",
+      "display_index": 9,
+      "title": "Featured Collection Cards Show Perfect 5.0/5.0 on Only 2-3 Reviews",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "trust-credibility F-10",
+      "cluster": "trust-credibility",
+      "display_index": 10,
+      "title": "Homepage Has No Company-Credibility or Aggregate Trust Block",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "trust-credibility F-13",
+      "cluster": "trust-credibility",
+      "display_index": 13,
+      "title": "Featured Collection Cards Show 5.0/5.0 With No Review Count",
+      "severity": "HIGH",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "trust-credibility F-15",
+      "cluster": "trust-credibility",
+      "display_index": 15,
+      "title": "Star Ratings Carry No AggregateRating Markup for Search Results",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "trust-credibility F-23",
+      "cluster": "trust-credibility",
+      "display_index": 23,
+      "title": "Most Featured Collection Cards Carry Zero Reviews",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "trust-credibility F-27",
+      "cluster": "trust-credibility",
+      "display_index": 27,
+      "title": "No Guarantee or Return-Policy Reassurance Near the Products",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "trust-credibility F-28",
+      "cluster": "trust-credibility",
+      "display_index": 28,
+      "title": "Payment Badges Sit Only in Footer, Far From Any Buying Decision",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "trust-credibility F-31",
+      "cluster": "trust-credibility",
+      "display_index": 31,
+      "title": "Recognized Payment Brands and Social Links Present in Footer",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "trust-credibility F-62",
+      "cluster": "trust-credibility",
+      "display_index": 62,
+      "title": "Recognized Payment Badges Present in Footer",
+      "severity": "LOW",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "visual-cta F-08",
+      "cluster": "visual-cta",
+      "display_index": 8,
+      "title": "Hero Band Is Empty Black Space With No Supporting Media",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "visual-cta F-11",
+      "cluster": "visual-cta",
+      "display_index": 11,
+      "title": "No Hero Headline or Value Proposition Above the Vehicle Selector",
+      "severity": "HIGH",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "visual-cta F-12",
+      "cluster": "visual-cta",
+      "display_index": 12,
+      "title": "FIND PARTS Button Is Undersized, Not Full-Width, and Its Label Reads Low-Contrast Grey",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "visual-cta F-13",
+      "cluster": "visual-cta",
+      "display_index": 13,
+      "title": "Hero's Only CTA Is a 59px Icon-Only 'Find parts' Button",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "visual-cta F-16",
+      "cluster": "visual-cta",
+      "display_index": 16,
+      "title": "SHOP PERFORMANCE Category Card Button Is Clear and Well-Contrasted",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "visual-cta F-24",
+      "cluster": "visual-cta",
+      "display_index": 24,
+      "title": "Hero Band Has No Headline or Value Proposition",
+      "severity": "HIGH",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "visual-cta F-27",
+      "cluster": "visual-cta",
+      "display_index": 27,
+      "title": "Only Above-Fold Trust Element Is a Shipping Promo, Not Credibility",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "visual-cta F-38",
+      "cluster": "visual-cta",
+      "display_index": 38,
+      "title": "Five Identical 'SHOP' Category CTAs Compete With No Primary",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "visual-cta F-46",
+      "cluster": "visual-cta",
+      "display_index": 46,
+      "title": "Top FREE SHIPPING / SHOP NOW Bar Sits in the Banner-Blindness Zone",
+      "severity": "LOW",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    },
+    {
+      "f_ref": "visual-cta F-55",
+      "cluster": "visual-cta",
+      "display_index": 55,
+      "title": "Category 'SHOP' Buttons Use High-Contrast Blue Against Dark Cards",
+      "severity": "LOW",
+      "devices_present": [
+        "desktop"
+      ],
+      "device": "desktop"
+    },
+    {
+      "f_ref": "visual-cta F-67",
+      "cluster": "visual-cta",
+      "display_index": 67,
+      "title": "No Sticky CTA After the Find Parts Button Scrolls Out of View",
+      "severity": "MEDIUM",
+      "devices_present": [
+        "mobile"
+      ],
+      "device": "mobile"
+    }
+  ]
+}

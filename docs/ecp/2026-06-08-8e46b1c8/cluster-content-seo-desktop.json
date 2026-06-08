@@ -1,0 +1,382 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "content-seo",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8"
+  },
+  "started_at": "2026-06-08T22:30:00.000Z",
+  "completed_at": "2026-06-08T22:41:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Title Tag Is Just the Brand Name Repeated Twice",
+      "surface": "title-tag",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "AWDMods – AWDMods",
+        "role": "title"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e113",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "Title tag has no DOM element on the page; anchor near the logo where the brand identity sits"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e113",
+          "context": "The HTML title is 'AWDMods – AWDMods' (17 characters) — the store name duplicated with an en-dash. It contains no product category, no vehicle fitment, and no descriptive keyword."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "title-formulas-serp-psychology.md",
+          "section": "Finding 2: Optimal Title Length Is 51–60 Characters",
+          "tier": "Silver"
+        },
+        {
+          "source": "title-formulas-serp-psychology.md",
+          "section": "Finding 4: Front-Loading the Primary Keyword Increases CTR",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The homepage title tag reads 'AWDMods – AWDMods' — the brand name repeated, 17 characters total, with the second half wasted on a duplicate. There is no product category, no vehicle fitment (Focus RS/ST, WRX/STI), and no keyword a shopper would type. Titles under 30 characters get rewritten by Google more than 95% of the time, so even this thin title is unlikely to survive into the search result. The 51–60 character range that earns the most clicks is left almost entirely empty.",
+      "recommendation": "If the store wants the homepage to rank for its core category, rewrite the title to front-load what AWDMods sells and which cars it fits, then close with the brand — for example 'Focus RS/ST & WRX/STI Performance Parts | AWDMods' (around 49 characters). Keep the primary keyword in the first two to three words so it survives the F-pattern scan, and drop the duplicated brand name.",
+      "why_this_matters": "The title tag is the single biggest CTR lever for a page that already ranks. A title that is just the brand name twice gives Google nothing to match against a buyer's query and forfeits the 51–60 character window that drives the most clicks.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "breadcrumb-bar",
+          "anchor_relative_to": "e113",
+          "placement": "above"
+        },
+        "reason": "Title tag lives in the document head with no on-page element; ghost marker placed near the logo/brand mark"
+      }
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "Homepage Has No Meta Description At All",
+      "surface": "meta-description",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "meta name=description is not present in the page head",
+        "role": "meta"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e113",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "Meta description has no on-page element; anchor near the brand mark at the top of the page"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.95,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e113",
+          "context": "The page head contains no meta name='description' tag. The og:description fallback is also just 'AWDMods', so there is no sentence describing the store for the search snippet or social/AI preview."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "title-formulas-serp-psychology.md",
+          "section": "Finding 1: Position #1 Gets 27.6% CTR",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "There is no meta description on the homepage, and the only fallback — og:description — is the single word 'AWDMods'. When Google builds the search snippet it will scrape whatever text it can find on a page that is almost entirely navigation and product thumbnails, which tends to produce a disjointed, low-CTR snippet. The store has no control over how its most important page is summarized in the result.",
+      "recommendation": "If the homepage should attract clicks from brand and category searches, add a meta description of roughly 150 characters that names the catalog and the vehicles it covers — for example 'Performance, exterior, and interior parts for the Ford Focus RS/ST and Subaru WRX/STI. Free shipping on most orders $75+ in the contiguous US.' Write it as a sentence a shopper would read, not a keyword list.",
+      "why_this_matters": "The meta description is the store's pitch in the search result. Leaving it blank hands snippet control to Google's auto-extraction, which on a thumbnail-heavy homepage routinely produces a weak summary that suppresses click-through.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "breadcrumb-bar",
+          "anchor_relative_to": "e113",
+          "placement": "above"
+        },
+        "reason": "Meta description is a head element with no on-page rendering; ghost marker placed at the top of the page"
+      }
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "FAIL",
+      "title": "No Open Graph Image for Social and AI Previews",
+      "surface": "og-image",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "og:image is not present in the page head",
+        "role": "meta"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e113",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "Open Graph image is a head meta tag with no on-page element; anchor near the logo/brand mark"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e113",
+          "context": "The head declares twitter:card='summary_large_image' but supplies no og:image and no twitter:image. og:title and og:description are both just 'AWDMods'."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "image-seo-alt-text.md",
+          "section": "Finding 4: Google Lens Processes ~20 Billion Visual Searches/Month",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The head requests a large-image social card (twitter:card='summary_large_image') but never provides an image to fill it — there is no og:image and no twitter:image. When the homepage is shared on Facebook, sent in a message, or surfaced by an AI assistant building a preview, there is no thumbnail to show, so the link renders as a bare title-and-URL card next to competitors that show a branded image.",
+      "recommendation": "If the store wants its links to render as rich cards, add an og:image (and a matching twitter:image) pointing to a 1200×630 branded preview — the AWDMods logo over a hero build shot works well. Because the card type is already set to summary_large_image, supplying the image is the only missing step.",
+      "why_this_matters": "Shared and AI-surfaced links with a strong preview image are clicked far more than bare text cards. A declared image card with no image is the worst of both worlds — it reserves the large slot and then leaves it empty.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "video-tile",
+          "anchor_relative_to": "e113",
+          "placement": "above"
+        },
+        "reason": "og:image is a head meta tag with no on-page rendering; ghost marker placed near the brand mark"
+      }
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "FAIL",
+      "title": "Featured Products Carry No Product or Rating Schema",
+      "surface": "product-schema",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "No Product, ItemList, or AggregateRating JSON-LD; head only has OnlineStore + WebSite",
+        "role": "meta"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e79",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "Product/rating schema should describe the Featured Collection grid; anchor on its heading"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e79",
+          "context": "The 'Featured Collection' grid shows real products with brands, prices, and visible 5.0-star ratings with review counts (e105, e106), but the page's only JSON-LD is OnlineStore and WebSite — there is no Product, ItemList, or AggregateRating markup."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 931,
+          "viewport": "desktop",
+          "context": "Featured Collection cards display named products (Borla Cat-Back ATAK, Injen SP Series Cold Air Intake, Tufskinz kits) with prices and 5.0-star ratings — none of which is described in structured data."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "schema-product-markup.md",
+          "section": "Finding 10: Review Schema Alone Produces ~20% Organic Traffic Uplift",
+          "tier": "Gold"
+        },
+        {
+          "source": "ai-search-agentic-discovery.md",
+          "section": "Finding 10: Schema.org Product Markup Is the Single Highest-ROI AI Commerce Action",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Featured Collection grid lists named products with brands (Borla, Injen, Magnaflow, Tufskinz, Lloyd Mats), live prices, and visible 5.0-star ratings with review counts, yet the page exposes none of this in structured data — the only JSON-LD blocks are OnlineStore and WebSite. With no Product, ItemList, or AggregateRating markup, Google cannot surface star ratings or price for these items, and AI shopping agents (ChatGPT Shopping, Perplexity) have no machine-readable product data to match or recommend.",
+      "recommendation": "If these products are meant to be discoverable, add ItemList JSON-LD wrapping each featured product as a Product with name, offers (price, priceCurrency, availability, url), and AggregateRating (ratingValue, ratingCount) drawn from the same fields already rendered on the cards. Render the markup server-side so the Merchant Center and AI crawlers see it without executing JavaScript.",
+      "why_this_matters": "Adding AggregateRating schema alone produced roughly a 20% organic traffic uplift in SearchPilot's controlled test, and the same Product markup is what feeds Google Shopping and AI shopping agents. Leaving real, rated products undescribed forfeits both the star-rating rich result and AI commerce visibility.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "reviews-block",
+          "anchor_relative_to": "e79",
+          "placement": "below"
+        },
+        "reason": "Product/rating schema has no on-page element; ghost marker placed on the Featured Collection grid it should describe"
+      }
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "FAIL",
+      "title": "Product Card Images Use CSS Class Names as Alt Text",
+      "surface": "image-alt-text",
+      "element": {
+        "baton_index": "e35",
+        "text_content": "",
+        "role": "image",
+        "tag": "img"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e35",
+          "context": "The Featured Collection product images resolve to an accessible name of 'card__image motion-reduce object-center object-contain' — the element's CSS class list, not a description of the product. The same non-descriptive alt repeats across every product card (e35–e44)."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2.jpg",
+          "scroll_y": 931,
+          "viewport": "desktop",
+          "context": "Each Featured Collection card shows a clear product photo (floor mats, cold air intake, cat-back exhaust, gauge kit) whose alt text is the CSS class string rather than the product name."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "image-seo-alt-text.md",
+          "section": "Finding 11: WCAG 2.1 Success Criterion 1.1.1 Is the Legally-Cited Alt Text Standard",
+          "tier": "Gold"
+        },
+        {
+          "source": "image-seo-alt-text.md",
+          "section": "Finding 2: Alt Text Must Be Descriptive",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "Every product image in the Featured Collection carries an alt value of 'card__image motion-reduce object-center object-contain' — the image's CSS class list bled into the alt attribute instead of a real description. A screen reader announces that string verbatim, and Google has nothing meaningful to read for the photo. These are clearly identifiable products (floor mats, a cold air intake, a cat-back exhaust, a gauge accent kit), so the alt text should name them.",
+      "recommendation": "If these images are populated from the product feed, set each alt attribute to the product name plus a key attribute — for example 'Borla cat-back ATAK exhaust for the Ford Focus RS' — following a [Product Name] [Key Attribute] pattern under about 125 characters. The fix is at the card component template so it corrects every card at once.",
+      "why_this_matters": "Descriptive alt text is both the WCAG 2.1 SC 1.1.1 standard plaintiffs cite (3,948 federal ADA web suits were filed in 2025) and the signal Google and Google Lens use to surface product images in visual search. CSS class names as alt text fail on accessibility and discoverability simultaneously.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-4",
+          "selector_hint": "img.card__image",
+          "text_quote": "card__image motion-reduce object-center object-contain"
+        },
+        "reason": "Anchored on the first Featured Collection product image; the same non-descriptive alt repeats across all cards"
+      }
+    },
+    {
+      "cluster": "content-seo",
+      "device": "desktop",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Self-Referencing HTTPS Canonical on the Homepage",
+      "surface": "canonical-url",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "https://www.awdmods.com/",
+        "role": "meta"
+      },
+      "proposed_anchor": {
+        "kind": "element",
+        "element_baton_index": "e113",
+        "placement": "before-element",
+        "viewport": "desktop",
+        "reason": "Canonical is a head element with no on-page rendering; anchor near the brand mark"
+      },
+      "severity": "LOW",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e113",
+          "context": "The head canonical is 'https://www.awdmods.com/' — absolute, HTTPS, lowercase, and self-referencing, matching the captured page URL exactly."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "canonical-duplicate-content.md",
+          "section": "Finding 12: Self-Referencing Canonicals Are Best Practice for All Pages",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The homepage canonical is 'https://www.awdmods.com/' — absolute, HTTPS, lowercase, and self-referencing, matching the live URL exactly. This is exactly what Google wants and avoids the trailing-slash and www-variant duplication that trips up many stores.",
+      "recommendation": "Keep this as-is. When extending to product and collection templates, hold the same standard: a self-referencing, absolute, lowercase canonical that resolves to the /products/[handle] path rather than any collection-prefixed duplicate.",
+      "why_this_matters": "A correct self-referencing canonical consolidates ranking signals onto the preferred URL and prevents tracking-parameter and slash variants from fragmenting equity — a clean foundation worth preserving as the catalog grows.",
+      "evidence_tier": "Silver",
+      "visual_evidence": {
+        "type": "page_level",
+        "confidence": "medium",
+        "reason": "Canonical is a head-level signal with no single on-page element; recorded as a page-level positive"
+      }
+    }
+  ],
+  "notes": [
+    "Page is the AWDMods Shopify homepage, not a product detail page; findings target homepage-level head signals (title, meta description, og:image, store/featured-product schema) and the featured-product card images. No PDP-level surfaces (per-variant Offer, MerchantReturnPolicy, GTIN, benefit-first description) are present to audit on this page.",
+    "Positive signal not emitted as a finding: the head includes valid OnlineStore and WebSite JSON-LD, and the WebSite block carries a SearchAction (sitelinks-search-box eligible). The gap is product-level structured data, captured in F-04.",
+    "The Featured Collection products visibly show 5.0-star ratings with review counts (baton e105, e106). If those ratings reflect genuine, unsuppressed reviews they are an asset; AggregateRating schema (F-04) must mirror only real review data to stay clear of FTC 16 CFR 465.",
+    "Cluster context routed only the global header section and 'Lower page section 3' (empty DOM slice) to content-seo; the bulk of head/schema evidence came from baton.page_head, which is the authoritative source per the cluster guidance."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "canonical-duplicate-content.md",
+      "schema-product-markup.md",
+      "image-seo-alt-text.md",
+      "url-structure-information-architecture.md",
+      "title-formulas-serp-psychology.md",
+      "content-freshness-signals.md",
+      "ai-search-agentic-discovery.md",
+      "benefit-first-descriptions.md",
+      "evidence-tiers.md"
+    ]
+  }
+}

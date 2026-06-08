@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "performance-ux",
+  "device": "mobile",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8",
+    "context_window": "1M",
+    "temperature": 0.1
+  },
+  "started_at": "2026-06-08T22:30:00.000Z",
+  "completed_at": "2026-06-08T22:42:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "No Above-Fold Image Preload; 74 Checkout Scripts Prefetched on Home Load",
+      "surface": "third-party-scripts",
+      "element": {
+        "baton_index": "e69",
+        "text_content": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP ",
+        "role": "group"
+      },
+      "severity": "HIGH",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e69",
+          "context": "Page head contains zero rel=preload as=image links but 74 rel=prefetch fetchpriority=low tags pulling the Shopify checkout-web bundle (polyfills, app, OnePage, GooglePayButton, etc.) on the homepage. No product hero image exists above the fold; the announcement bar and dark vehicle-finder occupy the first viewport."
+        },
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "First mobile viewport is the blue free-shipping bar, the logo, the search field, and the unstyled-dark vehicle finder — no preloaded above-fold imagery to anchor the load."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "core-web-vitals.md",
+          "section": "Finding 8: Third-Party Scripts Are the Primary CWV Killer",
+          "tier": "Silver"
+        },
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 1: Product Hero Image Is the LCP Element — Requires fetchpriority and Preload",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The page head fires 74 prefetch tags for the Shopify checkout bundle (polyfills, OnePage, Google Pay, PayPal, address autocomplete, and dozens more) on the homepage, where no one is checking out yet. On a phone over cellular, that network contention competes with the assets the visitor actually needs to see and act on. At the same time the head carries no preload for any above-fold image, so the browser discovers and prioritizes the visible content late. The first mobile viewport is the free-shipping bar over a dark vehicle finder with no prioritized imagery to settle the layout quickly.",
+      "recommendation": "If the checkout-web bundle is being prefetched globally, gate it so it only fires on the cart and checkout routes, not the homepage. If a specific element is the mobile LCP target (the logo or the first category tile), add a matching rel=preload as=image with fetchpriority=high in the head so the browser starts fetching it before it parses down to the markup.",
+      "why_this_matters": "Each 0.1s of mobile load time tracks to roughly 8% retail conversion, and prefetching the entire checkout codebase on a page no one is checking out from is pure latency tax paid by every mobile visitor. Slow first paint also reads as an untrustworthy store before the visitor has evaluated a single product.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e69",
+          "selector_hint": "div[class*=announce]",
+          "text_quote": "FREE SHIPPING on most orders $75+"
+        },
+        "reason": "Anchored on the topmost above-fold element since the cost is a head-level loading-priority problem with no single visual element."
+      }
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 2,
+      "verdict": "FAIL",
+      "title": "No Sticky Header or Cart Once the Visitor Scrolls Past the First Screen",
+      "surface": "mobile-touch-target",
+      "element": {
+        "baton_index": "absent",
+        "text_content": "no persistent navigation, search, or cart on scroll",
+        "role": "navigation"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "proposed_anchor": {
+        "kind": "viewport",
+        "viewport_trigger": "after_primary_cta_offscreen",
+        "placement": "viewport-bottom-sticky",
+        "viewport": "mobile",
+        "reason": "A persistent search/cart bar should remain reachable in the thumb zone once the header scrolls away."
+      },
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e41",
+          "context": "The header banner (e41) and every interactive element inside it — hamburger e105, cart e106, search input e53 — all carry is_sticky=false and scroll_y_at_capture=0. The header is not pinned; it leaves the viewport as the visitor scrolls into the category cards and featured collection."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 844,
+          "viewport": "mobile",
+          "context": "By the Featured Collection row the only way back to search or the cart is to scroll all the way to the top; no thumb-reachable persistent bar exists."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 18: Thumb-Friendly Sticky CTA Bars",
+          "tier": "Bronze"
+        },
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 13: Mobile Navigation -- Hamburger Menu vs. Bottom Navigation",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The header that holds search, the cart, and the menu sits at the top and scrolls away with the page — it is not pinned. Once a mobile visitor moves past the first screen into the category carousel and the Featured Collection, there is no persistent way to search, open the cart, or jump back to the vehicle finder without scrolling back to the very top. On a phone, where the natural easy-reach zone is the bottom of the screen, the most-used actions live in the hard-to-reach top corners and then disappear entirely.",
+      "recommendation": "If the storefront keeps a single primary mobile journey (search and cart), pin a compact sticky bar — logo, search, and cart — to the top or bottom of the mobile viewport so it stays reachable on scroll. A bottom bar keeps these actions in the natural thumb zone and shows a cart count badge for ongoing context.",
+      "why_this_matters": "Hidden or disappearing navigation consistently depresses engagement on mobile; when the cart and search vanish on scroll, every return trip costs the visitor a full-page scroll, which is exactly the friction that pushes phone shoppers to abandon.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "generated_expected_zone",
+        "confidence": "low",
+        "expected_overlay": {
+          "template_id": "sticky-cta",
+          "anchor_relative_to": "viewport",
+          "placement": "sticky-viewport-bottom"
+        },
+        "reason": "No element exists for the missing persistent bar; ghost overlay at the viewport bottom shows where a sticky search/cart bar should live."
+      }
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Vehicle Finder Pushes Two of Four Dropdowns and Find Parts Below the Fold",
+      "surface": "form-fields",
+      "element": {
+        "baton_index": "e84",
+        "text_content": "Find parts",
+        "role": "button"
+      },
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The FIND PARTS button (e84) is the homepage's primary conversion action but the candidate ranker built no primary-cta/secondary-cta bucket for this page, so the verbatim-named button is absent from the registry. Anchoring directly on it is the correct, deterministic choice.",
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e84",
+          "context": "Select Make (e74) and Select Model (e75) carry is_above_fold=true; Select Year (e76), Select your Trim (e77), and the Find Parts button (e84, at y=466 CSS px) all carry is_above_fold=false. The primary conversion action sits roughly 466px down, below the 844px-tall first viewport once the announcement bar, header, and search consume the top."
+        },
+        {
+          "type": "visual",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "viewport": "mobile",
+          "context": "Make, Model, Year, and Trim stack as four full-width dropdowns; the blue FIND PARTS button is the last thing in the stack and is only partly in the first screen, requiring a scroll to complete the core task."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 12: Viewport-Based Information Hierarchy",
+          "tier": "Bronze"
+        },
+        {
+          "source": "cognitive-load-management.md",
+          "section": "Finding 1: Hick-Hyman Law",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The vehicle finder is the page's primary task, but on a 390-wide phone its four sequential dropdowns (Make, Model, Year, Trim) plus the FIND PARTS button stack vertically and the action button lands below the first screen — Year, Trim, and the button are all flagged below the fold. The visitor has to make four ordered selections and scroll before they can run the search. None of the four dropdowns shows a pre-selected default, so every field is an active decision from a cold start.",
+      "recommendation": "If the four-step finder must stay, tighten the vertical rhythm so at least Make, Model, and the FIND PARTS button fit the first mobile screen, and consider pre-selecting the most common Make or collapsing Year and Trim until Make and Model are chosen. Sequential disclosure (reveal Year only after Model is set) reduces the number of choices visible at once and keeps the action in view.",
+      "why_this_matters": "When the only action that starts the shopping journey sits below the fold behind four cold-start decisions, a share of mobile visitors never reach it; each added equally-weighted choice raises decision time and the odds of a silent bounce before the first product is ever seen.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e84",
+          "selector_hint": "button",
+          "text_quote": "Find parts"
+        },
+        "reason": "Anchored on the FIND PARTS button, the conversion action that falls below the first mobile screen."
+      }
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 4,
+      "verdict": "PARTIAL",
+      "title": "Featured Collection Product Images Carry No Explicit Dimensions for CLS",
+      "surface": "cls-source",
+      "element": {
+        "baton_index": "e23",
+        "text_content": "",
+        "role": "image",
+        "tag": "img"
+      },
+      "severity": "MEDIUM",
+      "scope": "page",
+      "effort": {
+        "change_type": "html-attr",
+        "change_scope": "component"
+      },
+      "confidence": 0.75,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e23",
+          "context": "Featured Collection card images (e23-e31) render at 266x266 CSS px in a horizontally scrolling row. The accessible name is the class string (card__image ... object-contain) rather than descriptive alt, and the cards load below the fold where late image arrival can reflow the row."
+        },
+        {
+          "type": "visual",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 1100,
+          "viewport": "mobile",
+          "context": "Featured Collection product cards (Lloyd Mats floor mats, Revo decals) sit below the fold in a swipeable row; the orange quick-add plus badge overlays the image, and the card heights depend on image load."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "media-performance-optimization.md",
+          "section": "Finding 5: Explicit Width and Height Attributes Prevent Cumulative Layout Shift",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The Featured Collection product images sit below the fold in a horizontally swipeable row and are lazy-loaded, which is correct for off-screen media. What is missing is the safeguard: if these card images do not carry explicit width and height (or a CSS aspect-ratio reserving their square footprint), the cards have no reserved space until each image arrives, so the row can reflow as a phone slowly pulls them in over cellular. On mobile the small screen absorbs layout shift poorly, and the orange quick-add badge overlapping each image is a tap target that can jump as the card settles.",
+      "recommendation": "If the card image container does not already reserve its square footprint, add explicit width and height attributes or a CSS aspect-ratio on the card image so the browser holds the space before the image loads. This keeps the Featured Collection row stable as the visitor swipes and prevents the quick-add badge from shifting under a thumb.",
+      "why_this_matters": "Cumulative layout shift causes misclicks and erodes trust, and its impact is proportionally larger on mobile because the screen has less room to absorb a reflow; a shifting product row at the moment a visitor reaches for the quick-add badge directly costs add-to-cart actions.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "candidate_id": "gallery-image-5",
+          "selector_hint": "img.card__image",
+          "text_quote": "Featured Collection product card image"
+        },
+        "reason": "Anchored on the first Featured Collection card image; the CLS risk applies to the whole lazy-loaded card row."
+      }
+    },
+    {
+      "cluster": "performance-ux",
+      "device": "mobile",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Header Tap Targets and Native Dropdowns Meet Mobile Sizing",
+      "surface": "mobile-touch-target",
+      "element": {
+        "baton_index": "e105",
+        "text_content": "",
+        "role": "group",
+        "tag": "summary"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "dom",
+          "reference": "e105",
+          "context": "Hamburger (e105) and cart (e106) tap targets measure 46x46 CSS px; the vehicle finder dropdowns (e74-e77) and the search field (e53) are 55px tall and full-width. All comfortably clear the WCAG 2.2 AA 24x24 minimum and sit at or above the 44px platform recommendation."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "mobile-conversion.md",
+          "section": "Finding 6: Touch Target Sizing Research",
+          "tier": "Bronze"
+        }
+      ],
+      "observation": "The header icons (hamburger and cart) render at 46x46 CSS px and the vehicle-finder dropdowns and search field are 55px tall full-width controls — all comfortably above the WCAG 2.2 AA minimum and at the platform-recommended size, so the interactive elements are easy to hit on a phone.",
+      "recommendation": "Keep these control sizes as the storefront evolves; if anything, the only adjacency to watch is keeping the hamburger and the logo from crowding in the top-left corner.",
+      "why_this_matters": "Adequately sized, well-spaced tap targets keep mobile interaction error rates low and avoid the accidental taps that frustrate phone shoppers and add friction to every navigation step.",
+      "evidence_tier": "Bronze",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e105",
+          "selector_hint": "summary.header__icon--menu",
+          "text_quote": "menu"
+        },
+        "reason": "Anchored on the hamburger menu control as a representative header tap target."
+      }
+    }
+  ],
+  "notes": [
+    "Header repeats at the top of every section screenshot (section-1 through section-4 mobile), but baton confirms is_sticky=false on the header banner (e41/e43/e45/e47) and all its children — the repetition is the section-tiling renderer, not a real sticky header. The no-sticky finding (F-02) is grounded in the baton sticky flags, not the screenshots.",
+    "Category cards render as a horizontal carousel with a visible partial-next-card peek and a two-dot scroll indicator (section-2 mobile) — a correct swipe affordance, so it was not emitted as a finding.",
+    "Payment-method badges (e49/e50: Amex, Apple Pay, Discover, Google Pay, Mastercard, PayPal, Shop, Visa) render in the footer; relevant to trust-credibility, noted here only because they confirm digital-wallet support exists for the checkout the prefetch bundle is pre-loading.",
+    "Cross-device consistency: F-01 (LCP/preload + third-party scripts) and F-04 (Featured Collection CLS) mirror the desktop performance-ux emission's F-01 and F-04 and are emitted scope=page so the synthesizer renders synchronized prose into both documents."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "mobile-conversion.md",
+      "cognitive-load-management.md",
+      "page-performance-psychology.md",
+      "core-web-vitals.md",
+      "media-performance-optimization.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 4,
+    "findings_by_verdict": {
+      "FAIL": 2,
+      "PARTIAL": 2,
+      "PASS": 1
+    }
+  }
+}

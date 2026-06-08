@@ -1,0 +1,291 @@
+{
+  "cluster": "visual-cta",
+  "completed_at": "2026-06-08T00:06:00.000Z",
+  "device": "mobile",
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "findings": [
+    {
+      "cluster": "visual-cta",
+      "confidence": 0.9,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "single-file",
+        "change_type": "component"
+      },
+      "element": {
+        "baton_index": "absent",
+        "role": "heading",
+        "text_content": "(no headline element present in the hero zone)"
+      },
+      "evidence_anchors": [
+        {
+          "context": "The first mobile viewport runs: blue 'FREE SHIPPING' bar, then the AWDMods logo and search bar, then four 'Select Make / Model / Year / Trim' dropdowns, then a small 'FIND PARTS' button. There is no headline, no tagline, and no sentence stating what the store sells or who it serves. The only words above the fold besides the search placeholder are the four dropdown labels.",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "mobile"
+        },
+        {
+          "context": "First element in the vehicle-selector group is the Select Make combobox at the top of the hero zone; no heading element precedes it inside the hero.",
+          "reference": "e74",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 1,
+      "observation": "The top of the mobile homepage jumps straight from the search bar into four 'Select Make / Model / Year / Trim' dropdowns and a 'FIND PARTS' button, with no headline or value-proposition sentence anywhere above the fold. A first-time visitor who lands here in the first five seconds sees the brand name in the logo and a vehicle-lookup form, but nothing that states what AWDMods sells, who it is for, or why to buy here rather than a competitor. The dropdown labels do the page's only talking, and they describe the tool, not the offer.",
+      "proposed_anchor": {
+        "element_baton_index": "e74",
+        "kind": "element",
+        "placement": "before-element",
+        "reason": "A headline and one-line value proposition belong directly above the Select Make dropdown, in the empty band between the search bar and the vehicle selector",
+        "viewport": "mobile"
+      },
+      "recommendation": "If the homepage is meant to convert cold traffic, add a short headline and one supporting line in the empty band directly above the Select Make dropdown — for example a benefit-led headline naming the audience and category ('Performance and styling parts for your WRX, STI, and Focus RS/ST') with a one-line subhead on fitment confidence. Keep the headline to roughly two lines so it does not push the 'FIND PARTS' button further down the first screen.",
+      "reference_citations": [
+        {
+          "section": "Finding 1: The 5-Second Test — Clarity Is the Foundational Hero Metric",
+          "source": "hero-section-psychology.md",
+          "tier": "Gold"
+        },
+        {
+          "section": "Finding 4: Required Above-Fold Elements — Minimum Viable Hero",
+          "source": "hero-section-psychology.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "device",
+      "severity": "HIGH",
+      "surface": "headline-block",
+      "title": "No Hero Headline or Value Proposition Above the Vehicle Selector",
+      "verdict": "FAIL",
+      "why_this_matters": "Within the first five seconds a visitor decides whether the page is relevant; with no headline answering 'what is this and is it for me,' shoppers who are not already sold on the brand bounce before they ever engage the vehicle selector, and the entire hero rests on a tool the visitor has no stated reason to use."
+    },
+    {
+      "cluster": "visual-cta",
+      "confidence": 0.85,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "single-file",
+        "change_type": "css"
+      },
+      "element": {
+        "baton_index": "e84",
+        "role": "button",
+        "tag": "button",
+        "text_content": "Find parts"
+      },
+      "evidence_anchors": [
+        {
+          "context": "The blue 'FIND PARTS' button sits left-aligned under the four full-width dropdowns and spans only about 40 percent of the screen width, while every dropdown above it runs nearly edge to edge. The 'FIND PARTS' label and its magnifier icon render in a muted grey against the blue fill rather than white, so the label reads dimmer than the surrounding white dropdown text.",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "mobile"
+        },
+        {
+          "context": "Find parts button rect is roughly 148x55 CSS px (physical 444x165 at 3x), left-aligned at x=210 physical, well short of the ~1044px-wide dropdowns stacked above it.",
+          "reference": "e84",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The vehicle-selector submit button is the hero's primary conversion action but the candidate ranker did not classify it under primary-cta (no primary-cta bucket exists in this sidecar); e84 'Find parts' is the correct verbatim anchor for the hero CTA finding.",
+      "local_id": 2,
+      "observation": "The 'FIND PARTS' button is the single conversion action in the hero, yet it is the smallest interactive target on the first screen: it spans roughly 40 percent of the width while the four dropdowns above it are nearly full-width, and it sits left-aligned rather than anchored across the thumb zone. Its label and search icon render in a muted grey on the blue fill instead of white, so the button text is lower-contrast than the plain white dropdown labels directly above it — the most important action on the screen is visually quieter than the form fields that feed it.",
+      "recommendation": "If the vehicle selector is the hero's primary path, make 'FIND PARTS' a full-width button matching the width of the dropdowns above it and set the label and icon to white for a strong contrast against the blue fill. Sizing the primary action at least as large as the inputs it submits keeps it the easiest target to tap and the clearest next step after the dropdowns are filled.",
+      "reference_citations": [
+        {
+          "section": "Finding 4: Fitts's Law — Larger Buttons Are Faster and Easier to Acquire",
+          "source": "cta-design-and-placement.md",
+          "tier": "Gold"
+        },
+        {
+          "section": "Finding 2: CTA Button Color — Contrast Matters, Not the Color Itself",
+          "source": "cta-design-and-placement.md",
+          "tier": "Silver"
+        }
+      ],
+      "scope": "device",
+      "severity": "MEDIUM",
+      "surface": "primary-cta",
+      "title": "FIND PARTS Button Is Undersized, Not Full-Width, and Its Label Reads Low-Contrast Grey",
+      "verdict": "FAIL",
+      "why_this_matters": "Larger, edge-anchored buttons are acquired faster and more reliably by thumbs, and a primary CTA that is smaller and lower-contrast than its own form fields signals it is a minor control; on mobile, where the selector is the main conversion path, a quiet undersized submit button costs completed lookups."
+    },
+    {
+      "cluster": "visual-cta",
+      "confidence": 0.8,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "component",
+        "change_type": "feature"
+      },
+      "element": {
+        "baton_index": "absent",
+        "role": "button",
+        "text_content": "(no persistent/sticky CTA bar present on mobile)"
+      },
+      "evidence_anchors": [
+        {
+          "context": "Past the first screen the only persistent chrome is the header (logo, account, cart) and the search bar; once the hero 'FIND PARTS' button scrolls off there is no floating or pinned action bar anywhere through the category cards, Featured Collection, and newsletter sections.",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 974,
+          "type": "visual",
+          "viewport": "mobile"
+        }
+      ],
+      "evidence_tier": "Bronze",
+      "local_id": 3,
+      "observation": "The mobile homepage runs roughly four screens deep — hero, category cards, Featured Collection, newsletter, footer — but the only conversion action, the hero 'FIND PARTS' button, disappears after the first screen and nothing replaces it. As the visitor scrolls through the category carousel and featured products there is no pinned bar offering to jump back into the vehicle selector or to shop, so a shopper who decides to act mid-page has to scroll all the way back up to the hero or hunt for the search bar.",
+      "proposed_anchor": {
+        "kind": "viewport",
+        "placement": "viewport-bottom-sticky",
+        "reason": "A persistent bottom bar should appear once the hero 'FIND PARTS' button scrolls past the top of the viewport so the conversion path stays reachable down the page",
+        "viewport": "mobile",
+        "viewport_trigger": "after_primary_cta_offscreen"
+      },
+      "recommendation": "If the page is going to run multiple screens on mobile, add a compact sticky bottom bar that appears once the hero button scrolls off — surfacing either the vehicle-selector entry point or a 'Shop All' action — so the primary path stays one tap away at any scroll depth. Keep the bar to roughly 50-60px tall so it does not crowd the content it floats over.",
+      "reference_citations": [
+        {
+          "section": "Finding 11: Sticky \"Add to Cart\" on Mobile — 5-37% Conversion Lift",
+          "source": "cta-design-and-placement.md",
+          "tier": "Bronze"
+        },
+        {
+          "section": "Finding 8: Sticky CTAs on Long Pages — Mobile Conversion Mechanism",
+          "source": "page-length-strategy.md",
+          "tier": "Bronze"
+        }
+      ],
+      "scope": "device",
+      "severity": "MEDIUM",
+      "surface": "sticky-cta",
+      "title": "No Sticky CTA After the Find Parts Button Scrolls Out of View",
+      "verdict": "FAIL",
+      "why_this_matters": "On multi-screen mobile pages the primary action scrolls out of view quickly, and persistent bottom CTAs recover conversions from shoppers who become ready to act below the fold; without one, intent that builds mid-page leaks away while the visitor reorients to find the next step."
+    },
+    {
+      "cluster": "visual-cta",
+      "confidence": 0.78,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "single-file",
+        "change_type": "css"
+      },
+      "element": {
+        "baton_index": "e69",
+        "role": "group",
+        "tag": "div",
+        "text_content": "FREE SHIPPING on most orders $75+ — Contiguous US only SHOP "
+      },
+      "evidence_anchors": [
+        {
+          "context": "A full-width blue band at the very top reads 'FREE SHIPPING on most orders $75+' with a truck icon and an embedded 'SHOP NOW' link. It occupies the classic promotional-bar slot above the logo, styled as a colored strip distinct from the page content.",
+          "reference": "section-1-mobile.jpg",
+          "scroll_y": 0,
+          "type": "visual",
+          "viewport": "mobile"
+        },
+        {
+          "context": "Announcement bar element at x=0,y=0 full-width, text 'FREE SHIPPING on most orders $75+ — Contiguous US only SHOP NOW'.",
+          "reference": "e69",
+          "type": "dom"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 4,
+      "observation": "The free-shipping message and its 'SHOP NOW' link live in a full-width colored bar pinned above the logo — the exact slot users have learned to treat as a promotional banner and skip. The free-shipping threshold is a genuine reason-to-buy signal, but presenting it as a top promo strip with an embedded generic 'SHOP NOW' link means a large share of visitors scan straight past both the offer and the link to the content below.",
+      "recommendation": "If the free-shipping threshold is meant to influence the buying decision, also surface it as plain text inside the content flow near the hero or the conversion path rather than relying only on the top banner, and give the embedded link a destination-specific label instead of generic 'SHOP NOW'. Repeating the shipping promise where the eye actually lands keeps it working even when the banner is ignored.",
+      "reference_citations": [
+        {
+          "section": "Finding 6: Banner Blindness -- Users Ignore Ad-Like Content Across 3 Decades",
+          "source": "eye-tracking-and-scan-patterns.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "device",
+      "severity": "LOW",
+      "surface": "other",
+      "surface_note": "Top FREE SHIPPING announcement/promo bar in the banner-blindness zone; no exact visual-cta surface slug fits a global promo strip.",
+      "title": "Top FREE SHIPPING / SHOP NOW Bar Sits in the Banner-Blindness Zone",
+      "verdict": "FAIL",
+      "why_this_matters": "Content styled as a top promotional banner is reliably skipped, so a real purchase incentive parked there does little work; pulling the free-shipping message into the content flow recovers a trust-and-value signal that is currently spent on a slot most shoppers' eyes route around."
+    },
+    {
+      "cluster": "visual-cta",
+      "confidence": 0.8,
+      "device": "mobile",
+      "effort": {
+        "change_scope": "single-file",
+        "change_type": "css"
+      },
+      "element": {
+        "baton_index": "e17",
+        "role": "group",
+        "tag": "div",
+        "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDr"
+      },
+      "evidence_anchors": [
+        {
+          "context": "Inside the Performance category card the 'SHOP PERFORMANCE' button is a solid blue fill with white, fully readable label, set against the black card; it is the highest-contrast action within the card and clearly names its destination.",
+          "reference": "section-2-mobile.jpg",
+          "scroll_y": 974,
+          "type": "visual",
+          "viewport": "mobile"
+        }
+      ],
+      "evidence_tier": "Gold",
+      "local_id": 5,
+      "observation": "The category-card CTA gets the basics right: 'SHOP PERFORMANCE' is a solid blue button with a crisp white label that names exactly where it goes, and it is the most contrasting element inside the dark card. The label is specific rather than a generic 'Shop Now', so a scanning visitor understands the action at a glance.",
+      "recommendation": "Keep this treatment for the category-card CTAs and reuse the same solid-fill, white-label, destination-specific pattern for the hero's 'FIND PARTS' button so the primary action reads at least as strongly as these secondary ones.",
+      "reference_citations": [
+        {
+          "section": "Finding 14: NNGroup — Specific Labels Outperform Generic Labels",
+          "source": "cta-design-and-placement.md",
+          "tier": "Gold"
+        }
+      ],
+      "scope": "device",
+      "severity": "LOW",
+      "surface": "secondary-cta",
+      "title": "SHOP PERFORMANCE Category Card Button Is Clear and Well-Contrasted",
+      "verdict": "PASS",
+      "why_this_matters": "Specific, high-contrast button labels let scanning shoppers act without re-reading the surrounding card, which keeps the category carousel a working entry point into the catalog."
+    }
+  ],
+  "notes": [
+    "Cluster context for visual-cta routed three sections (hero/global section plus two lower sections that arrived with empty dom_slice); the hero analysis relied on the section-1 screenshot and the global section's DOM slice, which were sufficient. Lower sections (newsletter/footer) were read from screenshots 3 and 4.",
+    "The vehicle selector dropdowns (Select Make/Model/Year/Trim) render as outlined fields on a black background, giving them low contrast as a group; this borders on a visual-hierarchy concern but the primary issue is the missing headline above them (F-01), so it was folded into that finding rather than emitted separately.",
+    "The two visible price displays observed below the fold ('From $135.99' on the Lloyd Mats card, '$49.00' on the Revo card) belong to the pricing cluster and were not evaluated here.",
+    "Baton elements with physical-pixel y beyond ~2305 CSS (e.g., off-canvas menu-drawer nav items and the tiled duplicate header elements at y=1500/2961/4422) were treated as off-canvas or tiling artifacts, not as visible below-fold content."
+  ],
+  "schema_version": 1,
+  "specialist_model": {
+    "context_window": "1M",
+    "family": "opus",
+    "temperature": 0.1,
+    "version": "4.8"
+  },
+  "started_at": "2026-06-08T00:00:00.000Z",
+  "status": "complete",
+  "telemetry": {
+    "baton_elements_referenced": 4,
+    "findings_by_verdict": {
+      "FAIL": 4,
+      "PARTIAL": 0,
+      "PASS": 1
+    },
+    "reference_files_read": [
+      "cta-design-and-placement.md",
+      "color-psychology.md",
+      "eye-tracking-and-scan-patterns.md",
+      "hero-section-psychology.md",
+      "headline-copywriting.md",
+      "page-length-strategy.md",
+      "evidence-tiers.md"
+    ],
+    "sections_routed_to_cluster": 3
+  }
+}

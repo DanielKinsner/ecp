@@ -1,0 +1,30 @@
+{
+  "clusters": [
+    "visual-cta",
+    "trust-credibility",
+    "content-seo",
+    "performance-ux",
+    "pricing",
+    "category-navigation"
+  ],
+  "devices": [
+    "desktop",
+    "mobile"
+  ],
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "ethics_emission": "ethics-findings.json",
+  "expected_specialist_emissions": [
+    "cluster-visual-cta-desktop.json",
+    "cluster-trust-credibility-desktop.json",
+    "cluster-content-seo-desktop.json",
+    "cluster-performance-ux-desktop.json",
+    "cluster-pricing-desktop.json",
+    "cluster-category-navigation-desktop.json",
+    "cluster-visual-cta-mobile.json",
+    "cluster-trust-credibility-mobile.json",
+    "cluster-content-seo-mobile.json",
+    "cluster-performance-ux-mobile.json",
+    "cluster-pricing-mobile.json",
+    "cluster-category-navigation-mobile.json"
+  ]
+}

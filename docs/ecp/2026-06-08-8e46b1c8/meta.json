@@ -1,0 +1,42 @@
+{
+  "blocked": false,
+  "clusters_used": [
+    "visual-cta",
+    "trust-credibility",
+    "content-seo",
+    "performance-ux",
+    "pricing",
+    "category-navigation"
+  ],
+  "compare_target": null,
+  "created": "2026-06-08T22:18:00.000Z",
+  "devices_requested": [
+    "desktop",
+    "mobile"
+  ],
+  "devices_scanned": [
+    "desktop",
+    "mobile"
+  ],
+  "engagement_status": "complete",
+  "id": "2026-06-08-8e46b1c8",
+  "min_priority": null,
+  "page": {
+    "file_path": null,
+    "type": "homepage",
+    "url": "https://www.awdmods.com/",
+    "url_normalized": "awdmods.com"
+  },
+  "plans_queue": [],
+  "platform": "shopify",
+  "quick_scan": false,
+  "reconciled": true,
+  "reflection_state": "complete",
+  "report_state": "draft",
+  "schema_version": 3,
+  "scope": "comprehensive",
+  "screenshot_input": null,
+  "source_mode": "url-dual",
+  "type": "audit",
+  "updated": "2026-06-08T23:33:07Z"
+}

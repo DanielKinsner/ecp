@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "engagement_id": "2026-06-08-8e46b1c8",
+  "cluster": "category-navigation",
+  "device": "desktop",
+  "specialist_model": {
+    "family": "opus",
+    "version": "4.8"
+  },
+  "started_at": "2026-06-08T22:30:00.000Z",
+  "completed_at": "2026-06-08T22:38:00.000Z",
+  "status": "complete",
+  "findings": [
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 1,
+      "verdict": "FAIL",
+      "title": "Vehicle Selector Submit Is an Icon-Only Square With No Label",
+      "surface": "search-bar",
+      "element": {
+        "baton_index": "e117",
+        "text_content": "Find parts",
+        "role": "button",
+        "tag": "button"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The fitment-selector submit button (the magnifying-glass square that runs the Make/Model/Year/Trim lookup) is the natural anchor for this finding, but the candidate ranker classified only the cart Checkout buttons (e7/e11) as primary-cta and did not register this fitment submit control.",
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The four fitment dropdowns (Select Make, Select Model, Select Year, Select your Trim) end in a small blue square containing only a magnifying-glass icon at the far right (x=1357, 59x59px). There is no 'Find Parts', 'Search', or 'Go' text on the control."
+        },
+        {
+          "type": "dom",
+          "reference": "e117",
+          "context": "Submit control captured as role=button, tag=button, accessible name 'Find parts' but with no visible text label rendered in the UI."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 17: Search Box Width Must Accommodate the Typical Query",
+          "tier": "Gold"
+        },
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 5: Compatibility Filters — Only 35% Task Success",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The vehicle fitment tool, which is the primary way a shopper narrows this auto-parts catalog to their car, ends in a magnifying-glass icon with no text. After a visitor sets Make, Model, Year, and Trim, the action that returns their compatible parts looks like a generic search icon rather than a labeled commit button. The reused magnifying glass also visually duplicates the separate site-search box at the top of the page, so the two distinct actions (free-text search vs. run-my-fitment) read as the same control.",
+      "recommendation": "If the fitment selector is the primary findability path for this store, give its submit control a visible text label such as 'Find Parts' or 'Show My Parts' instead of a bare magnifying glass, and style it distinctly from the top-of-page site-search icon so the two findability tools are not confused.",
+      "why_this_matters": "Compatibility-driven catalogs live or die on the fitment flow; Baymard found only 35% of shoppers successfully find a compatible product when compatibility filtering is unclear. An unlabeled commit button at the end of a four-step selection is the exact friction point where a high-intent shopper hesitates and abandons.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e117",
+          "selector_hint": "button (fitment submit, magnifying-glass icon)",
+          "text_quote": "Find parts"
+        }
+      }
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 2,
+      "verdict": "PARTIAL",
+      "title": "Fitment Selector Floats in an Empty Black Band Above the Fold",
+      "surface": "search-bar",
+      "element": {
+        "baton_index": "e86",
+        "text_content": "Select Make\n                  \n                \n            ",
+        "role": "combobox",
+        "tag": "select"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "css",
+        "change_scope": "component"
+      },
+      "confidence": 0.78,
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The Make dropdown (e86) is the leftmost control of the fitment row and the natural anchor for a finding about the fitment selector's vertical position. The candidate ranker registered search inputs and navigation but did not classify the fitment comboboxes, so the strongest anchor for this finding sits outside the registry.",
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The Make/Model/Year/Trim row sits around y=308-367 inside a tall, otherwise empty black band that runs roughly from the navigation (y=110) down to the category cards (y=544). The fitment tool is centered in a void with no headline, supporting copy, or imagery around it, and the category cards that show catalog breadth are pushed down to y=544."
+        },
+        {
+          "type": "dom",
+          "reference": "e86",
+          "context": "Select Make combobox captured at y=308, height 59px, inside the above-the-fold hero band; the category-card groups (e29-e33) begin at y=544."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "grid-layout.md",
+          "section": "Finding 10: NNGroup Above-Fold Attention — 57% of Viewing Time",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The vehicle fitment selector is the single most valuable findability control on this page, but it is dropped into the middle of a large empty black band with nothing around it and a wide gap of dead space both above and below the dropdown row. The result is that the most attention-rich zone of the page, the area above the fold where 57% of viewing time is spent, is mostly empty, while the category cards that communicate what the store actually sells do not start until y=544.",
+      "recommendation": "If the fitment selector is meant to anchor the homepage, tighten the empty band around it: add a short directive headline above the dropdowns (for example 'Find parts that fit your car') and reduce the vertical dead space so the selector and the first row of category cards both occupy the above-fold zone instead of leaving it largely blank.",
+      "why_this_matters": "Above-the-fold space is the most-attended real estate on the page; leaving it as an empty black band wastes the prime opportunity to orient a first-time visitor and pushes the breadth-signaling category cards into lower-attention territory, slowing the visitor's read of what the store carries.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "proxy_element",
+        "confidence": "medium",
+        "observed_anchor": {
+          "baton_index": "e86",
+          "selector_hint": "select (Select Make, leftmost fitment dropdown)",
+          "text_quote": "Select Make"
+        },
+        "reason": "Anchored on the leftmost fitment dropdown; the finding is about the whole selector row's vertical placement, so the rect represents the region rather than a single exact element."
+      }
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 3,
+      "verdict": "PARTIAL",
+      "title": "Category Cards Don't Match the Shop-by-Category Menu Taxonomy",
+      "surface": "subcategory-tiles",
+      "element": {
+        "baton_index": "e33",
+        "text_content": "Electronics\n\n\n                      LightingWiringInfotainme",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "MEDIUM",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.8,
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The Electronics category card (e33) is the specific tile whose label has no counterpart in the Shop-by-Category menu, so it is the natural anchor for this taxonomy-mismatch finding. The candidate ranker registered the card headings as subheadings but not the card groups themselves as navigation tiles.",
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The five homepage category cards read Performance, Handling & Brakes, Interior, Exterior, Electronics. The 'Shop by Category' header menu lists Performance, Exterior, Interior, Handling, Drivetrain, Brakes, Cooling, Wheels, Accessories — so the 'Electronics' card has no matching menu entry, and Drivetrain, Cooling, Wheels, and Accessories appear in the menu but get no card."
+        },
+        {
+          "type": "dom",
+          "reference": "e33",
+          "context": "Electronics card group; the Shop-by-Category drawer markup in the routed header lists collections performance, exterior, interior, handling-brakes, drivetrain, brakes, cooling, wheels, accessories — no electronics collection."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "merchandising-psychology.md",
+          "section": "Finding 8: Subcategory Navigation Tiles Improve Discovery for Large Category Hierarchies",
+          "tier": "Silver"
+        },
+        {
+          "source": "collection-page-architecture.md",
+          "section": "Finding 7: Internal Link Anchor Text Provides Topic Context",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The five large category cards (Performance, Handling & Brakes, Interior, Exterior, Electronics) present themselves as the store's primary category map, but they do not line up with the 'Shop by Category' menu, which lists Performance, Exterior, Interior, Handling, Drivetrain, Brakes, Cooling, Wheels, and Accessories. The 'Electronics' card points to a category the top menu never offers, while Drivetrain, Cooling, Wheels, and Accessories exist in the menu but are invisible on the homepage. A shopper who navigates by the cards and a shopper who navigates by the menu are working from two different taxonomies.",
+      "recommendation": "If the cards and the menu are both meant to be primary category entry points, reconcile them to one taxonomy: either add cards for the menu categories that are currently homepage-invisible (Drivetrain, Cooling, Wheels, Accessories) or fold 'Electronics' into the menu so the two surfaces name the same set of collections and use matching anchor text.",
+      "why_this_matters": "When the homepage cards and the navigation menu disagree on the category structure, shoppers cannot form a reliable mental model of how the catalog is organized, and the mismatched anchor text also dilutes the internal-linking signals that help category pages rank and pass authority.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e33",
+          "selector_hint": "div (Electronics category card)",
+          "text_quote": "Electronics"
+        }
+      }
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 4,
+      "verdict": "PASS",
+      "title": "Site Search Is Prominent, Wide, and Top-Positioned",
+      "surface": "search-bar",
+      "element": {
+        "baton_index": "e58",
+        "text_content": "",
+        "role": "textbox",
+        "tag": "input"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.9,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "An open search field with 'Search' placeholder and a magnifying-glass button sits in the header at y=51, roughly 929px wide and centered between the logo and the account/cart icons, visible without any click or toggle."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "search-and-filter-ux.md",
+          "section": "Finding 17: Search Box Width Must Accommodate the Typical Query",
+          "tier": "Gold"
+        }
+      ],
+      "observation": "The site search is an always-visible open input at the top of the page, about 929px wide, rather than hidden behind an icon-only toggle. The field is wide enough to hold long auto-parts queries (brand plus model plus part type) without truncation, and it sits in the most expected location at the top of the header.",
+      "recommendation": "Keep the open, full-width search field. As a small enhancement, replace the generic 'Search' placeholder with a scope cue such as 'Search parts, brands, or part numbers' so the field signals what the catalog can match.",
+      "why_this_matters": "A visible, generously sized search box is the baseline that lets high-intent shoppers self-serve; keeping it open and wide protects the single highest-intent findability path on the page.",
+      "evidence_tier": "Gold",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "search-1",
+          "selector_hint": "input[type=search] (header search field)",
+          "text_quote": "Search"
+        }
+      }
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 5,
+      "verdict": "PASS",
+      "title": "Category Cards Expose Subcategories Plus Dedicated CTAs",
+      "surface": "subcategory-tiles",
+      "element": {
+        "baton_index": "e29",
+        "text_content": "Performance \n\n\n                      IntakesExhaustCoolingDr",
+        "role": "group",
+        "tag": "div"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "component",
+        "change_scope": "component"
+      },
+      "confidence": 0.85,
+      "intentional_outside_registry": true,
+      "intentional_outside_registry_reason": "The Performance card group (e29) is the natural anchor for a PASS about the subcategory-tile pattern; the ranker registered the card heading text as a subheading but not the card group as a navigation tile.",
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "Each category card (e.g., Performance) shows the category name, a short list of its subcategories (Intakes, Exhaust, Cooling, Drivetrain upgrades) and a dedicated 'SHOP PERFORMANCE' button, giving two depths of entry from one tile."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "merchandising-psychology.md",
+          "section": "Finding 8: Subcategory Navigation Tiles Improve Discovery for Large Category Hierarchies",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The homepage category cards do more than name a category: each one lists its key subcategories (Performance shows Intakes, Exhaust, Cooling, Drivetrain upgrades) and carries a dedicated 'SHOP PERFORMANCE' style CTA. That lets a shopper self-route either to the broad category or to a specific subcategory directly from the tile.",
+      "recommendation": "Keep the subcategory-in-tile pattern with dedicated CTAs. If subcategory links are not individually clickable yet, make each listed subcategory a direct link so the discovery depth the cards advertise is also navigable in one click.",
+      "why_this_matters": "Subcategory tiles let shoppers self-route to the right part of a deep auto-parts catalog instead of wading through an undifferentiated grid, which shortens the path from homepage to a relevant collection.",
+      "evidence_tier": "Silver",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "baton_index": "e29",
+          "selector_hint": "div (Performance category card)",
+          "text_quote": "Performance"
+        }
+      }
+    },
+    {
+      "cluster": "category-navigation",
+      "device": "desktop",
+      "local_id": 6,
+      "verdict": "PASS",
+      "title": "Top Navigation Is Lean and Clearly Labeled",
+      "surface": "above-the-fold-hero-navigation-and-primary-cta",
+      "element": {
+        "baton_index": "e28",
+        "text_content": "Shop All\n              \n                \n                  \n",
+        "role": "navigation",
+        "tag": "nav"
+      },
+      "severity": "LOW",
+      "scope": "device",
+      "effort": {
+        "change_type": "copy",
+        "change_scope": "single-file"
+      },
+      "confidence": 0.85,
+      "evidence_anchors": [
+        {
+          "type": "visual",
+          "reference": "section-1.jpg",
+          "scroll_y": 0,
+          "viewport": "desktop",
+          "context": "The primary navigation bar (y=115) carries four clear top-level entries: Shop All, Shop by Category (dropdown), Shop by Vehicle (dropdown), and Contact."
+        }
+      ],
+      "reference_citations": [
+        {
+          "source": "collection-page-architecture.md",
+          "section": "Finding 8: Mega Menus May Dilute PageRank and Are Mobile-First Issues",
+          "tier": "Silver"
+        }
+      ],
+      "observation": "The main navigation keeps to four legible top-level entries (Shop All, Shop by Category, Shop by Vehicle, Contact) with two of them opening category and vehicle dropdowns. This is a lean top-level structure rather than a sprawling mega menu, which keeps the catalog's two natural browse paths, by category and by vehicle, obvious from the header.",
+      "recommendation": "Keep the lean four-item navigation. As noted in the separate taxonomy finding, ensure the Shop-by-Category dropdown lists the same category set the homepage cards advertise so both browse paths resolve to one consistent structure.",
+      "why_this_matters": "A small, clearly labeled top-level navigation gives shoppers the two browse paths (by category, by vehicle) without overwhelming them, and a lean link set keeps internal authority concentrated on the category pages that drive organic traffic.",
+      "evidence_tier": "Silver",
+      "visual_evidence": {
+        "type": "exact_element",
+        "confidence": "high",
+        "observed_anchor": {
+          "candidate_id": "navigation-3",
+          "selector_hint": "nav (primary top navigation bar)",
+          "text_quote": "Shop All"
+        }
+      }
+    }
+  ],
+  "notes": [
+    "This is a homepage, not a category/collection page. Only the global above-the-fold header section was routed to category-navigation, so the cluster's filter-panel, sort-control, product-grid, applied-filters, pagination, and zero-results surfaces have no page presence here and were not forced into findings. The audited findability surfaces are the vehicle-fitment selector, the category-card carousel, the site search, and the top navigation.",
+    "The category cards are implemented as a carousel (slider-button--prev captured at e15/e16), but at 1920px all five cards render on screen at once, so the carousel mechanism causes no hidden-card harm on this desktop viewport; flagging it would be a mobile-viewport concern handled by the mobile specialist.",
+    "Breadcrumbs are intentionally absent because this is the homepage (the site root has no hierarchy above it); their absence here is not a defect and was not emitted as a finding.",
+    "The fitment dropdowns show concrete example values in the captured markup (Make=Ford, Model=Focus, Trim=Base, plus a year list). These read as placeholder/sample defaults rather than a user selection; if they are genuinely pre-selected defaults rather than 'Select Make' prompts, that would be worth a closer look on a live re-capture."
+  ],
+  "telemetry": {
+    "reference_files_read": [
+      "search-and-filter-ux.md",
+      "filtering-ux.md",
+      "grid-layout.md",
+      "merchandising-psychology.md",
+      "pagination-patterns.md",
+      "product-cards.md",
+      "sorting-psychology.md",
+      "zero-results.md",
+      "breadcrumbs.md",
+      "collection-page-architecture.md",
+      "evidence-tiers.md"
+    ]
+  }
+}
