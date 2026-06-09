@@ -253,6 +253,19 @@ When `variant_divergence: true`, the synthesizer prompt template MUST include a 
 
 These three blocks land BEFORE the SUBSTANTIVE CANARIES block in the trace file so the diagnostic context precedes the canary verdicts.
 
+### DRIFT GATE block
+
+Auto-emitted by `scripts/test-specialist.py drift-check` (Phase F.3) on **every** invocation — the lead does NOT hand-write it. Each run appends a fresh block, so a FAIL → fix → re-PASS sequence is reconstructable by reading the adjacent blocks (closes the awdmods 2026-06-08 run-review C9 gap, where only the corrected state survived).
+
+```
+# DRIFT GATE (Phase F.3 — auto-emitted by drift-check; diagnostic on FAIL):
+#   verdict: FAIL (max_ratio=0.1108, threshold=0.10)
+#   refs_checked: 2, missing: 0
+#   worst: content-seo F-32 obs=0.1108 rec=0.0000 why=0.0000
+```
+
+The `worst` line is emitted only when a per-finding ratio is non-zero; it names the f_ref and the obs/rec/why ratios driving `max_ratio`. The append is best-effort (a missing/locked `audit-trace.log` is skipped, never failing the gate).
+
 ---
 
 ---

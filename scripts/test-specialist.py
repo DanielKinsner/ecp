@@ -728,6 +728,45 @@ def run_autofix(
     return 0
 
 
+def _format_drift_trace_block(report, ref_count: int) -> str:
+    """Render the audit-trace.log DRIFT GATE block (Phase F.3).
+
+    Auto-emitted by ``drift-check`` so a FAIL -> fix -> re-PASS sequence is
+    reconstructable from the artifacts (each invocation appends a fresh block),
+    instead of surviving only as lead prose (awdmods 2026-06-08 run-review C9).
+    """
+    verdict = "PASS" if report.ok else "FAIL"
+    lines = [
+        "",
+        "# DRIFT GATE (Phase F.3 — auto-emitted by drift-check; diagnostic on FAIL):",
+        f"#   verdict: {verdict} (max_ratio={report.max_ratio:.4f}, threshold={report.threshold:.2f})",
+        f"#   refs_checked: {ref_count}, missing: {len(report.missing)}",
+    ]
+    if report.per_finding:
+        worst = max(report.per_finding, key=lambda t: max(t[1], t[2], t[3]))
+        f_ref, obs_r, rec_r, why_r = worst
+        if max(obs_r, rec_r, why_r) > 0:
+            lines.append(
+                f"#   worst: {f_ref} obs={obs_r:.4f} rec={rec_r:.4f} why={why_r:.4f}"
+            )
+    return "\n".join(lines) + "\n"
+
+
+def _append_drift_trace_block(trace_path: Path, report, ref_count: int) -> None:
+    """Append the DRIFT GATE block to an existing ``audit-trace.log``.
+
+    Best-effort and append-only (matching every other trace producer): a missing
+    or locked trace must never fail the gate itself.
+    """
+    if not trace_path.exists():
+        return
+    try:
+        with trace_path.open("a", encoding="utf-8") as fh:
+            fh.write(_format_drift_trace_block(report, ref_count))
+    except OSError:
+        pass
+
+
 def run_drift_check(
     *,
     desktop_md_path: Path,
@@ -758,6 +797,11 @@ def run_drift_check(
     refs = emission.get("scope_page_synchronized_refs") or []
 
     report = assert_synchronization_invariant(desktop_md, mobile_md, refs)
+    # Persist the verdict + worst ratio to the trace so the failure->fix is
+    # reconstructable from artifacts, not just lead prose (run-review C9).
+    _append_drift_trace_block(
+        synthesizer_emission_path.parent / "audit-trace.log", report, len(refs)
+    )
     print(f"scope_page_synchronized_refs: {len(refs)}")
     print(f"threshold: {report.threshold}")
     print(f"max_ratio: {report.max_ratio:.4f}")

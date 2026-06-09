@@ -155,6 +155,7 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
    ```powershell
    python scripts/test-specialist.py drift-check --desktop-md docs/ecp/{id}/audit-desktop.md --mobile-md docs/ecp/{id}/audit-mobile.md --synthesizer-emission docs/ecp/{id}/synthesizer-emission-v1.json
    ```
+   This auto-appends a `# DRIFT GATE` block (verdict + `max_ratio` + worst f_ref) to `audit-trace.log` on every run — you do **not** need to mirror the ratio into the trace by hand. If it FAILs and you resolve it by editing a synced finding, just re-run: the second block records the re-PASS, so the failure→fix is reconstructable from the two adjacent blocks (`contracts/trace-assertion-canary.md` "DRIFT GATE block").
 
 7. **Run substantive canaries** with `scripts.assembly.canary_checks.run_all_canaries` as documented in `contracts/trace-assertion-canary.md`; append summaries to `audit-trace.log` and record anomalies in `lead-reflection.md`.
 
