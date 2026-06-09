@@ -157,3 +157,78 @@ acquirer accepts it with `--allow-existing` without wiping `meta.json`; (b)
   (`.../tasks/whtlc109h.output`, `.../tasks/wqpntlg92.output`) — ephemeral; the
   Category B evidence above is the durable copy.
 - Env / launch: `CLAUDE.md` (always `--plugin-dir` against the working tree).
+
+---
+
+## Addendum — operator visual review of the awdmods report (hero capture + hotspot placement)
+
+The operator reviewed the awdmods `2026-06-08-8e46b1c8` visual report and flagged
+that hotspots are visually wrong AND several findings are false. Investigation
+(viewing `section-1.jpg`, the DOM, the baton, and `review-state-desktop.json`)
+found **two distinct failures**:
+
+### A. The hero capture FAILED → false-finding cascade (root cause, FIX SHIPPED `293d0ed`)
+- The awdmods hero is a Shopify **Dawn `banner image-overlay`** section with
+  `scroll-trigger animate--fade-in` / `animate--slide-in` reveals (content is
+  `opacity:0` until an IntersectionObserver fires) and a lazy background image
+  behind a dark overlay. The page has **19 scroll-trigger elements + 19 lazy images**.
+- The acquirer captured the above-fold cold at scroll-y=0, **before** the reveals
+  fired and the hero painted → `section-1.jpg` shows a **black void** behind the
+  vehicle selector (the category cards *below* loaded fine — proof it's timing,
+  not an empty hero). The banner heading/image were `opacity:0` so they were
+  **filtered out of the baton** (only the selector remained in the hero band).
+- Specialists, fed a black screenshot + a baton with only the selector, produced
+  **false findings**: VC-08 "Hero Band Is Empty Black Space", VC-24 "Hero Has No
+  Headline", VC-27, PU-83 "Empty Black Band Wastes the Above-Fold", PU-37. The DOM
+  shows the banner DOES have `banner__heading`/`banner__text`/background image —
+  the hero is populated; it just never painted.
+- **Fix shipped:** `acquire_url._reveal_lazy_and_animations()` forces scroll-trigger
+  reveals visible + eager-loads lazy media + nudges observers before capture.
+  **Needs one live `--plugin-dir` re-audit to confirm** (no browser here). After
+  re-running, the false hero findings should disappear; if any above-fold still
+  captures flat/empty, treat its findings as suspect.
+- **Why there's no pixel "blank-capture" canary:** measured against the real
+  screenshots, every flatness/darkness heuristic confounds on this dark-themed,
+  selector-in-the-hero layout (the hero is "selector floating in black", not a pure
+  void). Distinguishing sparse-content from rich-hero is a content-density/semantic
+  judgment — i.e. the **vision** pass, not pixels. The right guards are (1)
+  at-capture: check whether above-fold `.scroll-trigger` elements are still
+  `opacity:0` and re-fire/retry (live; partially addressed by the reveal fix), and
+  (2) the `ecp-visual-qa` vision gate. Do NOT ship a pixel blank-detector — it
+  will false-positive on dark designs.
+
+### B. Hotspot placement is visually wrong even when DOM-valid (NOT shipped — needs live render + vision)
+Characterized from `review-state-desktop.json` (50 markers / 25 findings):
+- **Stacked point-circles = the visible "duplicate/weird areas".** ~6 absence /
+  region / head-meta findings on slide 1 (content-seo F-32/F-60/F-74, visual-cta
+  F-08/F-24, a trust finding) are all `shape:point, source:proposed_anchor_*` that
+  resolve to nearly the same anchor (the logo / Find-parts button) → they pile into
+  one spot as overlapping circles. This is the deferred **C6** work.
+- **Region/banner findings render as a point, not a box.** VC-08 (whole hero) and
+  PU-83 (whole above-fold band) anchor to a single element (Find-parts button e117 /
+  Select-Year dropdown e88) → a tiny circle, when the operator expects a **box over
+  the banner region**.
+- **Wrong element chosen by the SPECIALIST.** PR-97 (installment pricing on items
+  >$1,000) anchored to `e104` = the **$135 floor-mats** price, not the Borla
+  ($1,649) / Magnaflow ($1,766) items the finding is about. This is a
+  specialist-prompt anchor-selection problem (`contracts/specialist-prompt-v2.md`),
+  not pure geometry — the specialist picked one arbitrary cheap price.
+- **Base + `-ai` duplicate markers.** `review_state.py:92-94` appends both a base
+  marker and an `-ai` suggestion copy to `markers[]`. `review_state.py`'s own
+  renderer (line 399) draws only `finding.marker_id` (base), so they overlap
+  exactly in a fresh draft (not the visible duplicate). **But verify the EDITOR's
+  JS draws only the active marker, not the `-ai` copy** — after a human moves the
+  base marker, a stale `-ai` at the old spot would show as a real duplicate.
+
+**Recommended next pass (needs a live run — can't be done headless here):**
+1. Re-run the awdmods audit with `--plugin-dir` (picks up the capture fix `293d0ed`).
+   Confirm `section-1.jpg` now shows the real hero and the VC-08/VC-24/PU-83/PU-37
+   "empty hero" findings are gone or changed.
+2. Run the **`ecp-visual-qa`** vision gate (`Workflow name="ecp-visual-qa"`, per
+   device, tier `standard`/`deep`) on the re-captured report — it crops each marker
+   and has a vision agent judge placement, which is the visual assessment the
+   operator is asking for. Use its verdicts to drive the C6 placement work (region
+   boxes for banner/absence findings; de-stack; pick the right priced item).
+3. Then implement C6 placement (Phase-1 plan above) with the live render to verify,
+   and tighten `specialist-prompt-v2.md` so "items over $X" findings anchor to an
+   element that actually matches the predicate (or to multiple, or to the section).
