@@ -3,7 +3,7 @@
 Internal maintenance file. This is a live URL health pass, not a claim-content audit.
 
 - Generated: 2026-04-24
-- Refresh command: `python3 scripts/check-reference-links.py`
+- Refresh command: `python3 scripts/reference_link_check.py`
 - Error/server-error URLs receive a slower retry before this report is written.
 - Treat 401/403/405/429 as reachable-but-blocked unless manual review shows otherwise.
 

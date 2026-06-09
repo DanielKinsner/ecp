@@ -3,7 +3,7 @@
 Internal maintenance file. This is a recheck queue for source freshness, not public report copy.
 
 - Generated: 2026-04-24
-- Refresh command: `python3 scripts/build-reference-maintenance.py`
+- Refresh command: `python3 scripts/reference_maintenance.py`
 - Public reports should expose only compact evidence-confidence labels, not this maintenance ledger.
 
 ## Cadence Rules

@@ -267,7 +267,7 @@ def render_link_report(results: list[LinkCheckResult], as_of: str | None = None)
             "Internal maintenance file. This is a live URL health pass, not a claim-content audit.",
             "",
             f"- Generated: {as_of}",
-            "- Refresh command: `python3 scripts/check-reference-links.py`",
+            "- Refresh command: `python3 scripts/reference_link_check.py`",
             "- Error/server-error URLs receive a slower retry before this report is written.",
             "- Treat 401/403/405/429 as reachable-but-blocked unless manual review shows otherwise.",
             "",

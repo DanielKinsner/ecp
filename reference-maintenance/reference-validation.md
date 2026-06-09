@@ -3,7 +3,7 @@
 Internal maintenance file. Do not load this during normal customer-facing ECP audits unless the task is reference upkeep.
 
 - Generated: 2026-04-24
-- Refresh command: `python3 scripts/build-reference-maintenance.py`
+- Refresh command: `python3 scripts/reference_maintenance.py`
 - Source of truth: `references/*.md` plus `scripts/reference_lint.py`
 
 ## Summary
