@@ -194,6 +194,47 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
             f"v2 subagent specialist counter must reconcile. summary={result['summary']!r}",
         )
 
+    def test_annotated_counters_are_parsed_not_dropped(self):
+        """Regression (awdmods 2026-06-08 run-review C7c): the lead annotates
+        counters inline — ``subagent_spawned_specialists: 12 (wave2 6+6)`` or the
+        contract template's ``← v2: ...`` arrow comment. The parser must read the
+        integer, not silently drop the line and default it to 0 (which produced a
+        FALSE reconcile failure that cost a rework cycle)."""
+        self._write_meta(["pricing"], ["desktop"])
+        self._touch_cluster_emission("pricing", "desktop")
+        self._touch_baton("desktop")
+        self._touch_ethics()
+        self._touch_synth()
+        (self.eng / "audit-trace.log").write_text(
+            "# ASSERTIONS\n"
+            "#   subagent_spawned_acquirers: 1            ← v2: incremented per acquirer Task\n"
+            "#   subagent_spawned_specialists: 12 (wave2 6+6)\n"
+            "#   subagent_spawned_ethics: 1\n"
+            "#   subagent_spawned_synthesizer: 1\n"
+            "#   cluster_files_written: 1   # one emission on disk\n",
+            encoding="utf-8",
+        )
+        result = check_trace_counters_reconcile_with_artifacts(self.eng)
+        self.assertTrue(
+            result["passed"],
+            f"Annotated counters must parse, not default to 0. summary={result['summary']!r}",
+        )
+
+    def test_event_log_prose_is_not_mistaken_for_a_counter(self):
+        """The loosened regex must not turn an event-log line like
+        ``... Task created: 5 specialists`` into a counter — the leading anchor
+        (optional ``#`` + alpha/underscore key at line start) keeps timestamped
+        prose out, and first-match ``setdefault`` protects the real header value."""
+        from assembly.canary_checks import _parse_trace_counters
+
+        text = (
+            "2026-06-08T12:00:00Z Task created: 5 specialists dispatched\n"
+            "#   subagent_spawned_specialists: 12 (wave2 6+6)\n"
+        )
+        counters = _parse_trace_counters(text)
+        self.assertEqual(counters.get("subagent_spawned_specialists"), 12)
+        self.assertNotIn("created", counters)
+
     # ------------------------------------------------------------------
     # Fail-loud paths — the actual G22 failure mode
     # ------------------------------------------------------------------

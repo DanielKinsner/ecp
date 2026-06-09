@@ -742,8 +742,15 @@ def check_clusters_represented(
 # We tolerate optional whitespace and a leading ``#`` (some legacy headers
 # wrote counters under a ``# Counters`` section with ``#`` prefixes on
 # subsequent lines — accept both shapes).
+# The integer is anchored by a trailing word boundary, then anything may follow
+# (whitespace, a ``(wave2 6+6)`` parenthetical, or the contract template's
+# ``← v2: ...`` arrow comment). The earlier form required the int at end-of-line,
+# so any annotated counter — including the contract's own template lines — was
+# silently skipped and defaulted to 0, producing a FALSE reconcile failure. The
+# strong leading anchor (``^\s*#?\s*`` + an alpha/underscore key) plus first-match
+# ``setdefault`` keep event-log prose from being mistaken for a counter.
 _TRACE_COUNTER_RE = re.compile(
-    r"^\s*#?\s*([a-z_][a-z0-9_]*)\s*:\s*(\d+)\s*$",
+    r"^\s*#?\s*([a-z_][a-z0-9_]*)\s*:\s*(\d+)\b.*$",
     re.IGNORECASE | re.MULTILINE,
 )
 

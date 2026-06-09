@@ -263,6 +263,7 @@ These three blocks land BEFORE the SUBSTANTIVE CANARIES block in the trace file 
 - The `Flags` line is locked at header-write time — record the flags actually present in `$ARGUMENTS`. Do NOT update this line later; it's a snapshot of how the run was invoked.
 - The cost-trace `model_*` lines are locked at header-write time based on whether `--deep` was set. Do NOT update these later either; they record the model decision for this run.
 - After EACH `Agent` tool call that spawns a teammate, the lead UPDATES the corresponding counter line in-place via `Edit` (not append a new line — overwrite the assertion line).
+- **Trailing annotations after the integer are tolerated.** A counter line of the form `key: <int>` MAY carry a trailing whitespace run, a `(wave2 6+6)` parenthetical, an `# inline` comment, or the template's `← v2: …` arrow note — the `trace_counters_reconcile_with_artifacts` parser reads the integer and ignores everything after it. (Earlier the parser required the int at end-of-line, so an annotated counter silently parsed as `0` and produced a false reconcile failure — `scripts/assembly/canary_checks.py` `_TRACE_COUNTER_RE`.) Preserve or strip the annotation per readability; either renders correctly.
 - After cluster file format validation passes for each cluster file, increment `cluster_files_written`.
 - After the ethics gate processing step in `<audit_assembly>`, set `ethics_gate_executed: true`.
 - At audit completion (before phase → plan), the lead updates `estimated_tokens_total` using the heuristic below.
