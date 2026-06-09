@@ -165,7 +165,7 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
    ```
    The render prints a deterministic **Placement QA** line (`weak_placements` + `≥3-on-a-pixel` stacks) — the free Tier-0 signal. Surface a non-zero count at the checkpoint. When `--visual` is set, escalate per device to the `ecp-visual-qa` vision gate at the flag-mapped tier (`standard`, or `deep` with `--deep`; `--auto` stays `free`). See `contracts/report-export.md` "Post-render placement QA".
 
-**Legacy v1 tools — do NOT run on a v2 engagement.** `scripts/validate-cluster-files.py`, `scripts/assemble-audit.py`, and `scripts/prep_synth_input.py` parse v1 `cluster-{cluster}-{device}.md` markdown. On a v2 JSON engagement they find zero findings or raise `FileNotFoundError`; they exist only for replaying archived v1 markdown engagements. The v1 `audit.md` template lives in `contracts/audit-assembly.md`.
+**Legacy v1 tools — do NOT run on a v2 engagement.** `scripts/validate-cluster-files.py` and `scripts/assemble-audit.py` parse v1 `cluster-{cluster}-{device}.md` markdown. On a v2 JSON engagement they find zero findings or raise `FileNotFoundError`; they exist only for replaying archived v1 markdown engagements. The v1 `audit.md` template lives in `contracts/audit-assembly.md`.
 
 **Recovery.** If acquisition fails after the required dispatch and correction attempt, use the manual acquisition fallback from `workflows/acquire.md` and log the degraded path. If cluster specialists fail, write an honest SKIP marker; do not replace specialist work with lead-authored findings.
 
