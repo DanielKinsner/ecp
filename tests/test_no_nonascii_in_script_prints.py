@@ -39,8 +39,6 @@ class TestNoNonAsciiInScriptPrints(unittest.TestCase):
     def test_print_literals_are_ascii(self):
         offenders: list[str] = []
         for py in SCRIPTS.rglob("*.py"):
-            if "one_off" in py.parts:
-                continue
             tree = ast.parse(py.read_text(encoding="utf-8"))
             for lineno, val in _print_string_literals(tree):
                 bad = sorted({c for c in val if ord(c) > 127})
