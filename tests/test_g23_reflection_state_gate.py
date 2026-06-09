@@ -161,9 +161,9 @@ class TestMarkReflectionCompleteCLI(unittest.TestCase):
         self.tmp.cleanup()
 
     def _run_cli(self, *args: str) -> subprocess.CompletedProcess:
-        # --device + --plugin-root are required by argparse globally but
-        # are unused by the --mark-reflection-complete code path
-        # (mirrors G8 test_g8_client_verified_gate.py:_run_cli).
+        # --device + --plugin-root are accepted but no longer REQUIRED for the
+        # state verbs (C7b, 2026-06-08); passed here to mirror the historical
+        # invocation. The bare-invocation case is covered separately below.
         return subprocess.run(
             [
                 sys.executable,
@@ -204,6 +204,48 @@ class TestMarkReflectionCompleteCLI(unittest.TestCase):
         # Stderr must explain why.
         self.assertIn("ERROR", result.stderr)
         self.assertIn("premature finalization", result.stderr.lower())
+
+    def test_cli_marks_complete_without_device_or_plugin_root(self):
+        """C7b regression (awdmods 2026-06-08 run-review): the state verbs
+        operate on meta.json alone, so a bare --mark-reflection-complete must
+        run WITHOUT --device / --plugin-root. Previously argparse rejected the
+        invocation before the handler could run, forcing operators to pass
+        unused placeholder values."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(_REPO / "scripts" / "generate-report.py"),
+                "--engagement", str(self.eng),
+                "--mark-reflection-complete",
+            ],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+        )
+        self.assertEqual(
+            result.returncode, 0,
+            f"Bare --mark-reflection-complete (no --device/--plugin-root) must "
+            f"exit 0. stderr={result.stderr!r}",
+        )
+        on_disk = json.loads(self.meta_path.read_text(encoding="utf-8"))
+        self.assertEqual(on_disk["reflection_state"], REFLECTION_STATE_COMPLETE)
+
+    def test_cli_render_path_still_requires_device_and_plugin_root(self):
+        """The conditional requirement must still fire for the RENDER path:
+        omitting --device/--plugin-root with no state verb is an argparse error
+        (exit 2), so render invocations keep their guardrail."""
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(_REPO / "scripts" / "generate-report.py"),
+                "--engagement", str(self.eng),
+            ],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+        )
+        self.assertEqual(
+            result.returncode, 2,
+            f"Render path with no device/plugin-root must exit 2. "
+            f"stderr={result.stderr!r}",
+        )
+        self.assertIn("required for report rendering", result.stderr)
 
 
 class TestG23DoesNotEntangleWithG8(unittest.TestCase):

@@ -43,9 +43,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate E-Commerce Psychology visual report")
     parser.add_argument("--engagement", required=True, help="Path to engagement directory")
     parser.add_argument(
-        "--device", required=True,
+        "--device", required=False, default=None,
         choices=["mobile", "laptop", "desktop"],
-        help="Device name",
+        help="Device name (required for rendering; not needed for the state verbs below)",
     )
     parser.add_argument(
         "--audit", default=None,
@@ -55,7 +55,7 @@ def main() -> int:
         "--baton", default=None,
         help="Baton filename. Defaults to baton.json (desktop/laptop) or baton-{device}.json.",
     )
-    parser.add_argument("--plugin-root", required=True, help="Path to plugin root directory")
+    parser.add_argument("--plugin-root", required=False, default=None, help="Path to plugin root directory (required for rendering; not needed for the state verbs below)")
     parser.add_argument("--markers", default=None, help="Path to marker overrides JSON (v2 merges; v1 replaces)")
     parser.add_argument("--output", default=None, help="Output filename (auto-generated if omitted)")
     parser.add_argument(
@@ -130,6 +130,29 @@ def main() -> int:
     args = parser.parse_args()
 
     engagement_path = Path(args.engagement)
+
+    # --device / --plugin-root are only needed for the rendering paths. The
+    # state verbs below (mark-reflection-complete, mark-client-verified,
+    # validate-review-state, list-imports) operate on meta.json / review-state
+    # alone, so requiring those flags unconditionally only produced a confusing
+    # argparse error before the handler could run. Enforce them for rendering.
+    _state_verb = (
+        args.mark_reflection_complete
+        or args.mark_client_verified
+        or args.validate_review_state
+        or args.list_imports
+    )
+    if not _state_verb:
+        _missing = [
+            name
+            for name, value in (("--device", args.device), ("--plugin-root", args.plugin_root))
+            if not value
+        ]
+        if _missing:
+            parser.error(
+                "the following arguments are required for report rendering: "
+                + ", ".join(_missing)
+            )
 
     if args.mark_client_verified:
         from assembly.report_state import AutoPromotionError, set_client_verified
