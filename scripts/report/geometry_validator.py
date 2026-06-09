@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 try:  # Support both `python -m report.geometry_validator` and direct script use.
-    from .geometry import slide_for_css_y
+    from .geometry import element_rect_raw, slide_for_css_y, viewport_dpr
     from .markers import _infer_element_coord_scale
     from .v2_loader import load_v2_engagement
     from .v2_markers import (
@@ -25,7 +25,7 @@ try:  # Support both `python -m report.geometry_validator` and direct script use
     )
 except ImportError:  # pragma: no cover - exercised by manual direct invocation.
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from report.geometry import slide_for_css_y
+    from report.geometry import element_rect_raw, slide_for_css_y, viewport_dpr
     from report.markers import _infer_element_coord_scale
     from report.v2_loader import load_v2_engagement
     from report.v2_markers import (
@@ -36,33 +36,11 @@ except ImportError:  # pragma: no cover - exercised by manual direct invocation.
     )
 
 
-def viewport_dpr(viewport: dict[str, Any]) -> float:
-    """Return the effective DPR for legacy and v2 viewport shapes."""
-    raw = (
-        viewport.get("dpr_actual")
-        or viewport.get("dpr")
-        or viewport.get("dpr_requested")
-        or 1
-    )
-    try:
-        value = float(raw)
-    except (TypeError, ValueError):
-        return 1.0
-    return value if value > 0 else 1.0
-
-
-def element_rect_raw(element: dict[str, Any]) -> dict[str, float] | None:
-    """Return raw element geometry from v2 rect or legacy flat fields."""
-    rect = element.get("rect") if isinstance(element.get("rect"), dict) else element
-    try:
-        return {
-            "x": float(rect.get("x", 0) or 0),
-            "y": float(rect.get("y", 0) or 0),
-            "width": float(rect.get("width", 0) or 0),
-            "height": float(rect.get("height", 0) or 0),
-        }
-    except (AttributeError, TypeError, ValueError):
-        return None
+# ``viewport_dpr`` and ``element_rect_raw`` are re-exported from
+# ``report.geometry`` (imported above) — the validator MUST use the same
+# coordinate helpers as the renderer, so a single canonical copy lives in
+# geometry.py. (Prior verbatim duplicates here drifted from the renderer; same
+# failure class as the backfill copy consolidated 2026-06-03.)
 
 
 def backfill_screenshots_from_sections(baton: dict[str, Any]) -> None:

@@ -44,6 +44,8 @@ import math
 import re
 from typing import TypedDict
 
+from ._text_distance import levenshtein_distance
+
 
 _MODEL_NAME = "all-MiniLM-L6-v2"
 _MODEL = None  # populated by _get_model() on first call (process-cached)
@@ -113,34 +115,10 @@ def severity_distance(a: str, b: str) -> int:
     return abs(severity_rank(a) - severity_rank(b))
 
 
-def levenshtein_distance(a: str, b: str) -> int:
-    """Classic edit distance via two-row dynamic programming.
-
-    Returns the minimum number of single-character insertions, deletions,
-    or substitutions required to transform ``a`` into ``b``. Iterative
-    implementation; O(min(|a|, |b|)) memory.
-    """
-    if a == b:
-        return 0
-    if not a:
-        return len(b)
-    if not b:
-        return len(a)
-    # Always iterate over the shorter string for better space usage
-    if len(a) > len(b):
-        a, b = b, a
-    prev = list(range(len(a) + 1))
-    for j, bc in enumerate(b, start=1):
-        curr = [j]
-        for i, ac in enumerate(a, start=1):
-            cost = 0 if ac == bc else 1
-            curr.append(min(
-                curr[i - 1] + 1,        # insertion
-                prev[i] + 1,            # deletion
-                prev[i - 1] + cost,     # substitution
-            ))
-        prev = curr
-    return prev[-1]
+# ``levenshtein_distance`` is imported from ``._text_distance`` (single shared
+# copy). This module's SIMILARITY-score ``levenshtein_ratio`` (1.0 = identical) is
+# the opposite convention to synth_input's DRIFT-score ratio, so only the distance
+# primitive is shared, never the ratio wrapper.
 
 
 def levenshtein_ratio(a: str, b: str) -> float:

@@ -37,6 +37,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List, Sequence
 
+from ._text_distance import levenshtein_distance
 from .atomic_write import atomic_write_json
 from .models import Finding
 
@@ -379,35 +380,10 @@ def render_phrasing_seeds_block(seeds: Sequence[PhrasingSeed]) -> str:
 # ---------------------------------------------------------------------------
 # 3. Levenshtein cross-device synchronization gate
 # ---------------------------------------------------------------------------
-
-
-def levenshtein_distance(a: str, b: str) -> int:
-    """Compute classic Levenshtein edit distance between two strings.
-
-    Pure-Python implementation - no third-party dependency. O(n*m) time,
-    O(min(n,m)) space (rolling row optimization). Adequate for prose
-    paragraphs <=2000 chars; the synchronization gate runs <100 times per
-    audit so the overall cost is negligible vs LLM dispatch.
-    """
-    if a == b:
-        return 0
-    if not a:
-        return len(b)
-    if not b:
-        return len(a)
-    # Ensure b is the shorter to minimize memory.
-    if len(a) < len(b):
-        a, b = b, a
-    previous = list(range(len(b) + 1))
-    for i, ca in enumerate(a, start=1):
-        current = [i] + [0] * len(b)
-        for j, cb in enumerate(b, start=1):
-            insertions = previous[j] + 1
-            deletions = current[j - 1] + 1
-            substitutions = previous[j - 1] + (0 if ca == cb else 1)
-            current[j] = min(insertions, deletions, substitutions)
-        previous = current
-    return previous[-1]
+# ``levenshtein_distance`` is imported from ``._text_distance`` (single shared
+# copy). This module's DRIFT-score ``levenshtein_ratio`` (0.0 = identical) is the
+# opposite convention to finding_stability's SIMILARITY-score ratio, so only the
+# distance primitive is shared.
 
 
 def levenshtein_ratio(a: str, b: str) -> float:
