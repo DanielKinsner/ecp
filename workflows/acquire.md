@@ -102,7 +102,7 @@ Use whichever succeeds first.
    - Mobile: 3x DPR via `agent-browser set device "iPhone 14"` (the only reliable high-DPR method)
 4. **Named session** (optional) — a session name for `agent-browser` commands (e.g., `--session mobile`). When provided, prefix ALL `agent-browser` commands with `--session {name}`. This enables parallel acquisition across devices — each device uses its own browser instance. If not provided, use the default (unnamed) session.
 
-*(Note: the legacy nonce input was removed in Phase 4 — acquirer now runs as a teammate in the audit team, so lead-acquirer communication happens via `SendMessage` and task completion, not via nonce-tagged stdout markers.)*
+*(Note: the legacy nonce input was removed in Phase 4. The acquirer runs as a `Task` subagent — not an Agent-Teams teammate — so lead↔acquirer hand-off is via the subagent's task completion and the artifacts it writes, not nonce-tagged stdout markers.)*
 
 ## Output Contract
 
@@ -198,7 +198,7 @@ Install: npm install -g agent-browser && agent-browser install
 Alternatives: (1) provide a local file path, (2) paste page source code
 ```
 
-**Acquirer teammate scope only — do NOT fall back to WebFetch mid-task.** If you (the acquirer) are mid-task and `agent-browser` fails or a page won't load, do NOT silently swap to WebFetch. Fail loudly with `STATUS: BLOCKED` per the block above and let the coordinator decide the fallback path. WebFetch does not render the page at a viewport and produces source code that doesn't reflect the actual rendered layout — using it to cover a mid-task agent-browser failure would degrade audit quality without the user knowing.
+**Acquirer scope only — do NOT fall back to WebFetch mid-task.** If you (the acquirer) are mid-task and `agent-browser` fails or a page won't load, do NOT silently swap to WebFetch. Fail loudly with `STATUS: BLOCKED` per the block above and let the coordinator decide the fallback path. WebFetch does not render the page at a viewport and produces source code that doesn't reflect the actual rendered layout — using it to cover a mid-task agent-browser failure would degrade audit quality without the user knowing.
 
 **The coordinator-level WebFetch fallback** (triggered when `agent-browser` is not installed AT ALL — see `skills/audit/SKILL.md` "WebFetch fallback" block and the zero-install install path in README.md) is a separate, intentional zero-install failsafe and is NOT affected by this rule. That path is meant for users who can't install agent-browser in their environment and still want a CODE-only audit from raw page source, and it requires explicit user consent + a degraded-mode warning before proceeding.
 

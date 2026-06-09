@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecp.local/schema/finding-v1.json",
   "title": "ECP Finding v1",
-  "description": "Single structured finding emitted by a v2 specialist auditor or the ethics subagent. JSON is the source of truth; markdown audit-mirror, HTML report, and bulleted exports all render from this shape. Mechanically validatable. Authored 2026-04-27 brainstorm; see docs/brainstorms/2026-04-27-ecp-v2-architecture-brainstorm.md and docs/redesign-v2-proposal.md §21.4.3.",
+  "description": "Single structured finding emitted by a v2 specialist auditor or the ethics subagent. JSON is the source of truth; markdown audit-mirror, HTML report, and bulleted exports all render from this shape. Mechanically validatable.",
   "type": "object",
   "additionalProperties": false,
   "required": [

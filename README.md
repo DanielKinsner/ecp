@@ -68,7 +68,7 @@ Useful flags: `--device mobile|laptop|desktop` (or a comma pair), `--focus <doma
 `--deep`, `--min-priority`, `--platform`, `--auto`. The full flag reference is
 `contracts/flags.md`.
 
-Outputs land in `docs/ecp/<engagement-id>/` (`audit.md`, `visual-report.html`, …).
+Outputs land in `docs/ecp/<engagement-id>/` (`audit-desktop.md` + `audit-mobile.md`, and the annotated `visual-report-{device}-v2.html`, …).
 A generated report is a **DRAFT** until you complete the manual verification pass
 (re-check the live site, verify legal/ethics citation links, finalize hotspots) —
 see `product.md` §6.

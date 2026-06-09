@@ -43,9 +43,15 @@ python --version 2>/dev/null && PYTHON_CMD=python || PYTHON_CMD=python3
 
 ## Output naming
 
-- Mobile: `visual-report-mobile.html`
-- Laptop: `visual-report.html`
-- Desktop: `visual-report-desktop.html`
+The **v2 renderer** (the canonical path — `--v2`, auto-detected from `synthesizer-emission-v1.json`) appends a `-v2` suffix so a v1 and a v2 report can coexist in one engagement dir. The legacy v1 renderer writes the un-suffixed names:
+
+| Device | v2 (canonical, hardcoded by `report/v2_html_builder.py`) | v1 (legacy) |
+| --- | --- | --- |
+| Mobile | `visual-report-mobile-v2.html` | `visual-report-mobile.html` |
+| Laptop | `visual-report-v2.html` | `visual-report.html` |
+| Desktop | `visual-report-desktop-v2.html` | `visual-report-desktop.html` |
+
+(`--from-review` final renders use `visual-report-{device}-final.html`.)
 
 **Two-device mode:** Generate both reports by running the Python script twice sequentially (2-5 seconds each).
 

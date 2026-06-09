@@ -21,7 +21,7 @@ This matches Phase A's explicit goal: "the difference between `audit-state: runn
 
 | Value | Written by | Meaning |
 |---|---|---|
-| `pending` | `skills/audit/SKILL.md` `<engagement_setup>` step 4 | Engagement directory created, `meta.json` written. Acquirer not yet dispatched. |
+| `pending` | `skills/audit/SKILL.md` Phase Order step 3 | Engagement directory created, `meta.json` written. Acquirer not yet dispatched. |
 
 ### Acquisition phase (Layer 0)
 

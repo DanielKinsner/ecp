@@ -114,7 +114,7 @@ Write audit artifacts inside `docs/ecp/{engagement-id}/`:
 - audit markdown: `audit-{device}.md` for v2 device output; preserve legacy `audit.md` behavior where the current scripts require it
 - `priority-path-stories.json` when priority path sidecar output is produced
 - `lead-reflection.md`
-- `visual-report.html` when a visual report is requested
+- `visual-report-{device}-v2.html` when a visual report is requested (v2 renderer; laptop is just `visual-report-v2.html`). The legacy v1 renderer writes `visual-report.html` / `visual-report-{device}.html` with no `-v2` suffix.
 
 Use the path and field names from `contracts/meta-schema.md`, `contracts/audit-state-machine.md`, and the relevant workflow. Do not invent alternate artifact names.
 

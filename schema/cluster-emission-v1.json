@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecp.local/schema/cluster-emission-v1.json",
   "title": "ECP Cluster Emission v1",
-  "description": "Canonical shape of what a v2 specialist auditor (one per cluster per device) emits to disk. Replaces the v1 cluster-{cluster}-{device}.md markdown file. JSON in; JSON out; no prose parsing. Reconciler reads these files via JSON Schema validation, not regex against finding-block prose. Authored 2026-04-27 brainstorm; pairs with finding-v1.json. See docs/brainstorms/2026-04-27-ecp-v2-architecture-brainstorm.md.",
+  "description": "Canonical shape of what a v2 specialist auditor (one per cluster per device) emits to disk. Replaces the v1 cluster-{cluster}-{device}.md markdown file. JSON in; JSON out; no prose parsing. Reconciler reads these files via JSON Schema validation, not regex against finding-block prose. Pairs with finding-v1.json.",
   "type": "object",
   "additionalProperties": false,
   "required": [

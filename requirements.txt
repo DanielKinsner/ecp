@@ -14,9 +14,8 @@
 # brings forward this dep so test-specialist.py can validate emissions in
 # isolation; Phase E extends usage to the structuring layer).
 #
-# Authored 2026-04-27. See:
-# - docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase E.1
-# - docs/brainstorms/2026-04-27-ecp-v2-architecture-brainstorm.md (validator selection)
+# Authored 2026-04-27 (validator selection: jsonschema is the only full draft
+# 2020-12 validator; fastjsonschema is draft 04/06/07 only).
 
 jsonschema>=4.26.0,<5
 
@@ -35,7 +34,5 @@ jsonschema>=4.26.0,<5
 # module (Jaccard, severity-distance, Levenshtein) do NOT require this
 # package — only the embedding-based helpers lazy-import it.
 #
-# Authored Phase J 2026-04-28. See:
-# - docs/plans/2026-04-27-feat-ecp-v2-redesign-plan.md Phase J.3
-# - docs/plans/2026-04-27-phase-j-handoff.md "Deliverable 3"
+# Authored Phase J 2026-04-28.
 sentence-transformers>=3.0,<6
