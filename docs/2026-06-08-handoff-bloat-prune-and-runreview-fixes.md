@@ -160,6 +160,25 @@ acquirer accepts it with `--allow-existing` without wiping `meta.json`; (b)
 
 ---
 
+## ▶ Diagnosis tool (built 2026-06-08 — the accountability harness)
+
+`scripts/diagnose_engagement.py` + `docs/2026-06-08-hotspot-diagnosis-protocol.md`
+are the durable way to attribute every hotspot/finding defect to the stage that
+caused it and tune the right knob:
+
+```
+python scripts/diagnose_engagement.py --engagement docs/ecp/<id>
+```
+
+Offline, deterministic; writes `<id>/_diagnosis/report-<device>.md` (verdict +
+stage-attribution table), `diagnosis.json`, and `crops/*.png` (every hotspot drawn
+on its screenshot). On the awdmods fixture it auto-reproduces every defect the
+operator found by hand: 6 CAPTURE_SUSPECT (the black-hero cascade), 1
+PREDICATE_MISMATCH (installment finding on the $135 part), 7 STACKED, 3 DUPLICATE,
+6 WEAK_ANCHOR → verdict **DO NOT SHIP**. The accountability loop: tune a stage,
+re-run the audit + this tool, watch that stage's count fall. Worked example
+committed at `docs/ecp/2026-06-08-8e46b1c8/_diagnosis/`. 14 unit tests cover it.
+
 ## Addendum — operator visual review of the awdmods report (hero capture + hotspot placement)
 
 The operator reviewed the awdmods `2026-06-08-8e46b1c8` visual report and flagged

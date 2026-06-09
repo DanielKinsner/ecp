@@ -14,6 +14,15 @@ run, do one live `--plugin-dir` audit** to confirm the new acquirer merge/auto-c
 (`acquire_url.py`) and the still-pending hotspot-placement verification.
 Prior hotspot-accuracy handoff: [`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md).
 
+**▶ Morning triage tool (use this to diagnose the recurring hotspot/finding problems):**
+`python scripts/diagnose_engagement.py --engagement docs/ecp/<id>` — stage-attribution
+diagnostic that pins every bad hotspot / false finding to the stage that caused it
+(ACQUISITION / SPECIALIST / PLACEMENT), prints a ship/no-ship verdict, and crops every
+hotspot onto its screenshot for visual confirmation. Read
+[`docs/2026-06-08-hotspot-diagnosis-protocol.md`](docs/2026-06-08-hotspot-diagnosis-protocol.md)
+for how to read it and the accountability loop. Worked example committed at
+`docs/ecp/2026-06-08-8e46b1c8/_diagnosis/`.
+
 ## Platform reality
 - **Primary dev/run environment is Windows** (PowerShell). The majority of work and every real
   `/ecp:audit` happens there.
