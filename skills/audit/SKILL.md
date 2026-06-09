@@ -167,7 +167,7 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
 
 **Legacy v1 tools — do NOT run on a v2 engagement.** `scripts/validate-cluster-files.py` and `scripts/assemble-audit.py` parse v1 `cluster-{cluster}-{device}.md` markdown. On a v2 JSON engagement they find zero findings or raise `FileNotFoundError`; they exist only for replaying archived v1 markdown engagements. The v1 `audit.md` template lives in `contracts/audit-assembly.md`.
 
-**Recovery.** If acquisition fails after the required dispatch and correction attempt, use the manual acquisition fallback from `workflows/acquire.md` and log the degraded path. If cluster specialists fail, write an honest SKIP marker; do not replace specialist work with lead-authored findings.
+**Recovery.** If acquisition fails after the required dispatch and correction attempt, use the manual acquisition fallback from `workflows/acquire.md` and log the degraded path. If cluster specialists fail, write an honest SKIP marker; do not replace specialist work with lead-authored findings. If the synthesizer truncates or emits an unparseable `synthesizer-emission-v1.json`, `scripts/build_synthesizer_emission_fallback.py` rebuilds a valid emission from the cluster + canonical-f_refs inputs (Phase J emergency tooling; covered by `tests/test_synth_emission_fallback.py`) — it is a recovery aid, not a normal pipeline step.
 
 ## Checkpoints
 

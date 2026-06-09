@@ -19,9 +19,9 @@ The router keeps the active execution surface small and makes the source of trut
 
 ## v1 To v2 Dispatch Context
 
-The old skill carried a long inline note from Phase H, dated 2026-04-28. The important context is that v2 flipped most roles from teammate dispatch to one-shot subagent dispatch. Cluster specialists stayed as teammates because they benefit from the shared engagement workspace.
+The old skill carried a long inline note from Phase H, dated 2026-04-28. The important context is that v2 flipped most roles from teammate dispatch to one-shot subagent dispatch. As of 2026-06-01 cluster specialists ALSO migrated off Agent-Teams to GA parallel one-shot subagents — the last teammate role removed from the audit path (product.md "Specialists off Agent Teams"). No role in the audit path is an Agent-Teams teammate anymore.
 
-The runtime rule now lives in `contracts/dispatch-contract.md`. When the old prose says "spawn the X teammate" for acquirer, ethics, or synthesizer, the v2 interpretation is a `Task` subagent. Cluster specialists remain `Agent` teammates.
+The runtime rule now lives in `contracts/dispatch-contract.md`. When the old prose says "spawn the X teammate", the v2 interpretation is a one-shot subagent: acquirer / ethics / synthesizer via the `Task` tool, and cluster specialists via the `Agent` tool with no `team_name` (NOT teammates — see SKILL.md "Dispatch Shape").
 
 ## Acquisition And Device Context
 
@@ -97,7 +97,7 @@ Cluster failure has a different recovery model: failed specialist work becomes S
 | dom_preprocessor | `contracts/dom-preprocessor.md` |
 | phase_ethics_v2 | `contracts/ethics-subagent-v2.md` |
 | phase_synthesize_v2 | `contracts/synthesizer-v2.md` |
-| audit_assembly | `contracts/audit-assembly.md`, `scripts/assemble-audit.py` |
+| audit_assembly | `contracts/audit-assembly.md`, `scripts/assemble-audit.py` — **legacy v1 markdown path** (do NOT run on a v2 engagement; v2 assembles via the synthesizer, `contracts/synthesizer-v2.md`) |
 | progress_comparison | `contracts/progress-comparison.md` |
 | report_export | `contracts/report-export.md` |
 | ethics | `references/ethics-gate.md`, `contracts/ethics-subagent-v2.md` |
