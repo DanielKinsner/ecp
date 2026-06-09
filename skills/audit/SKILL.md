@@ -77,8 +77,8 @@ Run this sequence:
 2. Select device(s) per `contracts/device-semantics.md`.
 3. Create or resume `docs/ecp/{engagement-id}` and write/update `meta.json`.
 4. Detect platform, page type, page pattern, and cluster scope.
-5. Dispatch acquisition for each requested device.
-6. Verify acquisition artifacts on disk.
+5. Dispatch acquisition for each requested device. The acquirer invocation MUST pass `--allow-existing` (step 3 already created the dir): acquisition **merges** its quick-scan fields into the lead's `meta.json` — lead-authored fields win, so `engagement_status`/`report_state`/`reflection_state`/`clusters` survive — instead of clobbering it, and **auto-upgrades** each v1-shape baton to the v2 schema in place (`baton{,-mobile}.json` become v2; the raw v1 is preserved as `baton{,-mobile}.v1raw.json`). No separate `baton_v1_to_v2.py` step is needed on the happy path — run it manually only to recover a v1 baton.
+6. Verify acquisition artifacts on disk (the on-disk `baton{,-mobile}.json` are already v2-shape — that is what validation, synthesis, and render consume).
 7. Preprocess DOM per device when DOM exists.
 8. Dispatch cluster specialists for each selected cluster and device — **full-parallel by default** (spawn all requested clusters in one message). Concurrency is capped server-side; if transient rate limits appear, use the `--max-concurrent N` flag to batch spawns into waves (documented in `contracts/flags.md`). The flag defaults to unlimited (all clusters at once). Wait for each batch's file-presence signal (via glob `cluster-{cluster}-{device}.json`) before proceeding to the next phase layer. See `contracts/dispatch-contract.md` §"Why specialists are one-shot subagents" point 1 for the transport-shape rationale.
 9. Dispatch ethics v2 after specialist emissions are present.

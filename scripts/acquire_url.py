@@ -1308,7 +1308,82 @@ def build_arg_parser() -> argparse.ArgumentParser:
             "then rerun one stricter acquisition pass per failing device."
         ),
     )
+    parser.add_argument(
+        "--allow-existing",
+        action="store_true",
+        help=(
+            "Merge into an existing (non-empty) engagement dir instead of "
+            "refusing it. Required when the audit lead pre-creates the dir with "
+            "meta.json + audit-trace.log per SKILL phase order: lead-authored "
+            "meta.json fields are preserved (merge, not clobber)."
+        ),
+    )
     return parser
+
+
+def _prepare_engagement_dir(eng_dir: Path, allow_existing: bool) -> int | None:
+    """Create the engagement dir. Return an exit code to ABORT, or None to proceed.
+
+    By default a non-empty dir is refused (a fresh quick-scan must not stomp a
+    prior engagement). With ``allow_existing`` the lead's pre-created dir — SKILL
+    phase order writes ``meta.json`` + ``audit-trace.log`` BEFORE acquisition — is
+    accepted so the acquirer can merge into it rather than being forced to wipe it
+    (run-review C2: the two frozen contracts collided on the critical path).
+    """
+    if eng_dir.exists() and any(eng_dir.iterdir()) and not allow_existing:
+        print(f"ERROR: engagement directory already exists and is not empty: {eng_dir}")
+        print("  (pass --allow-existing to merge into a lead-created engagement dir)")
+        return 1
+    eng_dir.mkdir(parents=True, exist_ok=True)
+    return None
+
+
+def _merge_meta(eng_dir: Path, acquirer_meta: dict[str, Any]) -> dict[str, Any]:
+    """Merge the acquirer's quick-scan meta into any lead-authored meta.json.
+
+    Lead-authored fields WIN — the acquirer only fills gaps it owns — so a
+    pre-existing engagement's ``engagement_status`` / ``report_state`` /
+    ``reflection_state`` / ``clusters`` are never destroyed by acquisition
+    (run-review C2: the acquirer was clobbering the lead's meta.json + trace to
+    get past the non-empty-dir guard). On a fresh standalone quick-scan there is
+    no existing meta.json yet, so the acquirer's own meta is written unchanged.
+    """
+    existing_path = eng_dir / "meta.json"
+    if existing_path.exists():
+        try:
+            existing = json.loads(existing_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            existing = None
+        if isinstance(existing, dict) and existing:
+            return {**acquirer_meta, **existing}
+    return acquirer_meta
+
+
+def _upgrade_batons_to_v2(eng_dir: Path, devices, engagement_id: str) -> None:
+    """Upgrade the freshly-written v1 batons to the v2 schema the downstream
+    pipeline (validate / synthesize / render) consumes.
+
+    Previously this conversion was an undocumented manual step the lead ran by
+    hand; wiring it into acquisition removes that gap (run-review C1). Desktop +
+    mobile only — the v2 baton schema covers those two device shapes; a laptop
+    capture keeps its v1 baton. Idempotent (``baton_v1_to_v2.convert_engagement``
+    preserves ``baton{,-mobile}.v1raw.json``) and best-effort: acquisition has
+    already succeeded, so a conversion failure — e.g. a non-schema engagement id
+    on a standalone quick-scan — only warns and leaves the v1 baton in place.
+    """
+    convertible = tuple(d for d in devices if d in ("desktop", "mobile"))
+    if not convertible:
+        return
+    try:
+        converter = _load_script_module(
+            "baton_v1_to_v2", SCRIPTS_DIR / "baton_v1_to_v2.py")
+        converter.convert_engagement(
+            eng_dir, devices=convertible, engagement_id=engagement_id)
+    except Exception as exc:  # noqa: BLE001 — never fail acquisition on conversion
+        print(f"WARNING: v1->v2 baton conversion skipped ({exc}); v1 baton kept on disk.",
+              file=sys.stderr)
+        print(f"  Convert manually: python scripts/baton_v1_to_v2.py {eng_dir}",
+              file=sys.stderr)
 
 
 def main() -> int:
@@ -1326,10 +1401,9 @@ def main() -> int:
 
     engagement_id = args.engagement_id.strip() or f"ecp-cursor-{uuid.uuid4().hex[:10]}"
     eng_dir = REPO_ROOT / "docs" / "ecp" / engagement_id
-    if eng_dir.exists() and any(eng_dir.iterdir()):
-        print(f"ERROR: engagement directory already exists and is not empty: {eng_dir}")
-        return 1
-    eng_dir.mkdir(parents=True, exist_ok=True)
+    _abort = _prepare_engagement_dir(eng_dir, args.allow_existing)
+    if _abort is not None:
+        return _abort
 
     agent_browser = _ensure_agent_browser()
     ecp_dom = _load_script_module("ecp_acquire_dom", SCRIPTS_DIR / "ecp_acquire_dom.py")
@@ -1422,7 +1496,7 @@ def main() -> int:
         meta["devices_requested"] = list(devices)
         meta["devices_scanned"] = [r.device for r in results]
 
-    _write_text(eng_dir / "meta.json", json.dumps(meta, indent=2) + "\n")
+    _write_text(eng_dir / "meta.json", json.dumps(_merge_meta(eng_dir, meta), indent=2) + "\n")
     if multi:
         lines = [
             f"# Engagement {engagement_id}",
@@ -1471,6 +1545,10 @@ def main() -> int:
             )
             + "\n",
         )
+
+    # Upgrade the v1-shape batons just written to the v2 schema the rest of the
+    # pipeline reads (previously an undocumented manual lead step — run-review C1).
+    _upgrade_batons_to_v2(eng_dir, devices, engagement_id)
 
     print("OK")
     print(f"engagement_dir={eng_dir}")

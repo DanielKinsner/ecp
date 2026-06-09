@@ -18,6 +18,8 @@ The acquirer's output MUST validate against [`schema/baton-v1.json`](../schema/b
 
 The Output Contract and Output Format sections at the end of this document are the canonical baton shape — refer back to them for the exact field list. Steps 1–6 below describe HOW to gather the data.
 
+> **Implementation note (`scripts/acquire_url.py`).** The script captures a flat **v1-shape** baton and then auto-converts it to the v2 shape above *in place* (`baton{,-mobile}.json` become v2; the raw v1 is preserved as `baton{,-mobile}.v1raw.json`) — so the on-disk baton always satisfies the v2 contract without a separate `baton_v1_to_v2.py` orchestration step (run that manually only to recover a v1 baton). When the audit lead has pre-created `docs/ecp/{id}/` with `meta.json` + `audit-trace.log` (SKILL phase order step 3), pass `--allow-existing`: the acquirer **merges** its quick-scan fields into the lead's `meta.json` (lead-authored fields win) instead of clobbering it.
+
 ---
 
 > **IMPORTANT: `agent-browser` is a CLI tool.** All `agent-browser` commands must be run via the **Bash tool**, not as MCP tools or function calls. The agent literally runs shell commands. For example:
@@ -139,6 +141,8 @@ Navigate to the URL via agent-browser. You MUST set the viewport/device before n
 If a **named session** was provided, prefix every `agent-browser` command below with `--session {name}` (e.g., `agent-browser --session laptop set viewport 1440 900`, or `agent-browser --session desktop set viewport 1920 1080`, or `agent-browser --session mobile set device "iPhone 14"`). When no named session is provided, omit the flag. The examples below show `{session_flag}` as a placeholder — replace it with `--session {name}` or remove it. **Match the session name to the device's actual viewport command** — never mix a session name with the wrong device's dimensions.
 
 > **CRITICAL — parallel mode safety:** In two-device mode, NEVER use bare `agent-browser close` — it kills the default session, which may be in use by the other device. Always scope close commands: `agent-browser --session {name} close`.
+
+> **CRITICAL — never kill browsers by process name.** The only sanctioned browser-close in the pipeline is `agent-browser [--session {name}] close`. During ad-hoc cleanup, do NOT use a process-name match (`taskkill /IM chrome.exe`, `Stop-Process -Name chrome`, `pkill chrome`, `killall "Google Chrome"`) — Playwright's headless browser shares the `chrome` process name with the operator's everyday browser, so a bare match closes the user's real Chrome (this happened during the awdmods 2026-06-08 run). If a wedged Playwright process truly must be killed, match on the command line containing the `ms-playwright` cache directory, or simply restart `agent-browser`.
 
 Follow these steps in exact order:
 
