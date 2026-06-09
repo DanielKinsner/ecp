@@ -332,7 +332,7 @@ A subagent can't SendMessage during execution. v1's reviewer/builder Q&A loops (
 
 If the subagent's prompt produces malformed output, validation failure, or no useful response:
 1. **Retry once** — re-dispatch a fresh `Task` call with the same prompt plus an embedded validation error (e.g., "Your prior emission failed schema validation: <error>. Re-emit a single valid JSON object."). Increment a `subagent_retried_<role>` counter.
-2. **On second failure** — mark the role's output `status: "partial"` (or skip the layer with a SKIP marker) and continue. Document in `audit-trace.log` and `lead-reflection.md`.
+2. **On second failure** — either apply a logged **mechanical normalize** (schema/placement/shape metadata only, NEVER substantive prose; re-validate clean; record in `audit-trace.log` + `lead-reflection.md` — see `skills/audit/SKILL.md` Validation step 1), OR mark the role's output `status: "partial"` (or skip the layer with a SKIP marker) and continue. Document in `audit-trace.log` and `lead-reflection.md`.
 
 ### Cancel.flag check
 
