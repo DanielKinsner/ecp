@@ -173,5 +173,31 @@ class TestUpgradeBatonsToV2(unittest.TestCase):
         self.assertNotIn("schema_version", baton)  # still v1
 
 
+class TestRevealLazyAndAnimations(unittest.TestCase):
+    """Plumbing for the pre-capture reveal (the JS behavior needs a live browser;
+    here we cover that it returns the eval result and is failure-safe, and that the
+    injected JS targets the right things — the awdmods 2026-06-08 root cause)."""
+
+    def test_returns_eval_report(self):
+        report = {"lazy_imgs": 19, "reveal_els": 19, "error": None}
+        self.assertEqual(acquire_url._reveal_lazy_and_animations(lambda src: report), report)
+
+    def test_swallows_eval_failure(self):
+        def boom(src):
+            raise RuntimeError("agent-browser eval failed")
+        self.assertEqual(acquire_url._reveal_lazy_and_animations(boom), {})
+
+    def test_non_dict_result_is_normalized(self):
+        self.assertEqual(acquire_url._reveal_lazy_and_animations(lambda src: None), {})
+
+    def test_injected_js_targets_the_failure_mode(self):
+        js = acquire_url._REVEAL_LAZY_AND_ANIMATIONS_JS
+        # Shopify Dawn scroll-trigger reveal neutralization + lazy eager-load.
+        self.assertIn("scroll-trigger--offscreen", js)
+        self.assertIn('animate--', js)
+        self.assertIn("loading='eager'", js)
+        self.assertIn("opacity", js)
+
+
 if __name__ == "__main__":
     unittest.main()

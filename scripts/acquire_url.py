@@ -663,6 +663,55 @@ def _count_visible_text(agent_browser: str, session: str | None) -> int:
         return 0
 
 
+# Pre-capture reveal: many themes (notably Shopify Dawn + its derivatives) hide
+# above-fold content behind scroll-triggered reveal animations (`.scroll-trigger
+# .animate--fade-in`, `opacity:0` until an IntersectionObserver fires) and behind
+# lazy-loaded images / background media. A cold headless capture at scroll-y=0
+# catches these UNPAINTED, so the hero renders as a black/empty void and its
+# elements (heading, image) are filtered as `opacity:0` -> not visible. That
+# produced the awdmods 2026-06-08 false "empty hero" finding cascade. Firing the
+# reveals + eager-loading lazy media BEFORE capture is the root-cause fix.
+_REVEAL_LAZY_AND_ANIMATIONS_JS = """JSON.stringify((function(){
+  var r={lazy_imgs:0, reveal_els:0, error:null};
+  try {
+    document.querySelectorAll('img[loading="lazy"]').forEach(function(img){ img.loading='eager'; r.lazy_imgs++; });
+    document.querySelectorAll('img[data-src],img[data-srcset],source[data-srcset]').forEach(function(el){
+      if(el.dataset.src && !el.getAttribute('src')) el.setAttribute('src', el.dataset.src);
+      if(el.dataset.srcset && !el.getAttribute('srcset')) el.setAttribute('srcset', el.dataset.srcset);
+      r.lazy_imgs++;
+    });
+    document.querySelectorAll('.scroll-trigger,[class*="animate--"],[data-cascade]').forEach(function(el){
+      el.classList.remove('scroll-trigger--offscreen');
+      el.classList.add('scroll-trigger--active');
+      el.style.opacity='1'; el.style.transform='none'; el.style.visibility='visible';
+      r.reveal_els++;
+    });
+    var s=document.createElement('style');
+    s.setAttribute('data-ecp-reveal','1');
+    s.textContent='.scroll-trigger,[class*="animate--"]{opacity:1!important;transform:none!important;visibility:visible!important;}*{animation-duration:0s!important;transition-duration:0s!important;}';
+    (document.head||document.documentElement).appendChild(s);
+    var y=window.scrollY||0;
+    window.scrollTo(0, Math.min((document.body?document.body.scrollHeight:0)||0, window.innerHeight));
+    window.dispatchEvent(new Event('scroll'));
+    window.scrollTo(0, y);
+    window.dispatchEvent(new Event('scroll'));
+  } catch(e){ r.error=String((e&&e.message)||e); }
+  return r;
+})())"""
+
+
+def _reveal_lazy_and_animations(ev) -> dict[str, Any]:
+    """Force scroll-trigger reveal animations visible and eager-load lazy media
+    before capture, so above-fold heroes/banners paint. Best-effort: any failure
+    is swallowed (a non-revealing page captures as before). Returns a small report
+    (counts) for the trace. ``ev`` is the engagement's JSON-eval callable."""
+    try:
+        out = ev(_REVEAL_LAZY_AND_ANIMATIONS_JS)
+        return out if isinstance(out, dict) else {}
+    except (OSError, RuntimeError, ValueError, TypeError):
+        return {}
+
+
 def _outer_html(agent_browser: str, session: str | None) -> str:
     out = _run_capture(
         _ab_bin(
@@ -902,6 +951,19 @@ def _run_one_device(
         blockers = list(vp0.get("blocking") or [])
 
     timer_baton: dict[str, Any] | None = ecp_ov.verify_timers(lambda s: _ev(s), sleep_s=10.0)
+
+    # Reveal scroll-trigger animations + eager-load lazy media BEFORE capture so
+    # above-fold heroes/banners actually paint (root-cause fix for the black-hero
+    # false-finding cascade). Then give images a beat to decode.
+    reveal = _reveal_lazy_and_animations(_ev)
+    if reveal:
+        print(
+            f"REVEAL: forced {reveal.get('reveal_els', 0)} scroll-trigger/animation "
+            f"elements visible, eager-loaded {reveal.get('lazy_imgs', 0)} lazy images"
+            + (f" (error: {reveal['error']})" if reveal.get("error") else ""),
+            file=sys.stderr,
+        )
+        time.sleep(1.0)
 
     m0 = _metrics(agent_browser, session)
     inner_w = int(m0.get("innerW") or prof.width)
