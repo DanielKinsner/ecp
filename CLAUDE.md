@@ -4,11 +4,15 @@
 ECP up and not break it across machines*. If anything here disagrees with `product.md`, `product.md` is right.
 
 ## ▶ Start here (current work state)
-**Rolling handoff: [`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md)** —
-read it before picking up hotspot-accuracy work. Current state (2026-06-03): all four
-hotspot-placement fixes are in code (acquirer element-capture, mobile tiling, hero-stack
-distribute+flag) and pushed to `main`; the one remaining step is a single live verification
-audit — **which requires the `--plugin-dir` launch below, or it tests stale code.**
+**Rolling handoff: [`docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md`](docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md)** —
+read it first. State (2026-06-08): the awdmods run-review claims were validated (8 VALID / 3
+PARTIAL) and the safe subset implemented + pushed (net −2.9k LOC; tests green both runners,
+1107 pytest / 719 unittest). Deferred with precise plans in that handoff: the v1/Agent-Teams
+contract-reword sweep (load-bearing — needs a focused pass), the acquirer true-height probe
+(C3), the normalizations canary (C4), and ghost-zone placement (C6). **Before the next client
+run, do one live `--plugin-dir` audit** to confirm the new acquirer merge/auto-convert path
+(`acquire_url.py`) and the still-pending hotspot-placement verification.
+Prior hotspot-accuracy handoff: [`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md).
 
 ## Platform reality
 - **Primary dev/run environment is Windows** (PowerShell). The majority of work and every real
