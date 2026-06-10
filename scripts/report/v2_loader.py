@@ -398,11 +398,21 @@ def build_canonical_view(
             raw = json.loads(p.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
-        for i, rf in enumerate(raw.get("findings", []), start=1):
-            # Match by (cluster, device, position) — the dataclass's local_index
-            # is also 1-based parse-order. raw JSON has 'local_id' not 'local_index'.
-            key = (res.cluster, rf.get("device"), i)
-            raw_extras_by_local[key] = {
+        for rf in raw.get("findings", []):
+            # Match by (cluster, device, local_id) — the dataclass's local_index
+            # is parsed from JSON 'local_id' (assembly/json_parser.py), which the
+            # schema only constrains to 1..99 with no uniqueness/sequence guarantee.
+            # Keying by enumerate position silently mismatched any emission whose
+            # local_ids didn't equal array positions, losing reference_citations /
+            # proposed_anchor / change_type and defaulting severity to MEDIUM.
+            # Duplicate local_ids within one (cluster, device) file: first-wins
+            # via setdefault (deterministic; matches parse-order precedence).
+            try:
+                lid = int(rf.get("local_id"))
+            except (TypeError, ValueError):
+                continue
+            key = (res.cluster, rf.get("device"), lid)
+            raw_extras_by_local.setdefault(key, {
                 "reference_citations": list(rf.get("reference_citations") or []),
                 "element_selector": (rf.get("element") or {}).get("selector", ""),
                 "element_text_content": (rf.get("element") or {}).get("text_content", ""),
@@ -415,7 +425,7 @@ def build_canonical_view(
                 "ethics_state": rf.get("ethics_state"),
                 "source_url": rf.get("source_url"),
                 "proposed_anchor": rf.get("proposed_anchor"),
-            }
+            })
 
     if ethics_findings_path and ethics_findings_path.exists():
         try:
@@ -431,9 +441,15 @@ def build_canonical_view(
             if "ethics" not in clusters_used:
                 clusters_used.append("ethics")
             raw = json.loads(ethics_findings_path.read_text(encoding="utf-8"))
-            for i, rf in enumerate(raw.get("findings", []), start=1):
-                key = ("ethics", rf.get("device"), i)
-                raw_extras_by_local[key] = {
+            for rf in raw.get("findings", []):
+                # See cluster-loop comment above: key by JSON local_id (matches
+                # the dataclass local_index), not enumerate position.
+                try:
+                    lid = int(rf.get("local_id"))
+                except (TypeError, ValueError):
+                    continue
+                key = ("ethics", rf.get("device"), lid)
+                raw_extras_by_local.setdefault(key, {
                     "reference_citations": list(rf.get("reference_citations") or []),
                     "element_selector": (rf.get("element") or {}).get("selector", ""),
                     "element_text_content": (rf.get("element") or {}).get("text_content", ""),
@@ -446,7 +462,7 @@ def build_canonical_view(
                     "ethics_state": rf.get("ethics_state"),
                     "source_url": rf.get("source_url"),
                     "proposed_anchor": rf.get("proposed_anchor"),
-                }
+                })
         except Exception as exc:
             # G16: ethics drops are equally invisible pre-fix. Match the
             # cluster-emission contract — record the drop, exclude the
