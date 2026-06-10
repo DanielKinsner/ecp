@@ -512,6 +512,24 @@
       }
     },
     {
+      "description": "severity=CRITICAL is reserved for ethics findings (cluster='ethics'). Cluster specialists never emit CRITICAL — the contract prose in contracts/ethics-subagent-v2.md (~32, ~154-156) and contracts/specialist-prompt-v2.md (~150) forbids it; this rule pins the contract in schema so a non-ethics specialist emitting CRITICAL fails validation rather than silently inflating Priority Path weighting.",
+      "if": {
+        "properties": {
+          "severity": {
+            "const": "CRITICAL"
+          }
+        },
+        "required": ["severity"]
+      },
+      "then": {
+        "properties": {
+          "cluster": {
+            "const": "ethics"
+          }
+        }
+      }
+    },
+    {
       "description": "evidence_tier promotion: any Gold citation forces evidence_tier=Gold.",
       "if": {
         "properties": {
