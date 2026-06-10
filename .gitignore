@@ -37,8 +37,9 @@ engagements/
 # specific converter). These live in scripts/ during the run but are
 # NOT durable repo content — each is tied to one engagement's specific
 # failure mode and would be re-written for any future recovery.
-# Distinct from scripts/one_off/ which IS the canonical home for
-# genuinely-shared one-off scripts (and IS tracked).
+# (The formerly-tracked scripts/one_off/ home for shared one-offs was
+# deleted 2026-06-08, commit aac68a9 — anything under it now is
+# untracked scratch like the rest of this class.)
 scripts/_write_*.py
 scripts/write_*.py
 scripts/temp_*.py
@@ -49,11 +50,11 @@ scripts/assembly/temp_*.py
 
 # Per-engagement baton converters/trimmers are the same scratch class: one per
 # engagement, *adapted* (not shared) each run — e.g. convert_<eng>_batons.py,
-# trim_batons_phase5.py. They sometimes get saved under scripts/one_off/ (the
-# tracked dir), but they fail that dir's "genuinely-shared" test, so keep them
-# untracked in place. The durable fix is a single parameterized v1->v2 converter
-# (roadmap); until that lands these stay scratch. Root-scoped + the specific
-# one_off/ converter glob — does NOT touch tracked scripts/one_off/trim_r03_batons.py.
+# trim_batons_phase5.py. They sometimes get saved under scripts/one_off/ (now
+# fully untracked — the dir was deleted from git 2026-06-08), but they fail the
+# "genuinely-shared" test, so keep them untracked in place. The durable fix is a
+# single parameterized v1->v2 converter (roadmap); until that lands these stay
+# scratch. Root-scoped + the specific one_off/ converter glob.
 scripts/convert_*.py
 scripts/trim_*.py
 scripts/one_off/convert_*_batons.py
