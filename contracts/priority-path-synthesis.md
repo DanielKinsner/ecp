@@ -1,29 +1,31 @@
 <!-- RESEARCH_DATE: 2026-04-14 -->
 # Priority Path synthesis
 
-Canonical rules for the lead's Priority Path synthesis step — the one the audit lead runs after finding reconciliation and before writing the final `audit.md` summary.
+Historical v1 contract for the audit lead's Priority Path synthesis step — invoked when replaying archived v1 markdown engagements through `scripts/assemble-audit.py`. **The live v2 path supersedes this file** — see `${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-v2.md` (the canonical v2 synthesizer prompt that emits `priority_path[]` stories directly into `synthesizer-emission-v1.json`).
 
 ## v1.0 orchestration contract
 
 **Before:** the lead manually wrote action stories into `audit.md` by reading `priority-path-candidates-{device}.json`. When the lead forgot, `audit.md` shipped with a literal `<!-- Lead: ... -->` HTML comment and the report's Priority Path card fell back to empty-state (Codex audit C1).
 
-**v1.0:** the synthesis step is an explicit subagent dispatch with deterministic Python validation.
+**v1.0 (frozen — v1 replay path only):** the synthesis step was an explicit subagent dispatch with deterministic Python validation.
 
-1. `scripts/assemble-audit.py` runs reconciliation → dedup → `pipeline.assign_display_indices` → `score_groups` → `write_audit_md` (with `priority_path_stories=None`, which renders a clear pointer to Step 2).
-2. The lead dispatches the synthesizer subagent per `${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-subagent.md`, inlining the finalized `valid_refs` allowlist, the scoring candidates, and a compact findings digest. The subagent returns a fenced JSON code block.
-3. The lead writes the subagent response text to a file (e.g. `priority-path-synthesis-{device}.txt` in the engagement directory) and re-runs `assemble-audit.py --priority-path PATH`.
+1. `scripts/assemble-audit.py` ran reconciliation → dedup → `pipeline.assign_display_indices` → `score_groups` → `write_audit_md` (with `priority_path_stories=None`, which rendered a clear pointer to Step 2).
+2. The lead dispatched the synthesizer subagent per `${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-subagent.md`, inlining the finalized `valid_refs` allowlist, the scoring candidates, and a compact findings digest. The subagent returned a fenced JSON code block.
+3. The lead wrote the subagent response text to a file (e.g. `priority-path-synthesis-{device}.txt` in the engagement directory) and re-ran `assemble-audit.py --priority-path PATH`.
 4. `assemble-audit.py` parses + validates the response with `scripts/assembly/synthesizer_parser.py`. Validation failures (no fenced block, malformed JSON, hallucinated F-N, story count out of range, etc.) render a visible ERROR block in `audit.md` instead of silent placeholder. The operator sees the failure.
 5. On validation pass, stories are passed to the writer and rendered as real `### N. Title (SEVERITY)` blocks with action paragraphs and Underlying findings F-N references. All F-Ns are guaranteed to resolve because the allowlist was built from `FinalizedFindings.cluster_finding_map`.
 
+**Live-path note (load-bearing).** Item 4 above is the visible-ERROR-block rule cited at `scripts/report/html_builder.py:89` and `:124` and at `scripts/report/templates/components.py:300` — sidecar load / validation failures (and v1 `--priority-path` validation failures) MUST surface as a visible ERROR card to the operator instead of falling through to silent regex-scraped markdown. This rule applies regardless of which synthesis path produced the priority-path-stories sidecar; it is the only piece of this contract that is still live for v2 reports. The exact line-15 location is referenced by file:line in those callers — do not renumber.
+
 **F-N references use post-dedup display order.** `assign_display_indices` tags every finding with `display_index` before scoring runs; `scoring._finding_ref` emits refs in the form `{cluster} F-{display_index:02d}`; the writer renders findings in the same order the display indices were assigned. Before v1.0, scoring emitted refs based on pre-dedup `local_index` while the writer re-sorted by priority — links pointed at the wrong cards (C2). The single-source ordering guarantee removes the drift.
 
-**Retry protocol.** If validation fails, the lead may dispatch the synthesizer subagent ONE more time with a correction turn including the validation error message. If the retry also fails, the lead proceeds without `--priority-path` and the writer renders the ERROR block. No third attempt — elaborate retry loops defend a failure mode we have not observed, and graceful degradation is sufficient.
+**Retry protocol (v1).** If validation failed, the lead could dispatch the synthesizer subagent ONE more time with a correction turn including the validation error message. If the retry also failed, the lead proceeded without `--priority-path` and the writer rendered the ERROR block. No third attempt — elaborate retry loops defend a failure mode we have not observed, and graceful degradation is sufficient.
 
 
 
-**Why this file exists:** The Priority Path is the headline UX feature of the v5.0 visual report — it collapses 20-30 raw findings into 3-5 concrete "focused changes" the user can actually act on. The synthesis rules are substantial (scoring formula, action story format, voice rules, header/footer templates) and prior to Round 12 they lived inline in `skills/audit/SKILL.md` where they interrupted the phase orchestration flow. This file extracts them so the audit lead can load the synthesis rules only when running the synthesis step, and so the reasoning behind Priority Path is discoverable from `references/` as a first-class concept.
+**Why this file exists (historical):** The Priority Path is the headline UX feature of the visual report — it collapses 20-30 raw findings into 3-5 concrete "focused changes" the operator can actually act on. The v1 synthesis rules (scoring formula, action story format, voice rules, header/footer templates) lived inline in `skills/audit/SKILL.md` prior to Round 12; this file extracted them so v1 replay could load the rules without the whole skill body. The v2 synthesizer in `contracts/synthesizer-v2.md` carries the same conceptual contract (3–5 priority_path stories, action-imperative titles, integrated narratives) in the v2 JSON-emission idiom; the v1 rules below are retained as the v1 emission contract for archived markdown engagements.
 
-**Read this file when:** you are the audit lead and you are running the Priority Path synthesis step, which happens after `<finding_reconciliation>` (format validation + voice check + dedup + ethics preservation) is complete and before `<audit_assembly>` writes the final `audit.md`.
+**Read this file when:** you are replaying an archived v1 markdown engagement through `scripts/assemble-audit.py` and need the v1 synthesis rules. For the live v2 `/ecp:audit` pipeline, read `contracts/synthesizer-v2.md` instead.
 
 ---
 

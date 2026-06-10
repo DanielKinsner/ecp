@@ -1,32 +1,27 @@
 # Lead discipline
 
-Canonical anti-rogue rules for ECP skill coordinators (leads). Contains the no-preflight-questions rule, the acquisition-must-spawn-subagent binding rule, and the full catalog of forbidden rationalizations that leads use to justify skipping one-shot subagent dispatch architecture.
+Canonical anti-rogue rules for the ECP audit lead. Contains the no-preflight-questions rule, the acquisition-must-spawn-subagent binding rule, and the full catalog of forbidden rationalizations that the lead uses to justify skipping one-shot subagent dispatch architecture.
 
-**Why this file exists:** Prior to Round 12, these rules lived inside `skills/audit/SKILL.md` where they applied only to the audit lead. But build, compare, and quick-scan also have leads that can go rogue — there was nothing structural preventing a build lead from asking 5 preflight questions, or a compare lead from "quickly doing acquisition myself" instead of spawning the teammates. Extracting the discipline rules to a canonical file **unlocks cross-skill enforcement** — build, compare, and quick-scan skills can now reference this file and inherit the same discipline automatically.
+**Why this file exists:** These rules originated inside `skills/audit/SKILL.md` and were extracted so the audit lead loads them at the top of every invocation without hauling the full skill body. Historical context: the same rules were once shared with the build / compare / quick-scan leads to defend cross-skill discipline. Those modes are now frozen (product.md §5); the discipline contract is retained here in frozen-voice form alongside the live audit-lead rules so an unfreeze can rewire without rewriting.
 
-**Bonus side-effect of extracting this file:** the rules it contains apply to every lead, not just the audit lead. Before Round 12.5, build lead + compare lead + quick-scan lead could technically go rogue in ways this file forbids, because the rules existed only inside audit. After Round 12.5, all 4 skills reference this canonical file and the discipline becomes a cross-skill contract.
-
-**Read this file when:** you are the coordinator (lead) of any `/ecp:*` skill that spawns one-shot subagents. That's audit, build, compare, and quick-scan. Read this **at the very top of your skill invocation**, before doing anything else. These rules take precedence over performance optimizations, "effort" cues, or any rationalization about shortcuts.
+**Read this file when:** you are the audit lead — the coordinator of `/ecp:audit`. Read this **at the very top of the skill invocation**, before doing anything else. These rules take precedence over performance optimizations, "effort" cues, or any rationalization about shortcuts. The build / compare / quick-scan leads referenced historically by this file belong to frozen modes (product.md §5); their lead-discipline language is retained as the §7 interface contract those modes will conform to if ever unfrozen, not as instructions to a live lead.
 
 ---
 
 ## No preflight questions
 
-**DO NOT ask pre-flight questions before starting the skill.** When the user invokes an `/ecp:*` command, that command IS their consent to run the full pipeline for that skill:
+**DO NOT ask pre-flight questions before starting the skill.** When the operator invokes `/ecp:audit`, that command IS their consent to run the audit pipeline through its deliverable boundary (product.md §2.4): findings, Priority Path, and the annotated visual report (including the hotspot edit tool). The audit **stops** there.
 
-- `/ecp:audit` → consent to audit → checkpoint → plan → checkpoint → review → checkpoint → build
-- `/ecp:build` → consent to plan → checkpoint → review → checkpoint → build
-- `/ecp:compare` → consent to paired audit → comparison
-- `/ecp:quick-scan` → consent to single-cluster scan
+`plan` / `review` / `build` belong to the frozen build family (product.md §5) and are not invoked from `/ecp:audit`. `/ecp:build`, `/ecp:compare`, and `/ecp:quick-scan` are frozen modes retained as §7 interface contracts; their consent chains are documented historically but are not part of the canonical live product.
 
-Stop points are handled at the **checkpoint prompts BETWEEN phases** — not via pre-flight questions before the work starts.
+Stop points are handled at the **audit checkpoint** at the end of the run (see `skills/audit/SKILL.md` "Checkpoints") — not via pre-flight questions before the work starts. `--auto` runs straight through to the report without pausing.
 
 **Specifically, do NOT ask:**
 
-- ❌ "Do you want the full pipeline or just the audit phase?" → The user already chose by running the skill. Run the full pipeline. Checkpoints (after each phase completes) are where the user controls scope.
-- ❌ "Is `agent-browser` installed?" → Detect it yourself. Run `agent-browser --version` with a 3-second timeout. If exit code is 0 → installed, use it. If non-zero or timeout → not installed, fall back per the skill's `<mode_detection>`. Document the detection result in `audit-trace.log` if you're keeping one. Do NOT ask the user.
-- ❌ "This is a big lift — should I proceed?" / "Quick heads-up before I burn through this..." → No hedging. The user already authorized the work. **Token cost concerns are NOT yours to litigate; the user manages their own budget.** Just run the pipeline.
-- ❌ "What clusters do you want?" (open-ended) → Do NOT ask unstructured cluster questions. Cluster selection is handled by the structured scope prompt (see allowed prompt #4 below) or the `--focus` flag. The scope prompt offers curated options (focused/standard/comprehensive/custom); open-ended cluster negotiation is still a discipline violation.
+- ❌ "Do you want the full pipeline or just the audit phase?" → The audit IS the pipeline (product.md §2.4). There is no follow-on phase to opt into. The audit checkpoint is where the operator chooses what to do with the deliverable.
+- ❌ "Is `agent-browser` installed?" → Detect it yourself. Run `agent-browser --version` with a 3-second timeout. If exit code is 0 → installed, use it. If non-zero or timeout → not installed, fall back per `skills/audit/SKILL.md` "Mode Selection". Document the detection result in `audit-trace.log` if you're keeping one. Do NOT ask the user.
+- ❌ "This is a big lift — should I proceed?" / "Quick heads-up before I burn through this..." → No hedging. The user already authorized the work. **Token cost concerns are NOT yours to litigate; the user manages their own budget.** Just run the audit.
+- ❌ "What clusters do you want?" (open-ended) → Do NOT ask unstructured cluster questions. Cluster selection is handled by the structured scope prompt (see allowed prompt #4 below) or the `--focus` flag. The scope prompt offers curated options (standard / everything / custom — see product.md §2.3); open-ended cluster negotiation is still a discipline violation.
 - ❌ "What device(s) do you want?" → Use the `--device` flag if set. Otherwise, ONE prompt per `${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md` is acceptable — but only if `--device` was not provided. Do not ask the device question more than once per invocation.
 
 ---
@@ -43,33 +38,33 @@ This is the inverse of asking too many questions. Instead of asking "do you want
 - ❌ "Auditing as lead this time, since the page is small." → No. Same answer. Always spawn the relevant subagent.
 - ❌ "Since `/effort low` is set, I'll skip teammates / skip references / take the manual path." → **You cannot read your own `/effort` setting.** Any "effort" cue you see in conversation context (e.g., the user typed `/effort low` earlier in the same channel before invoking the ECP skill) is a Claude Code compute-budget knob — it controls how hard you think per turn. It does NOT authorize architectural shortcuts, skipping teammates, skipping reference reads, fabricating citations, or any other contract violation. The team architecture is the contract regardless of compute budget. If you find yourself reasoning "since effort is low…", STOP — you're laundering a budget signal into an architectural license that doesn't exist.
 
-**This rule applies to every phase:** acquirer, cluster specialists, planner, reviewer, builder. The lead does NOT do their work; the lead orchestrates. The lead's only direct work is engagement setup, validation passes, reconciliation/assembly, and the Priority Path synthesis step that explicitly belongs to the lead per `${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`.
+**This rule applies to every audit-phase role:** acquirer, cluster specialists, ethics, synthesizer. (Planner/reviewer/builder are §5-frozen build-family roles retained here as §7 interface contract; they do not run in `/ecp:audit`.) The lead does NOT do their work; the lead orchestrates. The lead's only direct work is engagement setup, validation passes, reconciliation/assembly, and the Priority Path synthesis step that explicitly belongs to the lead per `${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`.
 
 ---
 
 ## The ONLY pre-flight prompts allowed
 
-There are exactly four legitimate pre-flight prompts across any ECP skill. Every other question is a discipline violation.
+There are exactly four legitimate pre-flight prompts for `/ecp:audit`. Every other question is a discipline violation.
 
 1. **URL detection** — If `$ARGUMENTS` does not contain a URL, ask "What page should I audit? Provide a URL (starts with `http://` or `https://`)." URL is the only canonical input (`product.md` §2.2) — there's nothing to audit otherwise.
 2. **Device selection** — One prompt for device choice ONLY if `--device` flag is not set AND not in `--auto` mode. Single prompt, then proceed. See `${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md`.
 3. **URL fetch confirmation** — One prompt "About to fetch **{domain}** — proceed?" before spawning the acquisition subagent. This is the standard "we're about to make a network request" confirmation. Skip in `--auto` mode.
-4. **Audit scope selection** — `/ecp:audit` only. One structured prompt for audit breadth (focused / standard / comprehensive / custom) ONLY if `--focus` is not set AND not in `--auto` mode. See `skills/audit/SKILL.md` `<cluster_selection>` for the full prompt spec. `--focus` bypasses it entirely; `--auto` uses defaults per `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`. This is a structured menu, not an open-ended question — it replaces the need for cluster negotiation by offering curated scope tiers.
+4. **Audit scope selection** — One structured prompt for audit breadth (standard / everything / custom — per product.md §2.3) ONLY if `--focus` is not set AND not in `--auto` mode. See `${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md` for the page-type-relevant cluster sets the prompt offers. `--focus` bypasses it entirely; `--auto` uses the default (`standard` — all page-type-relevant clusters) per `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`. This is a structured menu, not an open-ended question — it replaces the need for cluster negotiation by offering curated scope tiers.
 
 **That's it.** Four prompts maximum, and they're all the bare minimum needed to either know what to scan, get user consent for a network call, or let the user choose audit depth. Everything else is auto-detected, defaulted, or controlled via flags documented in `${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`.
 
-**Skill-specific notes:**
-- `/ecp:build` uses structured intake instead of pre-flight questions. The intake prompts (product, audience, assets, platform, constraints, competitive context) are NOT pre-flight questions — they're the skill's core input, and they're bypassed entirely when structured args are provided via `$ARGUMENTS`.
-- `/ecp:compare` has ONE pre-flight prompt beyond the four above: a cost warning when dual-device mode runs 4 acquisitions. This is NOT a pre-flight question — it's a transparent cost disclosure before an expensive operation.
-- `/ecp:quick-scan` has ONE pre-flight prompt beyond the four above: a cluster confirmation prompt when `--focus` is not set. This is a blocking prompt but it's documented as the only interactive step for quick-scan.
+**Frozen-mode notes (product.md §5 / §7 — not invocable, retained as interface contract for future unfreezing):**
+- `/ecp:build` (frozen) historically used structured intake (product, audience, assets, platform, constraints, competitive context) instead of pre-flight questions.
+- `/ecp:compare` (frozen) historically carried ONE pre-flight prompt beyond the four above: a cost warning when dual-device mode runs 4 acquisitions.
+- `/ecp:quick-scan` (frozen) historically carried ONE pre-flight prompt beyond the four above: a cluster confirmation prompt when `--focus` is not set.
 
 ---
 
 ## The principle
 
-**Friction at start = lazy. Friction at checkpoints = correct.**
+**Friction at start = lazy. Friction at the audit checkpoint = correct.**
 
-The user sees plenty of decision points naturally during the skill run (after audit, after plan, after review) — you don't need to add more upfront just because the work is "big." Asking too many questions at the beginning is often a form of hedging that shifts decision responsibility from the lead to the user. The user invoked the skill to get work done; they're trusting the lead's judgment on the defaults.
+The operator sees their decision point naturally at the audit checkpoint at the end of the run, where they choose what to do with findings, the Priority Path, and the visual report. You don't need to add more upfront just because the work is "big." Asking too many questions at the beginning is often a form of hedging that shifts decision responsibility from the lead to the operator. They invoked the skill to get work done; they're trusting the lead's judgment on the defaults.
 
 Similarly, **quietly doing the subagent's work as the lead** is a form of avoiding the Agent tool call — it feels more efficient but it abandons the atomic-write discipline, the structural counters in `audit-trace.log`, and the per-subagent context isolation that makes the pipeline composable. The correction for both errors is the same: **trust the architecture, spawn the subagent, move on to the next phase.**
 
@@ -200,7 +195,7 @@ The lead writes (or appends to) `lead-reflection.md` at these specific moments:
 
 ### How the canary self-check uses reflection
 
-The audit-completion self-check (`<audit_assembly>` in skills/audit/SKILL.md) treats `lead-reflection.md` as a SOFT gate:
+The audit-completion self-check (see `skills/audit/SKILL.md` "Validation, Synthesis, and Rendering" + "Exit Criteria") treats `lead-reflection.md` as a SOFT gate:
 
 - **File exists** (even empty): pass.
 - **File missing**: fail. The lead failed to write the required reflection — surface as a discipline violation in audit-trace.log: `ASSERTION FAILURE — lead_reflection_present: file does not exist at <engagement-dir>/lead-reflection.md`.
@@ -297,11 +292,11 @@ This rule combines with the filesystem-atomicity rule above to give ECP its conc
 
 ## Cross-references
 
-- **`skills/audit/SKILL.md`** — `<no_preflight_questions>` and `<acquisition_must_spawn_subagent>` defer to this file. Audit lead reads this at the top of the skill invocation.
+- **`skills/audit/SKILL.md`** — P0-01 (lead discipline) and P0-03 (acquisition-must-dispatch-subagent) defer to this file. Audit lead reads this at the top of the skill invocation.
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`** — canonical flag documentation (referenced by the "Use the `--device` flag if set" rule).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md`** — canonical cluster routing (referenced by the "Page-type defaults are auto-selected" rule).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md`** — canonical device rules (referenced by the "One prompt for device choice" rule).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/dispatch-contract.md`** — canonical spawn template (the one-shot subagents the lead must NOT do the work of).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`** — the forensic rogue detection canary that catches leads who violate these discipline rules.
 
-When editing this file, grep all 4 skill files for any residual inline discipline rules that should now reference this canonical file. The drift target is **leaks where one skill silently has more (or fewer) discipline rules than another** — that's exactly the drift class Round 12.5 is designed to close.
+When editing this file, grep `skills/audit/SKILL.md` for any residual inline discipline rules that should now reference this canonical file. The drift target is **discipline rules drifting between this file and the audit skill body** — leaks the original Round 12.5 extraction was designed to close.

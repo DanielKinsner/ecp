@@ -1,25 +1,29 @@
 # Audit reconciliation
 
-Canonical reference for the lead's reconciliation phase — format validation (Step 0), voice check (Step 0b, added in Round 14), deduplication, ethics preservation, and consolidated audit.md assembly. Runs after cluster specialists emit their cluster files and before Priority Path synthesis.
+Canonical reference for the lead's reconciliation phase — format validation (Step 0), voice check (Step 0b, added in Round 14), evidence-anchor gate (Step 0c), deduplication, ethics preservation, and consolidated audit assembly. Runs after cluster specialists emit their cluster files and before Priority Path synthesis.
 
-**Why this file exists:** The reconciliation phase is the quality gate between cluster auditor output and the final audit.md. It contains three distinct enforcement layers (format, voice, dedup+ethics) that all live in the reconciliation step but serve different quality concerns. Prior to Round 12, these 120+ lines sat inline in `skills/audit/SKILL.md` where they interrupted the phase flow. Round 14 added the voice check (Step 0b) on top of the existing format check (Step 0), making the section even heavier. Extracting the whole reconciliation block as an **atomic unit** into this canonical file keeps all three enforcement layers together (they share the same fresh-re-dispatch correction loop, same second-failure escape, same audit-trace.log logging) while giving the audit lead a cleaner orchestration narrative.
+**v2 vs v1 — what the lead actually runs.** The live `/ecp:audit` pipeline is v2 (JSON emission). v2 cluster specialists write `docs/ecp/{engagement-id}/cluster-{cluster}-{device}.json` per `contracts/specialist-prompt-v2.md`; the lead validates each emission with `scripts/test-specialist.py validate --schema cluster-emission` (autofix → fresh re-dispatch via `--write-retry-prompt` → mechanical normalize → partial) per `skills/audit/SKILL.md`. The substantive content rules in Steps 0 / 0b / 0c below — code-fenced FINDING block format, voice/jargon blocklist, evidence-anchor gate — were written against the v1 markdown emission (`cluster-{cluster}-{device}.md`) and are retained here as the v1 emission contract (frozen path per product.md §5: invoked only when replaying archived v1 markdown engagements). The fresh-re-dispatch correction loop (`Agent(subagent_type="general-purpose", model="opus", prompt=<rendered retry prompt from test-specialist.py --write-retry-prompt>)`) is identical in both paths — that's the v1.1 / v2 commonality that lets this file describe one correction protocol.
 
-**Atomic extraction rule:** Step 0 + Step 0b + the reconciliation process MUST stay in one file. Do not split the format check from the voice check — they share the correction loop. Do not split the validation passes from the dedup logic — the dedup logic assumes validation passed. This file is the canonical home for the entire reconciliation phase.
+**Why this file exists:** The reconciliation phase is the quality gate between cluster specialist output and the consolidated audit document. It contains three distinct enforcement layers (format, voice, evidence-anchor / dedup+ethics) that all live in the reconciliation step but serve different quality concerns. Prior to Round 12, these 120+ lines sat inline in `skills/audit/SKILL.md` where they interrupted the phase flow. Round 14 added the voice check (Step 0b) on top of the existing format check (Step 0), making the section even heavier. Extracting the whole reconciliation block as an **atomic unit** into this canonical file keeps all three enforcement layers together (they share the same fresh-re-dispatch correction loop, same second-failure escape, same audit-trace.log logging) while giving the audit lead a cleaner orchestration narrative.
 
-**Read this file when:** you are the audit lead (or compare lead — same logic applies to both pages) and all cluster specialist subagents have written their cluster files. You're about to validate and reconcile their findings into the consolidated `audit.md`.
+**Atomic extraction rule:** Step 0 + Step 0b + Step 0c + the reconciliation process MUST stay in one file. Do not split the format check from the voice check — they share the correction loop. Do not split the validation passes from the dedup logic — the dedup logic assumes validation passed. This file is the canonical home for the entire reconciliation phase.
+
+**Read this file when:** you are the audit lead and all cluster specialist subagents have written their cluster files (`cluster-{cluster}-{device}.json` for v2 emissions, `cluster-{cluster}-{device}.md` for archived v1 emissions). You're about to validate and reconcile their findings into the consolidated audit document.
 
 ---
 
 ## Overview
 
-After all cluster specialist subagents have written their cluster files, the lead validates and reconciles their findings into the consolidated `audit.md`. The validation happens in two sequential passes (format, then voice), each with a single fresh-re-dispatch correction step (on a second failure the lead fixes in place). Only after both passes clear does dedup + ethics preservation + assembly run.
+After all cluster specialist subagents have written their cluster files (v2: `cluster-{cluster}-{device}.json`; v1: `cluster-{cluster}-{device}.md`), the lead validates and reconciles their findings into the consolidated audit document. The validation happens in three sequential passes (format, voice, evidence-anchor), each with a single fresh-re-dispatch correction step (on a second failure the lead either normalizes mechanically, drops the finding, or marks the cluster partial — see the per-step "second failure" clauses). Only after all three passes clear does dedup + ethics preservation + assembly run.
 
 Sequence of operations:
 
 1. **Step 0 — Format validation pass** (per cluster file, as each one arrives, don't wait)
 2. **Step 0b — Voice check pass** (after format check passes)
-3. **Reconciliation process** (dedup + ethics preservation + SYNTHESIS_HINT grouping + final ordering)
-4. **Handoff to `<priority_path_synthesis>`** — runs next, see `${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`
+3. **Step 0c — Evidence-anchor gate** (after voice check passes)
+4. **Step 1 — Voice humanizer rewrite** (one-shot transform; not a gate)
+5. **Reconciliation process** (dedup + ethics preservation + SYNTHESIS_HINT grouping + final ordering)
+6. **Handoff to Priority Path synthesis** — v2: synthesizer dispatch per `${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-v2.md` (the canonical live v2 contract); v1 historical contract: `${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`.
 
 ---
 
@@ -53,7 +57,9 @@ The remaining fields (`TITLE:`, `SECTION:`, `ELEMENT:`, etc.) are required by th
 
 ### Procedure
 
-1. Read `docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md`
+> **v2 emissions** — on a v2 (JSON) engagement the lead reads `docs/ecp/{engagement-id}/cluster-{cluster}-{device}.json` and validates it via `scripts/test-specialist.py validate --schema cluster-emission` (with `autofix --in-place` as the first repair); the schema/autofix flow is the v2 analogue of the `_FINDING_FENCE` markdown check below. The fresh-one-shot re-dispatch protocol (`--write-retry-prompt` → `Agent(...)` call) is identical for both paths; only the on-disk artifact differs.
+
+1. Read `docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md` (v1 markdown emission — the format rules below describe this path). For v2 JSON emissions the equivalent file is `cluster-{cluster}-{device}.json`; schema validation supersedes the prose rules in this step.
 2. Run a format check. The cluster file MUST contain code-fenced FINDING blocks of the form:
    ```
    ```
@@ -105,7 +111,7 @@ The remaining fields (`TITLE:`, `SECTION:`, `ELEMENT:`, etc.) are required by th
 
 ## Step 0b — Voice check pass (MANDATORY, runs after format check passes)
 
-After the format check accepts a cluster file, the lead runs a voice check against the OBSERVATION and RECOMMENDATION fields of each finding. The voice guide in `${CLAUDE_PLUGIN_ROOT}/workflows/audit.md` Step 4b + Step 4c is the canonical reference — this check enforces it at the reconciliation layer so clients never see raw jargon output.
+After the format check accepts a cluster file, the lead runs a voice check against the OBSERVATION and RECOMMENDATION fields of each finding. The voice guide in `${CLAUDE_PLUGIN_ROOT}/workflows/audit.md` Step 4b + Step 4c (frozen v1 reference; v2 specialists carry their own voice rules in `${CLAUDE_PLUGIN_ROOT}/contracts/specialist-prompt-v2.md`) is the canonical source for this blocklist — this check enforces it at the reconciliation layer so clients never see raw jargon output.
 
 **Voice check — scan each finding's OBSERVATION and RECOMMENDATION fields for these violation patterns:**
 
@@ -201,10 +207,10 @@ For each rewrite returned:
 
 ## Reconciliation process per device
 
-Only run AFTER format validation AND voice check pass for all cluster files.
+Only run AFTER format validation AND voice check AND evidence-anchor gate pass for all cluster files.
 
-1. List all `cluster-{cluster}-{device}.md` files in the engagement directory.
-2. Read each file. Parse FINDING blocks (each wrapped in triple-backtick code fences per the existing finding format).
+1. List all `cluster-{cluster}-{device}.json` files (v2 emissions — the live default) in the engagement directory; for archived v1 replay this is `cluster-{cluster}-{device}.md`.
+2. Read each file. v2 path: parse `findings[]` from the JSON emission. v1 path: parse FINDING blocks (each wrapped in triple-backtick code fences per the existing finding format).
 3. For each finding, extract: `TITLE`, `SECTION` slug, `ELEMENT`, `SOURCE`, `PRIORITY`, `OBSERVATION`, `RECOMMENDATION`, `REFERENCE`, citations, and any `SYNTHESIS_HINT` tag. TITLE must have cleared the format gate — any finding reaching this step without a unique-within-cluster TITLE is a gate-escape bug; log and bounce back to Step 0.
 4. **Apply deduplication (three layers):**
 
@@ -292,14 +298,14 @@ Only run AFTER format validation AND voice check pass for all cluster files.
 
 8. Order findings by `PRIORITY` (CRITICAL → HIGH → MEDIUM → LOW), then by cluster (per the order in `clusters_used` from `meta.json`).
 
-9. Write the consolidated `audit.md` per the `<audit_assembly>` format in `skills/audit/SKILL.md`.
+9. Write the consolidated `audit.md` per the v1 `audit.md` template in `${CLAUDE_PLUGIN_ROOT}/contracts/audit-assembly.md`. (v2 engagements emit `audit-{device}.md` from the synthesizer directly per `${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-v2.md` — this step is the legacy v1 path.)
 
 ---
 
 ## Cluster file lifecycle
 
-- Cluster files (`cluster-{cluster}-{device}.md`) are intermediate artifacts. They persist after reconciliation for debugging and re-reconciliation.
-- They are NOT consumed by the visual report generator — only `audit.md` (and `audit-{device}.md` for the second device in dual-device mode) are.
+- Cluster files (v2: `cluster-{cluster}-{device}.json`; v1: `cluster-{cluster}-{device}.md`) are intermediate artifacts. They persist after reconciliation for debugging and re-reconciliation.
+- They are NOT consumed by the visual report generator — only `audit.md` (v1) or `audit-{device}.md` plus `synthesizer-emission-v1.json` (v2) are.
 - They CAN be re-read on resume if reconciliation needs to be re-run (e.g., after a single cluster is re-audited and the lead wants to re-integrate the corrected findings without re-running the other clusters).
 
 ---
@@ -312,12 +318,13 @@ Only run AFTER format validation AND voice check pass for all cluster files.
 
 ## Cross-references
 
-- **`skills/audit/SKILL.md`** — `<finding_reconciliation>` defers to this file. Audit lead reads this file after all cluster auditor tasks complete.
-- *(Compare mode — reconciling two pages — is out of scope in this build; see `product.md`.)*
-- **`${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`** — the phase immediately after reconciliation. Consumes the deduplicated finding set + SYNTHESIS_HINT groupings.
-- **`${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`** — after reconciliation completes, the lead increments `cluster_files_written` (one per file that passed both validation passes) and eventually runs the self-check at audit completion.
-- **`${CLAUDE_PLUGIN_ROOT}/workflows/audit.md`** Step 4 / 4a / 4b / 4c — the canonical format + voice guide the cluster auditors are supposed to follow. The validation passes in this file enforce conformance.
+- **`skills/audit/SKILL.md`** — the audit lead reads this file after all cluster specialist emissions are present. The skill's own Validation flow runs `test-specialist.py validate` on v2 JSON emissions; the rules below describe the v1 markdown format gate retained for v1 replay.
+- *(Compare mode — reconciling two pages — is frozen scope; see `product.md` §5.)*
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/specialist-prompt-v2.md`** — the canonical v2 emission contract whose schema the v2 path validates against.
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-v2.md`** — the v2 Priority Path synthesizer (live path) that runs after reconciliation. The historical v1 contract is `${CLAUDE_PLUGIN_ROOT}/contracts/priority-path-synthesis.md`.
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`** — after reconciliation completes, the lead increments `cluster_files_written` (one per file that passed all validation passes) and eventually runs the self-check at audit completion.
+- **`${CLAUDE_PLUGIN_ROOT}/workflows/audit.md`** Step 4 / 4a / 4b / 4c — the canonical format + voice guide for v1 cluster auditors. The validation passes below enforce conformance on v1 emissions; v2 specialists carry their own conformance rules in `specialist-prompt-v2.md`.
 - **`${CLAUDE_PLUGIN_ROOT}/references/evidence-tiers.md`** — Gold/Silver/Bronze tie-breaker rules for the dedup step.
 - **`${CLAUDE_PLUGIN_ROOT}/references/ethics-gate.md`** — source of the CRITICAL preservation rule.
 
-When editing this file, the audit skill's `<finding_reconciliation>` pointer stub should reference this file as the source of truth. The compare skill can reference this file directly without deferring through audit — that's a bonus side-effect of Round 12.4 being clean.
+When editing this file, the audit skill should keep referencing it as the canonical home for the reconciliation phase.

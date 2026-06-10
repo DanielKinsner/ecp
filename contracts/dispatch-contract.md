@@ -53,9 +53,9 @@ As of 2026-06-02, cluster specialists default to **opus**. The audit runs on a M
 
 Earlier in this release cycle (2026-04-07 awdmods test), sonnet drifted on FINDING block format — 5 of 10 auditors wrote `### F-SEO-XX` headings instead of code-fenced blocks. That drift is caught by **four reinforcing guardrails**:
 
-1. **Lead-as-validator format check** in `<finding_reconciliation>` Step 0 — reads each cluster file as it arrives, bounces non-compliant files back via SendMessage with corrective instructions. See `${CLAUDE_PLUGIN_ROOT}/contracts/audit-reconciliation.md`.
-2. **Lead-as-validator voice check** in `<finding_reconciliation>` Step 0b (added in Round 14) — catches client-tone drift (jargon, compliance-speak, citation-only Why-this-matters) before reconciliation. Also in contracts/audit-reconciliation.md.
-3. **`<audit_trace_assertion_header>` canary** — surfaces silent format failures in the numerical counters at audit completion. See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`.
+1. **Lead-as-validator format check** in `${CLAUDE_PLUGIN_ROOT}/contracts/audit-reconciliation.md` Step 0 — reads each cluster file as it arrives, bounces non-compliant files back via SendMessage with corrective instructions.
+2. **Lead-as-validator voice check** in `${CLAUDE_PLUGIN_ROOT}/contracts/audit-reconciliation.md` Step 0b (added in Round 14) — catches client-tone drift (jargon, compliance-speak, citation-only Why-this-matters) before reconciliation.
+3. **Forensic assertion canary** — surfaces silent format failures in the numerical counters at audit completion. See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`.
 4. **Explicit format examples in `workflows/audit.md` Step 4a + worked voice examples in Step 4b/4c** — sonnet follows concrete examples better than prose descriptions.
 
 Opus clears this bar with less drift and fewer re-dispatches than sonnet did. If you ever need a cost-sensitive run, the guardrails above still hold on sonnet — flip the specialist default back in the per-role table above and file a spec note.
@@ -126,152 +126,13 @@ Multi-planner is the one role where SendMessage peer negotiation is the WHOLE PO
 
 ---
 
-## Auditor prompt template (v1 cluster-auditor teammate dispatch — retained for v1 compatibility only; v2 specialists use `contracts/specialist-prompt-v2.md`)
+## Auditor prompt template (removed in v1.2)
 
-> **v2 note:** v2 cluster specialists use `contracts/specialist-prompt-v2.md` as the canonical prompt template — that template emits JSON-only against `schema/cluster-emission-v1.json` and explicitly documents "## No coordination" (no SendMessage, no huddles, no SYNTHESIS_HINT propagation; see lines 178-182 of that file). The template below is the v1 markdown-emission template, retained for v1 audit compatibility. **Do NOT propagate this template's huddle/handoff broadcast machinery into the v2 specialist template** — the §3.8 / §17.7.6 / §19.2 coordination ceremony is closed in v2.
+The v1 cluster-auditor teammate prompt template — including its `team_name`/`name`-bearing Agent invocation, its MANDATORY Step 1b intent huddle, its MANDATORY handoff broadcast, and the per-finding overlap-SendMessage — **was removed from this file in v1.2** as part of the prune pass for the frozen v1 markdown-emission path (product.md §5).
 
-In v1, when the lead spawned a cluster auditor teammate, the Agent tool call used these exact parameters (v2 dispatches a one-shot subagent with no `team_name`/`name` — see the v2 table above):
+v2 specialists use [`contracts/specialist-prompt-v2.md`](specialist-prompt-v2.md) as the canonical prompt template. That template emits JSON-only against `schema/cluster-emission-v1.json`, dispatches as a one-shot subagent (no `team_name`, no `name`), and explicitly documents "## No coordination" (no SendMessage, no huddles, no SYNTHESIS_HINT propagation). The per-role and v2 dispatch tables above are the live contract; the cluster-specialist row carries `subagent_spawned_specialists` as its canonical counter (with `team_spawned_auditors` retained as the v1 alias).
 
-```
-Agent tool call:
-- subagent_type: "general-purpose"
-- team_name: "audit-{engagement-id}"
-- name: "auditor-{cluster}-{device}"   (e.g., "auditor-pricing-mobile")
-- model: "sonnet"   ← v1 DEFAULT (v1 passed "opus" only with --deep). NOTE: v2 cluster specialists run "opus" unconditionally — see the per-role table above; this v1 block is retained only for replaying archived v1 markdown engagements.
-- prompt: [the prompt template below]
-```
-
-**Prompt template:**
-
-```
-You are joining the **audit-{engagement-id}** team as **auditor-{cluster}-{device}**. Your job: audit a {device} viewport ({width}×{height}) for the **{cluster}** cluster of e-commerce psychology findings.
-
-## Team context
-- Team name: `audit-{engagement-id}`
-- Your name: `auditor-{cluster}-{device}`
-- Other teammates: see `~/.claude/teams/audit-{engagement-id}/config.json` for the full member list
-- Lead: `team-lead`
-
-## Your task
-Claim task `audit-{cluster}-{device}` from the team task list (TaskUpdate with owner=your name, status=in_progress).
-
-## Your Reference Files (READ ALL BEFORE AUDITING)
-Read these reference files at ${CLAUDE_PLUGIN_ROOT}/references/:
-{{reference_file_list}}
-
-## Page Data
-- **Screenshots** (PRIMARY visual evidence): {{screenshot_paths_with_descriptions}}
-- **Cluster context file**: {{cluster_context_path}} (JSON file with per-cluster DOM slices, page head, filtered elements, and styles — produced by the lead's DOM preprocessor. Read this file for your DOM content. Do NOT read the full `dom.html` / `dom-mobile.html` — it contains the entire page and is not filtered to your cluster.)
-- **Device**: {{device}} at {{width}}×{{height}}, {{dpr}}x DPR
-- **Page type**: {{page_type}} ({{platform}})
-
-**Pixel units in the cluster context file are CSS pixels.** The DOM preprocessor has already normalized `elements[].x`, `elements[].y`, `elements[].width`, `elements[].height` by the viewport DPR. A 390-wide iPhone viewport reports element y-coordinates up to ~844 for above-fold elements, not 2532. Do NOT quote screenshot pixel numbers in your TITLE or OBSERVATION — write in CSS px or as viewport ratios. See `workflows/audit.md` §FORMAT CONTRACT "Pixel units" for the rule and the linter that enforces it.
-
-## Ethics Gate
-{{full_ethics_gate_content}}
-
-## Audit Instructions
-[Read and include content from ${CLAUDE_PLUGIN_ROOT}/workflows/audit.md]
-
-## Evidence requirement (MANDATORY — finding-level gate)
-Every finding you emit MUST cite at least one concrete evidence anchor from THIS page. Acceptable anchors:
-
-1. A **DOM selector** matching a specific element present in `{{cluster_context_path}}` (e.g., `button.add-to-cart-hero`, `div.product-reviews[data-count="0"]`).
-2. A **screenshot region** with an approximate coordinate reference (e.g., "top-right quadrant of mobile hero, ~340×220 at 0,120").
-3. A **verbatim quoted copy string** of ≥3 consecutive words that actually appears in the acquired DOM text (e.g., "Add to cart — in stock").
-
-If you cannot identify at least one anchor for a finding, **do not emit it**. Generic CRO advice without a page anchor will be rejected by the reconciliation Step 0c evidence-anchor gate (see `${CLAUDE_PLUGIN_ROOT}/contracts/audit-reconciliation.md`) and bounced back to you for rewrite. Evidence-tier classification per `${CLAUDE_PLUGIN_ROOT}/references/evidence-tiers.md` requires both a credible source AND a page anchor — a Gold-publisher citation without a page anchor is downgraded to Bronze.
-
-## Forbidden framings (DO NOT use these phrases)
-These phrasings mark a finding as page-agnostic (could be pasted into any audit of any store). Do not emit them verbatim or as close paraphrase:
-
-- "consider adding X"
-- "best practice suggests"
-- "typical stores benefit from"
-- "industry standard is"
-- "users often expect"
-- "research shows that"
-
-If your evidence points to a pattern the page lacks, name what is actually on the page and describe the specific absence, not the generic advice.
-
-### Worked example — acceptable (page-anchored)
-```
-FINDING: FAIL
-SECTION: hero-layout
-ELEMENT: button.add-to-cart-hero
-PRIORITY: HIGH
-OBSERVATION: The "Add to cart" button below the hero uses #FF6B35 text on the #F7F3EC hero panel. The contrast ratio is 2.8:1 — on the desktop viewport at normal brightness the button reads as a muted orange blur against the ecru panel, not as the page's primary action.
-RECOMMENDATION: Darken the button to #D9480F (4.6:1 against the ecru panel). That clears WCAG AA on a 14px button and makes the button dominate the hero area visually.
-↳ color-psychology.md — Finding 3 [Silver]
-```
-Why acceptable: specific DOM element, measured contrast ratio from the acquired styles, quoted hex values, named observable effect. Another auditor could verify against the same page.
-
-### Worked example — unacceptable (generic, will be rejected)
-```
-FINDING: FAIL
-SECTION: hero-layout
-ELEMENT: (unspecified)
-PRIORITY: MEDIUM
-OBSERVATION: The hero section could benefit from a stronger call-to-action. Best practice suggests using high-contrast colors for primary buttons.
-RECOMMENDATION: Consider adding a more prominent CTA button. Users often expect the primary action to stand out visually.
-↳ cta-design-and-placement.md
-```
-Why unacceptable: no DOM element, no measured evidence, no quoted copy. Contains three forbidden framings ("could benefit from", "best practice suggests", "consider adding", "users often expect"). The observation and recommendation would apply unchanged to any e-commerce store. Step 0c rejects; you will be bounced back to rewrite with a concrete anchor.
-
-## Output
-Write your findings to: `docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md`
-
-Use the same finding block format as audit.md (triple-backtick code fences around each FINDING block).
-
-## Team coordination (MANDATORY — read `workflows/audit.md` §Step 1b and §Handoff broadcast)
-
-Cluster auditors ran silently through the 2026-04-21 engagement — they all started in parallel, produced their findings in isolation, and the lead reconciled text blobs without any runtime peer knowledge. The result: duplicated findings across clusters, missed cross-cluster overlaps, and a Priority Path synthesizer operating on 56 findings it had to group by its own heuristics because the auditors never coordinated.
-
-Two broadcasts are now MANDATORY:
-
-**1. Intent huddle at Step 1b (BEFORE auditing):**
-
-```
-SendMessage to "*":
-"[auditor-{cluster}-{device}] Starting. Primary surfaces I'll examine: {top 3 SECTION slugs}. Flag if you're touching any of these."
-```
-
-Don't wait for replies. If another auditor raises a hand about overlap, align a SYNTHESIS_HINT slug and move on.
-
-**2. Handoff broadcast after writing your cluster file:**
-
-```
-SendMessage to "*":
-"[auditor-{cluster}-{device}] Complete — {N} findings. Top 3: {F-01 title} ({SEVERITY}) | {F-02 title} ({SEVERITY}) | {F-03 title} ({SEVERITY}). File: cluster-{cluster}-{device}.md."
-```
-
-Plus a DM to `team-lead`:
-
-```
-SendMessage to "team-lead":
-"Done. Findings at docs/ecp/{engagement-id}/cluster-{cluster}-{device}.md"
-```
-
-**Per-finding overlap flag (optional, use when cross-cluster overlap is detected mid-audit):**
-
-```
-SendMessage to "auditor-{other-cluster}-{device}":
-"I (auditor-{cluster}-{device}) flagged {element} at {scroll position}. If you're covering this area, tag SYNTHESIS_HINT: {shared-slug} so the reconciler groups us."
-```
-
-## Completion
-1. Mark your task complete: TaskUpdate with status=completed
-2. Fire the handoff broadcast to the team (above)
-3. DM `team-lead` with the short "Done. Findings at..." line
-4. Go idle. The lead will collect your findings during reconciliation.
-
-If you fail or partially complete (STATUS: PARTIAL), mark the task complete with a status note explaining what was missing. The lead will decide whether to retry.
-```
-
-**Template notes:**
-- `{{cluster_context_path}}`: The per-cluster context file produced by the lead's DOM preprocessor (`<dom_preprocessor>` in `skills/audit/SKILL.md`). Format: `cluster-context-{cluster}-{device}.json`. Contains: per-section DOM slices, page head (meta/schema/canonical), filtered elements, and extracted styles. For file-path mode (no DOM preprocessor), pass the source file path directly instead.
-- `{{full_ethics_gate_content}}`: The COMPLETE text of `${CLAUDE_PLUGIN_ROOT}/references/ethics-gate.md` — do not summarize, paraphrase, or excerpt.
-- `{{reference_file_list}}`: The list of cluster-specific reference files from `${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md` "The 10 clusters" table, matching the auditor's assigned cluster.
+If a v1 markdown-emission engagement ever needs replaying, the historical prompt template lives in git history alongside `scripts/assemble-audit.py` and `scripts/validate-cluster-files.py` — both of which are themselves frozen v1 tools per `skills/audit/SKILL.md` "Legacy v1 tools" note.
 
 ---
 
@@ -347,9 +208,10 @@ Before EACH subagent dispatch (and at every layer boundary in the audit pipeline
 - **`skills/audit/SKILL.md`** — the audit router defers to this file for dispatch shape.
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/flags.md`** — canonical `--deep` flag documentation.
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`** — spawn counter contract + cost trace heuristic.
-- **`${CLAUDE_PLUGIN_ROOT}/contracts/audit-reconciliation.md`** — the format + voice validation guardrails that make sonnet default safe.
-- **`${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md`** — source of truth for `{{reference_file_list}}` per cluster.
-- **`${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md`** — source of truth for `{{dom_path}}` + dual-device session isolation.
-- **`${CLAUDE_PLUGIN_ROOT}/references/ethics-gate.md`** — canonical ethics content interpolated as `{{full_ethics_gate_content}}`.
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/audit-reconciliation.md`** — the format + voice validation guardrails the specialist emissions must clear.
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/specialist-prompt-v2.md`** — canonical v2 cluster-specialist prompt template (replaces the removed v1 teammate template above).
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md`** — source of truth for the per-cluster reference file list each v2 specialist receives.
+- **`${CLAUDE_PLUGIN_ROOT}/contracts/device-semantics.md`** — dual-device session isolation and per-device path conventions.
+- **`${CLAUDE_PLUGIN_ROOT}/references/ethics-gate.md`** — canonical ethics content the ethics subagent (`contracts/ethics-subagent-v2.md`) consumes.
 
-When editing this file, grep all 4 skill files + `workflows/acquire.md` + `workflows/audit.md` for any `model: "sonnet"` or `model: "opus"` literals and verify each still matches the per-role table above. Drift in model assignments is the highest-risk class of bug in the whole plugin because it silently changes cost and quality.
+When editing this file, grep `skills/audit/SKILL.md` + `workflows/acquire.md` + `workflows/audit.md` for any `model: "sonnet"` or `model: "opus"` literals and verify each still matches the per-role table above. Drift in model assignments is the highest-risk class of bug in the whole plugin because it silently changes cost and quality.
