@@ -94,8 +94,10 @@ setx ECP_PYTHON "C:\Path\To\python.exe"                # pins the global interpr
 python -m pytest tests/                # canonical — collects unittest classes AND bare pytest funcs
 python -m unittest discover -s tests   # cross-check; unittest-only HIDES pytest-style breakage
 ```
-- Green is **~989 passed** with the optional deps (pillow/sentence-transformers); **~923 passed,
-  more skipped** without them — same health, fewer optional tests.
+- Green is **~1341 passed / ~11 skipped** with the optional deps (pillow/sentence-transformers)
+  and **889 unittest** (counts as of 2026-06-10); without the optional deps: fewer passed, more
+  skipped — same health, fewer optional tests. `tests/test_runner_parity_guard.py` floors pytest
+  collection at 1322; re-floor it in any wave that adds or removes tests.
 - **Missing `jsonschema` makes the determinism / canonical-frefs canaries *cascade-fail*** (false
   "logic" failures). Install deps first before trusting a red suite.
 
@@ -104,7 +106,8 @@ python -m unittest discover -s tests   # cross-check; unittest-only HIDES pytest
   cp1252 console + a non-ASCII `print()` = `UnicodeEncodeError`.
 - **Acquisition is the OS-sensitive surface:** `agent-browser eval` on Windows historically mangled
   long / `//`-commented inline JS; `scripts/acquire_url.py` mitigates via base64 (`-b`) encoding.
-  (README §Known-limitations still flags this as open — likely stale; verify on Windows.)
+  (README §Known-limitations records this as mitigated, pinned by `tests/test_eval_encoding.py`
+  + `tests/test_acquire_eval_guard.py`; verified on Windows 2026-06-10.)
 - A few operator command snippets in `skills/audit/SKILL.md` / contracts hardcode bare `python` —
   fine on Windows, breaks on a stock Mac (use `python3` / the activated venv there).
 
