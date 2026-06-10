@@ -54,9 +54,13 @@ started **without** `--plugin-dir` loads *that* one and runs the wrong, old code
   double `/ecp:audit` down to the single 1.0.0 command).
 - **Verify:** `claude plugin list` → **v1.0.0 = this repo ✅ · v1.4.x = archived ❌.** Backup tell: on
   the clean repo, `/ecp:audit` is the ONLY ecp command — no `*-cursor` skills, no `ecp-*` agents.
-- The archived plugin was uninstalled **only on the Mac**; the **Windows boxes likely still have it.**
-  Remove with: `claude plugin uninstall ecp@ecommerce-conversion-psychology` (user **and** project
-  scope) + `claude plugin marketplace remove ecommerce-conversion-psychology`, then **restart Claude**.
+- Status by machine (2026-06-10): **Mac ✅ clean** · **Windows home ✅ clean** (the 2026-06-10 spec-audit
+  Sweep 3 verified no install/marketplace references remained; the last orphaned v1.4.1 cache payload
+  was deleted 2026-06-10 — a bare `claude` session on this box simply has no `/ecp:audit` at all, which
+  is why `--plugin-dir` is mandatory) · **Windows work box (`C:\Users\SM - Dan\...`) ⚠️ unverified — may
+  still have it.** If `claude plugin list` shows a v1.4.x ecp anywhere, remove with:
+  `claude plugin uninstall ecp@ecommerce-conversion-psychology` (user **and** project scope) +
+  `claude plugin marketplace remove ecommerce-conversion-psychology`, then **restart Claude**.
 
 ## One-time setup — GLOBAL deps (no per-repo venv), Windows
 Install **Python from python.org — NOT the Microsoft Store** (its App-Execution-Alias breaks the
