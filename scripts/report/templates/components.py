@@ -348,10 +348,34 @@ def build_priority_tab_html(priority_path_stories, findings_by_fid):
                 continue
             fid = f"{cluster}/F-{idx:02d}"
             ref_applies_elsewhere = bool(ref.get("applies_on_other_device"))
+            # C5 (2026-06-10): refs that don't resolve to any canonical
+            # finding on EITHER device render as a visible
+            # blocked/flagged entry instead of the confident "applies on
+            # the other device" chip. The synth-side validator should
+            # have caught these — and on a clean run this row never
+            # appears — but when something slips through, the operator
+            # has to see the failure, not a misdirected link.
+            ref_unresolved = bool(ref.get("ref_resolution_failed"))
             row_class = "priority-ref-row"
             if ref_applies_elsewhere:
                 row_class += " underlying-applies-elsewhere"
+            if ref_unresolved:
+                row_class += " underlying-unresolved"
             finding = findings_by_fid.get(fid)
+            if ref_unresolved:
+                # Visible error: same data-ref tooltip carrier as the
+                # applies-elsewhere row but with role="alert" and an
+                # explicit failure message. No data-fid (no detail card
+                # to link to), no interactive checkbox — the row exists
+                # to flag, not to be acted on.
+                ref_rows.append(
+                    '<div class="{cls}" role="alert" data-ref="{fid}" data-ref-resolution-failed="true" '
+                    'aria-disabled="true" title="Synthesizer cited this finding but it does not exist on either device — investigate the synthesizer emission">'
+                    '<span class="priority-ref-check" role="checkbox" aria-checked="false" aria-disabled="true"></span>'
+                    '<span class="priority-ref-label"><strong>{fid}</strong> — UNRESOLVED REF (synthesizer cited a finding that does not exist on either device)</span>'
+                    '</div>'.format(cls=row_class, fid=escape_html(fid))
+                )
+                continue
             if ref_applies_elsewhere:
                 # Phase 6 hardening (2026-05-18) — Codex 19a4f51 review.
                 # The faded row is non-interactive: no detail card exists

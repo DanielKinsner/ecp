@@ -253,7 +253,13 @@ The structured emission validates against `schema/synthesizer-emission-v1.json`.
 
 `scope='page'` on the underlying finding is a NECESSARY but NOT SUFFICIENT condition. The other necessary condition: BOTH device's specialists actually surfaced the finding (or the cross-device-title-merge step in the canonical-f_refs manifest grouped them into one canonical ref with `devices_present: ["desktop", "mobile"]`). A `scope='page'` finding caught only by the desktop specialist renders into audit-desktop.md only — and it must NOT be in sync_refs because audit-mobile.md has no such heading.
 
-**The render-time filter** (`scripts/report/v2_loader.load_v2_priority_path` and the renderer's per-device finding filter) drops f_refs that don't resolve to a heading on the current device. If you put a single-device f_ref in sync_refs, the parity test (Phase K) will fail because the cross-device drift assertion can't extract paragraphs from a finding that doesn't appear in one document.
+**The render-time filter** (`scripts/report/v2_loader.load_v2_priority_path` and the renderer's per-device finding filter) classifies each f_ref against the full cross-device canonical view, not just the current device's headings:
+
+- f_ref present in the current device's actionable set → renders as a normal underlying entry.
+- f_ref absent from the current device but present in the OTHER device's canonical view → rendered as a faded, non-interactive "applies on the other device — see that device's report" row.
+- f_ref absent from BOTH devices' canonical views → rendered as a visible `role="alert"` "UNRESOLVED REF" row so the operator can see the synthesizer cited a finding that doesn't exist. Pre-C5 (2026-06-10) this case was silently labelled "applies on the other device" — a confident chip pointing at nothing — because the loader only diff'd against the current device's actionable set. The C5 fix added a full-canonical-universe check before applying the cross-device label.
+
+If you put a single-device f_ref in sync_refs, the parity test (Phase K) will fail because the cross-device drift assertion can't extract paragraphs from a finding that doesn't appear in one document.
 
 #### Counter-example — DO NOT do this
 

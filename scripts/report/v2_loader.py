@@ -535,18 +535,90 @@ def build_canonical_view(
 
     # Augment devices_present from auto-merged trail (Layer 2 dedup merges
     # findings across devices when keys agree on (cluster, baton_index, verdict)).
+    #
+    # C7 (2026-06-10): the merge_record producer in
+    # ``scripts/assembly/dedup.py:_absorb_losers`` emits ``{reason, kept,
+    # merged_from, merged_devices}`` — NOT ``{winner, loser}``. Pre-fix this
+    # loop read winner/loser keys the producer never wrote, so
+    # ``winner.get("cluster")`` was ``None``, the ``if not (...)`` guard
+    # short-circuited every iteration, and devices_present never reflected
+    # cross-device merges. A page-scope finding caught on both desktop and
+    # mobile that survived layer-1 collapse therefore reported as
+    # single-device in devices_present, which then drove the renderer's
+    # per-device filter to hide it on the absorbed device.
+    #
+    # Post-fix: read the producer's actual shape and union the
+    # kept-finding's own device + merged_devices into the canonical ref's
+    # presence set.
     for merge_record in deduped.auto_merged:
-        winner = merge_record.get("winner") or {}
-        loser = merge_record.get("loser") or {}
-        winner_cluster = winner.get("cluster")
-        winner_local = winner.get("local_index")
-        loser_device = loser.get("device")
-        if not (winner_cluster and winner_local and loser_device):
+        kept = merge_record.get("kept") or {}
+        kept_cluster = kept.get("cluster")
+        kept_local = kept.get("finding_index")
+        if not (kept_cluster and kept_local):
             continue
+        devices_to_add: set = set()
+        kept_device = kept.get("device")
+        if kept_device:
+            devices_to_add.add(kept_device)
+        for d in merge_record.get("merged_devices") or ():
+            if d:
+                devices_to_add.add(d)
         for f in finalized.findings:
-            if f.cluster == winner_cluster and f.local_index == winner_local:
+            if f.cluster == kept_cluster and f.local_index == kept_local:
                 ref = f"{f.cluster} F-{f.display_index:02d}"
-                devices_presence[ref].add(loser_device)
+                if devices_to_add:
+                    devices_presence[ref].update(devices_to_add)
+                # C7 (2026-06-10): union loser reference_citations onto
+                # the kept finding's raw view. reference_citations isn't
+                # carried on the Finding dataclass (the citation prose
+                # lives outside the assembly schema), so the field-union
+                # ``_absorb_losers`` does for evidence_anchors must be
+                # mirrored here using merged_keys -> raw_extras_by_local.
+                # Dedup by (source, section, url, tier) so two losers
+                # citing the same paper don't double-count.
+                meta = raw_by_ref.get(ref)
+                if meta is not None:
+                    existing = list(meta.get("reference_citations") or [])
+                    seen_keys: set = {
+                        (
+                            (rc.get("source") or ""),
+                            (rc.get("section") or ""),
+                            (rc.get("url") or ""),
+                            (rc.get("tier") or ""),
+                        )
+                        for rc in existing
+                    }
+                    unioned = list(existing)
+                    for mk in merge_record.get("merged_keys") or ():
+                        loser_extras = raw_extras_by_local.get(
+                            (mk.get("cluster"), mk.get("device"), mk.get("local_index"))
+                        ) or {}
+                        for rc in loser_extras.get("reference_citations") or ():
+                            key = (
+                                (rc.get("source") or ""),
+                                (rc.get("section") or ""),
+                                (rc.get("url") or ""),
+                                (rc.get("tier") or ""),
+                            )
+                            if key not in seen_keys:
+                                seen_keys.add(key)
+                                unioned.append(rc)
+                    meta["reference_citations"] = unioned
+                    # Tier on the renderer-facing view must reflect the
+                    # unioned citation set (schema rule:
+                    # evidence_tier == max(citation tiers)). The Finding
+                    # dataclass tier was promoted in _absorb_losers; here
+                    # we promote the raw-view tier the renderer reads.
+                    tier_rank = {"Bronze": 1, "Silver": 2, "Gold": 3}
+                    current_tier = meta.get("evidence_tier") or "Bronze"
+                    current_rank = tier_rank.get(current_tier, 0)
+                    for rc in unioned:
+                        cand = rc.get("tier") or ""
+                        cand_rank = tier_rank.get(cand, 0)
+                        if cand_rank > current_rank:
+                            current_rank = cand_rank
+                            current_tier = cand
+                    meta["evidence_tier"] = current_tier
                 break
 
     for ref in raw_by_ref:
@@ -974,6 +1046,7 @@ def load_v2_priority_path(
     ref_aliases: dict[str, str] | None = None,
     device: str | None = None,
     min_actionable_refs: int = 1,
+    canonical_refs: set[str] | None = None,
 ) -> list[dict]:
     """Read priority_path stories from synthesizer-emission-v1.json.
 
@@ -991,6 +1064,20 @@ def load_v2_priority_path(
       belongs upstream in conceptual-finding-key generation, where it can be
       validated with a threshold and provenance. The renderer must not invent
       fuzzy merges because a false merge here creates misleading UI links.
+
+    C5 (2026-06-10): ``canonical_refs`` is the set of every ref that exists
+    on at least one device's actionable view (the union of both devices'
+    canonical f_refs). Pre-fix, any ref absent from the current device was
+    blindly labelled ``applies_on_other_device=True`` — including
+    hallucinated refs the synthesizer invented that don't resolve on
+    either device, which then rendered as a confident "applies on the
+    other device — see that device's report" chip pointing at nothing.
+    Post-fix, refs absent from ``canonical_refs`` are marked
+    ``ref_resolution_failed=True`` instead so the renderer surfaces them
+    as a visible blocked/flagged entry. When ``canonical_refs`` is None
+    (legacy callers), behavior degrades to the pre-fix labelling — the
+    new validation only fires when the caller explicitly passes the
+    canonical view.
 
     Output shape matches what html_builder._synth_stories_to_render_shape
     produces (the renderer-internal "render shape"):
@@ -1014,6 +1101,7 @@ def load_v2_priority_path(
         underlying: list[dict] = []
         seen_underlying_refs: set[str] = set()
         missing_refs: list[str] = []
+        unresolved_refs: list[str] = []
         raw_refs = _priority_story_refs_for_device(story, device)
         for ref in raw_refs:
             ref_str = str(ref)
@@ -1031,14 +1119,33 @@ def load_v2_priority_path(
             # desktop-only rendered as 2 underlying entries on desktop
             # and 1 on mobile, with no signal to the customer that the
             # finding existed elsewhere.
+            #
+            # C5 (2026-06-10): before labelling as "other device", check
+            # whether the ref exists on EITHER device's canonical view.
+            # Pre-C5, any ref absent from actionable_refs (including
+            # synthesizer hallucinations the prompt-level validator
+            # missed) rendered as a confident
+            # ``applies_on_other_device`` chip — a finding that doesn't
+            # exist anywhere was advertised as "go look at the other
+            # device's report" pointing at nothing. Post-C5, refs absent
+            # from BOTH devices' canonical views are flagged
+            # ``ref_resolution_failed`` so the renderer surfaces a
+            # visible blocked/flagged entry instead. When the caller
+            # passes no canonical_refs argument, the legacy behavior
+            # (everything missing → applies_on_other_device) is
+            # preserved.
             entry = {
                 "cluster": m.group(1),
                 "index": int(m.group(2)),
                 "label": canonical_ref,
             }
             if actionable_refs is not None and canonical_ref not in actionable_refs:
-                entry["applies_on_other_device"] = True
-                missing_refs.append(ref_str)
+                if canonical_refs is not None and canonical_ref not in canonical_refs:
+                    entry["ref_resolution_failed"] = True
+                    unresolved_refs.append(ref_str)
+                else:
+                    entry["applies_on_other_device"] = True
+                    missing_refs.append(ref_str)
             underlying.append(entry)
         # Phase 6 — Codex Q3: instead of `continue`ing a story whose
         # underlying refs are ALL "applies on another device" on this
@@ -1047,21 +1154,40 @@ def load_v2_priority_path(
         # styles it as a faded/disabled card so the customer sees the
         # same Priority Path count across markdown and HTML.
         actionable_underlying = [
-            u for u in underlying if not u.get("applies_on_other_device")
+            u for u in underlying
+            if not u.get("applies_on_other_device")
+            and not u.get("ref_resolution_failed")
         ]
         story_applies_on_other_device = (
             actionable_refs is not None
             and underlying
             and len(actionable_underlying) < max(1, min_actionable_refs)
+            # If any underlying entry exists on the other device, the
+            # whole-story "applies on other device" label still applies.
+            # If EVERY non-actionable entry is unresolved, this isn't a
+            # cross-device coverage gap — it's a synthesizer hallucination
+            # and the story-level label would be a lie.
+            and any(u.get("applies_on_other_device") for u in underlying)
         )
         if (
             actionable_refs is not None
             and not story_applies_on_other_device
             and len(actionable_underlying) < max(1, min_actionable_refs)
+            # Keep the story when it has any flagged/unresolved entries —
+            # the renderer needs to surface them as visible errors. Pre-C5
+            # the "all on other device" path kept these implicitly via
+            # story_applies_on_other_device; with unresolved refs split
+            # out, we need an explicit keep when the story carries any
+            # surfaced entries at all.
+            and not any(
+                u.get("ref_resolution_failed") for u in underlying
+            )
         ):
             # Truly empty story (no refs at all, or all refs failed regex
-            # parse) — drop. The new applies_on_other_device path handles
-            # the "valid refs but all on other device" case explicitly.
+            # parse) — drop. The new applies_on_other_device +
+            # ref_resolution_failed paths handle the "valid refs but all
+            # on other device" and "valid refs but none exist" cases
+            # explicitly.
             continue
         spans_clusters = sorted({u["cluster"] for u in underlying})
         out.append({
@@ -1076,6 +1202,8 @@ def load_v2_priority_path(
             "mode": story.get("mode"),
             "missing_refs": missing_refs,
             "degraded_ref_count": len(missing_refs),
+            "unresolved_refs": unresolved_refs,
+            "unresolved_ref_count": len(unresolved_refs),
             "raw_ref_count": len(raw_refs),
             "applies_on_other_device": story_applies_on_other_device,
         })
@@ -1167,13 +1295,30 @@ def load_v2_engagement(
         ethics_findings_path=resolved_ethics_path,
     )
     actionable_refs = {f["f_ref"] for f in findings if f.get("f_ref")}
-    _, ref_aliases, _drops = build_canonical_view(resolved_cluster_paths, resolved_ethics_path)
+    by_canonical_ref, ref_aliases, _drops = build_canonical_view(
+        resolved_cluster_paths, resolved_ethics_path
+    )
+    # C5 (2026-06-10): pass the full canonical-ref set (every ref that
+    # exists on at least one device, regardless of which) into the
+    # priority-path loader so it can tell "applies on the other device"
+    # apart from "this ref doesn't resolve anywhere". Pre-C5 the loader
+    # only saw the current device's actionable_refs, so a hallucinated
+    # ref absent from BOTH devices got the confident "applies on the
+    # other device — see that device's report" chip pointing at nothing.
+    # ``ref_aliases`` keys + ``by_canonical_ref`` keys together cover
+    # every f_ref the synthesizer could legitimately cite: aliases for
+    # absorbed refs that were merged into a canonical, and the canonical
+    # keys themselves for un-merged refs.
+    canonical_refs_universe: set[str] = set(by_canonical_ref.keys())
+    if ref_aliases:
+        canonical_refs_universe.update(ref_aliases.keys())
     priority_path_stories = load_v2_priority_path(
         engagement_dir,
         actionable_refs,
         ref_aliases=ref_aliases,
         device=device,
         min_actionable_refs=1,
+        canonical_refs=canonical_refs_universe,
     )
 
     # Phase G follow-up #3: inject humanized_findings (plain English summary

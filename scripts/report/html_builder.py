@@ -676,7 +676,19 @@ def _process_screenshots(engagement_path, baton, slide_markers):
 
 
 def _compute_metrics(findings):
-    """Count severities, compute evidence confidence, and projected lift."""
+    """Count severities and compute evidence confidence.
+
+    C17 (2026-06-10): removed ``projected_lift`` from this metric set and
+    from the render context. The legacy v1 baseline templates rendered a
+    "Projected Lift" KPI card from this value, which violates product.md
+    §3.1: ECP "does not promise lift." The metric was synthetic (a
+    weighted sum of severity counts capped at 35%, not a measurement),
+    yet rendered with the same authority as severity tallies. The active
+    v2 templates never consumed it; the only surviving consumers were the
+    committed baseline HTML fixtures (``tests/baseline/*-{device}.html``),
+    which are now stale legacy artifacts per ``tests/baseline/README.md``
+    and not used as comparison baselines by any test in the suite.
+    """
     severity_counts = {"critical": 0, "high": 0, "medium": 0, "low": 0}
     for f in findings:
         sev = get_severity_class(f.get("priority"))
@@ -701,20 +713,11 @@ def _compute_metrics(findings):
         evidence_confidence_label = "LOW"
         evidence_confidence_class = "critical"
 
-    projected_lift = min(
-        severity_counts["critical"] * 5
-        + severity_counts["high"] * 3
-        + severity_counts["medium"] * 1.5
-        + severity_counts["low"] * 0.5,
-        35,
-    )
-
     return {
         "severity_counts": severity_counts,
         "total_findings": total_findings,
         "evidence_confidence_label": evidence_confidence_label,
         "evidence_confidence_class": evidence_confidence_class,
-        "projected_lift": projected_lift,
     }
 
 

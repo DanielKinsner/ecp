@@ -293,12 +293,46 @@ def _absorb_losers(
     ``dataclasses.replace()`` once at the end to produce the new winner.
     No in-place writes to ``winner`` — the caller's reference to the original
     instance remains valid and unchanged.
+
+    Field-union semantics (C7, 2026-06-10): pre-fix only merged_from /
+    ethics_state / source_url / synthesis_hint flowed from losers onto the
+    winner. evidence_anchors and reference_citations from losers vanished
+    unrecorded, meaning a cross-device merge where mobile carried a Gold
+    citation and desktop carried Silver dropped the Gold provenance the
+    moment the desktop winner was selected. Post-fix we union both lists
+    onto the winner using the same dedup pattern
+    ``scripts/assembly/pipeline.py:cross_device_title_merge`` already uses
+    (anchors keyed by ``(type, reference)``, citations by ``(section, url)``).
+
+    Evidence tier promotion: when a loser carries a higher-ranked tier than
+    the winner (e.g. winner=Silver, loser=Gold), promote the winner's tier
+    to match. ``schema/finding-v1.json`` allOf enforces
+    ``evidence_tier == max(citation tiers)`` at emission time, so once the
+    citations are unioned the tier must follow or the kept finding emits as
+    invalid against its own citations. ``EVIDENCE_TIER_RANK`` (Bronze=1,
+    Silver=2, Gold=3) is the canonical ordering.
     """
     absorbed_refs: List[str] = []
     new_merged_from = list(winner.merged_from)
     new_ethics_state = winner.ethics_state
     new_source_url = winner.source_url
     new_synthesis_hint = winner.synthesis_hint
+
+    # Union evidence_anchors + reference_citations across winner + losers.
+    # Same dedup pattern as cross_device_title_merge in pipeline.py:
+    # anchors keyed by (type, reference); citations by (section, url).
+    new_anchors: list = list(winner.evidence_anchors)
+    seen_anchor_keys: set = {
+        (ea.type, ea.reference) for ea in new_anchors
+    }
+    # reference_citations is not carried on the Finding dataclass (it is
+    # threaded via raw extras in the loader / writer), so the union for
+    # citations happens at those consumer sites. evidence_anchors IS on
+    # the dataclass, so we union it here.
+
+    # Tier promotion: track the highest-ranked tier seen across the group.
+    new_tier = winner.tier
+    best_rank = EVIDENCE_TIER_RANK.get(new_tier, 0)
 
     for loser in losers:
         ref = f"{loser.cluster} F-{loser.local_index:02d}"
@@ -314,12 +348,25 @@ def _absorb_losers(
         if not new_synthesis_hint and loser.synthesis_hint:
             new_synthesis_hint = loser.synthesis_hint
 
+        for ea in loser.evidence_anchors:
+            key = (ea.type, ea.reference)
+            if key not in seen_anchor_keys:
+                seen_anchor_keys.add(key)
+                new_anchors.append(ea)
+
+        loser_rank = EVIDENCE_TIER_RANK.get(loser.tier, 0)
+        if loser_rank > best_rank:
+            best_rank = loser_rank
+            new_tier = loser.tier
+
     new_winner = replace(
         winner,
         merged_from=tuple(new_merged_from),
         ethics_state=new_ethics_state,
         source_url=new_source_url,
         synthesis_hint=new_synthesis_hint,
+        evidence_anchors=tuple(new_anchors),
+        tier=new_tier,
     )
 
     merge_record = {
@@ -330,8 +377,33 @@ def _absorb_losers(
             "section": new_winner.section,
             "element": new_winner.element_normalized,
             "priority": new_winner.priority,
+            # C7 (2026-06-10): expose the devices the merge spans so
+            # downstream consumers (v2_loader devices_present augmentation)
+            # can derive cross-device coverage without re-reading the
+            # winner/loser objects. Pre-fix v2_loader read ["winner"]/
+            # ["loser"] keys this producer never emitted, so the
+            # devices_present augmentation was a dead loop.
+            "device": new_winner.device,
         },
         "merged_from": absorbed_refs,
+        # Per-loser device trail — symmetric with kept.device above; the
+        # v2_loader devices_present augmentation walks this list to learn
+        # every device the canonical finding actually existed on.
+        "merged_devices": sorted({l.device for l in losers if l.device}),
+        # Per-loser (cluster, device, local_index) so v2_loader can look
+        # each loser's raw_extras up and union reference_citations onto
+        # the kept finding's raw view. The dataclass-level union (above)
+        # only handles evidence_anchors + tier; reference_citations live
+        # outside the Finding dataclass and must be merged at the
+        # consumer site.
+        "merged_keys": [
+            {
+                "cluster": l.cluster,
+                "device": l.device,
+                "local_index": l.local_index,
+            }
+            for l in losers
+        ],
     }
 
     return new_winner, merge_record
