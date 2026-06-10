@@ -23,7 +23,7 @@ Always update the `updated` field to the current ISO 8601 timestamp on every pha
 |---|---|---|
 | `id` | string | MUST match `^\d{4}-\d{2}-\d{2}-[0-9a-f]{8}$` (e.g., `2026-04-08-a3f7b1c2`) |
 | `created` | string | Valid ISO 8601 (e.g., `2026-04-08T14:30:00.000Z`) |
-| `type` | string | One of: `audit`, `build`, `quick-scan`, `compare` |
+| `type` | string | Enum: `audit` (the canonical v1.2 engagement type — the only value written by a new engagement). The values `build`, `quick-scan`, `compare` are retained as a `product.md` §7 frozen-interface contract for the §5-frozen modes — accepted on resume from archived engagements, never written by a new v1.2 engagement. |
 | `phase` | string | LEGACY (v1/v2 schema_version): One of `pending`, `audit`, `plan`, `review`, `build`, `complete`, `blocked`. v2-architecture engagements (schema_version=3) use `engagement_status` instead — see below. |
 | `engagement_status` | string | **v2-architecture only (schema_version=3).** One of the values listed in [`contracts/audit-state-machine.md`](audit-state-machine.md). v1-schema engagements omit this field. |
 | `platform` | string | One of: `shopify`, `nextjs`, `opencart`, `woocommerce`, `generic` |
@@ -38,7 +38,7 @@ Legacy v4.x cluster names (`trust-conversion`, `context-platform`, `audience-jou
 
 ### Note on `phase: blocked` (legacy v1/v2-schema)
 
-For v1-schema engagements (`schema_version: 1` or `2`), the `blocked` phase value is written by the Phase 4 **forensic assertion canary** (see `skills/audit/SKILL.md` `<audit_trace_assertion_header>`) when structural assertions fail at audit completion — for example, when `team_spawned_auditors: 0` means the lead skipped all cluster auditor teammates. A blocked engagement is structurally invalid and needs investigation, not a normal recovery path.
+For v1-schema engagements (`schema_version: 1` or `2`), the `blocked` phase value is written by the Phase 4 **forensic assertion canary** (see `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md`) when structural assertions fail at audit completion — for example, when `team_spawned_auditors: 0` means the lead skipped all cluster auditor teammates. A blocked engagement is structurally invalid and needs investigation, not a normal recovery path.
 
 For v2-architecture engagements (`schema_version: 3`), this state is replaced by `engagement_status: failed_<phase>` — the `<phase>` suffix names exactly which layer's assertion failed (e.g., `failed_specialists`, `failed_synthesis`, `failed_render`). See [`contracts/audit-state-machine.md`](audit-state-machine.md) for the full state graph.
 
@@ -79,13 +79,13 @@ Valid if present, ignored if absent:
 
 | Value | Meaning |
 |---|---|
-| `focused` | Single cluster selected (scope option a) |
-| `standard` | 3-4 clusters from standard defaults table (scope option b) |
-| `comprehensive` | Page-type comprehensive defaults — typically 5-7 clusters for the detected page type (scope option c). Note: this is NOT every cluster regardless of page type; for that, use `everything`. |
-| `custom` | User-selected cluster set (scope option d) |
-| `everything` | Every cluster regardless of page type — all 10 clusters dispatched (scope option e, equivalent to `--focus all`). Added 2026-04-27 from §24.4 #3 to remove the prior "all clusters"/`comprehensive` ambiguity. |
+| `focused` | Single cluster selected (interactive scope prompt option a). |
+| `standard` | **Canonical v1.2 audit scope (default; interactive scope prompt option b).** Every cluster relevant to the detected page type, per `product.md` §2.3 v1.2 and `contracts/cluster-routing.md`. New v1.2 engagements write this value for the page-type-relevant set. |
+| `custom` | Operator-selected cluster set (interactive scope prompt option d). |
+| `everything` | Every cluster regardless of page type — all 10 clusters dispatched (interactive scope prompt option e, equivalent to `--focus all`). |
+| `comprehensive` | **Legacy alias (pre-v1.2).** Pre-v1.2 engagements wrote `"comprehensive"` for what is now called `"standard"` (page-type-relevant set). Accepted on resume from those engagements; new v1.2 engagements never write it. The pre-v1.2 reduced-scope 3-4-cluster default tier (also called `"standard"` before v1.2) is retired — neither a new engagement nor an unfreezing change can introduce it without a §10 Spec Change Log entry. |
 
-On resume: if `scope` is missing (legacy v5.0 engagement created before the scope selector existed), treat as `"comprehensive"` for backward compatibility — legacy runs dispatched all default clusters.
+On resume: if `scope` is missing (legacy v5.0 engagement created before the scope selector existed), treat as `"standard"` (page-type-relevant set) for backward compatibility — that matches what legacy runs actually dispatched.
 
 ### Valid `report_state` values (product.md §6 draft → client-ready gate)
 
@@ -115,15 +115,17 @@ On resume / when missing: treat absent, null, or blank `reflection_state` as `dr
 
 ### Valid `source_mode` values
 
-| Value | Meaning |
-|---|---|
-| `url-dual` | Page scanned via URL with agent-browser (dual capture: DOM + screenshots) |
-| `manual` | Acquisition agent failed; coordinator captured screenshots + DOM directly |
-| `webfetch` | agent-browser unavailable; page content fetched via WebFetch |
-| `file` | Local file path provided |
-| `pasted-code` | Code pasted directly |
-| `screenshot` | User-provided screenshot image (no URL, no DOM) |
-| `description` | Text description only (from-scratch mode) |
+URL is the only canonical input (`product.md` §2.2). The file / pasted-code / screenshot / description values are retained as `product.md` §7 frozen-interface contracts for the §5-frozen non-URL input modes — accepted on resume from archived engagements, never written by a new v1.2 audit.
+
+| Value | Status | Meaning |
+|---|---|---|
+| `url-dual` | live | Page scanned via URL with agent-browser (dual capture: DOM + screenshots). |
+| `manual` | live | Acquisition agent failed; coordinator captured screenshots + DOM directly from a URL. |
+| `webfetch` | live | agent-browser unavailable; page content fetched via WebFetch from a URL. |
+| `file` | **frozen / legacy** | Local file path provided. §7 contract only — a new v1.2 audit never writes this. |
+| `pasted-code` | **frozen / legacy** | Code pasted directly. §7 contract only — a new v1.2 audit never writes this. |
+| `screenshot` | **frozen / legacy** | Operator-provided screenshot image (no URL, no DOM). §7 contract only — a new v1.2 audit never writes this. |
+| `description` | **frozen / legacy** | Text description only (from-scratch mode). §7 contract only — a new v1.2 audit never writes this. |
 
 ### `screenshot_input` object shape
 
@@ -143,12 +145,11 @@ Only present when `source_mode = "screenshot"`. Otherwise `null` or absent.
 
 ```json
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "2026-04-08-a3f7b1c2",
   "created": "2026-04-08T14:30:00.000Z",
   "updated": "2026-04-08T14:45:00.000Z",
   "type": "audit",
-  "phase": "audit",
   "page": {
     "url": "https://example.com/products/widget",
     "url_normalized": "example.com/products/widget",
@@ -157,9 +158,10 @@ Only present when `source_mode = "screenshot"`. Otherwise `null` or absent.
   },
   "platform": "shopify",
   "source_mode": "url-dual",
-  "devices_requested": ["mobile", "desktop"],
+  "devices_requested": ["mobile", "laptop"],
   "devices_scanned": [],
-  "clusters_used": ["visual-cta", "trust-credibility", "pricing", "product-media"],
+  "scope": "standard",
+  "clusters_used": ["visual-cta", "trust-credibility", "pricing", "product-media", "content-seo", "performance-ux"],
   "min_priority": null,
   "compare_target": null,
   "quick_scan": false,
@@ -167,7 +169,8 @@ Only present when `source_mode = "screenshot"`. Otherwise `null` or absent.
   "plans_queue": [],
   "reconciled": false,
   "screenshot_input": null,
-  "report_state": "draft"
+  "report_state": "draft",
+  "reflection_state": "draft"
 }
 ```
 
