@@ -4,15 +4,17 @@
 ECP up and not break it across machines*. If anything here disagrees with `product.md`, `product.md` is right.
 
 ## ▶ Start here (current work state)
-**Rolling handoff: [`docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md`](docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md)** —
-read it first. State (2026-06-08): the awdmods run-review claims were validated (8 VALID / 3
-PARTIAL) and the safe subset implemented + pushed (net −2.9k LOC; tests green both runners,
-1107 pytest / 719 unittest). Deferred with precise plans in that handoff: the v1/Agent-Teams
-contract-reword sweep (load-bearing — needs a focused pass), the acquirer true-height probe
-(C3), the normalizations canary (C4), and ghost-zone placement (C6). **Before the next client
-run, do one live `--plugin-dir` audit** to confirm the new acquirer merge/auto-convert path
-(`acquire_url.py`) and the still-pending hotspot-placement verification.
-Prior hotspot-accuracy handoff: [`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md).
+**Working roadmap: [`docs/reviews/2026-06-10-consolidated-findings-and-plan.md`](docs/reviews/2026-06-10-consolidated-findings-and-plan.md)** —
+read it first. It consolidates + dedupes the two 2026-06-09 adversarial audits (Codex
+`a45d196`, Claude `5c645d7` — they independently converged on the same two top findings)
+and absorbs the 2026-06-08 handoff's deferred items into one inventory (33 ranked
+findings) and a 7-phase plan. **Next actions: the Phase-0 adjudication sitting (9 owner
+decisions, A1–A9), then the Phase-1 quick-wins batch.** ⚠️ Three colliding C-ID spaces —
+that doc's §"ID disambiguation" is mandatory reading before touching any C-number.
+**Before the next client run, do one live `--plugin-dir` audit** (the roadmap's Phase-4
+LV1–LV4 list is the full pending-live queue).
+Prior handoffs: [`docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md`](docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md) ·
+[`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md).
 
 **▶ Morning triage tool (use this to diagnose the recurring hotspot/finding problems):**
 `python scripts/diagnose_engagement.py --engagement docs/ecp/<id>` — stage-attribution
