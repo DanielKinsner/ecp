@@ -14,7 +14,7 @@
     "smoke:editor-server": "node tests/editor-server-render-smoke.mjs",
     "smoke:editor": "node tests/editor-smoke.mjs",
     "smoke:acquire-capture": "node tests/acquire-element-capture-smoke.mjs",
-    "test": "npm run check:editor && npm run check:python && npm run smoke:acquire-capture && npm run smoke:editor"
+    "test": "npm run check:editor && npm run check:python && npm run smoke:acquire-capture && npm run smoke:editor && npm run smoke:editor-server"
   },
   "repository": {
     "type": "git",
