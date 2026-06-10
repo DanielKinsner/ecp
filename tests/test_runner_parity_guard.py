@@ -29,11 +29,14 @@ the full suite (which would deadlock pytest inside itself).
 Floor update rule
 -----------------
 ``EXPECTED_MIN_COLLECTED`` is set ~30 below the actual collected count
-at the time of writing (1187 collected -> floor 1157). If the suite
+at the time of writing (1352 collected -> floor 1322). If the suite
 *legitimately* shrinks below the floor (real test removal, not a
 collection bug), bump the floor down to ``new_count - 30`` in the SAME
 commit that removes the tests. Never raise the floor casually — a high
-floor turns small refactors into red builds.
+floor turns small refactors into red builds. The inverse also rots:
+when a wave ADDS tests, re-floor to ``new_count - 30`` in that wave,
+or the guard's slack silently grows past what it was designed to catch
+(found at 195 tests of slack on 2026-06-10).
 """
 from __future__ import annotations
 
@@ -45,9 +48,10 @@ import sys
 import unittest
 from pathlib import Path
 
-# Set ~30 below the actual collected count (1187 on 2026-06-10).
+# Set ~30 below the actual collected count (1352 on 2026-06-10, after the
+# roadmap-execution waves grew the suite from 1187).
 # See "Floor update rule" in the module docstring before changing.
-EXPECTED_MIN_COLLECTED = 1157
+EXPECTED_MIN_COLLECTED = 1322
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = REPO_ROOT / "tests"
