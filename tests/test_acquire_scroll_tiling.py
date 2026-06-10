@@ -90,6 +90,59 @@ class TestContiguousTiling(unittest.TestCase):
         self.assertEqual(ys, [0])
 
 
+class TestCapBoundRegime(unittest.TestCase):
+    """W3: very tall pages past the per-device cap fall into the cap-binding
+    regime documented in ``_plan_scroll_ys``'s docstring.
+
+    The contiguity contract holds only when the page fits inside the cap.
+    Past that, the planner evenly spaces ``max_shots`` shots across
+    ``[0, max_scroll]`` and the spacing between consecutive tiles
+    **exceeds the viewport height** — there are uncaptured vertical bands
+    between tiles. That is the documented behavior, not a bug; this test
+    pins it so a future "fix" that silently re-introduces the cliff (or
+    silently raises the cap) fails loudly.
+    """
+
+    def test_very_tall_mobile_page_hits_cap_and_spacing_exceeds_viewport(self):
+        # 30k-px page far exceeds 12 mobile viewports (~10.1k px), so the
+        # planner is forced into the cap-binding regime regardless of overlap.
+        doc_h = 30000
+        ys = _plan_scroll_ys(
+            max_scroll=doc_h - MOBILE_H,
+            inner_h=MOBILE_H,
+            doc_h=doc_h,
+            max_shots=MAX_SCREENSHOTS_MOBILE,
+        )
+        # The cap binds — we get exactly MAX_SCREENSHOTS_MOBILE tiles, not more.
+        self.assertEqual(len(ys), MAX_SCREENSHOTS_MOBILE)
+        # Spacing between consecutive ys exceeds the viewport height — i.e.,
+        # there are uncaptured bands between every adjacent tile.
+        spacings = [b - a for a, b in zip(ys, ys[1:])]
+        self.assertTrue(
+            all(s > MOBILE_H for s in spacings),
+            f"cap-binding regime must have every gap > viewport height; got spacings={spacings}",
+        )
+        # Therefore _max_gap (spacing minus inner_h) is strictly positive.
+        self.assertGreater(_max_gap(ys, MOBILE_H), 0)
+
+    def test_very_tall_desktop_page_hits_cap_and_spacing_exceeds_viewport(self):
+        # Same regime on desktop with its smaller cap of 6.
+        doc_h = 30000
+        ys = _plan_scroll_ys(
+            max_scroll=doc_h - DESKTOP_H,
+            inner_h=DESKTOP_H,
+            doc_h=doc_h,
+            max_shots=MAX_SCREENSHOTS_DESKTOP,
+        )
+        self.assertEqual(len(ys), MAX_SCREENSHOTS_DESKTOP)
+        spacings = [b - a for a, b in zip(ys, ys[1:])]
+        self.assertTrue(
+            all(s > DESKTOP_H for s in spacings),
+            f"cap-binding regime must have every gap > viewport height; got spacings={spacings}",
+        )
+        self.assertGreater(_max_gap(ys, DESKTOP_H), 0)
+
+
 class TestCliDefault(unittest.TestCase):
     def test_default_is_auto_sentinel(self):
         # 0 = auto per-device cap; parsed without an explicit value.

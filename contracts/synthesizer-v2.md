@@ -47,6 +47,8 @@ What this means for your prose:
 
 If a specialist's recommendation contains a hedge phrase ("could", "may want to", "consider"), rewrite to a direct action verb. Pick the strongest defensible verb and commit.
 
+**Action-voice vs outcome-voice (load-bearing carve-out).** The strong-verb rule above applies to the **action** the dev should take (do X, add Y, move Z) — never to the **outcome** that action is expected to produce. ECP output is research-backed **hypotheses**, not measured results (`product.md` §3.1). Outcome language stays hypothesis-framed: write "is expected to" / "should" / "in the cited research, did" — never "will lift conversion by N%", "will increase AOV", "produces a measured lift". The report's draft-status disclaimer (`product.md` §6) carries the qualification at the report level; your job is to not undo it inside individual finding prose. Concrete: "Add an MSRP strikethrough above the live price" (action — strong verb, no hedge) followed by "Reference-price anchoring is associated with higher willingness-to-pay in the cited Grewal 1998 study" (outcome — research-framed, not promised) — NOT "Adding an MSRP strikethrough will raise AOV by 8%".
+
 ## Cross-cluster integration patterns
 
 Specialists run independently with no peer coordination. Different specialists frequently flag the **same architectural gap** from their cluster's lens. Examples observed on real PDPs:

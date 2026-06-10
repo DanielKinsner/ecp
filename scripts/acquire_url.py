@@ -888,6 +888,33 @@ def _plan_scroll_ys(
     max_shots: int,
     overlap: float = SCROLL_OVERLAP_FACTOR,
 ) -> list[int]:
+    """Pick scroll-Y positions for the section screenshot tiles.
+
+    Two regimes — coverage is **only** contiguous in the first one:
+
+    1. **Page-bound (short / typical pages).** When the page fits inside the
+       per-device cap (``ceil((doc_h / inner_h) * overlap) <= max_shots``), the
+       planner emits exactly enough tiles to cover the page with a small
+       per-tile overlap. Adjacent windows touch or overlap; no uncaptured
+       bands. This is the regime ``tests/test_acquire_scroll_tiling.py``
+       contiguity assertions ride on.
+
+    2. **Cap-bound (very tall pages — past the cap).** When the page would
+       need more than ``max_shots`` tiles to tile contiguously, the planner
+       evenly spaces ``max_shots`` shots across ``[0, max_scroll]``. The
+       spacing between consecutive ``ys`` is then
+       ``max_scroll / (max_shots - 1)``, which **exceeds ``inner_h``** —
+       there are uncaptured vertical bands between tiles. This is a
+       deliberate budget cap (audit-cost bound), not a coverage claim.
+       Hotspots in the gap bands have no section image to anchor against;
+       downstream code must handle "no section for this Y" gracefully and
+       the operator-visible report surfaces the partial-coverage state.
+
+    The cap-binding regime is the documented behavior, not a bug — the
+    surrounding ``MAX_SCREENSHOTS_DESKTOP`` / ``MAX_SCREENSHOTS_MOBILE``
+    constants bound audit cost on monster pages. Raising the cap moves the
+    crossover; it does not change the regime split.
+    """
     max_shots = max(1, int(max_shots))
     n_by_page = max(1, int(math.ceil((doc_h / max(1, inner_h)) * max(1.0, float(overlap)))))
     n = min(max_shots, n_by_page)
