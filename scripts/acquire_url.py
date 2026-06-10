@@ -343,6 +343,13 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def _default_engagement_id() -> str:
+    # Canonical YYYY-MM-DD-<8hex> per schema/baton-v1.json — the legacy
+    # ecp-cursor-* default failed schema validation, so the in-place v1→v2
+    # auto-convert always best-effort-refused default-id runs.
+    return f"{datetime.now(timezone.utc):%Y-%m-%d}-{uuid.uuid4().hex[:8]}"
+
+
 def _run(cmd: list[str], *, check: bool) -> int:
     p = subprocess.run(cmd, check=False, text=True)
     if check and p.returncode != 0:
@@ -1703,7 +1710,7 @@ def main() -> int:
         )
         return 1
 
-    engagement_id = args.engagement_id.strip() or f"ecp-cursor-{uuid.uuid4().hex[:10]}"
+    engagement_id = args.engagement_id.strip() or _default_engagement_id()
     eng_dir = REPO_ROOT / "docs" / "ecp" / engagement_id
     _abort = _prepare_engagement_dir(eng_dir, args.allow_existing)
     if _abort is not None:
@@ -1787,7 +1794,7 @@ def main() -> int:
 
     meta: dict[str, Any] = {
         "engagement_id": engagement_id,
-        "mode": "quick-scan",
+        "mode": "audit",
         "status": "in_progress",
         "updated_at": _now_iso(),
         "confidence": combined_confidence,

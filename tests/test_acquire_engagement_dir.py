@@ -164,13 +164,27 @@ class TestUpgradeBatonsToV2(unittest.TestCase):
         self.assertFalse((self.eng / "baton.v1raw.json").exists())
 
     def test_non_schema_engagement_id_skips_gracefully(self):
-        """A standalone quick-scan default id (ecp-cursor-...) does not match the
+        """A legacy non-canonical id (ecp-cursor-...) does not match the
         schema id regex; conversion must be skipped, not raised, leaving v1."""
         self._write_v1()
         # Must not raise.
         acquire_url._upgrade_batons_to_v2(self.eng, ("desktop",), "ecp-cursor-deadbeef99")
         baton = json.loads((self.eng / "baton.json").read_text(encoding="utf-8"))
         self.assertNotIn("schema_version", baton)  # still v1
+
+    def test_default_engagement_id_is_schema_canonical(self):
+        """The 2026-06-10 live smoke caught the old ecp-cursor-* default: it
+        failed the YYYY-MM-DD-<8hex> schema pattern, so the auto-convert
+        best-effort-refused EVERY default-id run. The default must be canonical
+        so conversion succeeds end-to-end."""
+        import re
+        eid = acquire_url._default_engagement_id()
+        self.assertRegex(eid, r"^\d{4}-\d{2}-\d{2}-[0-9a-f]{8}$")
+        # And it must round-trip the converter (the actual failure mode).
+        self._write_v1()
+        acquire_url._upgrade_batons_to_v2(self.eng, ("desktop",), eid)
+        baton = json.loads((self.eng / "baton.json").read_text(encoding="utf-8"))
+        self.assertIn("capture_state", baton)  # converted to v2
 
 
 class TestRevealLazyAndAnimations(unittest.TestCase):
