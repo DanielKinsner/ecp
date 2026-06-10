@@ -1107,20 +1107,23 @@ def _hotspot_confidence(match_method: str | None) -> str:
     # placement quality. The old map collapsed every Strategy-1 lookup
     # to "exact-selector" even when the element had no geometry or
     # landed off-slide — making the editor's "needs review" filter
-    # useless. Off-slide e_index hits now downgrade to "fallback-absence"
-    # so they surface in the editor for manual placement. Viewport
-    # proposed_anchor is a real positioning signal (page-global sticky
-    # CTAs etc), not a manual-placement bail-out — re-label as
-    # "section-match". operator_override is a real hand-placed marker
-    # and should carry exact-selector confidence.
+    # useless. Viewport proposed_anchor is a real positioning signal
+    # (page-global sticky CTAs etc), not a manual-placement bail-out —
+    # re-label as "section-match". operator_override is a real hand-placed
+    # marker and should carry exact-selector confidence.
     # "unplaced" (2026-05-26, G4): Strategy 4 no longer auto-places a banner;
     # it leaves the hotspot blank (product.md §4.2). Map it to needs-manual-
     # marker so the editor surfaces it in the "Place manually" queue. "banner"
     # is retained for back-compat with operator overrides / persisted review
     # states written before the rename.
+    # C3 fix (2026-06-10): off-slide e_index hits used to emit
+    # match_method="e_index_lookup_offslide" -> "fallback-absence" while the
+    # renderer clamped them onto the wrong slide. They now fall through to
+    # Strategy 4 ("unplaced") and surface in the manual queue with no rendered
+    # marker. The "fallback-absence" label stays in the schema/editor for
+    # back-compat with persisted review states written before this fix.
     return {
         "e_index_lookup": "exact-selector",
-        "e_index_lookup_offslide": "fallback-absence",
         "proposed_anchor_element": "exact-selector",
         "proposed_anchor_section": "section-match",
         "proposed_anchor_viewport": "section-match",

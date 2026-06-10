@@ -686,42 +686,46 @@ def auto_map_markers_v2(
             # still uses element.top via _compute_marker_positions_v2.
             elem_h_raw = _element_height(elem)
             elem_h_css = elem_h_raw / element_coord_scale if element_coord_scale else elem_h_raw
-            # Bug A/B fix (2026-05-02): an element with no usable rect
-            # silently pinned to slide-0 top-left under the old code, and
-            # match_method continued to advertise "e_index_lookup" — i.e.
-            # hotspot_confidence lied about placement quality. Detect both
-            # the no-geometry case and the off-slide case (element y past
-            # the captured screenshot envelope, common when the page is
-            # taller than the screenshot run) and downgrade match_method
-            # so review_state._hotspot_confidence maps to fallback-absence
-            # — surfacing the finding for manual placement in the editor.
+            # Bug A/B/C3 (2026-05-02, refined 2026-06-10): an element with no
+            # usable rect, OR whose rect sits outside every captured screenshot's
+            # viewport band, must NOT be pinned onto an arbitrary slide. The
+            # earlier mitigation kept emitting a mapping with the nearest slide
+            # + full element geometry under match_method="e_index_lookup_offslide";
+            # the renderer then clamped the rect onto the wrong slide
+            # (product.md §4.2 — wrong-page placement is worse than blank).
+            # Both cases now fall through to Strategy 2/3/4 so Strategy 4 emits
+            # "unplaced" (no rendered position) and review_state queues the
+            # finding for manual placement — matching the G4 blank-below-
+            # confidence representation (see tests/test_g4_blank_below_confidence.py).
             if elem_y_raw <= 0 and elem_h_raw <= 0:
-                # No geometry at all. Fall through to Strategy 2/3/4.
                 pass
             else:
                 slide_pick_y = elem_y_css + elem_h_css / 2.0
                 slide = slide_for_css_y(slide_pick_y, viewport_h, screenshots, sections)
-                degenerate = False
+                offslide = True
                 if 0 <= slide < len(screenshots):
                     ss = screenshots[slide] if isinstance(screenshots[slide], dict) else {}
                     ss_scroll = float(ss.get("scrollY", 0) or 0)
-                    if not (ss_scroll <= slide_pick_y < ss_scroll + viewport_h):
-                        degenerate = True
-                method = "e_index_lookup_offslide" if degenerate else "e_index_lookup"
-                fallback_role = "absent_offslide_element" if degenerate else None
-                mappings.append({
-                    "finding_index": finding_idx,
-                    "f_ref": f_ref,
-                    "burn_number": burn_number,
-                    "baton_element_index": elem_idx,
-                    "slide": slide,
-                    "match_method": method,
-                    "severity": severity,
-                    "fallback_role": fallback_role,
-                    "fallback_position": None,
-                    "scope": scope,
-                })
-                continue
+                    if ss_scroll <= slide_pick_y < ss_scroll + viewport_h:
+                        offslide = False
+                if offslide:
+                    # Fall through to Strategy 2/3/4 — never auto-place on the
+                    # wrong slide.
+                    pass
+                else:
+                    mappings.append({
+                        "finding_index": finding_idx,
+                        "f_ref": f_ref,
+                        "burn_number": burn_number,
+                        "baton_element_index": elem_idx,
+                        "slide": slide,
+                        "match_method": "e_index_lookup",
+                        "severity": severity,
+                        "fallback_role": None,
+                        "fallback_position": None,
+                        "scope": scope,
+                    })
+                    continue
 
         # Strategy 2: proposed_anchor dispatch (fix B, 2026-04-30).
         # Absent findings emitted with a typed proposed_anchor get pinned per
