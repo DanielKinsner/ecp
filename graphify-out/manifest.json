@@ -1,0 +1,1687 @@
+{
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\.claude-plugin\\marketplace.json": {
+    "mtime": 1779820060.1414862,
+    "ast_hash": "5dd129784e3cf6c21f9e2f024be42bc2",
+    "semantic_hash": "5dd129784e3cf6c21f9e2f024be42bc2"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\.claude-plugin\\plugin.json": {
+    "mtime": 1779820042.8413208,
+    "ast_hash": "bcecdb9041db6c810fd4ec5307729894",
+    "semantic_hash": "bcecdb9041db6c810fd4ec5307729894"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\.claude\\workflows\\ecp-report-qa.js": {
+    "mtime": 1780325909.9924343,
+    "ast_hash": "dbb8d3c38f253d3de333d47032c1b7c5",
+    "semantic_hash": "dbb8d3c38f253d3de333d47032c1b7c5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\.claude\\workflows\\ecp-visual-qa.js": {
+    "mtime": 1780527298.5074344,
+    "ast_hash": "b5f4909b0a973cc8b612d5be5f2c87f6",
+    "semantic_hash": "b5f4909b0a973cc8b612d5be5f2c87f6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\package.json": {
+    "mtime": 1780604302.114918,
+    "ast_hash": "2c4d94a3eeb05253a16e692ff4fb1637",
+    "semantic_hash": "2c4d94a3eeb05253a16e692ff4fb1637"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\reference-maintenance\\reference-live-links.json": {
+    "mtime": 1777304300.885871,
+    "ast_hash": "855b6985f96a743d41e4fc6052802985",
+    "semantic_hash": "855b6985f96a743d41e4fc6052802985"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\schema\\baton-v1.json": {
+    "mtime": 1777676868.7641246,
+    "ast_hash": "887413692a1deef5df53a1c4354de088",
+    "semantic_hash": "887413692a1deef5df53a1c4354de088"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\schema\\cluster-emission-v1.json": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "62316e8a92042ee9a34bf9ff8bb08d2f",
+    "semantic_hash": "62316e8a92042ee9a34bf9ff8bb08d2f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\schema\\finding-v1.json": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "aba4349ad165304509af9189e3e236f2",
+    "semantic_hash": "aba4349ad165304509af9189e3e236f2"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\schema\\review-state-v1.json": {
+    "mtime": 1777906965.8186955,
+    "ast_hash": "049fd13b8f0fb1ffda334bce44933312",
+    "semantic_hash": "049fd13b8f0fb1ffda334bce44933312"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\schema\\synthesizer-emission-v1.json": {
+    "mtime": 1779916179.6525674,
+    "ast_hash": "9e9528fb7b887652cc147b9db5271558",
+    "semantic_hash": "9e9528fb7b887652cc147b9db5271558"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\acquire_url.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "cdc2240774aa819c2eb3be31b0395f3a",
+    "semantic_hash": "cdc2240774aa819c2eb3be31b0395f3a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assemble-audit.py": {
+    "mtime": 1780501122.3433926,
+    "ast_hash": "ba6ccee7f68c5fbfba18e0a558e92c74",
+    "semantic_hash": "ba6ccee7f68c5fbfba18e0a558e92c74"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\__init__.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "26d1b7cdbee6815e8136d10ad2594516",
+    "semantic_hash": "26d1b7cdbee6815e8136d10ad2594516"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\_text_distance.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "921450057dcbcb2e42c7a5b516153f0c",
+    "semantic_hash": "921450057dcbcb2e42c7a5b516153f0c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\anchor_candidates.py": {
+    "mtime": 1779838569.9682052,
+    "ast_hash": "5a1ee1899e5ff66d8d3a2408f38bd579",
+    "semantic_hash": "5a1ee1899e5ff66d8d3a2408f38bd579"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\atomic_write.py": {
+    "mtime": 1779916179.6535668,
+    "ast_hash": "fda4a060265adaf7cc3b77df19250cd3",
+    "semantic_hash": "fda4a060265adaf7cc3b77df19250cd3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\business_rules.py": {
+    "mtime": 1780506799.2081945,
+    "ast_hash": "1874d53bb56e1a9f6b5806b0b1d418f0",
+    "semantic_hash": "1874d53bb56e1a9f6b5806b0b1d418f0"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\canary_checks.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "8fd17e250ea237a42ab3752e88d53616",
+    "semantic_hash": "8fd17e250ea237a42ab3752e88d53616"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\dedup.py": {
+    "mtime": 1780335937.1806397,
+    "ast_hash": "fab87e88bed6e570d5330b15d18c8671",
+    "semantic_hash": "fab87e88bed6e570d5330b15d18c8671"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\determinism_gate.py": {
+    "mtime": 1780353657.0112584,
+    "ast_hash": "51cff1852e164434579d76226661e3dc",
+    "semantic_hash": "51cff1852e164434579d76226661e3dc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\emission_autofix.py": {
+    "mtime": 1779922681.8758402,
+    "ast_hash": "22593e7db1ea576c325a046d9dcd41fe",
+    "semantic_hash": "22593e7db1ea576c325a046d9dcd41fe"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\finding_stability.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "3a1242518afc4dc8786fe1d0e4fc3cb0",
+    "semantic_hash": "3a1242518afc4dc8786fe1d0e4fc3cb0"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\json_parser.py": {
+    "mtime": 1780505139.2266722,
+    "ast_hash": "e32a33b0f5a0887f825c404f8305a746",
+    "semantic_hash": "e32a33b0f5a0887f825c404f8305a746"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\meta_validator.py": {
+    "mtime": 1779989771.1848254,
+    "ast_hash": "7c8efca934a8f3c0b57b26be9de1b180",
+    "semantic_hash": "7c8efca934a8f3c0b57b26be9de1b180"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\models.py": {
+    "mtime": 1779916179.658569,
+    "ast_hash": "45420ca3212196ac8a45f119c5ac89a5",
+    "semantic_hash": "45420ca3212196ac8a45f119c5ac89a5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\parser.py": {
+    "mtime": 1776881608.6478348,
+    "ast_hash": "b7824752d4c731d57d57850004195c83",
+    "semantic_hash": "b7824752d4c731d57d57850004195c83"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\pipeline.py": {
+    "mtime": 1779916179.659568,
+    "ast_hash": "66e5499386d89734f4e741c6287363bd",
+    "semantic_hash": "66e5499386d89734f4e741c6287363bd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\reflection_state.py": {
+    "mtime": 1779989771.1858282,
+    "ast_hash": "360bd83d610e96f2988f0440c25de206",
+    "semantic_hash": "360bd83d610e96f2988f0440c25de206"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\report_state.py": {
+    "mtime": 1779895437.5850616,
+    "ast_hash": "bae5b8ae10dff69773294c5b691d5725",
+    "semantic_hash": "bae5b8ae10dff69773294c5b691d5725"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\review_state.py": {
+    "mtime": 1780529923.5790281,
+    "ast_hash": "ca6b0b5be1023672d6b2c80b51a98af4",
+    "semantic_hash": "ca6b0b5be1023672d6b2c80b51a98af4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\scoring.py": {
+    "mtime": 1777646745.1595712,
+    "ast_hash": "c453f40b29c2ecf5e062730fd0c4657d",
+    "semantic_hash": "c453f40b29c2ecf5e062730fd0c4657d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\synth_input.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "2f1a6e5216b5a3483fe588038d2b55d1",
+    "semantic_hash": "2f1a6e5216b5a3483fe588038d2b55d1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\synthesizer_parser.py": {
+    "mtime": 1777646745.170042,
+    "ast_hash": "2f4eb9bf6169bcfd059bb9b9c2f7a6d3",
+    "semantic_hash": "2f4eb9bf6169bcfd059bb9b9c2f7a6d3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\visual_quality.py": {
+    "mtime": 1780505307.2721274,
+    "ast_hash": "0cc95838c121eb39b105576390e5c01f",
+    "semantic_hash": "0cc95838c121eb39b105576390e5c01f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\assembly\\writer.py": {
+    "mtime": 1779833317.6604025,
+    "ast_hash": "73c52b6356916e2c34353122fa9798eb",
+    "semantic_hash": "73c52b6356916e2c34353122fa9798eb"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\baton_v1_to_v2.py": {
+    "mtime": 1780346842.54308,
+    "ast_hash": "b25cfa15456272f2093271c7b83d5d55",
+    "semantic_hash": "b25cfa15456272f2093271c7b83d5d55"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\build_synthesizer_emission_fallback.py": {
+    "mtime": 1780501384.2282536,
+    "ast_hash": "13fcd5d3e7614db319bcf7b686bd3957",
+    "semantic_hash": "13fcd5d3e7614db319bcf7b686bd3957"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\cli_io.py": {
+    "mtime": 1780501122.3433926,
+    "ast_hash": "d9ef08b7dd5cc41e186d5d510ee202f6",
+    "semantic_hash": "d9ef08b7dd5cc41e186d5d510ee202f6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\diagnose_engagement.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "82fb7865e244f0f6e44e5f2278e67328",
+    "semantic_hash": "82fb7865e244f0f6e44e5f2278e67328"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\diagnostics\\determinism_probe.py": {
+    "mtime": 1780336548.3541994,
+    "ast_hash": "3eae8c8be201d6f61eda295d3719b165",
+    "semantic_hash": "3eae8c8be201d6f61eda295d3719b165"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\diagnostics\\repair_fixtures.py": {
+    "mtime": 1780336184.303919,
+    "ast_hash": "1ebab618993f11726bf5676535938edd",
+    "semantic_hash": "1ebab618993f11726bf5676535938edd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\dom_preprocess.py": {
+    "mtime": 1780506885.2186952,
+    "ast_hash": "aad830399d097a0f8a6663dc04facbf5",
+    "semantic_hash": "aad830399d097a0f8a6663dc04facbf5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\ecp_acquire_dom.py": {
+    "mtime": 1780066729.7980435,
+    "ast_hash": "ee97c64f8c9b8cf7b95257de5aaaf1e9",
+    "semantic_hash": "ee97c64f8c9b8cf7b95257de5aaaf1e9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\ecp_acquire_overlays.py": {
+    "mtime": 1777304300.9451742,
+    "ast_hash": "e18a8775ebdd604b5f073b2723fb4b9a",
+    "semantic_hash": "e18a8775ebdd604b5f073b2723fb4b9a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\ecp_configurator.py": {
+    "mtime": 1780066729.805043,
+    "ast_hash": "177da065cf7c37329aeb44ab2944de36",
+    "semantic_hash": "177da065cf7c37329aeb44ab2944de36"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\ecp_section_hints.py": {
+    "mtime": 1780066729.8110423,
+    "ast_hash": "5821d92f4d74fe1d891bb77972ecab76",
+    "semantic_hash": "5821d92f4d74fe1d891bb77972ecab76"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\generate-editor.py": {
+    "mtime": 1777676868.7661319,
+    "ast_hash": "3e4deec04f50370dbfbce88af682c0a9",
+    "semantic_hash": "3e4deec04f50370dbfbce88af682c0a9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\generate-report.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "837317589f36f3c4945de07b2e361898",
+    "semantic_hash": "837317589f36f3c4945de07b2e361898"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\lead_prep.py": {
+    "mtime": 1779916179.6605675,
+    "ast_hash": "9947a14e16bf3528f0ced80e18b6db18",
+    "semantic_hash": "9947a14e16bf3528f0ced80e18b6db18"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\reference_link_check.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "b92798001e26223767b4c6a0906c40f8",
+    "semantic_hash": "b92798001e26223767b4c6a0906c40f8"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\reference_lint.py": {
+    "mtime": 1777304300.9462657,
+    "ast_hash": "3aee1f646bd2de307bd6a4988edb682b",
+    "semantic_hash": "3aee1f646bd2de307bd6a4988edb682b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\reference_maintenance.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "40f5150495fde79cc5e34054f4e931ef",
+    "semantic_hash": "40f5150495fde79cc5e34054f4e931ef"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\__init__.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "1e6f9b5f725a8db37559228424346e52",
+    "semantic_hash": "1e6f9b5f725a8db37559228424346e52"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\capture_coverage.py": {
+    "mtime": 1780603937.117597,
+    "ast_hash": "13cb0ad177b6f916c141025ef14b0ba1",
+    "semantic_hash": "13cb0ad177b6f916c141025ef14b0ba1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\citations.py": {
+    "mtime": 1776208123.405371,
+    "ast_hash": "0872cf88333ff0072be543c7649bea42",
+    "semantic_hash": "0872cf88333ff0072be543c7649bea42"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\geometry.py": {
+    "mtime": 1777929626.8624258,
+    "ast_hash": "3e1251fe704a7129ad299c2cd1477901",
+    "semantic_hash": "3e1251fe704a7129ad299c2cd1477901"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\geometry_validator.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "950df976d1cb56a06fa414ee9ebadcff",
+    "semantic_hash": "950df976d1cb56a06fa414ee9ebadcff"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\html_builder.py": {
+    "mtime": 1780604706.3796227,
+    "ast_hash": "ef8fafbfa1dee70842bba6ff15b30cfb",
+    "semantic_hash": "ef8fafbfa1dee70842bba6ff15b30cfb"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\images.py": {
+    "mtime": 1777304300.9472666,
+    "ast_hash": "ac60deb4ffe2e5ef110399ba10227dab",
+    "semantic_hash": "ac60deb4ffe2e5ef110399ba10227dab"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\markers.py": {
+    "mtime": 1777929667.7335775,
+    "ast_hash": "0faf0375ee6b1670296689e4ed8c5f63",
+    "semantic_hash": "0faf0375ee6b1670296689e4ed8c5f63"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\parser.py": {
+    "mtime": 1776266786.747445,
+    "ast_hash": "9efc3cfc4841aac17807442175dd1d7b",
+    "semantic_hash": "9efc3cfc4841aac17807442175dd1d7b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\path_safety.py": {
+    "mtime": 1776379720.0183468,
+    "ast_hash": "d1947f21494498f1e0e705ffdca26f4f",
+    "semantic_hash": "d1947f21494498f1e0e705ffdca26f4f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\placement_audit.py": {
+    "mtime": 1780527452.6152022,
+    "ast_hash": "b6f2a3c813a54567277c484fd13aee91",
+    "semantic_hash": "b6f2a3c813a54567277c484fd13aee91"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\placement_repair.py": {
+    "mtime": 1780527488.4353268,
+    "ast_hash": "6915ed6a9182361e38e742071dfd376c",
+    "semantic_hash": "6915ed6a9182361e38e742071dfd376c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\templates\\__init__.py": {
+    "mtime": 1775853469.2247765,
+    "ast_hash": "7e47de6c2683cece4b9ee9328047e5d7",
+    "semantic_hash": "7e47de6c2683cece4b9ee9328047e5d7"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\templates\\components.py": {
+    "mtime": 1779146846.0232654,
+    "ast_hash": "02a6c4be852bbe80a8b73a247d362e67",
+    "semantic_hash": "02a6c4be852bbe80a8b73a247d362e67"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\templates\\css.py": {
+    "mtime": 1780077835.1590748,
+    "ast_hash": "e380827ce23da336a3736dbe620b3798",
+    "semantic_hash": "e380827ce23da336a3736dbe620b3798"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\templates\\html_structure.py": {
+    "mtime": 1780077829.0238097,
+    "ast_hash": "58499b44a2605d688395499a434281b8",
+    "semantic_hash": "58499b44a2605d688395499a434281b8"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\templates\\js.py": {
+    "mtime": 1777906965.8238204,
+    "ast_hash": "1b336ab98be9f5973752eafc2008f798",
+    "semantic_hash": "1b336ab98be9f5973752eafc2008f798"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\utils.py": {
+    "mtime": 1777304300.9482656,
+    "ast_hash": "7ded1c4b409689c4b1979c4e4de2b6ef",
+    "semantic_hash": "7ded1c4b409689c4b1979c4e4de2b6ef"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\v2_html_builder.py": {
+    "mtime": 1780605469.0481875,
+    "ast_hash": "f440878a42b3c6f4eee6b98fb89a385b",
+    "semantic_hash": "f440878a42b3c6f4eee6b98fb89a385b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\v2_loader.py": {
+    "mtime": 1780506886.8492336,
+    "ast_hash": "e9865c2e59070667cde5f93cf1682d92",
+    "semantic_hash": "e9865c2e59070667cde5f93cf1682d92"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\v2_markers.py": {
+    "mtime": 1780604910.7974942,
+    "ast_hash": "7838caf25c8de1f9af7993042ac30193",
+    "semantic_hash": "7838caf25c8de1f9af7993042ac30193"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\v2_renderers.py": {
+    "mtime": 1777646745.2594843,
+    "ast_hash": "d6c6626c85940d8ad56d2a45d940a6bc",
+    "semantic_hash": "d6c6626c85940d8ad56d2a45d940a6bc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\report\\visual_evidence.py": {
+    "mtime": 1780608897.119604,
+    "ast_hash": "0e08ffbb899459ec9d541ac8151dc314",
+    "semantic_hash": "0e08ffbb899459ec9d541ac8151dc314"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\run-determinism-gate.py": {
+    "mtime": 1779916179.66257,
+    "ast_hash": "e6cdbd7ad4f175c51b61d14467c32ace",
+    "semantic_hash": "e6cdbd7ad4f175c51b61d14467c32ace"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\test-cluster-specialist-parity.py": {
+    "mtime": 1780357944.518758,
+    "ast_hash": "442b5beba15cc76489650e085a792022",
+    "semantic_hash": "442b5beba15cc76489650e085a792022"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\test-fixture-stability.py": {
+    "mtime": 1779916179.66257,
+    "ast_hash": "06e32ed502e0cdee3d972fc9fd0babf4",
+    "semantic_hash": "06e32ed502e0cdee3d972fc9fd0babf4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\test-specialist.py": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "69bea911d3a861182ae72be887811981",
+    "semantic_hash": "69bea911d3a861182ae72be887811981"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\scripts\\validate-cluster-files.py": {
+    "mtime": 1780505307.2731276,
+    "ast_hash": "4247d816b9be255e877f960cfa82111b",
+    "semantic_hash": "4247d816b9be255e877f960cfa82111b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\__init__.py": {
+    "mtime": 1776208123.4083712,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\acquire-element-capture-smoke.mjs": {
+    "mtime": 1780604302.1168027,
+    "ast_hash": "74b05a2d8ea8b9320dabf752128b2f0b",
+    "semantic_hash": "74b05a2d8ea8b9320dabf752128b2f0b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\editor-server-render-smoke.mjs": {
+    "mtime": 1780499852.186239,
+    "ast_hash": "597f891c2a29734d7db0df74a325709f",
+    "semantic_hash": "597f891c2a29734d7db0df74a325709f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\editor-smoke.mjs": {
+    "mtime": 1780499852.1882496,
+    "ast_hash": "9446502daf133143c2ef7a9ab380679c",
+    "semantic_hash": "9446502daf133143c2ef7a9ab380679c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_acquire_element_selectors.py": {
+    "mtime": 1780604302.1168027,
+    "ast_hash": "82c80375c13305eff3c054135844623f",
+    "semantic_hash": "82c80375c13305eff3c054135844623f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_acquire_engagement_dir.py": {
+    "mtime": 1781016440.7269258,
+    "ast_hash": "3e60045cee633cf6b141ca95f7b83d49",
+    "semantic_hash": "3e60045cee633cf6b141ca95f7b83d49"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_acquire_eval_guard.py": {
+    "mtime": 1780066729.8230422,
+    "ast_hash": "a31c46f63b93b6dd18fa721e9588be2b",
+    "semantic_hash": "a31c46f63b93b6dd18fa721e9588be2b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_acquire_screenshot_naming.py": {
+    "mtime": 1780336801.9216716,
+    "ast_hash": "7d616257169f01f75b24c9b1ba2b6e5f",
+    "semantic_hash": "7d616257169f01f75b24c9b1ba2b6e5f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_acquire_scroll_tiling.py": {
+    "mtime": 1780529314.4661925,
+    "ast_hash": "9d9bec1a455f93cc95bc95251a6a06c6",
+    "semantic_hash": "9d9bec1a455f93cc95bc95251a6a06c6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_acquirer_contamination_guard.py": {
+    "mtime": 1780066729.8270428,
+    "ast_hash": "ed1c94be286517f378d5d6d22915f35d",
+    "semantic_hash": "ed1c94be286517f378d5d6d22915f35d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_anchor_candidates.py": {
+    "mtime": 1779916179.6645699,
+    "ast_hash": "a1d14d29388f075b0d5423d3c4b772cf",
+    "semantic_hash": "a1d14d29388f075b0d5423d3c4b772cf"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_b0_prompt_resolution.py": {
+    "mtime": 1780337551.3413606,
+    "ast_hash": "55d184ce5824ba40a92eb6e36f76c3de",
+    "semantic_hash": "55d184ce5824ba40a92eb6e36f76c3de"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_b4_generated_date_determinism.py": {
+    "mtime": 1780337532.7034073,
+    "ast_hash": "6c9c4ad59d8a04afff3ba2207f23446e",
+    "semantic_hash": "6c9c4ad59d8a04afff3ba2207f23446e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_b5_absent_key_determinism.py": {
+    "mtime": 1780337500.3945422,
+    "ast_hash": "e376116b66495c08217a8bc739fe4a13",
+    "semantic_hash": "e376116b66495c08217a8bc739fe4a13"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_baton_rect_clamp.py": {
+    "mtime": 1780072377.7426982,
+    "ast_hash": "d16459b8950dee30b8a54719c69fe9c3",
+    "semantic_hash": "d16459b8950dee30b8a54719c69fe9c3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_baton_v1_to_v2.py": {
+    "mtime": 1780072187.7617307,
+    "ast_hash": "28e3928ba0ee38fbdacdf3d9b5091542",
+    "semantic_hash": "28e3928ba0ee38fbdacdf3d9b5091542"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_business_rules_malformed.py": {
+    "mtime": 1780504045.3938756,
+    "ast_hash": "ca6c95f88367f19b584636ad63a545df",
+    "semantic_hash": "ca6c95f88367f19b584636ad63a545df"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_canary_malformed_meta.py": {
+    "mtime": 1780504332.3200915,
+    "ast_hash": "ca3617a5245a3c27a7bba9700cce58ef",
+    "semantic_hash": "ca3617a5245a3c27a7bba9700cce58ef"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_canonical_frefs_consumer_shape.py": {
+    "mtime": 1779835787.5043664,
+    "ast_hash": "2c1cb691bbe1a941aaf6bbe77b84647d",
+    "semantic_hash": "2c1cb691bbe1a941aaf6bbe77b84647d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_canonical_frefs_parity.py": {
+    "mtime": 1779916179.6655703,
+    "ast_hash": "d392a49ada52caacc111327de196a70a",
+    "semantic_hash": "d392a49ada52caacc111327de196a70a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_capture_coverage.py": {
+    "mtime": 1780603937.117597,
+    "ast_hash": "31f052ece8b0e363af2334a7f02a7a8a",
+    "semantic_hash": "31f052ece8b0e363af2334a7f02a7a8a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_dedup_consumer_parity.py": {
+    "mtime": 1779838698.914608,
+    "ast_hash": "1d5e65720ca931dbe7c976f328642230",
+    "semantic_hash": "1d5e65720ca931dbe7c976f328642230"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_determinism_canaries.py": {
+    "mtime": 1780337548.1971376,
+    "ast_hash": "2042fcba3073083c98ef18e7171f5341",
+    "semantic_hash": "2042fcba3073083c98ef18e7171f5341"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_diagnose_engagement.py": {
+    "mtime": 1781016440.7269258,
+    "ast_hash": "9745d7c941727023dda4309c9901ae98",
+    "semantic_hash": "9745d7c941727023dda4309c9901ae98"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_dom_preprocess_malformed.py": {
+    "mtime": 1780505048.6229765,
+    "ast_hash": "b78b9943afa578cfb73478a3e7859c51",
+    "semantic_hash": "b78b9943afa578cfb73478a3e7859c51"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_drift_check_trace_logging.py": {
+    "mtime": 1781016440.7278168,
+    "ast_hash": "a580e9fdb3389ea6e3ec6d1ec5c76634",
+    "semantic_hash": "a580e9fdb3389ea6e3ec6d1ec5c76634"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_e2e_render.py": {
+    "mtime": 1780604706.380622,
+    "ast_hash": "6903fadde42dddb8727b1cd8fb38b102",
+    "semantic_hash": "6903fadde42dddb8727b1cd8fb38b102"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_ethics_ref_agreement.py": {
+    "mtime": 1779916179.6655703,
+    "ast_hash": "ef2e8bdcae7de1877de13b0dc70d1323",
+    "semantic_hash": "ef2e8bdcae7de1877de13b0dc70d1323"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_eval_encoding.py": {
+    "mtime": 1780066729.8380432,
+    "ast_hash": "2717a878c910b5fbf566c3f9ab3e6e6e",
+    "semantic_hash": "2717a878c910b5fbf566c3f9ab3e6e6e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_final_report_render.py": {
+    "mtime": 1779838123.4350097,
+    "ast_hash": "7e33ee9b5ebe5fe9b4f7dd2ab30f39b5",
+    "semantic_hash": "7e33ee9b5ebe5fe9b4f7dd2ab30f39b5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_fix3_hero_stack_distribute.py": {
+    "mtime": 1780604910.7974942,
+    "ast_hash": "c762b8764db4458812bcee810ced8aad",
+    "semantic_hash": "c762b8764db4458812bcee810ced8aad"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_fixture_schema_evolution.py": {
+    "mtime": 1780337583.2027252,
+    "ast_hash": "6fc0b995478ebede10a48d4ef8d49c6b",
+    "semantic_hash": "6fc0b995478ebede10a48d4ef8d49c6b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g15_emission_autofix.py": {
+    "mtime": 1779922714.827195,
+    "ast_hash": "4c2171fe3166d9a0304e168add4437fd",
+    "semantic_hash": "4c2171fe3166d9a0304e168add4437fd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g16_canonical_view_surfaces_drops.py": {
+    "mtime": 1779916179.6665714,
+    "ast_hash": "414dc9ab420827704aa8747ef85dfdc6",
+    "semantic_hash": "414dc9ab420827704aa8747ef85dfdc6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g16_clusters_represented_canary.py": {
+    "mtime": 1779916179.6665714,
+    "ast_hash": "00f8c58fe1dbcc86683c3c68e54db2f5",
+    "semantic_hash": "00f8c58fe1dbcc86683c3c68e54db2f5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g16_layer3_single_validator.py": {
+    "mtime": 1779916179.6675718,
+    "ast_hash": "e0253a6a37ca6eaac6fc77a94a1eef8d",
+    "semantic_hash": "e0253a6a37ca6eaac6fc77a94a1eef8d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g21_cursor_agents_not_discoverable.py": {
+    "mtime": 1780066729.842043,
+    "ast_hash": "2b97c28f3f8105dd35f4187efe871523",
+    "semantic_hash": "2b97c28f3f8105dd35f4187efe871523"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g23_reflection_state_gate.py": {
+    "mtime": 1781016440.7278168,
+    "ast_hash": "c7f448433a3b536ca2d6ab3f9c1c7a05",
+    "semantic_hash": "c7f448433a3b536ca2d6ab3f9c1c7a05"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g24_trace_counters_reconcile.py": {
+    "mtime": 1781016440.7286644,
+    "ast_hash": "903095a009a4bb24b43ecfb1b019955f",
+    "semantic_hash": "903095a009a4bb24b43ecfb1b019955f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g4_blank_below_confidence.py": {
+    "mtime": 1779895437.655558,
+    "ast_hash": "b1a6a19a4bf6a9f5cf7b95cfc17d45b7",
+    "semantic_hash": "b1a6a19a4bf6a9f5cf7b95cfc17d45b7"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g6_oversized_downrank.py": {
+    "mtime": 1779895437.6615558,
+    "ast_hash": "851a5172f7f7acf256af1cec7b31fae2",
+    "semantic_hash": "851a5172f7f7acf256af1cec7b31fae2"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_g8_client_verified_gate.py": {
+    "mtime": 1779895437.666556,
+    "ast_hash": "880dae2d741809766f1911dec5ea867d",
+    "semantic_hash": "880dae2d741809766f1911dec5ea867d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_json_parser_nonobject.py": {
+    "mtime": 1780505132.66839,
+    "ast_hash": "92dea44bd2d841472eec816dde32afae",
+    "semantic_hash": "92dea44bd2d841472eec816dde32afae"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_lead_reflection_ownership_canary.py": {
+    "mtime": 1780075652.4841874,
+    "ast_hash": "b7df6cc9663401d3a8679ae2df2f3a34",
+    "semantic_hash": "b7df6cc9663401d3a8679ae2df2f3a34"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_lead_reflection_stale_canary.py": {
+    "mtime": 1780073205.0338798,
+    "ast_hash": "da8ad71cb582b04732bfc8d4ef887cee",
+    "semantic_hash": "da8ad71cb582b04732bfc8d4ef887cee"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_malformed_containers.py": {
+    "mtime": 1780506927.2465756,
+    "ast_hash": "29fe3da7b8abd8b4ddf47f46591409cd",
+    "semantic_hash": "29fe3da7b8abd8b4ddf47f46591409cd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_no_mojibake_in_fixtures.py": {
+    "mtime": 1779924817.9165878,
+    "ast_hash": "ca3a5096cf649c868e49b0cd6237494f",
+    "semantic_hash": "ca3a5096cf649c868e49b0cd6237494f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_no_nonascii_in_script_prints.py": {
+    "mtime": 1781016440.7286644,
+    "ast_hash": "69827b8b41d5042e0e7e45e7e8e94e92",
+    "semantic_hash": "69827b8b41d5042e0e7e45e7e8e94e92"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_phase_4b_mandatory_candidate.py": {
+    "mtime": 1779144839.1440945,
+    "ast_hash": "388866547ed56c1c96bc7639fa0905de",
+    "semantic_hash": "388866547ed56c1c96bc7639fa0905de"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_phase_6_priority_path_cross_device.py": {
+    "mtime": 1779146946.316539,
+    "ast_hash": "d1f431ac251de49bd9edc3c4dbd0e0c4",
+    "semantic_hash": "d1f431ac251de49bd9edc3c4dbd0e0c4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_phase_7_clear_ethics_not_applicable.py": {
+    "mtime": 1779147571.8962524,
+    "ast_hash": "966eeb9c848b00c76211eb281c71d03e",
+    "semantic_hash": "966eeb9c848b00c76211eb281c71d03e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_placement_audit.py": {
+    "mtime": 1780527539.588772,
+    "ast_hash": "58c540071cf16a6890af0155e2dfd896",
+    "semantic_hash": "58c540071cf16a6890af0155e2dfd896"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_placement_qa_summary.py": {
+    "mtime": 1780605469.0491872,
+    "ast_hash": "7d024e6c9a9979f01f1d830758a571d3",
+    "semantic_hash": "7d024e6c9a9979f01f1d830758a571d3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_placement_repair.py": {
+    "mtime": 1780527532.7503471,
+    "ast_hash": "ff4137f0b90007989dc1b21412b670ed",
+    "semantic_hash": "ff4137f0b90007989dc1b21412b670ed"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_prompt_template_completeness.py": {
+    "mtime": 1780337555.0966165,
+    "ast_hash": "0a6c46edc2d3b1a84510d33b105cfb07",
+    "semantic_hash": "0a6c46edc2d3b1a84510d33b105cfb07"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_reference_link_check.py": {
+    "mtime": 1777304300.9872694,
+    "ast_hash": "f03109a4e238a8e5f2d8b190d92f6375",
+    "semantic_hash": "f03109a4e238a8e5f2d8b190d92f6375"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_reference_lint.py": {
+    "mtime": 1777304300.9872694,
+    "ast_hash": "b76fdd25414c1f20207b205dd4502f41",
+    "semantic_hash": "b76fdd25414c1f20207b205dd4502f41"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_reference_maintenance.py": {
+    "mtime": 1777304300.98827,
+    "ast_hash": "058e583668b403382624666cebe48c8f",
+    "semantic_hash": "058e583668b403382624666cebe48c8f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_remaining_type_guards.py": {
+    "mtime": 1780505299.2053487,
+    "ast_hash": "c1ccfe2f0d4ffee82ad6a48b2d1a48a1",
+    "semantic_hash": "c1ccfe2f0d4ffee82ad6a48b2d1a48a1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_report_anchor_guards.py": {
+    "mtime": 1780504896.0380926,
+    "ast_hash": "7d40c641363b7a71edd4b48e8f927a50",
+    "semantic_hash": "7d40c641363b7a71edd4b48e8f927a50"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_report_disclaimer.py": {
+    "mtime": 1780077873.0794742,
+    "ast_hash": "911b33298023a28657af2c5d978470d4",
+    "semantic_hash": "911b33298023a28657af2c5d978470d4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_review_state_malformed.py": {
+    "mtime": 1780504545.9844944,
+    "ast_hash": "c3c1e111695767e91fe1737f94050e4b",
+    "semantic_hash": "c3c1e111695767e91fe1737f94050e4b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_review_state_migration.py": {
+    "mtime": 1779838130.8213274,
+    "ast_hash": "aef85438ad90bf6169af57731e6e71ec",
+    "semantic_hash": "aef85438ad90bf6169af57731e6e71ec"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_review_state_schema.py": {
+    "mtime": 1779838128.1180582,
+    "ast_hash": "46bb8df9d02ae30b92d1329fc579defa",
+    "semantic_hash": "46bb8df9d02ae30b92d1329fc579defa"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_sidecar_strict_loading.py": {
+    "mtime": 1779838656.3633225,
+    "ast_hash": "fbdcbc942bc087b45320f75e1bdb5f5c",
+    "semantic_hash": "fbdcbc942bc087b45320f75e1bdb5f5c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_specialist_subagent_dispatch.py": {
+    "mtime": 1780499852.1882496,
+    "ast_hash": "3420d8d6f175cf540a66b5f9233edf4d",
+    "semantic_hash": "3420d8d6f175cf540a66b5f9233edf4d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_specialist_write_scope.py": {
+    "mtime": 1780075904.3838944,
+    "ast_hash": "14346abba3d8c443f143ccd767ec7d00",
+    "semantic_hash": "14346abba3d8c443f143ccd767ec7d00"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_synth_emission_fallback.py": {
+    "mtime": 1780501360.9045286,
+    "ast_hash": "e97bd476a83f312730392ad209d9e353",
+    "semantic_hash": "e97bd476a83f312730392ad209d9e353"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_synthesizer_fref_contract.py": {
+    "mtime": 1780337594.5425425,
+    "ast_hash": "212c70b4a0d08acdbaa5678ea0162f1a",
+    "semantic_hash": "212c70b4a0d08acdbaa5678ea0162f1a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v1.py": {
+    "mtime": 1777646745.282872,
+    "ast_hash": "87085bf4c7bf7ba8522db1df3256f3e9",
+    "semantic_hash": "87085bf4c7bf7ba8522db1df3256f3e9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_business_rules.py": {
+    "mtime": 1779924505.6242106,
+    "ast_hash": "4652835359ee350680964181f019fec1",
+    "semantic_hash": "4652835359ee350680964181f019fec1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_canary_checks.py": {
+    "mtime": 1780075702.5938733,
+    "ast_hash": "e66371f8789bf2eaa8387c6759d17bb5",
+    "semantic_hash": "e66371f8789bf2eaa8387c6759d17bb5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_dedup.py": {
+    "mtime": 1777646745.2915647,
+    "ast_hash": "76624ce1c009821af0ce4b7501cf44cd",
+    "semantic_hash": "76624ce1c009821af0ce4b7501cf44cd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_determinism_gate.py": {
+    "mtime": 1780353957.0843916,
+    "ast_hash": "de31d37156f8058f20c7b9193ef371c6",
+    "semantic_hash": "de31d37156f8058f20c7b9193ef371c6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_finding_stability.py": {
+    "mtime": 1777646745.295565,
+    "ast_hash": "f0c3729a7a5f14d5ea38d1b0cf1fb45e",
+    "semantic_hash": "f0c3729a7a5f14d5ea38d1b0cf1fb45e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_hotspot_geometry_validator.py": {
+    "mtime": 1777929960.0502863,
+    "ast_hash": "858a025dc23b0da4bc1c4c2de6ea5caa",
+    "semantic_hash": "858a025dc23b0da4bc1c4c2de6ea5caa"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_json_parser.py": {
+    "mtime": 1777646745.3006349,
+    "ast_hash": "81202c8f0877355381811726656203d1",
+    "semantic_hash": "81202c8f0877355381811726656203d1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_markers_operator_overrides.py": {
+    "mtime": 1780504733.7484903,
+    "ast_hash": "4ae0f89037a87be3b3722952943d9365",
+    "semantic_hash": "4ae0f89037a87be3b3722952943d9365"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_models.py": {
+    "mtime": 1777646745.3056252,
+    "ast_hash": "41f4b712e27d70a0e7a1eab994bbcc19",
+    "semantic_hash": "41f4b712e27d70a0e7a1eab994bbcc19"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_pipeline_doc.py": {
+    "mtime": 1779832661.3002706,
+    "ast_hash": "5a55c40b3c042e20613b9a77891e69d5",
+    "semantic_hash": "5a55c40b3c042e20613b9a77891e69d5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_pipeline_merge.py": {
+    "mtime": 1777646745.3096323,
+    "ast_hash": "5f4ebcdd589cf90a3f8c5e216a834621",
+    "semantic_hash": "5f4ebcdd589cf90a3f8c5e216a834621"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_priority_path_loader.py": {
+    "mtime": 1779146397.3807545,
+    "ast_hash": "e87649dec4f9bf0a3c5e04a934705640",
+    "semantic_hash": "e87649dec4f9bf0a3c5e04a934705640"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_render_fixture.py": {
+    "mtime": 1780609044.3253026,
+    "ast_hash": "978b102fad4111f146a8b23c3abbdf71",
+    "semantic_hash": "978b102fad4111f146a8b23c3abbdf71"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_scoring.py": {
+    "mtime": 1777646745.3126335,
+    "ast_hash": "83345ea25544a149d36477296a88f4c8",
+    "semantic_hash": "83345ea25544a149d36477296a88f4c8"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_synth_input.py": {
+    "mtime": 1779916179.6685705,
+    "ast_hash": "d2147d714471e431a0820d8546b4a761",
+    "semantic_hash": "d2147d714471e431a0820d8546b4a761"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_v2_synthesizer_parser.py": {
+    "mtime": 1777646745.324326,
+    "ast_hash": "e61d1da3dce5c8027d0c12829ff6fff6",
+    "semantic_hash": "e61d1da3dce5c8027d0c12829ff6fff6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_visual_evidence.py": {
+    "mtime": 1780608897.119604,
+    "ast_hash": "d64a5ea1ce82551d529ef852c081632b",
+    "semantic_hash": "d64a5ea1ce82551d529ef852c081632b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\test_visual_quality.py": {
+    "mtime": 1780076723.0616245,
+    "ast_hash": "e632bbc8a1da6397d5608be58b68fffe",
+    "semantic_hash": "e632bbc8a1da6397d5608be58b68fffe"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tools\\editor\\editor.js": {
+    "mtime": 1779895437.6855512,
+    "ast_hash": "1b339d80d6a84641a56f1c095104cf45",
+    "semantic_hash": "1b339d80d6a84641a56f1c095104cf45"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tools\\editor\\migrations\\v1-to-v2.js": {
+    "mtime": 1777676868.7701385,
+    "ast_hash": "1d0543e6d44e81fa78d9603a2de85bae",
+    "semantic_hash": "1d0543e6d44e81fa78d9603a2de85bae"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tools\\editor\\review-state.schema.json": {
+    "mtime": 1777676868.7711506,
+    "ast_hash": "75941d7cd76f14d96c5594b1694f29f4",
+    "semantic_hash": "75941d7cd76f14d96c5594b1694f29f4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\.impeccable.md": {
+    "mtime": 1777930924.030482,
+    "ast_hash": "320598dc9fe0fb0ac661037203d520d1",
+    "semantic_hash": "320598dc9fe0fb0ac661037203d520d1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\CHANGELOG.md": {
+    "mtime": 1780077971.505957,
+    "ast_hash": "b541d25865ce6d7aef2ec9619360a52c",
+    "semantic_hash": "b541d25865ce6d7aef2ec9619360a52c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\CLAUDE.md": {
+    "mtime": 1781016440.6861901,
+    "ast_hash": "cfbda9625a1e6e865c879357e04188dc",
+    "semantic_hash": "cfbda9625a1e6e865c879357e04188dc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\README.md": {
+    "mtime": 1781016440.6871889,
+    "ast_hash": "9b3d053b8a270c9034b3aa3cdc562aa7",
+    "semantic_hash": "9b3d053b8a270c9034b3aa3cdc562aa7"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\archive\\cursor-agents\\README.md": {
+    "mtime": 1780066729.7420423,
+    "ast_hash": "27173874aa7de70962e659b1e670fc52",
+    "semantic_hash": "27173874aa7de70962e659b1e670fc52"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\archive\\cursor-agents\\ecp-acquisition.md": {
+    "mtime": 1780066729.7470434,
+    "ast_hash": "050883a3df18e1143a244c2fb1b755aa",
+    "semantic_hash": "050883a3df18e1143a244c2fb1b755aa"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\archive\\cursor-agents\\ecp-cluster-auditor.md": {
+    "mtime": 1780066729.754042,
+    "ast_hash": "1e0db118f3a92e062a109a81820b7a5d",
+    "semantic_hash": "1e0db118f3a92e062a109a81820b7a5d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\archive\\cursor-agents\\ecp-orchestrator.md": {
+    "mtime": 1780066729.759042,
+    "ast_hash": "91baeff3b9f1a585db425e7b6853a8b2",
+    "semantic_hash": "91baeff3b9f1a585db425e7b6853a8b2"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\archive\\cursor-agents\\ecp-reviewer.md": {
+    "mtime": 1780066729.7640421,
+    "ast_hash": "c6cf47b570dcb4b2251cb30df4f9b837",
+    "semantic_hash": "c6cf47b570dcb4b2251cb30df4f9b837"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\archive\\cursor-agents\\ecp-synthesizer.md": {
+    "mtime": 1780066729.7700431,
+    "ast_hash": "74dc17a6bbf57150beb83010cc782e2e",
+    "semantic_hash": "74dc17a6bbf57150beb83010cc782e2e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\citations\\sources.md": {
+    "mtime": 1775778067.2330883,
+    "ast_hash": "5bfc47150642df1dab1a86c7aa9ffe27",
+    "semantic_hash": "5bfc47150642df1dab1a86c7aa9ffe27"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\audit-assembly.md": {
+    "mtime": 1776881608.5104008,
+    "ast_hash": "054c0688ea8013db333c3d29daf1e894",
+    "semantic_hash": "054c0688ea8013db333c3d29daf1e894"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\audit-reconciliation.md": {
+    "mtime": 1780499852.168358,
+    "ast_hash": "600b987a3b8e5c0721831a343a0563f4",
+    "semantic_hash": "600b987a3b8e5c0721831a343a0563f4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\audit-state-machine.md": {
+    "mtime": 1781016440.6871889,
+    "ast_hash": "8c3266d5b726550ca3539eb7234a9c87",
+    "semantic_hash": "8c3266d5b726550ca3539eb7234a9c87"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\cluster-migration.md": {
+    "mtime": 1779826763.5001917,
+    "ast_hash": "517dc84819cbb401902d7caf86c45eda",
+    "semantic_hash": "517dc84819cbb401902d7caf86c45eda"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\cluster-routing.md": {
+    "mtime": 1779826665.9848273,
+    "ast_hash": "d322528a437e04f5750f7608aa32acdc",
+    "semantic_hash": "d322528a437e04f5750f7608aa32acdc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\device-semantics.md": {
+    "mtime": 1779826673.5848937,
+    "ast_hash": "fd20025e4e4eeeb9493c8bd21202f564",
+    "semantic_hash": "fd20025e4e4eeeb9493c8bd21202f564"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\dispatch-contract.md": {
+    "mtime": 1781016440.6881895,
+    "ast_hash": "ab1fd69e88220ef45fe2227cde090a59",
+    "semantic_hash": "ab1fd69e88220ef45fe2227cde090a59"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\dom-preprocessor.md": {
+    "mtime": 1776881608.5134008,
+    "ast_hash": "30747b96bc6693a6072c10520cd6d8f5",
+    "semantic_hash": "30747b96bc6693a6072c10520cd6d8f5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\ethics-subagent-v2.md": {
+    "mtime": 1780357511.4299438,
+    "ast_hash": "134b70a4206f9d840d88ce0018a40b9a",
+    "semantic_hash": "134b70a4206f9d840d88ce0018a40b9a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\flags.md": {
+    "mtime": 1780605684.9564075,
+    "ast_hash": "4aab55b2c8a339997cb7ee9f03599488",
+    "semantic_hash": "4aab55b2c8a339997cb7ee9f03599488"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\humanizer-subagent.md": {
+    "mtime": 1776881608.5144007,
+    "ast_hash": "052f1decc24f2277b3680f329e98424c",
+    "semantic_hash": "052f1decc24f2277b3680f329e98424c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\lead-discipline.md": {
+    "mtime": 1780357138.8225214,
+    "ast_hash": "165bef91b40276ecad586c6b30131282",
+    "semantic_hash": "165bef91b40276ecad586c6b30131282"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\meta-schema.md": {
+    "mtime": 1779989771.182826,
+    "ast_hash": "aedc4648f816eaf81f0ddb653b9047f0",
+    "semantic_hash": "aedc4648f816eaf81f0ddb653b9047f0"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\multi-planner-protocol.md": {
+    "mtime": 1780337021.4509218,
+    "ast_hash": "3be396afb5fd06ce0f7ac890bb056406",
+    "semantic_hash": "3be396afb5fd06ce0f7ac890bb056406"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\page-detection.md": {
+    "mtime": 1776881608.515401,
+    "ast_hash": "0245778a5cdd4c07c40f5f430c18e4ef",
+    "semantic_hash": "0245778a5cdd4c07c40f5f430c18e4ef"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\platform-detection.md": {
+    "mtime": 1779816811.5809555,
+    "ast_hash": "e0eab74e752baa23fb540cade7783241",
+    "semantic_hash": "e0eab74e752baa23fb540cade7783241"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\priority-path-synthesis.md": {
+    "mtime": 1776881608.516401,
+    "ast_hash": "98ec8d3d37e4ed355e6328feda7a6d56",
+    "semantic_hash": "98ec8d3d37e4ed355e6328feda7a6d56"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\progress-comparison.md": {
+    "mtime": 1776881608.516401,
+    "ast_hash": "2728d539c5bdd9af0980340e6989b321",
+    "semantic_hash": "2728d539c5bdd9af0980340e6989b321"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\relay-loop-protocol.md": {
+    "mtime": 1776881608.516401,
+    "ast_hash": "a2c631f3e260c28dfecfbe0601522777",
+    "semantic_hash": "a2c631f3e260c28dfecfbe0601522777"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\report-export.md": {
+    "mtime": 1781016440.6881895,
+    "ast_hash": "c78fc4811bb58127efa0c7e56313826f",
+    "semantic_hash": "c78fc4811bb58127efa0c7e56313826f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialist-prompt-v2.md": {
+    "mtime": 1780499852.1757753,
+    "ast_hash": "34e0054d11a2d7385b20e263e12abc54",
+    "semantic_hash": "34e0054d11a2d7385b20e263e12abc54"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\audience.md": {
+    "mtime": 1777646736.7591414,
+    "ast_hash": "546c6fd9299720885e65743fb1255094",
+    "semantic_hash": "546c6fd9299720885e65743fb1255094"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\category-navigation.md": {
+    "mtime": 1777646736.7601404,
+    "ast_hash": "cbc04ebff45086d57cb17eed06a13e5a",
+    "semantic_hash": "cbc04ebff45086d57cb17eed06a13e5a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\checkout-flows.md": {
+    "mtime": 1777646736.7613943,
+    "ast_hash": "920cf5f1ca89fa9a8fec807288387422",
+    "semantic_hash": "920cf5f1ca89fa9a8fec807288387422"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\content-seo.md": {
+    "mtime": 1777646736.7622983,
+    "ast_hash": "2938bf8700b74e5b42a18865a114930a",
+    "semantic_hash": "2938bf8700b74e5b42a18865a114930a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\performance-ux.md": {
+    "mtime": 1777646736.7629602,
+    "ast_hash": "973f1b1fd0156f73f770f2e764b4955b",
+    "semantic_hash": "973f1b1fd0156f73f770f2e764b4955b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\post-purchase.md": {
+    "mtime": 1777646736.7634566,
+    "ast_hash": "40606600724f96cecfc0827e902ac1ac",
+    "semantic_hash": "40606600724f96cecfc0827e902ac1ac"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\pricing.md": {
+    "mtime": 1777646736.7634566,
+    "ast_hash": "26e03c7ce2b66876b24ba17554eeb3c9",
+    "semantic_hash": "26e03c7ce2b66876b24ba17554eeb3c9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\product-media.md": {
+    "mtime": 1777646736.76446,
+    "ast_hash": "184f08f470e3861d6a2ee35a471d8086",
+    "semantic_hash": "184f08f470e3861d6a2ee35a471d8086"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\trust-credibility.md": {
+    "mtime": 1777646736.76446,
+    "ast_hash": "88928dfc0341adbaf730f75c9fff730e",
+    "semantic_hash": "88928dfc0341adbaf730f75c9fff730e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\specialists\\visual-cta.md": {
+    "mtime": 1777646736.76446,
+    "ast_hash": "f26c30b72f1c73c7f5e99f344e70ea01",
+    "semantic_hash": "f26c30b72f1c73c7f5e99f344e70ea01"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\synthesizer-subagent.md": {
+    "mtime": 1776881608.5174017,
+    "ast_hash": "598bffa4bd6597355018aea6e2fe22a7",
+    "semantic_hash": "598bffa4bd6597355018aea6e2fe22a7"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\synthesizer-v2.md": {
+    "mtime": 1780357516.4130085,
+    "ast_hash": "a5c3e048c85abf1419f3564005c02cd8",
+    "semantic_hash": "a5c3e048c85abf1419f3564005c02cd8"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\team-lifecycle.md": {
+    "mtime": 1780357932.136866,
+    "ast_hash": "42cad6c8b438e89c7150c3002771fcb4",
+    "semantic_hash": "42cad6c8b438e89c7150c3002771fcb4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\trace-assertion-canary.md": {
+    "mtime": 1781016440.6896,
+    "ast_hash": "5fc0d569941841f568349f17cce4fb59",
+    "semantic_hash": "5fc0d569941841f568349f17cce4fb59"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\contracts\\url-validation.md": {
+    "mtime": 1776881608.5184052,
+    "ast_hash": "6bc19565371932128287d45f3002a9b0",
+    "semantic_hash": "6bc19565371932128287d45f3002a9b0"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-05-26-ecp-v2-run-observations-handoff.md": {
+    "mtime": 1779830560.2658067,
+    "ast_hash": "5492ad7b9b272fb5a99223e0acccf650",
+    "semantic_hash": "5492ad7b9b272fb5a99223e0acccf650"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-05-31-dynamic-workflows-determinism-plan.md": {
+    "mtime": 1780325909.995147,
+    "ast_hash": "ade9059882a4fe03a7889e2d213056f2",
+    "semantic_hash": "ade9059882a4fe03a7889e2d213056f2"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-01-cluster-specialists-off-agent-teams-design.md": {
+    "mtime": 1780350946.9334881,
+    "ast_hash": "b48ac3766f555a2043d2d939c0db1842",
+    "semantic_hash": "b48ac3766f555a2043d2d939c0db1842"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-01-cluster-specialists-off-agent-teams-plan.md": {
+    "mtime": 1780358858.5298054,
+    "ast_hash": "ff738e6ab543607578b649b5e323519f",
+    "semantic_hash": "ff738e6ab543607578b649b5e323519f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-01-migration-reinvestigation-measure-twice.md": {
+    "mtime": 1780334985.8029459,
+    "ast_hash": "3da6a88997fe467e479849b5b6cd6922",
+    "semantic_hash": "3da6a88997fe467e479849b5b6cd6922"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-02-awdmods-audit-qa-investigation.md": {
+    "mtime": 1780499852.178167,
+    "ast_hash": "310a57e68f19dd53201767f1646cd000",
+    "semantic_hash": "310a57e68f19dd53201767f1646cd000"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-02-hotspot-placement-diagnosis.md": {
+    "mtime": 1780499852.178167,
+    "ast_hash": "8156b76a7d346f057ddb934f183abeb1",
+    "semantic_hash": "8156b76a7d346f057ddb934f183abeb1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-03-adversarial-placement-qa-findings.md": {
+    "mtime": 1780609164.320896,
+    "ast_hash": "4cc9977e34bb4a187b26c960addd8ba2",
+    "semantic_hash": "4cc9977e34bb4a187b26c960addd8ba2"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-03-adversarial-review-and-next-tasks.md": {
+    "mtime": 1780609164.3218956,
+    "ast_hash": "8509ff0d940cf520af41b9ba13ffb19d",
+    "semantic_hash": "8509ff0d940cf520af41b9ba13ffb19d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-03-adversarial-type-review-findings.md": {
+    "mtime": 1780505384.5600379,
+    "ast_hash": "4a636bdb7db7d37ef3140be65331fc56",
+    "semantic_hash": "4a636bdb7db7d37ef3140be65331fc56"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-03-handoff-hotspot-accuracy.md": {
+    "mtime": 1780609164.3218956,
+    "ast_hash": "c0a1a5c7b443fb8cdc97183dee84eac9",
+    "semantic_hash": "c0a1a5c7b443fb8cdc97183dee84eac9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-08-audit-run-review-awdmods.md": {
+    "mtime": 1780963104.4631438,
+    "ast_hash": "0f1b37db3f791b6d4b2c7d5df9651959",
+    "semantic_hash": "0f1b37db3f791b6d4b2c7d5df9651959"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-08-handoff-bloat-prune-and-runreview-fixes.md": {
+    "mtime": 1781016440.6896,
+    "ast_hash": "ffb42195e6d28d77e1299a394655bc3c",
+    "semantic_hash": "ffb42195e6d28d77e1299a394655bc3c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-08-hotspot-diagnosis-protocol.md": {
+    "mtime": 1781016440.6896,
+    "ast_hash": "80584793fdc08ed440e481841be06796",
+    "semantic_hash": "80584793fdc08ed440e481841be06796"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\2026-06-09-hotspot-accuracy-troubleshooting-methodology.md": {
+    "mtime": 1781016440.6906047,
+    "ast_hash": "b46027ec2f47508a1d923a31980e87cc",
+    "semantic_hash": "b46027ec2f47508a1d923a31980e87cc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\CONVENTIONS.md": {
+    "mtime": 1778002506.3617184,
+    "ast_hash": "f9a30dd4b887d620708ae55a92defb53",
+    "semantic_hash": "f9a30dd4b887d620708ae55a92defb53"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\conformance-gaps.md": {
+    "mtime": 1780077956.8587682,
+    "ast_hash": "fd9307b11998c9ba0997e646f446c8ba",
+    "semantic_hash": "fd9307b11998c9ba0997e646f446c8ba"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-05-27-conformance-batch.md": {
+    "mtime": 1779926040.7380524,
+    "ast_hash": "1cf84cac69adfaa612c59c4950a961d7",
+    "semantic_hash": "1cf84cac69adfaa612c59c4950a961d7"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-05-28-cursor-migration-completion.md": {
+    "mtime": 1780066729.7810428,
+    "ast_hash": "817372d1f39bf5e575cd418a23aba4bd",
+    "semantic_hash": "817372d1f39bf5e575cd418a23aba4bd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-05-28-observability-batch.md": {
+    "mtime": 1780013253.4074194,
+    "ast_hash": "125b0979942881e13b858382e2cc427b",
+    "semantic_hash": "125b0979942881e13b858382e2cc427b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-05-29-roadmap-batch.md": {
+    "mtime": 1780078631.12237,
+    "ast_hash": "5e32b5cb5597d265ae77a75ab01aac07",
+    "semantic_hash": "5e32b5cb5597d265ae77a75ab01aac07"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-06-01-cross-os-hardening-and-env-doc.md": {
+    "mtime": 1780499852.178167,
+    "ast_hash": "a71b726d89045ef45755c25ede7fc4f9",
+    "semantic_hash": "a71b726d89045ef45755c25ede7fc4f9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-06-01-migration-fixes-and-post-audit.md": {
+    "mtime": 1780358710.889873,
+    "ast_hash": "35254d636b8bca0c6b395b8d2931737a",
+    "semantic_hash": "35254d636b8bca0c6b395b8d2931737a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-06-01-specialists-off-agent-teams-complete.md": {
+    "mtime": 1780359065.6426961,
+    "ast_hash": "eca66d10da2c4ceaae0aeb9190d7aa7d",
+    "semantic_hash": "eca66d10da2c4ceaae0aeb9190d7aa7d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\handoff-2026-06-02-audit-accuracy-and-hotspot-render.md": {
+    "mtime": 1780499852.180189,
+    "ast_hash": "e51ec1d308e2e2a5870632a4ba0b9992",
+    "semantic_hash": "e51ec1d308e2e2a5870632a4ba0b9992"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\docs\\superpowers\\specs\\2026-05-29-durable-baton-converter-design.md": {
+    "mtime": 1780071544.9098482,
+    "ast_hash": "71aae805c6e1929e0443e3d27416bdaa",
+    "semantic_hash": "71aae805c6e1929e0443e3d27416bdaa"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\product.md": {
+    "mtime": 1780358693.3791473,
+    "ast_hash": "05ed6d1c25648e797313993a353c2ce9",
+    "semantic_hash": "05ed6d1c25648e797313993a353c2ce9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\reference-maintenance\\reference-freshness.md": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "c7e7a17465162abfab80b1857a568de3",
+    "semantic_hash": "c7e7a17465162abfab80b1857a568de3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\reference-maintenance\\reference-live-links.md": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "44fdda7777208bc7b27eeebf335cfb9c",
+    "semantic_hash": "44fdda7777208bc7b27eeebf335cfb9c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\reference-maintenance\\reference-validation.md": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "79d494f2ad70cc5e082ab97b38965936",
+    "semantic_hash": "79d494f2ad70cc5e082ab97b38965936"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\ab-testing-patterns.md": {
+    "mtime": 1777304300.8931162,
+    "ast_hash": "8bb67ae0c130c7dd8376a5b191958f89",
+    "semantic_hash": "8bb67ae0c130c7dd8376a5b191958f89"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\abandoned-cart-psychology.md": {
+    "mtime": 1777304300.8931162,
+    "ast_hash": "006ae07aea58b91f75a8569c732b8f9f",
+    "semantic_hash": "006ae07aea58b91f75a8569c732b8f9f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\accessibility.md": {
+    "mtime": 1777304300.8941174,
+    "ast_hash": "07c20af2bf9abdea3d77863fdd0116da",
+    "semantic_hash": "07c20af2bf9abdea3d77863fdd0116da"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\ai-media-disclosure.md": {
+    "mtime": 1777304300.8941174,
+    "ast_hash": "2bc73a795202a53474f8f5640e0956a1",
+    "semantic_hash": "2bc73a795202a53474f8f5640e0956a1"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\ai-search-agentic-discovery.md": {
+    "mtime": 1777304300.8941174,
+    "ast_hash": "0c86de6f2dd1e3019b0fc8ce6f710972",
+    "semantic_hash": "0c86de6f2dd1e3019b0fc8ce6f710972"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\ar-3d-visualization.md": {
+    "mtime": 1777304300.8951168,
+    "ast_hash": "4e44c843511825c8c184880276747643",
+    "semantic_hash": "4e44c843511825c8c184880276747643"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\benefit-first-descriptions.md": {
+    "mtime": 1777304300.8951168,
+    "ast_hash": "4ab84d54a1f7bfa7b9693f31965acbab",
+    "semantic_hash": "4ab84d54a1f7bfa7b9693f31965acbab"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\biometric-and-express-checkout.md": {
+    "mtime": 1777304300.8961964,
+    "ast_hash": "e001d3e29f93883b1a76447bd7054ebf",
+    "semantic_hash": "e001d3e29f93883b1a76447bd7054ebf"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\bnpl-payment.md": {
+    "mtime": 1777304300.8961964,
+    "ast_hash": "3f247735a94d17fb33758013f09e1ada",
+    "semantic_hash": "3f247735a94d17fb33758013f09e1ada"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\breadcrumbs.md": {
+    "mtime": 1777304300.8971963,
+    "ast_hash": "db44724b8a734a01e069726fb091f0e4",
+    "semantic_hash": "db44724b8a734a01e069726fb091f0e4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\bundle-pricing.md": {
+    "mtime": 1777304300.8971963,
+    "ast_hash": "d7320dae93bc3814cd184a11165d8aee",
+    "semantic_hash": "d7320dae93bc3814cd184a11165d8aee"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\buyers-remorse.md": {
+    "mtime": 1777304300.8981967,
+    "ast_hash": "7ccd8e35d157b7127ba1802de54fab24",
+    "semantic_hash": "7ccd8e35d157b7127ba1802de54fab24"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\canonical-duplicate-content.md": {
+    "mtime": 1777304300.899197,
+    "ast_hash": "5394d0456ab8506b91b9f78ee6a35c82",
+    "semantic_hash": "5394d0456ab8506b91b9f78ee6a35c82"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\charm-pricing.md": {
+    "mtime": 1777304300.9001966,
+    "ast_hash": "5d6ec9a95aff9c80c65f5adee87ade88",
+    "semantic_hash": "5d6ec9a95aff9c80c65f5adee87ade88"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\checkout-optimization.md": {
+    "mtime": 1777304300.9001966,
+    "ast_hash": "50e27477ebe290a692a1c05270e43c50",
+    "semantic_hash": "50e27477ebe290a692a1c05270e43c50"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\cognitive-load-management.md": {
+    "mtime": 1777304300.9001966,
+    "ast_hash": "e9b9a14f524f140ff038974430f35bb0",
+    "semantic_hash": "e9b9a14f524f140ff038974430f35bb0"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\collection-page-architecture.md": {
+    "mtime": 1777304300.9016473,
+    "ast_hash": "53a10a70a9c22303e932e73ba5a820d4",
+    "semantic_hash": "53a10a70a9c22303e932e73ba5a820d4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\color-accuracy.md": {
+    "mtime": 1777304300.9026525,
+    "ast_hash": "a987ca75919faf9a857c988d4046d3c9",
+    "semantic_hash": "a987ca75919faf9a857c988d4046d3c9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\color-psychology.md": {
+    "mtime": 1777304300.9026525,
+    "ast_hash": "a2034042936ec4b95888523995f30505",
+    "semantic_hash": "a2034042936ec4b95888523995f30505"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\competitive-positioning.md": {
+    "mtime": 1777304300.9041078,
+    "ast_hash": "119f2648b0f0e18248812ed9d68142c6",
+    "semantic_hash": "119f2648b0f0e18248812ed9d68142c6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\content-freshness-signals.md": {
+    "mtime": 1777304300.9051213,
+    "ast_hash": "10026ff71a51c2f935a2ea0104813a7e",
+    "semantic_hash": "10026ff71a51c2f935a2ea0104813a7e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\cookie-consent-and-compliance.md": {
+    "mtime": 1777304300.9051213,
+    "ast_hash": "7098f621eab54f588b7e85dbccf9d1e3",
+    "semantic_hash": "7098f621eab54f588b7e85dbccf9d1e3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\core-web-vitals.md": {
+    "mtime": 1777304300.9062204,
+    "ast_hash": "0f38c85a8a846d66220d8c75a912e51f",
+    "semantic_hash": "0f38c85a8a846d66220d8c75a912e51f"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\cross-cultural-considerations.md": {
+    "mtime": 1777646745.1083498,
+    "ast_hash": "125e81f03a7a3a22e75593da4042bdcc",
+    "semantic_hash": "125e81f03a7a3a22e75593da4042bdcc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\cta-design-and-placement.md": {
+    "mtime": 1777646745.1097903,
+    "ast_hash": "2ef098af068e0505a935f1d1922e7b74",
+    "semantic_hash": "2ef098af068e0505a935f1d1922e7b74"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\discount-framing.md": {
+    "mtime": 1777304300.9075449,
+    "ast_hash": "27f9e904973d1190de54121a52eecdca",
+    "semantic_hash": "27f9e904973d1190de54121a52eecdca"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\eeat-product-pages.md": {
+    "mtime": 1777304300.9075449,
+    "ast_hash": "10daf64484818b318993a8553c40c4dd",
+    "semantic_hash": "10daf64484818b318993a8553c40c4dd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\essential-principles.md": {
+    "mtime": 1776885883.0443778,
+    "ast_hash": "d276e51fa6bd372ad192e769bed32c5b",
+    "semantic_hash": "d276e51fa6bd372ad192e769bed32c5b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\ethics-gate.md": {
+    "mtime": 1777304300.9089735,
+    "ast_hash": "e1389f4930851849eb4201d3967b57c3",
+    "semantic_hash": "e1389f4930851849eb4201d3967b57c3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\evidence-tiers.md": {
+    "mtime": 1776881608.6478348,
+    "ast_hash": "93fea9e1d018233d6b6141c6ecb3e485",
+    "semantic_hash": "93fea9e1d018233d6b6141c6ecb3e485"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\eye-tracking-and-scan-patterns.md": {
+    "mtime": 1777646745.1107943,
+    "ast_hash": "c430360fbcdb69ddd1f9134c2649e1a9",
+    "semantic_hash": "c430360fbcdb69ddd1f9134c2649e1a9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\filtering-ux.md": {
+    "mtime": 1777646745.1107943,
+    "ast_hash": "52f2b32822dd5e8a614a9e6a4dadb4ad",
+    "semantic_hash": "52f2b32822dd5e8a614a9e6a4dadb4ad"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\free-shipping.md": {
+    "mtime": 1777304300.9099758,
+    "ast_hash": "b52cfc68b42192a366b26a036805eb7a",
+    "semantic_hash": "b52cfc68b42192a366b26a036805eb7a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\gallery-ux.md": {
+    "mtime": 1777304300.916218,
+    "ast_hash": "ee8f1fde411da6c81ff4298f909e242d",
+    "semantic_hash": "ee8f1fde411da6c81ff4298f909e242d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\grid-layout.md": {
+    "mtime": 1777646745.1117947,
+    "ast_hash": "4385c5334d969b02a4aabb491d64df52",
+    "semantic_hash": "4385c5334d969b02a4aabb491d64df52"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\headline-copywriting.md": {
+    "mtime": 1777304300.9172945,
+    "ast_hash": "7f5cd51d05feef3695fea30badc06f22",
+    "semantic_hash": "7f5cd51d05feef3695fea30badc06f22"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\hero-section-psychology.md": {
+    "mtime": 1777646745.1117947,
+    "ast_hash": "962f1d740209d5a3ae9734dad58daf77",
+    "semantic_hash": "962f1d740209d5a3ae9734dad58daf77"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\image-quantity-types.md": {
+    "mtime": 1777646745.1127944,
+    "ast_hash": "b0ccd95395e2efba288e48cfa8d75322",
+    "semantic_hash": "b0ccd95395e2efba288e48cfa8d75322"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\image-seo-alt-text.md": {
+    "mtime": 1777304300.918482,
+    "ast_hash": "34cadca78d3698e1e2901b9804e68bcd",
+    "semantic_hash": "34cadca78d3698e1e2901b9804e68bcd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\media-performance-optimization.md": {
+    "mtime": 1777304300.9194882,
+    "ast_hash": "69d6b21ccfa8a0d7b32a27b815a0c33a",
+    "semantic_hash": "69d6b21ccfa8a0d7b32a27b815a0c33a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\merchandising-psychology.md": {
+    "mtime": 1777304300.9204888,
+    "ast_hash": "d6d513f9b82181ebc50b292ad3935a17",
+    "semantic_hash": "d6d513f9b82181ebc50b292ad3935a17"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\mobile-conversion.md": {
+    "mtime": 1777646745.1127944,
+    "ast_hash": "2989d68959efd4627c185e62d7a85b26",
+    "semantic_hash": "2989d68959efd4627c185e62d7a85b26"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\order-confirmation.md": {
+    "mtime": 1777646745.1127944,
+    "ast_hash": "91b47be1df3ed82719105f0f3d0331b6",
+    "semantic_hash": "91b47be1df3ed82719105f0f3d0331b6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\page-length-strategy.md": {
+    "mtime": 1777304300.9270706,
+    "ast_hash": "7368c0b4f6017e626c801f986c71d945",
+    "semantic_hash": "7368c0b4f6017e626c801f986c71d945"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\page-performance-psychology.md": {
+    "mtime": 1777304300.9280734,
+    "ast_hash": "c59036811fc8ea48fef6ddd506427219",
+    "semantic_hash": "c59036811fc8ea48fef6ddd506427219"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\pagination-patterns.md": {
+    "mtime": 1777304300.9280734,
+    "ast_hash": "515debf203c4f2535c2184e3d90e3283",
+    "semantic_hash": "515debf203c4f2535c2184e3d90e3283"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\personalization-psychology.md": {
+    "mtime": 1777304300.9290729,
+    "ast_hash": "0e037458b14618d543f16eb0c9193ad5",
+    "semantic_hash": "0e037458b14618d543f16eb0c9193ad5"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\post-purchase-psychology.md": {
+    "mtime": 1777304300.9290729,
+    "ast_hash": "f98c1df5d052c0bc6f3513233cd3902b",
+    "semantic_hash": "f98c1df5d052c0bc6f3513233cd3902b"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\price-anchoring.md": {
+    "mtime": 1777304300.9290729,
+    "ast_hash": "cee1c2bf4f0003324c6a89d456212216",
+    "semantic_hash": "cee1c2bf4f0003324c6a89d456212216"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\price-transparency.md": {
+    "mtime": 1777304300.930074,
+    "ast_hash": "d0831d71baa78c4b3a0ac39d1e2921bc",
+    "semantic_hash": "d0831d71baa78c4b3a0ac39d1e2921bc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\product-cards.md": {
+    "mtime": 1777304300.931074,
+    "ast_hash": "f33134957e95751b202372bb8224e446",
+    "semantic_hash": "f33134957e95751b202372bb8224e446"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\referral-programs.md": {
+    "mtime": 1777304300.9320736,
+    "ast_hash": "671128f5cba18dcc2b0ef18320744cb4",
+    "semantic_hash": "671128f5cba18dcc2b0ef18320744cb4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\review-collection.md": {
+    "mtime": 1777304300.9320736,
+    "ast_hash": "0243189ea8fb5c1209eec5e7c626307a",
+    "semantic_hash": "0243189ea8fb5c1209eec5e7c626307a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\scarcity-urgency.md": {
+    "mtime": 1777304300.933074,
+    "ast_hash": "7ea4609e512b73cf80e4dd4af1821d04",
+    "semantic_hash": "7ea4609e512b73cf80e4dd4af1821d04"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\schema-product-markup.md": {
+    "mtime": 1777304300.933074,
+    "ast_hash": "94800152e227aa3e85cfd67bc953de85",
+    "semantic_hash": "94800152e227aa3e85cfd67bc953de85"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\search-and-filter-ux.md": {
+    "mtime": 1777646745.1140463,
+    "ast_hash": "aa78849769f632507c6541f608ef67b4",
+    "semantic_hash": "aa78849769f632507c6541f608ef67b4"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\social-commerce-psychology.md": {
+    "mtime": 1777304300.935074,
+    "ast_hash": "45ef8b42b724346c940b0e7784866ebc",
+    "semantic_hash": "45ef8b42b724346c940b0e7784866ebc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\social-proof-patterns.md": {
+    "mtime": 1777304300.935074,
+    "ast_hash": "8da336668a120d4df10d875462ae3416",
+    "semantic_hash": "8da336668a120d4df10d875462ae3416"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\sorting-psychology.md": {
+    "mtime": 1777304300.9361749,
+    "ast_hash": "d18798798f7691f76f3257a6f0be3a47",
+    "semantic_hash": "d18798798f7691f76f3257a6f0be3a47"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\thumbnail-design.md": {
+    "mtime": 1777646745.115051,
+    "ast_hash": "e22370a6dc10b45fe2d981aafd146f2d",
+    "semantic_hash": "e22370a6dc10b45fe2d981aafd146f2d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\tiered-pricing.md": {
+    "mtime": 1777304300.9371746,
+    "ast_hash": "b12c1623d371d138686dfab700723077",
+    "semantic_hash": "b12c1623d371d138686dfab700723077"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\title-formulas-serp-psychology.md": {
+    "mtime": 1777304300.9371746,
+    "ast_hash": "d00f5bade8646796e655ecc314e76ad9",
+    "semantic_hash": "d00f5bade8646796e655ecc314e76ad9"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\trust-and-credibility.md": {
+    "mtime": 1777646745.115051,
+    "ast_hash": "52f4a644d3407167b9adfb66b6455997",
+    "semantic_hash": "52f4a644d3407167b9adfb66b6455997"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\ugc-integration.md": {
+    "mtime": 1777304300.938173,
+    "ast_hash": "d3c3adb57821e1df7a846c57580970ee",
+    "semantic_hash": "d3c3adb57821e1df7a846c57580970ee"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\ugc-reviews-seo.md": {
+    "mtime": 1777304300.9391732,
+    "ast_hash": "841f5eb5c4d81ed5c23dcecc576b4dfb",
+    "semantic_hash": "841f5eb5c4d81ed5c23dcecc576b4dfb"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\url-structure-information-architecture.md": {
+    "mtime": 1777304300.9391732,
+    "ast_hash": "916bf999d161000c834e6f168e0d47d8",
+    "semantic_hash": "916bf999d161000c834e6f168e0d47d8"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\video-integration.md": {
+    "mtime": 1777304300.940173,
+    "ast_hash": "04cd2ad892b8a466c86af13291fe7101",
+    "semantic_hash": "04cd2ad892b8a466c86af13291fe7101"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\video-optimization.md": {
+    "mtime": 1777304300.940173,
+    "ast_hash": "c21ceec3ad926c3954f79b1acd0c6750",
+    "semantic_hash": "c21ceec3ad926c3954f79b1acd0c6750"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\video-schema.md": {
+    "mtime": 1777304300.941173,
+    "ast_hash": "f653cea15c7a3cfa6d3f525890c40f92",
+    "semantic_hash": "f653cea15c7a3cfa6d3f525890c40f92"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\zero-results.md": {
+    "mtime": 1777304300.941173,
+    "ast_hash": "b4830f59a5559bb61bff2ffdb53ef09d",
+    "semantic_hash": "b4830f59a5559bb61bff2ffdb53ef09d"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\requirements-dev.txt": {
+    "mtime": 1780499852.1822083,
+    "ast_hash": "01d1a10e6fe3dc2fdd77410eab4424bc",
+    "semantic_hash": "01d1a10e6fe3dc2fdd77410eab4424bc"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\requirements.txt": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "f972e5a752cb0add5b43dd9f892914e3",
+    "semantic_hash": "f972e5a752cb0add5b43dd9f892914e3"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\skills\\audit\\SKILL.md": {
+    "mtime": 1781016440.7128768,
+    "ast_hash": "0eda709ec55fabbe50e5fd59bdd2d601",
+    "semantic_hash": "0eda709ec55fabbe50e5fd59bdd2d601"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\skills\\audit\\SKILL.notes.md": {
+    "mtime": 1781016440.7269258,
+    "ast_hash": "8f0664abd791640778d4fbf8d3a6a05a",
+    "semantic_hash": "8f0664abd791640778d4fbf8d3a6a05a"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\skills\\ecp\\SKILL.md": {
+    "mtime": 1779816577.784598,
+    "ast_hash": "f06a16c131ef0995d4f837f65c24a52c",
+    "semantic_hash": "f06a16c131ef0995d4f837f65c24a52c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\baseline\\README.md": {
+    "mtime": 1777304300.952399,
+    "ast_hash": "b73c0409dbafb32ed804fe323caaffec",
+    "semantic_hash": "b73c0409dbafb32ed804fe323caaffec"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\baseline\\baseline-desktop.html": {
+    "mtime": 1777304300.9659941,
+    "ast_hash": "42879a94c3b71e20783fd17d51aa4acd",
+    "semantic_hash": "42879a94c3b71e20783fd17d51aa4acd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\baseline\\baseline-mobile.html": {
+    "mtime": 1777304300.9821296,
+    "ast_hash": "f64f1ee9e47691c81574b8d96793f744",
+    "semantic_hash": "f64f1ee9e47691c81574b8d96793f744"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\baseline\\refactored-desktop.html": {
+    "mtime": 1777304300.98413,
+    "ast_hash": "42879a94c3b71e20783fd17d51aa4acd",
+    "semantic_hash": "42879a94c3b71e20783fd17d51aa4acd"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tests\\baseline\\refactored-mobile.html": {
+    "mtime": 1777304300.98627,
+    "ast_hash": "f64f1ee9e47691c81574b8d96793f744",
+    "semantic_hash": "f64f1ee9e47691c81574b8d96793f744"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tools\\editor\\CHANGELOG.md": {
+    "mtime": 1779895437.6729476,
+    "ast_hash": "71fe628a86cd0a1435af6e9c2b619f0c",
+    "semantic_hash": "71fe628a86cd0a1435af6e9c2b619f0c"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tools\\editor\\README.md": {
+    "mtime": 1777918449.2559607,
+    "ast_hash": "eafd00c8893001731926e47779a9cc93",
+    "semantic_hash": "eafd00c8893001731926e47779a9cc93"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tools\\editor\\index.html": {
+    "mtime": 1777918449.2569606,
+    "ast_hash": "e57065efd4cf1cbe21958ab4a87b5950",
+    "semantic_hash": "e57065efd4cf1cbe21958ab4a87b5950"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\tools\\editor\\migrations\\README.md": {
+    "mtime": 1777676868.7701385,
+    "ast_hash": "a243f6543eaaeec379389a2c2a2f108e",
+    "semantic_hash": "a243f6543eaaeec379389a2c2a2f108e"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\workflows\\acquire.md": {
+    "mtime": 1781016440.7286644,
+    "ast_hash": "a9f0f96a53585a976f923a17ecc13216",
+    "semantic_hash": "a9f0f96a53585a976f923a17ecc13216"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\workflows\\audit.md": {
+    "mtime": 1776881608.6560662,
+    "ast_hash": "e0b785b8fe15a3e02b151d4f36919aa6",
+    "semantic_hash": "e0b785b8fe15a3e02b151d4f36919aa6"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\loyalty-programs.md": {
+    "mtime": 1777304300.9194882,
+    "ast_hash": "80a3d205588cb0c4f59246dbeb82f611",
+    "semantic_hash": "80a3d205588cb0c4f59246dbeb82f611"
+  },
+  "C:\\Users\\SM - Dan\\Documents\\GitHub\\ecp\\references\\pricing-psychology.md": {
+    "mtime": 1777304300.931074,
+    "ast_hash": "918229114d4b672ac31b4c1e44f25e22",
+    "semantic_hash": "918229114d4b672ac31b4c1e44f25e22"
+  }
+}
