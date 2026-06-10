@@ -150,6 +150,17 @@ def _build_elements_js(expected_hostname: str) -> str:
           r = ar;
         }
         if (r.bottom < 0 || r.top > window.innerHeight) return null;
+        /* C10 (workflows/acquire.md §558-563): drop elements that exist in DOM
+           but are not visible — display:none / visibility:hidden / aria-hidden=true.
+           Before this guard, an opacity:0 or visibility:hidden element entered the
+           baton as visible evidence and specialists cited it. _reveal_lazy_and_animations
+           runs BEFORE extraction (acquire_url.py:958) and sets style.visibility='visible'
+           on scroll-trigger / animate--* elements, so revealed heroes survive this filter. */
+        try {
+          const cs = window.getComputedStyle(el);
+          if (cs && (cs.display === 'none' || cs.visibility === 'hidden')) return null;
+          if (el.getAttribute && el.getAttribute('aria-hidden') === 'true') return null;
+        } catch(_) {}
         return {
           selector: sel,
           tag: tag,
@@ -586,6 +597,64 @@ def _to_jpg_inplace(path: Path, *, quality: int) -> Path:
     return path
 
 
+def _build_viewport_dpr_fields(
+    *, inner_w: int, inner_h: int, dpr_requested: float, dpr_actual: float
+) -> dict[str, Any]:
+    """C15 (schema/baton-v1.json viewport.dpr_requested/dpr_actual): assemble the
+    viewport sub-object with the full request-vs-actual DPR split so the
+    chromium_headless_shell silent-1x-on-mobile fallback surfaces in the baton
+    instead of being collapsed to a single ``dpr`` value.
+
+    Pre-fix the acquirer wrote only ``viewport.dpr`` (the observed value), which
+    meant a mobile capture that fell back to 1x DPR looked identical to a true
+    1x desktop capture; specialists making contrast/text-size claims had no way
+    to know the screenshots were undersampled. The schema (v2 deepen-plan
+    architecture, validated by scripts/baton_v1_to_v2.py) requires both
+    ``dpr_requested`` and ``dpr_actual``; ``dpr_fallback`` is the convenience
+    boolean the v1->v2 converter reads (baton_v1_to_v2.py:246). ``dpr`` is kept
+    set to ``dpr_actual`` so existing readers (scripts/report/geometry.py's
+    ``viewport_dpr`` fallback chain) keep returning the actual scaling factor.
+    """
+    fallback = abs(float(dpr_actual) - float(dpr_requested)) > 0.05
+    return {
+        "width": int(inner_w),
+        "height": int(inner_h),
+        "dpr": _dpr_int_from(float(dpr_actual)),
+        "dpr_requested": float(dpr_requested),
+        "dpr_actual": float(dpr_actual),
+        "dpr_fallback": bool(fallback),
+    }
+
+
+def _section_occluded_from_viewport_state(state: Any, *, threshold_pct: float = 30.0) -> bool:
+    """C14 (workflows/acquire.md §363): a section is occluded when an overlay
+    covers > ``threshold_pct`` % of the viewport at that scroll position.
+
+    ``state`` is the dict returned by ``ecp_acquire_overlays.read_viewport_state``
+    (``{clear: bool, blocking: [{coverage: <percent int>}, ...]}``). The
+    ``blocking`` entries carry per-overlay viewport coverage in integer percent;
+    we treat the section as occluded only when any single overlay exceeds the
+    contract threshold (default 30 %). On a non-dict / missing-blocking state we
+    fall back to ``not state.get('clear')`` so a totally-broken probe still
+    surfaces as occluded (fail loud, not silent).
+    """
+    if not isinstance(state, dict):
+        return False
+    blocking = state.get("blocking")
+    if isinstance(blocking, list):
+        for b in blocking:
+            if not isinstance(b, dict):
+                continue
+            try:
+                cov = float(b.get("coverage") or 0)
+            except (TypeError, ValueError):
+                cov = 0.0
+            if cov > float(threshold_pct):
+                return True
+        return False
+    return not bool(state.get("clear"))
+
+
 def _dpr_int_from(dpr: float) -> int:
     # `scripts/report/*` uses int() on viewport.dpr — keep to sane integer steps.
     if dpr <= 0:
@@ -969,8 +1038,16 @@ def _run_one_device(
     inner_w = int(m0.get("innerW") or prof.width)
     inner_h = int(m0.get("innerH") or prof.height)
     doc_h = int(m0.get("docH") or inner_h)
-    dpr = float(m0.get("dpr") or prof.dpr)
+    # C15 (schema/baton-v1.json viewport.dpr_requested/dpr_actual): record the
+    # full request-vs-actual split so the downstream v1->v2 converter
+    # (scripts/baton_v1_to_v2.py:246 reads `dpr_fallback`) can surface the
+    # chromium_headless_shell silent-1x-on-mobile downgrade instead of papering
+    # over it with a single observed dpr.
+    dpr_requested = float(prof.dpr)
+    dpr_actual = float(m0.get("dpr") or prof.dpr)
+    dpr = dpr_actual
     dpr_i = _dpr_int_from(dpr)
+    dpr_fallback = abs(dpr_actual - dpr_requested) > 0.05
 
     _req_shots = int(max_screenshots)
     # 0 (the default) = auto per-device cap; an explicit nonzero value overrides it.
@@ -1143,6 +1220,13 @@ def _run_one_device(
             hgt = min(inner_h, hgt)
         else:
             hgt = min(inner_h, max(0, doc_h - y_used))
+        # C14 (workflows/acquire.md §363): re-probe occlusion at THIS scroll
+        # position. Pre-fix the probe ran once at scroll_y=0 and that single
+        # boolean was copied to every section row, so an overlay that appeared
+        # mid-page (sticky chat widget, in-line video modal) silently went
+        # un-flagged. Per-position values now land on the section they describe.
+        vp_here = ecp_ov.read_viewport_state(lambda s: _ev(s))
+        section_occluded = _section_occluded_from_viewport_state(vp_here)
         section_rows.append(
             {
                 "label": label_guess,
@@ -1150,7 +1234,7 @@ def _run_one_device(
                 "scrollY": y_used,
                 "height": int(hgt),
                 "clusters": [],
-                "occluded": (not viewport_ok),
+                "occluded": bool(section_occluded),
                 "overlay_dismissed": bool(viewport_ok),
                 "screenshot_index": i,
                 "scroll_failed": bool(scroll_failed),
@@ -1242,11 +1326,13 @@ def _run_one_device(
         "engagement_id": engagement_id,
         "device": device,
         "dpr": dpr_i,
-        "viewport": {
-            "width": inner_w,
-            "height": inner_h,
-            "dpr": dpr_i,
-        },
+        "dpr_fallback": bool(dpr_fallback),
+        "viewport": _build_viewport_dpr_fields(
+            inner_w=inner_w,
+            inner_h=inner_h,
+            dpr_requested=dpr_requested,
+            dpr_actual=dpr_actual,
+        ),
         "viewport_clear": viewport_ok,
         "screenshots": screenshots,
         "sections": section_rows,
