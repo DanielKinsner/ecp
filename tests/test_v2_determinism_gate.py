@@ -609,7 +609,10 @@ class TestValidateRun(unittest.TestCase):
         # conforms to the lead format. Phase 6 ethics/legal batch (2026-06-10)
         # added C18 hedge + H2 source-url registry + H3 dark-pattern canaries
         # → 12: 11 substantive + 1 structural; all three PASS for slingmods.
-        self.assertEqual(len(report["canaries"]), 12)
+        # hc-C4 / ruling A7 (2026-06-10) added lead_normalizations_consistent
+        # → 13: 12 substantive + 1 structural. Skip-passes on the slingmods
+        # fixture because it has no *.normalizations.json sidecars.
+        self.assertEqual(len(report["canaries"]), 13)
         canary_names = [c["name"] for c in report["canaries"]]
         self.assertIn("ethics_findings_have_source_urls", canary_names)
         self.assertIn("element_index_match_rate", canary_names)

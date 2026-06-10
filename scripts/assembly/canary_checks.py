@@ -1865,6 +1865,252 @@ def check_recommendations_no_dark_patterns(
 
 
 # ---------------------------------------------------------------------------
+# Canary 12 (hc-C4 / ruling A7, 2026-06-10) — lead_normalizations_consistent
+# ---------------------------------------------------------------------------
+
+
+def _resolve_emission_field(
+    emission: dict, *, field: str, finding_local_id: int | None,
+) -> tuple[bool, Any]:
+    """Return ``(found, current_value)`` for a dotted path on the emission.
+
+    Mirrors the writer in ``scripts/test-specialist.py`` (``_apply_normalize_edit``)
+    so the canary reads exactly the same field shape the normalize verb
+    writes. ``found`` is False when an intermediate segment is missing or
+    when the leaf is absent — used to detect a normalize that adds-then-
+    deletes-then-something-else writes the same field.
+    """
+    if finding_local_id is not None:
+        findings = emission.get("findings")
+        if not isinstance(findings, list):
+            return False, None
+        target = None
+        try:
+            wanted = int(finding_local_id)
+        except (TypeError, ValueError):
+            return False, None
+        for f in findings:
+            if isinstance(f, dict) and f.get("local_id") == wanted:
+                target = f
+                break
+        if target is None:
+            return False, None
+        root: Any = target
+    else:
+        root = emission
+
+    parts = field.split(".")
+    cur: Any = root
+    for seg in parts[:-1]:
+        if not isinstance(cur, dict) or seg not in cur:
+            return False, None
+        cur = cur[seg]
+    leaf = parts[-1]
+    if not isinstance(cur, dict) or leaf not in cur:
+        return False, None
+    return True, cur[leaf]
+
+
+def check_lead_normalizations_consistent(
+    engagement_dir: Path,
+) -> CanaryResult:
+    """hc-C4 (ruling A7, 2026-06-10) — every recorded normalization's
+    ``after`` value still equals the emission file's CURRENT value.
+
+    The narrow mechanical normalize tier (between autofix and re-dispatch;
+    sanctioned in skills/audit/SKILL.md + contracts/dispatch-contract.md)
+    is safe ONLY when the trail is diff-auditable: an unrecorded edit
+    that flips a field after the trail was written breaks the
+    accountability loop. This canary asserts that the most recent
+    ``after`` value the lead recorded for each ``(finding_local_id,
+    field)`` pair still matches what's on disk.
+
+    When NO ``*.normalizations.json`` files exist in the engagement,
+    the canary skip-passes (mirror of the reflection canaries' posture
+    on pre-G23 engagements). A normalize file pointing at an
+    emission file that no longer exists fails with a clear message —
+    a deletion that erases the trail's referent is itself a drift.
+
+    Pass criteria:
+      - For every ``<emission>.normalizations.json`` next to an existing
+        ``<emission>`` (cluster or ethics emission JSON), the LAST-applied
+        normalization per ``(finding_local_id, field)`` key has an
+        ``after`` value equal to the emission's current value at that
+        path (under JSON-equality semantics).
+      - A trail entry whose ``after`` is None and whose corresponding
+        emission field is absent counts as consistent (the entry deleted
+        the field and the field stays deleted).
+
+    Returns the per-trail-file mismatch list in detail so the operator
+    can grep for "which finding got hand-edited without trail update".
+    """
+    name = "lead_normalizations_consistent"
+    if not engagement_dir.exists() or not engagement_dir.is_dir():
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (engagement dir absent)",
+            detail={"reason": "no engagement dir"},
+        )
+
+    trail_files = sorted(engagement_dir.glob("*.normalizations.json"))
+    if not trail_files:
+        # Mirror reflection-canary posture: no normalize sidecar -> the
+        # narrow normalize tier was never used; skip cleanly.
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=(
+                f"{name}: skipped (no *.normalizations.json in engagement; "
+                f"the narrow normalize tier was not used)"
+            ),
+            detail={"reason": "no normalization trail files"},
+        )
+
+    mismatches: list[dict] = []
+    missing_emissions: list[dict] = []
+    files_checked = 0
+    entries_checked = 0
+    for trail_path in trail_files:
+        # Recover the source emission filename from the trail filename:
+        # cluster-pricing-desktop.normalizations.json -> cluster-pricing-desktop.json
+        stem = trail_path.name[: -len(".normalizations.json")]
+        emission_path = engagement_dir / f"{stem}.json"
+        if not emission_path.is_file():
+            missing_emissions.append({
+                "trail_file": trail_path.name,
+                "expected_emission": emission_path.name,
+            })
+            continue
+        try:
+            trail = json.loads(trail_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            mismatches.append({
+                "trail_file": trail_path.name,
+                "error": f"unreadable trail file: {e}",
+            })
+            continue
+        try:
+            emission = json.loads(emission_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            mismatches.append({
+                "trail_file": trail_path.name,
+                "emission_file": emission_path.name,
+                "error": f"unreadable emission file: {e}",
+            })
+            continue
+        files_checked += 1
+
+        entries = trail.get("normalizations") if isinstance(trail, dict) else None
+        if not isinstance(entries, list):
+            continue
+        # Collapse to the LAST-applied entry per (finding_local_id, field).
+        # An earlier entry that was later superseded by a re-normalize is
+        # historical — the canary asserts on the latest claim.
+        last_per_key: dict[tuple[Any, str], dict] = {}
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            key = (entry.get("finding_local_id"), entry.get("field"))
+            last_per_key[key] = entry
+
+        for (flid, field), entry in last_per_key.items():
+            entries_checked += 1
+            if not isinstance(field, str):
+                mismatches.append({
+                    "trail_file": trail_path.name,
+                    "finding_local_id": flid,
+                    "field": field,
+                    "error": "trail entry missing or malformed 'field'",
+                })
+                continue
+            recorded_after = entry.get("after")
+            found, current = _resolve_emission_field(
+                emission, field=field, finding_local_id=flid,
+            )
+            # A normalize that deleted the field records after=None and
+            # the field should be absent. Consistent => (not found) and
+            # recorded_after is None.
+            if recorded_after is None and not found:
+                continue
+            if recorded_after is None and found:
+                mismatches.append({
+                    "trail_file": trail_path.name,
+                    "emission_file": emission_path.name,
+                    "finding_local_id": flid,
+                    "field": field,
+                    "recorded_after": None,
+                    "current_value": current,
+                    "reason": (
+                        "trail recorded a deletion (after=null) but the "
+                        "emission still has a value at that field — a "
+                        "later un-trailed edit re-added it"
+                    ),
+                })
+                continue
+            if not found:
+                mismatches.append({
+                    "trail_file": trail_path.name,
+                    "emission_file": emission_path.name,
+                    "finding_local_id": flid,
+                    "field": field,
+                    "recorded_after": recorded_after,
+                    "current_value": None,
+                    "reason": (
+                        "trail recorded a value but the emission no longer "
+                        "carries that field — a later un-trailed edit "
+                        "removed it"
+                    ),
+                })
+                continue
+            if current != recorded_after:
+                mismatches.append({
+                    "trail_file": trail_path.name,
+                    "emission_file": emission_path.name,
+                    "finding_local_id": flid,
+                    "field": field,
+                    "recorded_after": recorded_after,
+                    "current_value": current,
+                    "reason": (
+                        "later un-trailed edit changed the field's value "
+                        "after the normalize record was written"
+                    ),
+                })
+
+    passed = not mismatches and not missing_emissions
+    if passed:
+        summary = (
+            f"{name}: PASS ({files_checked} trail file(s), "
+            f"{entries_checked} normalization(s); every recorded 'after' "
+            f"still matches the emission's current value)"
+        )
+    else:
+        parts: list[str] = []
+        if missing_emissions:
+            parts.append(
+                f"{len(missing_emissions)} trail file(s) point at a "
+                f"missing emission"
+            )
+        if mismatches:
+            parts.append(
+                f"{len(mismatches)} normalization(s) drifted from the "
+                f"emission (un-trailed edit class)"
+            )
+        summary = f"{name}: FAIL -- " + "; ".join(parts)
+    return CanaryResult(
+        name=name,
+        passed=passed,
+        summary=summary,
+        detail={
+            "files_checked": files_checked,
+            "entries_checked": entries_checked,
+            "mismatches": mismatches,
+            "missing_emissions": missing_emissions,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
 # Top-level — run all canaries against an engagement directory
 # ---------------------------------------------------------------------------
 
@@ -1977,8 +2223,17 @@ def run_all_canaries(
     r9 = check_ethics_findings_hedge_law_on_adjacent(ethics_findings_path)
     r10 = check_ethics_source_url_against_registry(ethics_findings_path)
     r11 = check_recommendations_no_dark_patterns(engagement_dir)
+    # hc-C4 / ruling A7 (2026-06-10) — structured normalizations trail
+    # consistency gate. Mirror of the autofix repairs trail: every
+    # recorded 'after' value still equals the emission's current value,
+    # so a later un-trailed edit shows up as drift. Skips with PASS when
+    # no *.normalizations.json exists (the narrow normalize tier was
+    # not used) so engagements that never had to invoke it don't see a
+    # spurious failure. See skills/audit/SKILL.md + contracts/dispatch-contract.md
+    # for the policy this enforces.
+    r12 = check_lead_normalizations_consistent(engagement_dir)
 
-    results = [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
+    results = [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12]
 
     visual_quality_block: dict | None = None
     if include_visual_quality:

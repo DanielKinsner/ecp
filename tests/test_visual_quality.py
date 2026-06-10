@@ -631,8 +631,10 @@ class TestCanaryIntegration:
         # PASS on this fixture (no completed-but-draft reflection; no/conforming
         # lead-reflection.md). Phase 6 ethics/legal batch (2026-06-10) added the
         # three ethics enforcement canaries (C18 hedge, H2 source-url registry,
-        # H3 dark-pattern recommendations) → 11 baseline.
-        assert len(result["results"]) == 11
+        # H3 dark-pattern recommendations) → 11 baseline. hc-C4 / ruling A7
+        # (2026-06-10) added lead_normalizations_consistent → 12 baseline;
+        # skips with PASS on fixtures without *.normalizations.json.
+        assert len(result["results"]) == 12
         assert "visual_quality" in result  # Block present even when empty
         assert result["visual_quality"]["per_device"] == {}
 
@@ -649,8 +651,9 @@ class TestCanaryIntegration:
         # G23-followup (2026-05-29) added lead_reflection_not_stale (7th) +
         # lead_reflection_well_formed (8th) → 8 baseline. Phase 6 ethics/legal
         # batch (2026-06-10) added C18 hedge + H2 registry + H3 dark-pattern
-        # canaries → 11 baseline.
-        assert len(result["results"]) == 11
+        # canaries → 11 baseline. hc-C4 / ruling A7 (2026-06-10) added
+        # lead_normalizations_consistent → 12 baseline.
+        assert len(result["results"]) == 12
         assert "visual_quality" not in result
 
     def test_run_all_canaries_with_visual_quality_runs_when_review_state_present(self, tmp_path):

@@ -43,6 +43,7 @@ import argparse
 import json
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -728,6 +729,364 @@ def run_autofix(
     return 0
 
 
+# ---------------------------------------------------------------------------
+# normalize mode — hc-C4 / ruling A7 structured normalizations trail
+# ---------------------------------------------------------------------------
+#
+# Policy (skills/audit/SKILL.md + contracts/dispatch-contract.md): after the
+# second specialist re-dispatch still fails to validate, the lead MAY apply
+# ONE narrow mechanical normalize edit that touches schema/placement/shape
+# metadata ONLY — never substantive client-facing prose. Examples:
+# surface-field correction, stray proposed_anchor removal, telemetry-prefix
+# strip, null->"" coercion. This verb is the WRITE CHOKEPOINT: every change
+# is recorded in <emission>.normalizations.json so a later unrecorded edit
+# breaks the consistency canary (assembly.canary_checks
+# .check_lead_normalizations_consistent), making the trail diff-auditable.
+#
+# Prose fields are NEVER normalizable (operator-typeable but a lead/agent
+# rewriting them is a §0 trust violation): title, observation,
+# recommendation, why_this_matters, source_url, evidence_anchors[].context,
+# reference_citations[].quote, proposed_anchor.reason. Attempting to write
+# one of those returns exit 2 (refusal) with a NormalizationFieldError —
+# the lead must re-dispatch a fresh specialist instead.
+
+# Top-level JSON paths the normalize verb is allowed to write. Each entry
+# matches the field PATH the operator supplies on the CLI (dot-notation,
+# optionally including ``findings[<local_id>].`` as the prefix when a
+# finding-scoped path is being edited). Wildcards are not supported; the
+# operator must name the exact field. Updating telemetry.reference_files_read
+# is allowed in bulk because it's a small list of bare filenames already
+# constrained by the schema.
+NORMALIZE_ALLOWED_FIELDS = frozenset({
+    # ---- finding-scoped, schema/placement/shape metadata ----
+    "surface",
+    "surface_note",
+    "verdict",
+    "severity",
+    "scope",
+    "confidence",
+    "evidence_tier",
+    "effort.change_type",
+    "effort.change_scope",
+    "element.baton_index",
+    "element.text_content",
+    "element.role",
+    "element.tag",
+    # proposed_anchor structured fields (NOT .reason — that's prose tooltip).
+    "proposed_anchor",            # whole-block removal/replace
+    "proposed_anchor.kind",
+    "proposed_anchor.placement",
+    "proposed_anchor.viewport",
+    "proposed_anchor.element_baton_index",
+    "proposed_anchor.section_index",
+    "proposed_anchor.viewport_trigger",
+    # ---- emission-scoped ----
+    "telemetry.reference_files_read",
+    "status",
+})
+
+# Fields the normalize verb MUST refuse to write — substantive client-facing
+# prose. The lead must re-dispatch a fresh specialist for these.
+NORMALIZE_FORBIDDEN_FIELDS = frozenset({
+    "title",
+    "observation",
+    "recommendation",
+    "why_this_matters",
+    "source_url",
+    "proposed_anchor.reason",
+})
+
+
+class NormalizationFieldError(ValueError):
+    """Raised when the operator asks normalize to write a prose field.
+
+    The lead must re-dispatch a fresh specialist instead. The CLI maps
+    this to exit code 2 (refusal) so callers can distinguish a refusal
+    from a generic schema-validation failure (exit 1) or a missing-file
+    error (exit 3).
+    """
+
+
+def _utc_now_iso() -> str:
+    """Match the timestamp shape used by reflection_state / report_state /
+    review_state (``YYYY-MM-DDThh:mm:ssZ``)."""
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _check_normalize_field_allowed(field: str) -> None:
+    """Raise NormalizationFieldError if ``field`` is prose / not in allowlist.
+
+    Accepts both bare emission-scoped paths (``telemetry.reference_files_read``)
+    and finding-scoped paths prefixed with ``findings[<id>].`` (e.g.,
+    ``findings[3].surface``). The prefix is stripped before the allowlist
+    check; what remains MUST be in NORMALIZE_ALLOWED_FIELDS and MUST NOT
+    be in NORMALIZE_FORBIDDEN_FIELDS.
+    """
+    # Strip optional finding-scope prefix for the allowlist comparison.
+    stem = re.sub(r"^findings\[[^\]]+\]\.", "", field)
+    if stem in NORMALIZE_FORBIDDEN_FIELDS:
+        raise NormalizationFieldError(
+            f"normalize refuses to write prose field {field!r}: "
+            f"that field carries substantive client-facing meaning and is "
+            f"NEVER normalizable per skills/audit/SKILL.md (ruling A7). "
+            f"Re-dispatch a fresh specialist instead."
+        )
+    if stem not in NORMALIZE_ALLOWED_FIELDS:
+        raise NormalizationFieldError(
+            f"normalize refuses to write {field!r}: not in the schema/"
+            f"placement-only allowlist. Allowed fields: "
+            f"{sorted(NORMALIZE_ALLOWED_FIELDS)}. Forbidden prose fields: "
+            f"{sorted(NORMALIZE_FORBIDDEN_FIELDS)}."
+        )
+
+
+def _resolve_finding_by_local_id(
+    emission: dict, local_id: Any,
+) -> tuple[int, dict]:
+    """Return ``(index_in_list, finding_dict)`` for the given local_id.
+
+    Raises KeyError when no finding matches (the caller maps to exit 1).
+    """
+    findings = emission.get("findings")
+    if not isinstance(findings, list):
+        raise KeyError(f"emission.findings is not a list (got {type(findings).__name__})")
+    try:
+        target = int(local_id)
+    except (TypeError, ValueError):
+        raise KeyError(f"finding local_id={local_id!r} is not an integer")
+    for i, f in enumerate(findings):
+        if isinstance(f, dict) and f.get("local_id") == target:
+            return i, f
+    raise KeyError(f"no finding with local_id={target} in emission")
+
+
+def _apply_normalize_edit(
+    emission: dict,
+    *,
+    field: str,
+    new_value: Any,
+    finding_local_id: int | None,
+) -> tuple[Any, dict]:
+    """Apply one normalization to ``emission`` IN PLACE.
+
+    Returns ``(before_value, target_finding_or_none)``. ``before_value`` is
+    None when the field did not previously exist on the target (the
+    normalize is an INSERT). ``target_finding_or_none`` is the finding
+    dict when the path was finding-scoped, else None.
+    """
+    if finding_local_id is not None:
+        _, target = _resolve_finding_by_local_id(emission, finding_local_id)
+        root = target
+    else:
+        target = None
+        root = emission
+
+    # Walk the dotted path inside ``root``; auto-create intermediate dicts
+    # for whole-block normalize targets (e.g., adding a proposed_anchor).
+    parts = field.split(".")
+    cur: Any = root
+    for seg in parts[:-1]:
+        if not isinstance(cur, dict):
+            raise KeyError(
+                f"field {field!r}: intermediate segment {seg!r} is not "
+                f"addressable on a {type(cur).__name__}"
+            )
+        if seg not in cur or not isinstance(cur[seg], dict):
+            cur[seg] = {}
+        cur = cur[seg]
+
+    leaf = parts[-1]
+    if not isinstance(cur, dict):
+        raise KeyError(
+            f"field {field!r}: leaf parent is a {type(cur).__name__}, "
+            f"not a dict"
+        )
+    before = cur.get(leaf)
+    # Sentinel pass-through: writing the literal string ``<delete>`` removes
+    # the field (used for stray-anchor removal). Anything else is a set.
+    if isinstance(new_value, str) and new_value == "<delete>":
+        if leaf in cur:
+            del cur[leaf]
+    else:
+        cur[leaf] = new_value
+    return before, target
+
+
+def normalize_emission(
+    emission: dict,
+    *,
+    field: str,
+    new_value: Any,
+    finding_local_id: int | None,
+    reason: str,
+    now: str | None = None,
+) -> tuple[dict, dict]:
+    """Apply one normalization and return ``(normalized_emission, record)``.
+
+    The returned ``record`` is the structured trail entry written into
+    ``<emission>.normalizations.json``:
+    ``{finding_local_id, field, before, after, reason, applied_at}``.
+
+    Raises NormalizationFieldError if ``field`` is not in the allowlist
+    (prose fields, unknown fields). The caller is responsible for the
+    surrounding re-validate-after-edit step — a normalize that breaks the
+    schema is still rejected by the validator on the very next call.
+    """
+    _check_normalize_field_allowed(field)
+    import copy as _copy
+    fixed = _copy.deepcopy(emission)
+    before, _target = _apply_normalize_edit(
+        fixed,
+        field=field,
+        new_value=new_value,
+        finding_local_id=finding_local_id,
+    )
+    record = {
+        "finding_local_id": finding_local_id,
+        "field": field,
+        "before": before,
+        "after": new_value if not (isinstance(new_value, str) and new_value == "<delete>") else None,
+        "reason": reason,
+        "applied_at": now or _utc_now_iso(),
+    }
+    return fixed, record
+
+
+def run_normalize(
+    *,
+    emission_path: Path,
+    field: str,
+    new_value_raw: str,
+    finding_local_id: int | None,
+    reason: str,
+    out_path: Path | None,
+    trail_out_path: Path | None,
+    in_place: bool,
+) -> int:
+    """CLI entry for the normalize verb.
+
+    Reads emission, applies ONE normalize edit (allowlist-enforced in code),
+    re-validates the result against cluster-emission-v1.json, and writes:
+    - the normalized emission (atomic) to ``out_path`` or in place
+    - one APPENDED trail entry to ``<emission>.normalizations.json``
+      (the file accumulates a list — the consistency canary reads every
+      entry's ``after`` and compares to the current emission value)
+
+    Exit codes mirror the rest of the harness:
+        0 -- normalize applied + re-validated clean
+        1 -- post-edit emission fails schema validation (caller fixes
+             the value, re-runs, or backs out)
+        2 -- the field is in the prose-forbidden list or unknown (the
+             lead must re-dispatch a specialist instead — exit code
+             distinct from generic validation failure)
+        3 -- emission file missing / unreadable
+    """
+    if not emission_path.is_file():
+        print(f"emission file not found: {emission_path}", file=sys.stderr)
+        return 3
+    try:
+        emission = json.loads(emission_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        print(f"emission is not valid JSON: {e}", file=sys.stderr)
+        return 1
+
+    # Parse the new value as JSON first; fall back to the raw string when
+    # it isn't JSON (so the operator can pass ``--new-value primary-hero``
+    # without quoting it, while ``--new-value '["a","b"]'`` still works).
+    try:
+        new_value: Any = json.loads(new_value_raw)
+    except json.JSONDecodeError:
+        new_value = new_value_raw
+
+    try:
+        normalized, record = normalize_emission(
+            emission,
+            field=field,
+            new_value=new_value,
+            finding_local_id=finding_local_id,
+            reason=reason,
+        )
+    except NormalizationFieldError as e:
+        print(f"REFUSE: {e}", file=sys.stderr)
+        return 2
+    except KeyError as e:
+        print(f"FAIL -- {e}", file=sys.stderr)
+        return 1
+
+    # Re-validate against the cluster-emission schema BEFORE writing the
+    # trail. If the edit broke the schema, the lead must back out — we
+    # do NOT want a trail entry pointing at an emission state that never
+    # made it to disk.
+    validator, _ = _load_schemas()
+    schema_errors_raw = sorted(
+        validator.iter_errors(normalized), key=lambda e: list(e.absolute_path),
+    )
+    if schema_errors_raw:
+        print(
+            f"FAIL -- normalize edit on {field!r} produced "
+            f"{len(schema_errors_raw)} schema error(s); not writing.",
+            file=sys.stderr,
+        )
+        for e in schema_errors_raw[:5]:
+            print(f"  SCHEMA: path={list(e.absolute_path)} message={e.message}", file=sys.stderr)
+        return 1
+
+    # Resolve output paths.
+    if in_place:
+        emission_out = emission_path
+    elif out_path is not None:
+        emission_out = out_path
+    else:
+        emission_out = emission_path.parent / f"{emission_path.stem}.normalized.json"
+    trail_out = trail_out_path or (
+        emission_path.parent / f"{emission_path.stem}.normalizations.json"
+    )
+
+    # Append-rather-than-overwrite: the trail is the audit history of every
+    # normalize ever applied to this emission. The canary asserts every
+    # 'after' equals the emission's CURRENT value, so a later normalize
+    # that supersedes an earlier one MUST be appended (the consistency
+    # canary will read both, and only the latest 'after' for that field
+    # will match the current value -- the canary handles this by checking
+    # the last-applied entry per (finding_local_id, field) pair).
+    existing_trail: dict[str, Any]
+    if trail_out.is_file():
+        try:
+            existing_trail = json.loads(trail_out.read_text(encoding="utf-8"))
+            if not isinstance(existing_trail, dict):
+                existing_trail = {}
+        except json.JSONDecodeError:
+            existing_trail = {}
+    else:
+        existing_trail = {}
+    entries: list[dict] = list(existing_trail.get("normalizations") or [])
+    entries.append(record)
+    trail_doc = {
+        "engagement": str(emission_path.parent),
+        "source_emission": str(emission_path),
+        "normalizations_count": len(entries),
+        "normalizations": entries,
+    }
+
+    atomic_write_text(
+        emission_out, json.dumps(normalized, indent=2) + "\n",
+    )
+    atomic_write_text(
+        trail_out, json.dumps(trail_doc, indent=2) + "\n",
+    )
+
+    print(
+        f"[normalize] emission={emission_out.name} "
+        f"field={field} trail={trail_out.name} entries={len(entries)}"
+    )
+    print(
+        f"[normalize] {field}: {record['before']!r} -> {record['after']!r} "
+        f"(reason: {record['reason']})",
+        file=sys.stderr,
+    )
+    return 0
+
+
 def _format_drift_trace_block(report, ref_count: int) -> str:
     """Render the audit-trace.log DRIFT GATE block (Phase F.3).
 
@@ -1258,6 +1617,83 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
 
+    # hc-C4 (ruling A7, 2026-06-10) — structured normalizations trail.
+    # The narrow, logged, mechanical-only normalize tier between autofix
+    # and re-dispatch. Schema/placement fields only — prose fields are
+    # refused with exit 2. Writes <emission>.normalizations.json so the
+    # consistency canary (assembly.canary_checks.check_lead_normalizations_consistent)
+    # can detect later unrecorded edits as drift. See skills/audit/SKILL.md
+    # + contracts/dispatch-contract.md for the sanction text.
+    p_normalize = sub.add_parser(
+        "normalize",
+        help=(
+            "Apply ONE mechanical normalize edit to an emission "
+            "(schema/placement fields only; prose fields are refused). "
+            "Re-validates against the cluster-emission schema and writes "
+            "<emission>.normalizations.json."
+        ),
+    )
+    p_normalize.add_argument(
+        "--emission-path", type=Path, required=True,
+        help="Cluster or ethics emission JSON to normalize.",
+    )
+    p_normalize.add_argument(
+        "--field", required=True,
+        help=(
+            "Dotted field path to edit. Schema/placement only — see "
+            "NORMALIZE_ALLOWED_FIELDS in scripts/test-specialist.py. "
+            "Prose fields (title, observation, recommendation, "
+            "why_this_matters, source_url, proposed_anchor.reason) are "
+            "refused with exit code 2; re-dispatch a specialist instead."
+        ),
+    )
+    p_normalize.add_argument(
+        "--new-value", required=True,
+        help=(
+            "New value as JSON. Bare strings (like 'primary-hero') are "
+            "also accepted unquoted; complex shapes (objects, arrays) "
+            "must be valid JSON. Pass the literal string '<delete>' to "
+            "remove the field (useful for stray proposed_anchor removal)."
+        ),
+    )
+    p_normalize.add_argument(
+        "--finding-local-id", type=int,
+        help=(
+            "When the field lives under a finding (surface, element.*, "
+            "proposed_anchor, etc.), name the target finding's local_id. "
+            "Omit for emission-scoped fields (telemetry.*, status)."
+        ),
+    )
+    p_normalize.add_argument(
+        "--reason", required=True,
+        help=(
+            "One-line operator reason for the edit. Recorded in the "
+            "trail entry's 'reason' field so future operators can "
+            "review what was done and why."
+        ),
+    )
+    p_normalize.add_argument(
+        "--out", type=Path,
+        help=(
+            "Where to write the normalized emission. Defaults to "
+            "<emission>.normalized.json next to the input."
+        ),
+    )
+    p_normalize.add_argument(
+        "--trail-out", type=Path,
+        help=(
+            "Where to APPEND the normalization trail entry. Defaults "
+            "to <emission>.normalizations.json next to the input."
+        ),
+    )
+    p_normalize.add_argument(
+        "--in-place", action="store_true",
+        help=(
+            "Overwrite the original emission file. The trail still "
+            "writes to --trail-out (defaults next to the input)."
+        ),
+    )
+
     args = parser.parse_args(argv)
 
     if args.mode == "prepare":
@@ -1350,6 +1786,18 @@ def main(argv: list[str] | None = None) -> int:
             emission_path=args.emission_path,
             out_path=args.out,
             repairs_out_path=args.repairs_out,
+            in_place=args.in_place,
+        )
+
+    if args.mode == "normalize":
+        return run_normalize(
+            emission_path=args.emission_path,
+            field=args.field,
+            new_value_raw=args.new_value,
+            finding_local_id=args.finding_local_id,
+            reason=args.reason,
+            out_path=args.out,
+            trail_out_path=args.trail_out,
             in_place=args.in_place,
         )
 

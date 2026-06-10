@@ -545,7 +545,10 @@ class TestRunAllCanaries(unittest.TestCase):
         # on fixtures whose ethics file is missing or whose recommendations
         # are clean. visual_quality block adds zero results when no
         # review-state files are present (Phase 3 default-on path).
-        self.assertEqual(len(out["results"]), 11)
+        # hc-C4 / ruling A7 (2026-06-10) added lead_normalizations_consistent
+        # → 12 baseline. Skip-passes when no *.normalizations.json exists
+        # (the narrow normalize tier was not used).
+        self.assertEqual(len(out["results"]), 12)
 
     def test_aggregates_failure(self):
         # Ethics — block without source_url fails
