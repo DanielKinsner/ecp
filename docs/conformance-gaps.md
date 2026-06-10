@@ -649,9 +649,9 @@ rest, verified against current `HEAD`:
   `run_all_canaries` as canary #5. Catches both the strong signal (cluster missing) and
   the weaker-but-real signal (drop file non-empty even when surviving emissions cover all
   clusters).
-- **Regression:** `tests/test_g19_canonical_view_surfaces_drops.py` (5 tests: 3-tuple
+- **Regression:** `tests/test_g16_canonical_view_surfaces_drops.py` (5 tests: 3-tuple
   contract, clean-run-empty-drops, invalid-cluster-recorded, CLI clean exit, CLI dropped
-  exit-4). `tests/test_g19_clusters_represented_canary.py` (8 tests: pass + fail + skip
+  exit-4). `tests/test_g16_clusters_represented_canary.py` (8 tests: pass + fail + skip
   cases including the headline Run C shape). Both unittest-style for `unittest discover`
   runner.
 - **Layer 3 (this branch — ✓ DONE) — single shared validator instance:** investigation

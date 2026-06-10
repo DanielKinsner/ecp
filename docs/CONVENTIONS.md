@@ -56,6 +56,12 @@ Default handling:
 - Preserve evidence fidelity and source wording where accuracy matters.
 - Do not weaken legal, ethics, citation, or evidence requirements for prompt-size cleanup.
 
+Reference maintenance scripts:
+
+- `scripts/reference_link_check.py`, `scripts/reference_lint.py`, and `scripts/reference_maintenance.py` (~900 LOC total) are operator maintenance tools for the reference library — live-link checking, citation-hygiene lint, and upkeep dashboards.
+- They are **off the audit runtime path**: no `/ecp:audit` step imports them, and they are not invoked by `skills/audit/`, `workflows/`, or `scripts/assembly/`.
+- Bloat audits should classify the `reference_*` family as operator maintenance, not as audit-path code, and skip them when pruning for runtime size.
+
 ### Tests And Fixtures
 
 Tests and fixtures prove behavior without requiring full historical engagement archives.

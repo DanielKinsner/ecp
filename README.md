@@ -88,9 +88,12 @@ see `product.md` §6.
 
 ## Known limitations
 
-- **Acquisition (Windows):** `scripts/acquire_url.py` can fail to acquire
-  large pages because `agent-browser eval` mangles long inline JS args on Windows.
-  This is the current top fix target — see the engagement notes / `product.md` change log.
+- **Acquisition (Windows):** `agent-browser eval` mangles long inline JS args on
+  Windows (the npm `.ps1`/`.cmd` shim re-parses argv and PowerShell does not treat
+  CMD-style `\"` as an escape). `scripts/acquire_url.py` mitigates this by base64-encoding
+  the eval source through `agent-browser eval -b` (`_eval_args`), pinned by
+  `tests/test_eval_encoding.py` and `tests/test_acquire_eval_guard.py`. The Claude
+  acquirer in `workflows/acquire.md` follows the same guard.
 - Hotspot placement is precision-first: low-confidence hotspots are left **blank** for
   manual placement rather than auto-placed wrong (`product.md` §4.2).
 
