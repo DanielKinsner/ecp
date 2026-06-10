@@ -1102,12 +1102,32 @@ def load_v2_priority_path(
         seen_underlying_refs: set[str] = set()
         missing_refs: list[str] = []
         unresolved_refs: list[str] = []
+        # W2 (2026-06-10): refs that fail the ``<cluster> F-<N>`` regex used to
+        # be silently dropped — no entry in the returned dict, no counter, no
+        # log trail. The spec-audit verified this path is unreachable for
+        # conforming inputs (synthesizer-emission-v1.json's f_refs pattern is
+        # tighter than the regex), but it IS reachable via alias-map
+        # corruption (an alias mapping a valid ref to a non-conforming
+        # string) or any caller that skips schema validation. Surface the
+        # discards so a malformed alias map or a future loosened schema
+        # cannot hide a ref-resolution bug. Mirrors the
+        # ``canonical-frefs-dropped`` / ``unresolved_ref_count`` patterns
+        # already used here for the resolution-failure case.
+        malformed_refs: list[str] = []
         raw_refs = _priority_story_refs_for_device(story, device)
         for ref in raw_refs:
             ref_str = str(ref)
             canonical_ref = ref_aliases.get(ref_str, ref_str) if ref_aliases else ref_str
             m = re.match(r"^([\w-]+)\s+F-(\d+)$", canonical_ref)
             if not m:
+                # W2: account for the discard — keep the raw ref AND the
+                # post-alias canonical form when they differ, so a corrupt
+                # alias map (alias points at a malformed canonical) is
+                # diagnosable from the returned struct alone.
+                if canonical_ref != ref_str:
+                    malformed_refs.append(f"{ref_str} -> {canonical_ref}")
+                else:
+                    malformed_refs.append(ref_str)
                 continue
             if canonical_ref in seen_underlying_refs:
                 continue
@@ -1204,6 +1224,12 @@ def load_v2_priority_path(
             "degraded_ref_count": len(missing_refs),
             "unresolved_refs": unresolved_refs,
             "unresolved_ref_count": len(unresolved_refs),
+            # W2 (2026-06-10): refs the ``<cluster> F-<N>`` regex rejected.
+            # Empty list for every conforming synthesizer emission; non-empty
+            # signals a corrupt alias map or a caller that skipped the
+            # synthesizer-emission-v1.json validation step.
+            "malformed_refs": malformed_refs,
+            "malformed_ref_count": len(malformed_refs),
             "raw_ref_count": len(raw_refs),
             "applies_on_other_device": story_applies_on_other_device,
         })
