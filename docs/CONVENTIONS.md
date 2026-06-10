@@ -96,6 +96,10 @@ Default handling:
 - Audit logs are evidence only when the engagement itself is intentionally tracked or otherwise preserved as an approved reference.
 - Large generated artifacts should not be added to normal Git unless they are explicitly promoted as fixtures or reference material.
 
+### Promoted Generated Artifacts (recorded decisions)
+
+- `graphify-out/**` — generated code-knowledge-graph snapshot (graph, per-node cache, `GRAPH_REPORT.md`), committed 2026-06-09 (`25c072f`), promotion recorded here 2026-06-10. Reason: **reference evidence** — it backs the owner's `graphify` MCP server and gives agents a navigable cross-machine structural map of the codebase. It is a snapshot, not runtime truth: it predates the 2026-06-10 roadmap-execution wave, regeneration is deliberate (expect a large tracked diff when it happens), and the graph is never more current than the code itself.
+
 ### Archives And Historical Plans
 
 Archives and historical plans explain prior decisions, completed handoffs, deferred ideas, or superseded work.
