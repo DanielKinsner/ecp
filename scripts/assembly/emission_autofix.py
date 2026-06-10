@@ -14,10 +14,6 @@ exact shapes:
   emitted two findings about the same surface/element/verdict triple
   (e.g., two "global-nav / e7 / FAIL" entries).
 - ``proposed_anchor.reason`` over the 200-character schema cap.
-- ``element.baton_index='absent'`` findings missing the required
-  ``proposed_anchor`` field — the schema makes proposed_anchor MANDATORY
-  for absent-anchored findings, and Layer-3 hotspot routing breaks
-  without it.
 
 This module applies semantically-conservative repairs to these specific
 failure modes without changing the actual finding content. The lead
@@ -30,7 +26,12 @@ with ``{finding_local_id, field, before, after, why}`` so the operator
 can verify nothing material was rewritten. An empty repairs list means
 the emission was already clean — autofix is idempotent.
 
-Authored G15 P1-3 (2026-05-27).
+Authored G15 P1-3 (2026-05-27); shrunk 2026-06-10 when the §4.2 (v1.2)
+operationalization made ``proposed_anchor`` an OPTIONAL editor hint
+instead of a schema-required placement directive — the default-anchor
+injection (former repair 4) was the chief source of wrong-placed absent
+hotspots and was removed; absent findings now ship without a
+``proposed_anchor`` and the renderer leaves them blank for the operator.
 """
 from __future__ import annotations
 
@@ -42,41 +43,6 @@ from typing import Any
 # tells specialists to keep this under 200 chars; the autofix is the
 # safety net for when the specialist exceeds it anyway.
 PROPOSED_ANCHOR_REASON_MAX_LEN = 200
-
-
-# The default proposed_anchor injected when an absent-anchored finding
-# omits one. Uses the kind="section" variant per schema/finding-v1.json:
-#   - placement enum allowed for kind=section: {section-bottom-overlay,
-#     after-section}; section-bottom-overlay is the "lives inside this
-#     section near its bottom" semantic that operators normalize absent
-#     findings to in practice (per multiple live-run lead-reflections).
-#   - section_index=0 anchors at the first baton section, which exists
-#     on every captured page (acquirer always emits ≥1 section).
-#   - viewport: derived from the finding's device field; ethics page-
-#     scope findings default to desktop.
-# The reason string carries the auto-inject marker so it's findable in
-# both the editor's "Place manually" queue and the engagement audit trail.
-#
-# Bug fix history: prior to 2026-05-27 this default was
-# {kind=viewport, placement=above-fold-banner, viewport=both} — three
-# schema-invalid choices that bounced the SAME absent finding right back
-# into the validator on retry. Caught by five live runs in a row
-# (docs/ecp/2026-05-27-{b0051311,625832a6,4a0721e9,0669899d,...} lead-
-# reflections all hand-normalized the broken default). The fix matches
-# the lead's manual normalization recipe.
-_AUTO_INJECTED_PROPOSED_ANCHOR_REASON = (
-    "auto-injected by emission_autofix: specialist omitted proposed_anchor "
-    "on absent finding; operator must verify or replace in editor"
-)
-
-
-def _viewport_for_finding(finding: dict) -> str:
-    """Pick a schema-valid viewport ('desktop' or 'mobile') for an
-    injected proposed_anchor based on the finding's device field.
-    Ethics (device='page') and unknown defaults to 'desktop' since the
-    editor's manual-place queue is most often opened on desktop."""
-    device = (finding.get("device") or "").lower()
-    return "mobile" if device == "mobile" else "desktop"
 
 
 def autofix_emission(emission: dict) -> tuple[dict, list[dict]]:
@@ -105,16 +71,16 @@ def autofix_emission(emission: dict) -> tuple[dict, list[dict]]:
        ``PROPOSED_ANCHOR_REASON_MAX_LEN`` characters truncate at the
        last whole word boundary at or below the cap, with a trailing
        ``...`` ellipsis marker.
-    4. **Missing proposed_anchor on absent findings.** When a finding
-       has ``element.baton_index='absent'`` AND no ``proposed_anchor``
-       field, a schema-valid section-variant default is injected:
-       ``{kind: 'section', section_index: 0, placement:
-       'section-bottom-overlay', viewport: <derived>, reason: <auto-
-       inject marker>}``. The marker reason makes the auto-injection
-       visible to the operator in the editor's "Place manually" queue
-       so they verify/replace placement before client delivery.
-       ``viewport`` derives from ``finding.device`` (mobile finding →
-       mobile; desktop or ethics-page → desktop).
+
+    Pre-v1.2 there was a Repair 4 that injected a default
+    ``proposed_anchor`` (section_index=0, section-bottom-overlay) on
+    every absent finding that omitted one — back when the schema
+    required ``proposed_anchor`` for absent and the renderer
+    auto-pinned a section centroid from it. After product.md §4.2 v1.2
+    (rulings A1+A2), absences ship blank and ``proposed_anchor`` is an
+    optional editor hint, so the injection is gone — anything that
+    auto-pinned an absent finding was the chief source of
+    wrong-placement violations.
 
     Idempotency: re-running autofix on an already-fixed emission
     produces an empty repairs list (every repair-guard short-circuits
@@ -144,7 +110,6 @@ def autofix_emission(emission: dict) -> tuple[dict, list[dict]]:
     _repair_telemetry_paths(fixed, repairs)
     _repair_duplicate_findings(fixed, repairs)
     _repair_overlong_proposed_anchor_reasons(fixed, repairs)
-    _repair_missing_proposed_anchor_on_absent(fixed, repairs)
 
     return fixed, repairs
 
@@ -280,53 +245,6 @@ def _repair_overlong_proposed_anchor_reasons(
             "why": (
                 f"proposed_anchor.reason exceeds the {PROPOSED_ANCHOR_REASON_MAX_LEN}-char "
                 f"schema cap; truncated at the last word boundary."
-            ),
-        })
-
-
-# ---------------------------------------------------------------------------
-# Repair 4 — inject default proposed_anchor for absent findings
-# ---------------------------------------------------------------------------
-
-
-def _repair_missing_proposed_anchor_on_absent(
-    emission: dict, repairs: list[dict],
-) -> None:
-    findings = emission.get("findings")
-    if not isinstance(findings, list):
-        return
-    for f in findings:
-        if not isinstance(f, dict):
-            continue
-        element = f.get("element") or {}
-        if not isinstance(element, dict):
-            continue
-        if element.get("baton_index") != "absent":
-            continue
-        if "proposed_anchor" in f and isinstance(f["proposed_anchor"], dict):
-            continue  # already has one
-        viewport = _viewport_for_finding(f)
-        f["proposed_anchor"] = {
-            "kind": "section",
-            "section_index": 0,
-            "placement": "section-bottom-overlay",
-            "viewport": viewport,
-            "reason": _AUTO_INJECTED_PROPOSED_ANCHOR_REASON,
-        }
-        repairs.append({
-            "finding_local_id": f.get("local_id"),
-            "field": "proposed_anchor",
-            "before": "<missing>",
-            "after": (
-                "auto-injected schema-valid section variant "
-                f"(section_index=0, section-bottom-overlay, viewport={viewport})"
-            ),
-            "why": (
-                "absent-anchored finding lacks the schema-required "
-                "proposed_anchor; injected a section-bottom-overlay default "
-                "at section_index=0 with an auto-inject marker so the "
-                "operator must verify placement in the editor's "
-                "'Place manually' queue."
             ),
         })
 

@@ -112,7 +112,7 @@
       }
     },
     "proposed_anchor": {
-      "description": "Placement hint for findings whose target element does not exist on the page (element.baton_index = 'absent'). Tells the renderer where the missing thing should appear if it existed. Discriminated union on `kind`: 'element' anchors near a real baton element, 'section' anchors inside a baton section, 'viewport' anchors at a page-global viewport position (sticky bars, above-fold persistence). Section-bound behaviors (e.g. trust badges entering the purchase zone) MUST use kind='section' with placement='section-bottom-overlay', NOT kind='viewport' with a section-bound trigger — that keeps kind='viewport' truly page-global. The `reason` field is operator-tooltip prose ONLY; the renderer MUST NEVER parse it for placement logic. Architectural fix B (2026-04-30): replaces brittle surface-string matching for absent findings.",
+      "description": "OPTIONAL editor hint for absent findings (element.baton_index = 'absent'). Carries a structured suggestion of where the missing thing should appear, surfaced to the operator in editor.html's 'Place manually' queue. NOT a placement directive — per product.md §4.2 (v1.2), absence findings always render BLANK and the operator places them by hand. The renderer never auto-pins a hotspot from this field. Discriminated union on `kind`: 'element' anchors near a real baton element, 'section' anchors inside a baton section, 'viewport' anchors at a page-global viewport position. The `reason` field is operator-tooltip prose only; the renderer MUST NEVER parse it for placement logic. Was schema-required + auto-placed pre-v1.2 (architectural fix B, 2026-04-30); demoted to optional hint when §4.2 was operationalized — wrong placement is a hard violation, worse than blank.",
       "type": "object",
       "additionalProperties": false,
       "required": ["kind", "placement", "viewport"],
@@ -598,23 +598,6 @@
             "const": "Silver"
           }
         }
-      }
-    },
-    {
-      "description": "Findings whose element.baton_index is 'absent' MUST emit proposed_anchor. Without it the renderer falls back to a generic top-of-page banner indicator that visually flattens every absent finding to the same point on the page. Architectural fix B (2026-04-30).",
-      "if": {
-        "properties": {
-          "element": {
-            "properties": {
-              "baton_index": {"const": "absent"}
-            },
-            "required": ["baton_index"]
-          }
-        },
-        "required": ["element"]
-      },
-      "then": {
-        "required": ["proposed_anchor"]
       }
     },
     {

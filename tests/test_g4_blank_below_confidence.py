@@ -15,6 +15,13 @@ locks in the blank-and-queue behavior:
   that the final-report renderer draws as nothing.
 - The Phase-3 visual-evidence footprint stays page_level/low (same as the old
   banner), so this fix doesn't silently change the priority-path gate.
+
+Phase-0 rulings A1+A2 (product.md §4.2 v1.2, 2026-06-10) extend the same
+blank-and-queue treatment to all absence findings AND every sub-exact-tier
+placement method: the renderer ONLY auto-places exact-tier matches
+(e_index_lookup against a real on-slide baton element, or operator overrides).
+``TestAbsentWithProposedAnchorStillBlank`` and ``TestSubExactTierBlanks``
+guard that wider rule.
 """
 from __future__ import annotations
 
@@ -132,6 +139,157 @@ class TestUnplacedReviewState(unittest.TestCase):
             for mk in markers
         }
         self.assertIn("visual-cta/F-01", all_refs)
+
+
+class TestAbsentWithProposedAnchorStillBlank(unittest.TestCase):
+    """Phase-0 ruling A1 (product.md:144) — absences are ALWAYS blank, even
+    when the specialist authored a precise ``proposed_anchor`` hint. The
+    hint flows through to the editor as a manual-placement suggestion
+    (review_state surfaces it on ``finding.raw.proposed_anchor``), but the
+    renderer NEVER auto-pins from it."""
+
+    def _absent_finding_with_hint(self, kind: str, **anchor_extras):
+        """An absent finding carrying a typed proposed_anchor that pre-v1.2
+        would have auto-placed."""
+        anchor = {"kind": kind, "viewport": "laptop", "reason": "operator hint"}
+        anchor.update(anchor_extras)
+        return {
+            "index": 1,
+            "f_ref": "trust/F-09",
+            "baton_index": "absent",
+            "priority": "HIGH",
+            "proposed_anchor": anchor,
+        }
+
+    def test_absent_with_element_kind_anchor_unplaced(self):
+        # kind=element + a real on-slide e_index would have placed pre-v1.2;
+        # now it MUST unplace because the finding is an absence.
+        f = self._absent_finding_with_hint(
+            "element",
+            element_baton_index="e0",
+            placement="before-element",
+        )
+        mappings = auto_map_markers_v2([f], _baton())
+        self.assertEqual(mappings[0]["match_method"], "unplaced")
+        self.assertIsNone(mappings[0]["fallback_position"])
+        # No marker is drawn anywhere.
+        slide_markers = compute_marker_positions_v2(mappings, _baton())
+        rendered = {
+            mk.get("f_ref")
+            for markers in slide_markers.values()
+            for mk in markers
+        }
+        self.assertNotIn("trust/F-09", rendered)
+
+    def test_absent_with_section_kind_anchor_unplaced(self):
+        # The exact case product.md:144 names ("no sticky CTA"-style absence).
+        f = self._absent_finding_with_hint(
+            "section",
+            section_index=0,
+            placement="section-bottom-overlay",
+        )
+        mappings = auto_map_markers_v2([f], _baton())
+        self.assertEqual(mappings[0]["match_method"], "unplaced")
+        self.assertIsNone(mappings[0]["fallback_position"])
+
+    def test_absent_with_viewport_kind_anchor_unplaced(self):
+        f = self._absent_finding_with_hint(
+            "viewport",
+            viewport_trigger="after_primary_cta_offscreen",
+            placement="viewport-bottom-sticky",
+        )
+        mappings = auto_map_markers_v2([f], _baton())
+        self.assertEqual(mappings[0]["match_method"], "unplaced")
+        self.assertIsNone(mappings[0]["fallback_position"])
+
+
+class TestExactTierGate(unittest.TestCase):
+    """Phase-0 ruling A2 (product.md:147-151) — only exact-tier methods
+    auto-place; every sub-exact strategy falls through to unplaced. With
+    Strategies 2/3 pruned, the practical surface is: a non-absent finding
+    whose ONLY signal is the now-removed section_centroid / proposed_anchor
+    path no longer renders anywhere."""
+
+    def test_finding_with_only_surface_signal_unplaces(self):
+        """A finding that pre-prune would have hit Strategy 3
+        (section_centroid via surface-string match) — non-absent, no real
+        e_index, surface matches a section slug — must now unplace. Before
+        the prune this would have rendered at the section centroid; now the
+        only auto-placement path is Strategy 1 (real on-slide e_index)."""
+        finding = {
+            "index": 1,
+            "f_ref": "trust/F-99",
+            # No baton_index (or an invalid one) so Strategy 1 doesn't fire.
+            "baton_index": "e999",  # out-of-range
+            "priority": "HIGH",
+            "surface": "hero",  # would have matched section slug pre-prune
+        }
+        mappings = auto_map_markers_v2([finding], _baton())
+        self.assertEqual(mappings[0]["match_method"], "unplaced")
+        self.assertIsNone(mappings[0]["fallback_position"])
+
+    def test_strong_placement_methods_set_matches_visual_evidence(self):
+        """The v2_html_builder ``_STRONG_PLACEMENT_METHODS`` set must equal
+        the set of match_methods that visual_evidence classifies as
+        (exact_element, high) — that is the operational definition of
+        "exact-tier" the spec calls for."""
+        from report.v2_html_builder import _STRONG_PLACEMENT_METHODS
+        from report.visual_evidence import _MATCH_METHOD_TO_TYPE
+        exact_high = {
+            mm for mm, (t, c) in _MATCH_METHOD_TO_TYPE.items()
+            if (t, c) == ("exact_element", "high")
+        }
+        self.assertEqual(
+            _STRONG_PLACEMENT_METHODS,
+            frozenset(exact_high),
+            "v2_html_builder._STRONG_PLACEMENT_METHODS must contain exactly "
+            "the match_methods that visual_evidence classifies as exact-tier. "
+            "Drift here means the placement-QA summary and the visual-evidence "
+            "taxonomy disagree about what counts as a confident placement.",
+        )
+
+
+class TestOperatorOverrideStillPlaces(unittest.TestCase):
+    """The operator-override path (--markers file in v2_html_builder) MUST
+    keep working — operator placement is exact-tier by definition (a human
+    looked at the screenshot and clicked). merge_markers tags the entry
+    ``match_method="operator_override"`` which renders just like
+    e_index_lookup."""
+
+    def test_operator_override_is_strong_placement(self):
+        from report.v2_html_builder import _STRONG_PLACEMENT_METHODS
+        self.assertIn("operator_override", _STRONG_PLACEMENT_METHODS)
+
+    def test_operator_override_confidence_is_exact(self):
+        # review_state surfaces operator-placed markers as exact-selector,
+        # NOT needs-manual-marker — the operator already placed it.
+        self.assertEqual(_hotspot_confidence("operator_override"), "exact-selector")
+
+    def test_operator_override_renders(self):
+        # End-to-end: merge_markers + compute_marker_positions_v2 produce a
+        # rendered marker for an operator override entry.
+        from report.v2_markers import merge_markers
+        baton = _baton()
+        auto = auto_map_markers_v2([_unplaceable_finding()], baton)
+        # Operator override carries x_pct/y_pct directly.
+        op_override = [{
+            "f_ref": "trust-credibility/F-09",
+            "finding_index": 1,
+            "slide": 0,
+            "fallback_position": {"x_pct": 35.0, "y_pct": 42.0},
+            "severity": "high",
+        }]
+        merged = merge_markers(auto, op_override)
+        # The merge tags the resulting entry as operator_override.
+        self.assertEqual(merged[0]["match_method"], "operator_override")
+        # And the renderer draws it.
+        slide_markers = compute_marker_positions_v2(merged, baton)
+        rendered = {
+            mk.get("f_ref")
+            for markers in slide_markers.values()
+            for mk in markers
+        }
+        self.assertIn("trust-credibility/F-09", rendered)
 
 
 if __name__ == "__main__":

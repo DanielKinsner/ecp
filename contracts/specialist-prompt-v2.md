@@ -251,7 +251,7 @@ Concrete protocol:
 
 **Documented failure case (do NOT repeat):** awdmods.com 2026-05-01 mobile run, findings `pricing F-26` and `visual-cta F-44` both cited `e15` with claimed text `"FREE SHIPPING on most orders $75+"` and `"div.hero__inner"`. Mobile baton `e15` is actually a `<header role="banner">` containing `"Shop All / Shop by Category"`. Both findings passed JSON Schema validation (the index existed) and rendered to the wrong element on the visual report. The cross-check above closes this class.
 
-For findings about elements that genuinely don't exist (e.g., "page has no urgency framing on the price element" where the absence IS the finding), use `baton_index: "absent"` and surface the finding at the section level via `surface`. The renderer will place a section-level hotspot at the centroid of the section instead of an element-level pin.
+For findings about elements that genuinely don't exist (e.g., "page has no urgency framing on the price element" where the absence IS the finding), use `baton_index: "absent"` and surface the finding at the section level via `surface`. Per product.md §4.2 (v1.2 rulings A1+A2), absence findings ALWAYS render BLANK — the operator places (or declines) the hotspot in editor.html. Do NOT try to coerce a precise element pin; the editor exists exactly for this hand-off.
 
 ### Element references — precedence when multiple anchors are valid
 
@@ -285,16 +285,18 @@ The finding itself can be ironclad while the *exact* hotspot placement is unclea
 2. If even the section is ambiguous, use `proposed_anchor.kind: "viewport"` with `placement: "viewport-bottom-sticky"` and a `reason` that names what the operator must decide.
 3. Set `confidence` honestly (≤ 0.7).
 
-The downstream review-state builder maps these anchor kinds to `hotspot_confidence` values that float to the top of the operator's review queue (`section-match` or `needs-manual-marker`). The operator places the precise marker; you do not invent one. **A precise but wrong hotspot is worse than an honest "needs operator placement" — the editor exists exactly for this hand-off.**
+For non-absent findings the precedence stack above still applies (use the best real `baton_index` you can defend). For absent findings the renderer leaves the hotspot blank per product.md §4.2 v1.2 — the review-state builder maps it to `hotspot_confidence="needs-manual-marker"` and the editor surfaces it in the "Place manually" queue with the optional `proposed_anchor` hint attached. The operator places the precise marker; you do not invent one. **A precise but wrong hotspot is worse than an honest "needs operator placement" — the editor exists exactly for this hand-off.**
 
 What this rule does NOT permit:
 - Lowering `confidence` to dodge the precedence stack when a verbatim anchor exists (rule 1 of the precedence stack still wins).
 - Suppressing the finding entirely. The finding ships; only its anchor defers.
 - Flooding emissions with `kind: "viewport"` anchors. The reviewer should see this used selectively — under ~15% of FAIL/PARTIAL findings on a typical page. If you find yourself deferring more, the cluster context is too thin and a `status: "partial"` with a `notes[]` entry is the better call.
 
-### Proposed anchor for absent findings (REQUIRED when baton_index = "absent")
+### Proposed anchor for absent findings (OPTIONAL editor hint, never a placement directive)
 
-When `baton_index: "absent"` (the finding is about an element/behavior/relationship that does NOT exist on the page), you MUST also emit `proposed_anchor` to tell the renderer where the missing thing should appear if it existed. Without `proposed_anchor`, the renderer falls back to a generic banner indicator at the top of slide 1, which makes the report look like every absent finding is the same point on the page.
+When `baton_index: "absent"` (the finding is about an element/behavior/relationship that does NOT exist on the page), you MAY emit `proposed_anchor` as an OPTIONAL hint to the operator about where the missing thing should appear if it existed. The renderer NEVER auto-pins from this field — per product.md §4.2 v1.2 (Phase-0 rulings A1+A2), absence findings always render blank and the operator places them in editor.html. The field exists to surface your structured suggestion in the editor's "Place manually" queue so the operator has context (the kind/placement/reason ride on `finding.raw.proposed_anchor`); it is no longer required, and getting it wrong does not cause a wrong hotspot.
+
+Pre-v1.2 (before 2026-06-10), `proposed_anchor` was schema-required for absent findings and the renderer auto-pinned from it — that was the chief source of wrong-placement violations the §4.2 rulings target. The shape and decision rules below are otherwise unchanged for cases where you DO emit a hint.
 
 `proposed_anchor` is a typed object discriminated by `kind`. Pick exactly one variant:
 
@@ -370,12 +372,12 @@ Allowed `placement` values for `kind: "viewport"`:
 - `viewport` field on `proposed_anchor`: must be `"mobile"` OR `"desktop"`. Not `"both"`. If a behavior applies to both devices, emit two findings (one per device specialist).
 - `reason` field: free-form prose, ≤ 200 chars. **The renderer NEVER reads this field for placement logic.** It exists purely for the operator-facing tooltip so the buyer understands why a hotspot is at that location when there's no real element. Don't use `reason` to encode anything the renderer should act on — encode that in the structured fields.
 - Cross-variant fields are forbidden: `kind: "element"` MUST NOT carry `section_index` or `viewport_trigger`. The schema rejects it.
-- `proposed_anchor` is REQUIRED whenever `baton_index = "absent"`. The schema rejects emissions where `baton_index = "absent"` with no `proposed_anchor`.
+- `proposed_anchor` is OPTIONAL — a hint for the operator's manual-placement queue, not a placement directive. The schema accepts absent-anchored findings with or without `proposed_anchor` (was schema-required pre-v1.2; demoted to optional 2026-06-10 with the §4.2 absence-blank rulings).
 
 ### How this interacts with existing rules
 
 - The existing **natural absence anchor** rule (use `baton_index: "<e_index>"` when there's a clear element to mirror, e.g. price block as anchor for "no MSRP") **still applies and is preferred**. `proposed_anchor` is for cases where there is no natural element to anchor on — not a replacement for using a real `baton_index` when one fits.
-- The `surface` field is **unchanged**. It remains the cluster's surface vocabulary slug. The renderer treats `surface` as legacy metadata + alias-map fallback for older findings; it does not use `surface` for placement when `proposed_anchor` is present.
+- The `surface` field is **unchanged**. It remains the cluster's surface vocabulary slug for finding identity / dedup. The renderer no longer uses `surface` for placement (the section-centroid alias-map fallback was pruned 2026-06-10 with the §4.2 v1.2 absence-blank rulings — placements that aren't exact-tier always render blank).
 - Within-emission uniqueness rule **stays the same**: `(surface, baton_index, verdict)` tuple. `proposed_anchor` does NOT participate in identity or dedup.
 
 ### Worked examples

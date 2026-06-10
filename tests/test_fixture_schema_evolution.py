@@ -3,17 +3,17 @@ emission shape.
 
 The two golden engagement fixtures (``fixtures/slingmods-pdp`` and
 ``fixtures/awdmods-homepage``) are the load-bearing inputs for the report
-builder, the determinism probe, and a dozen regression tests. Two
-post-2026-04-30 schema evolutions are easy to silently revert when a
-fixture is hand-edited or regenerated against an older specialist:
+builder, the determinism probe, and a dozen regression tests. Two post-
+2026-04-30 schema evolutions are easy to silently revert when a fixture
+is hand-edited or regenerated against an older specialist:
 
-  B3.1  Every finding whose ``element.baton_index == 'absent'`` MUST carry
-        a dict ``proposed_anchor`` (top-level on the finding). Layer-3
-        hotspot routing breaks without it, which is why
-        ``schema/finding-v1.json`` makes it mandatory for absent-anchored
-        findings and ``assembly.emission_autofix`` injects a default when
-        the specialist forgets. A fixture that drops the field regresses to
-        the pre-mandatory shape.
+  B3.1  ``proposed_anchor`` shape, when present, is a dict. Was a strict
+        "absent baton_index MUST carry a dict proposed_anchor" rule pre-
+        v1.2; product.md §4.2 v1.2 (2026-06-10) demoted proposed_anchor to
+        an OPTIONAL editor hint and the schema's mandatory rule was
+        removed. The fixture guard now just enforces that when the field
+        IS present, it stays a dict (not a stringly-typed regression to a
+        prose pseudo-anchor).
 
   B3.2  Every ethics finding with ``ethics_state == 'CLEAR'`` MUST set
         ``effort.change_type == 'not_applicable'`` and
@@ -76,22 +76,24 @@ def _allof_branches() -> list[dict]:
 
 
 def _absent_const() -> str:
-    """The const value flagged as 'no baton anchor', from the schema branch
-    that requires proposed_anchor for absent-anchored findings."""
-    for branch in _allof_branches():
-        try:
-            const = branch["if"]["properties"]["element"]["properties"][
-                "baton_index"
-            ]["const"]
-        except (KeyError, TypeError):
-            continue
-        if "proposed_anchor" in json.dumps(branch.get("then", {})):
-            assert isinstance(const, str) and const
+    """The const value flagged as 'no baton anchor'. Pulled from the schema's
+    element.baton_index oneOf branch that pins the absent literal, so a
+    schema rename of the literal would track here automatically. The pre-
+    v1.2 hop through the (now removed) absent->proposed_anchor allOf branch
+    was replaced 2026-06-10 when §4.2 v1.2 demoted proposed_anchor to an
+    optional editor hint."""
+    schema_elem = (
+        SCHEMA.get("properties", {}).get("element", {})
+        .get("properties", {}).get("baton_index", {})
+    )
+    for branch in schema_elem.get("oneOf", []):
+        const = branch.get("const")
+        if isinstance(const, str) and const:
             return const
     pytest.fail(
-        "Could not locate the absent-baton_index -> proposed_anchor "
-        "conditional in schema/finding-v1.json; the guard's coupling to "
-        "the schema is broken (did the rule move or get removed?)."
+        "Could not locate the element.baton_index 'absent' const in "
+        "schema/finding-v1.json; the guard's coupling to the schema is broken "
+        "(did the const rename or get removed?)."
     )
 
 
@@ -196,41 +198,41 @@ def test_corpus_is_non_empty_for_both_fixtures():
 
 
 # ---------------------------------------------------------------------------
-# B3.1 - absent baton_index findings carry a dict proposed_anchor
+# B3.1 - proposed_anchor, when present, must be a dict
 # ---------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize("item", EMISSION_PATHS, ids=_emission_id)
-def test_absent_findings_carry_dict_proposed_anchor(item):
+def test_proposed_anchor_when_present_is_dict_shaped(item):
+    """Post product.md §4.2 v1.2 (2026-06-10) proposed_anchor is OPTIONAL on
+    absent findings — the renderer never auto-pins from it; absences ship
+    blank for the operator's manual queue. The fixture guard is now: when
+    proposed_anchor IS present (on absent or anywhere else), it must be a
+    structured dict, never a stringly-typed prose pseudo-anchor that would
+    silently regress the editor-hint flow."""
     name, path = item
     offenders: list[str] = []
-    saw_absent = False
     for f in _load_findings(path):
         if not isinstance(f, dict):
             continue
-        element = f.get("element") or {}
-        if not isinstance(element, dict):
-            continue
-        if element.get("baton_index") != ABSENT:
-            continue
-        saw_absent = True
+        if "proposed_anchor" not in f:
+            continue  # absent field is fine post-v1.2
         pa = f.get("proposed_anchor")
         if not isinstance(pa, dict):
             offenders.append(
                 f"local_id={f.get('local_id')!r} proposed_anchor={type(pa).__name__}"
             )
     assert not offenders, (
-        f"{name}/{path.name}: absent-anchored findings missing a dict "
-        f"proposed_anchor (pre-2026-04-30 regression): {offenders}"
+        f"{name}/{path.name}: proposed_anchor present but not a dict "
+        f"(stringly-typed regression): {offenders}"
     )
-    # Not every emission has absent findings; saw_absent just records coverage.
-    _ = saw_absent
 
 
 def test_some_absent_findings_exist_across_the_corpus():
     """Coverage guard: at least one absent-anchored finding must exist in
-    the corpus, otherwise test_absent_findings_carry_dict_proposed_anchor
-    is vacuously green and a real regression could slip through."""
+    the corpus, otherwise downstream guards that exercise absence flow
+    (renderer Strategy 4, editor manual queue) are vacuously green and a
+    real regression could slip through."""
     total_absent = 0
     for _name, path in EMISSION_PATHS:
         for f in _load_findings(path):

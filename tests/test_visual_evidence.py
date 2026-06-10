@@ -66,21 +66,16 @@ class TestDeriveProducerWins:
         assert result["type"] == "proxy_element"
         assert result["confidence"] == "medium"
 
-    def test_section_stacked_manual_overrides_stale_producer_evidence(self) -> None:
-        # Rule 0: a marker relabeled section_stacked_manual (hero-stack
-        # distribute, Fix#3) must be forced to section_absence/low even when it
-        # still carries stale producer {exact_element, high} from before the
-        # relabel — it is a manual-review-queued placement, not a confident
-        # exact one (adversarial review 2026-06-03 §1 Fix#3 NIT / §4 #9).
-        finding = {
-            "element": {"baton_index": "e7"},
-            "match_method": "section_stacked_manual",
-            "visual_evidence": {"type": "exact_element", "confidence": "high"},
-        }
-        result = derive_visual_evidence(finding)
-        assert (result["type"], result["confidence"]) == ("section_absence", "low")
-
-    def test_section_stacked_manual_via_kwarg_is_forced(self) -> None:
+    def test_section_stacked_manual_back_compat_enum_hit(self) -> None:
+        # ``section_stacked_manual`` was a 2026-06-03 relabel of distributed
+        # hero stacks (Fix #3) that the renderer no longer produces after the
+        # 2026-06-10 §4.2 v1.2 prune (absences ship blank, so no stack forms
+        # to distribute). The match_method string remains in
+        # ``_MATCH_METHOD_TO_TYPE`` purely as back-compat for persisted
+        # review-state files written before the prune — kwarg lookup must
+        # still return the legacy (section_absence, low) typing so old states
+        # don't trip the giant-rectangle gate by accidentally getting
+        # classified as exact_element.
         result = derive_visual_evidence(match_method="section_stacked_manual")
         assert (result["type"], result["confidence"]) == ("section_absence", "low")
 

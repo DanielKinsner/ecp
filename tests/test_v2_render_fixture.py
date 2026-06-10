@@ -54,7 +54,10 @@ class TestV2RenderFixture(unittest.TestCase):
             "Priority Path link did not resolve — F-NN numbering regression (P0-3 class)")
         # Fix#4 fold-in: the render summary surfaces placement QA deterministically.
         self.assertIn("Placement QA:", result.stdout)
-        self.assertIn("section_stacked_manual=", result.stdout)
+        # Post-2026-06-10 the CLI summary is the live methods + an `other`
+        # bucket for back-compat strings; previous `section_stacked_manual=`
+        # check was a relic of the now-pruned Fix #3 distribution path.
+        self.assertIn("unplaced=", result.stdout)
 
     def test_mobile_renders_clean(self) -> None:
         result, html = self._render("mobile", "baton-mobile.json")

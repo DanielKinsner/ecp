@@ -8,12 +8,19 @@ inform what the autofix repairs:
   (e.g., ``references/ethics-gate.md`` instead of bare filename).
 - Duplicate ``(surface, baton_index, verdict)`` finding tuples.
 - ``proposed_anchor.reason`` exceeding the 200-char schema cap.
-- ``element.baton_index='absent'`` findings missing the required
-  ``proposed_anchor`` field.
 
 Each repair has a "fires on bad input" + "no-op on clean input" pair,
 plus an idempotency test (re-running autofix on the fixed output
 produces no further repairs).
+
+Pre-v1.2 the autofix also injected a default ``proposed_anchor`` on
+absent findings that omitted one (the schema required it). After
+product.md §4.2 v1.2 rulings A1+A2 (operationalized 2026-06-10),
+``proposed_anchor`` is an OPTIONAL editor hint and absent findings
+render BLANK — the injection is gone, and
+``TestAbsentFindingsKeepNoProposedAnchor`` locks in the no-op behavior
++ confirms the unannotated absent finding still passes
+schema/finding-v1.json validation.
 
 unittest-style for ``python -m unittest discover`` runner compatibility.
 
@@ -246,76 +253,54 @@ class TestRepairOverlongProposedAnchorReason(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
-# Repair 4 — inject default proposed_anchor for absent findings
+# Absent findings + proposed_anchor: post-v1.2 NO injection happens
 # ---------------------------------------------------------------------------
 
 
-class TestRepairMissingProposedAnchorOnAbsent(unittest.TestCase):
-    def test_injects_default_on_absent_without_proposed_anchor(self):
+class TestAbsentFindingsKeepNoProposedAnchor(unittest.TestCase):
+    """Per product.md §4.2 v1.2 (Phase-0 rulings A1+A2, operationalized
+    2026-06-10), absence findings always render BLANK and ``proposed_anchor``
+    is an OPTIONAL editor hint — not a placement directive. The autofix's
+    former Repair 4 (inject a default section-bottom-overlay anchor on
+    absent findings missing one) was the chief source of wrong-placement
+    violations and has been removed. These tests lock in the no-op
+    behavior and confirm an unannotated absent finding still passes
+    schema validation."""
+
+    def test_no_injection_on_absent_without_proposed_anchor(self):
         finding = _make_finding(local_id=1, baton_index="absent", device="desktop")
         # No proposed_anchor field at all.
         fixed, repairs = autofix_emission(_emission([finding]))
-        pa = fixed["findings"][0].get("proposed_anchor")
-        self.assertIsNotNone(pa, "proposed_anchor must be injected on absent findings.")
-        # G15 P1-3 v2 (2026-05-27): the injected default uses the schema's
-        # kind=section variant (matches how live-run leads were hand-
-        # normalizing the prior broken viewport/above-fold-banner default).
-        self.assertEqual(pa["kind"], "section")
-        self.assertEqual(pa["placement"], "section-bottom-overlay")
-        self.assertEqual(pa["section_index"], 0)
-        self.assertEqual(pa["viewport"], "desktop")
-        self.assertIn("auto-injected", pa["reason"])
-        inject_repairs = [r for r in repairs if r["field"] == "proposed_anchor" and r["before"] == "<missing>"]
-        self.assertEqual(len(inject_repairs), 1)
+        self.assertNotIn(
+            "proposed_anchor",
+            fixed["findings"][0],
+            "absent finding without a proposed_anchor must stay that way; "
+            "the autofix MUST NOT inject a default — per product.md §4.2 "
+            "v1.2 the renderer leaves the hotspot blank for the operator.",
+        )
+        inject_repairs = [r for r in repairs if r.get("field") == "proposed_anchor" and r.get("before") == "<missing>"]
+        self.assertEqual(
+            inject_repairs,
+            [],
+            "No 'proposed_anchor <missing>' repair record should be emitted.",
+        )
 
-    def test_injected_anchor_viewport_derives_from_finding_device(self):
-        """When the finding is mobile-scoped, the injected viewport must be
-        mobile (not desktop). Ethics page-scope findings default to desktop."""
-        for device, expected_viewport in (
-            ("desktop", "desktop"),
-            ("mobile", "mobile"),
-            ("page", "desktop"),  # ethics default
-            (None, "desktop"),    # missing field default
-        ):
-            with self.subTest(device=device):
-                kwargs = {"local_id": 1, "baton_index": "absent"}
-                if device is not None:
-                    kwargs["device"] = device
-                finding = _make_finding(**kwargs)
-                fixed, _ = autofix_emission(_emission([finding]))
-                self.assertEqual(
-                    fixed["findings"][0]["proposed_anchor"]["viewport"],
-                    expected_viewport,
-                    f"device={device!r} → viewport should be {expected_viewport!r}",
-                )
-
-    def test_injected_anchor_passes_real_schema_validator(self):
-        """The headline G15 P1-3 v2 regression: the injected default MUST
-        pass schema/finding-v1.json validation. Pre-v2 (commit e7f6af5)
-        the autofix injected `viewport / above-fold-banner / viewport=both`,
-        all three of which are out-of-enum per the finding-v1.json schema.
-        Five live runs in a row (docs/ecp/2026-05-27-*) hand-normalized
-        the broken injection because the autofix's "repair" produced an
-        emission that bounced right back into the validator.
-
-        This test exercises the actual repo schema, so it would have
-        caught the bug at CI time."""
+    def test_absent_without_proposed_anchor_passes_real_schema_validator(self):
+        """Schema/finding-v1.json must accept an absent finding with NO
+        ``proposed_anchor`` field after the v1.2 prune. Pre-v1.2 the schema
+        required ``proposed_anchor`` whenever ``baton_index='absent'``; that
+        rule has been dropped. This guards against accidentally re-adding it."""
         import sys as _sys
         from pathlib import Path as _Path
         _sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "scripts"))
         from assembly.json_parser import get_validator
 
-        # Build an emission whose ONLY repair will be the proposed_anchor
-        # injection, so we can isolate that injection in the output and
-        # validate it against the real schema.
         finding = _make_finding(local_id=1, baton_index="absent", device="desktop")
         emission = _emission([finding])
         fixed, _ = autofix_emission(emission)
 
         validator = get_validator()
         errors = sorted(validator.iter_errors(fixed), key=lambda e: list(e.absolute_path))
-        # Filter to errors that touch proposed_anchor specifically — any other
-        # validation gap is unrelated to the autofix regression.
         pa_errors = [
             f"{list(e.absolute_path)}: {e.message}"
             for e in errors
@@ -324,16 +309,16 @@ class TestRepairMissingProposedAnchorOnAbsent(unittest.TestCase):
         self.assertEqual(
             pa_errors,
             [],
-            f"G15 P1-3 v2 invariant violated: the autofix's injected "
-            f"proposed_anchor must pass the real finding-v1.json schema. "
-            f"Errors against proposed_anchor: {pa_errors}",
+            f"Schema should accept absent findings with no proposed_anchor. "
+            f"Errors: {pa_errors}",
         )
 
-    def test_no_op_when_proposed_anchor_already_present(self):
+    def test_existing_proposed_anchor_is_preserved_untouched(self):
         finding = _make_finding(local_id=1, baton_index="absent")
         finding["proposed_anchor"] = {
             "kind": "section",
-            "placement": "section-top",
+            "section_index": 1,
+            "placement": "section-bottom-overlay",
             "viewport": "desktop",
             "reason": "operator-authored placement",
         }
@@ -341,12 +326,12 @@ class TestRepairMissingProposedAnchorOnAbsent(unittest.TestCase):
         self.assertEqual(
             fixed["findings"][0]["proposed_anchor"]["reason"],
             "operator-authored placement",
-            "Existing proposed_anchor must be preserved untouched.",
+            "Existing proposed_anchor must be preserved as an editor hint.",
         )
         inject_repairs = [r for r in repairs if r.get("before") == "<missing>"]
         self.assertEqual(inject_repairs, [])
 
-    def test_no_op_on_non_absent_findings(self):
+    def test_no_proposed_anchor_added_on_non_absent_findings(self):
         finding = _make_finding(local_id=1, baton_index="e7")
         fixed, repairs = autofix_emission(_emission([finding]))
         self.assertNotIn(
@@ -408,19 +393,22 @@ class TestAutofixCrossCutting(unittest.TestCase):
         )
 
     def test_combined_repairs_all_fire(self):
-        """Single emission carrying every repair-class; assert all four
-        repair classes fire on the same pass."""
+        """Single emission carrying every live repair-class; assert each of
+        the three remaining repair classes fires on the same pass. The
+        former Repair 4 (inject default proposed_anchor on absent) was
+        removed in 2026-06-10 with the §4.2 v1.2 absence-blank rulings."""
         finding_absent = _make_finding(local_id=1, baton_index="absent")
-        # finding_absent intentionally missing proposed_anchor → repair 4 fires.
+        # finding_absent intentionally missing proposed_anchor — must NOT be
+        # injected (post-v1.2: absences ship blank, operator places by hand).
         finding_hero_a = _make_finding(local_id=2, surface="hero", baton_index="e3")
         finding_hero_b = _make_finding(local_id=3, surface="hero", baton_index="e3")  # dup → repair 2
-        # Distinct surface so dedup doesn't collapse finding_overlong into finding_absent
-        # (both would otherwise share key ('primary-content-block', 'absent', 'FAIL')).
+        # Distinct surface so dedup doesn't collapse finding_overlong into finding_absent.
         finding_overlong = _make_finding(local_id=4, surface="footer", baton_index="absent")
         finding_overlong["proposed_anchor"] = {
-            "kind": "viewport",
-            "placement": "above-fold-banner",
-            "viewport": "both",
+            "kind": "section",
+            "section_index": 0,
+            "placement": "section-bottom-overlay",
+            "viewport": "desktop",
             "reason": "x" * (PROPOSED_ANCHOR_REASON_MAX_LEN + 50),  # repair 3 fires
         }
         emission = _emission(
@@ -432,7 +420,16 @@ class TestAutofixCrossCutting(unittest.TestCase):
         self.assertIn("telemetry.reference_files_read[]", repair_fields)
         self.assertIn("findings[]", repair_fields)
         self.assertIn("proposed_anchor.reason", repair_fields)
-        self.assertIn("proposed_anchor", repair_fields)
+        # The retired Repair 4 (proposed_anchor inject on absent) must NOT
+        # fire anywhere in this combined emission.
+        self.assertNotIn(
+            "proposed_anchor",
+            repair_fields,
+            "Repair 4 (inject default proposed_anchor) was removed with the "
+            "§4.2 v1.2 absence-blank rulings; absence findings now ship "
+            "blank for the operator's manual queue.",
+        )
+        self.assertNotIn("proposed_anchor", fixed["findings"][0])
 
 
 if __name__ == "__main__":

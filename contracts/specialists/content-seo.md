@@ -52,7 +52,7 @@ Before touching the cluster-context DOM slices, read the structured fields in ba
 - `schema_jsonld` — the raw JSON-LD block(s); validate presence, parse for @type: Product / ProductGroup / Offer / AggregateRating / MerchantReturnPolicy / ShippingService
 - `hreflang` — if present, validate that locale alternates point to the correct locale-specific canonical URLs (not the default language URL)
 
-Derive your findings from these structured fields rather than re-parsing the DOM for the same data. For baton.elements[], the head-level findings use baton_index: "absent" when the element does not exist in the DOM (e.g., "no canonical tag") — the renderer will place a section-level hotspot.
+Derive your findings from these structured fields rather than re-parsing the DOM for the same data. For baton.elements[], the head-level findings use baton_index: "absent" when the element does not exist in the DOM (e.g., "no canonical tag") — per product.md §4.2 (v1.2), the renderer leaves absence hotspots blank; the operator places or declines them manually in the editor. You may emit `proposed_anchor` as an optional hint for that manual pass if you have a defensible suggestion.
 
 ---
 

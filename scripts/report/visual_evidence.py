@@ -50,16 +50,30 @@ from typing import Any
 # Canonical mapping of match_method enum -> (visual_evidence.type, confidence)
 # when the finding does NOT carry an explicit visual_evidence object.
 #
-# These are best-effort heuristics. A specialist that authors visual_evidence
-# directly will produce richer output (e.g. observed_anchor with selector_hint
-# and text_quote, or expected_overlay with template_id). The derivation here
-# is the back-compat path for legacy emissions and unmigrated specialists.
+# Per product.md §4.2 v1.2 (rulings A1+A2), only methods that prove the marker
+# lands on the right element are exact-tier and qualify for auto-placement
+# (e_index_lookup against a real on-slide baton element, and operator_override
+# — the human looked at the screenshot and clicked). Every other historical
+# method is below exact-tier; the renderer no longer emits them at all (see
+# scripts/report/v2_markers.auto_map_markers_v2), so the table below has
+# shrunk to the live emitters plus a handful of back-compat strings for old
+# persisted state ("banner", "section_centroid", "section_stacked_manual",
+# "proposed_anchor_*") that a freshly-loaded review-state.json may still
+# carry. New code must not produce them.
 _MATCH_METHOD_TO_TYPE: dict[str, tuple[str, str]] = {
-    # Renderer found a tight match against a real baton element by e_index
+    # Exact-tier (auto-placed): tight match against a real baton element.
     "e_index_lookup": ("exact_element", "high"),
     "e_index": ("exact_element", "high"),
-    # Renderer fell back to section centroid because no element was cited
-    "section_centroid": ("section_absence", "low"),
+    # Exact-tier (auto-placed): operator placed the marker in editor.html.
+    # Operator placement is exact by construction — a human looked at the
+    # pixel and clicked. Mirrors e_index_lookup so the Phase-3 gates treat
+    # it as exact_element.
+    "operator_override": ("exact_element", "high"),
+    # Back-compat: the bare "operator" verb (from older review-state shapes)
+    # records that an operator edited the finding, but does NOT prove a
+    # concrete pin was placed. Stays needs_review so the priority-path gate
+    # surfaces it for human verification before client delivery.
+    "operator": ("page_level", "needs_review"),
     # No placement signal at all — the hotspot is left blank (product.md §4.2);
     # operator places it in editor.html. Typed page_level/low (not needs_review)
     # to preserve the prior "banner" fallback's Phase-3 gate footprint: it
@@ -67,10 +81,15 @@ _MATCH_METHOD_TO_TYPE: dict[str, tuple[str, str]] = {
     # needs_review gate. "banner" retained for back-compat with old emissions.
     "unplaced": ("page_level", "low"),
     "banner": ("page_level", "low"),
-    "operator": ("page_level", "needs_review"),
-    # Distributed hero-stack fallback (diagnosis Fix #3): spread up the section
-    # band and explicitly queued for manual review — same evidence class as the
-    # section centroid it derives from.
+    # Back-compat for review-state files written before the v1.2 prune
+    # (2026-06-10). These match_methods are no longer emitted by the renderer
+    # but may still appear on persisted markers. Map them to honest non-exact
+    # evidence so the giant_exact_rectangles gate doesn't accidentally fire
+    # on a stale section-fallback marker.
+    "section_centroid": ("section_absence", "low"),
+    "proposed_anchor_element": ("proxy_element", "medium"),
+    "proposed_anchor_section": ("section_absence", "low"),
+    "proposed_anchor_viewport": ("generated_expected_zone", "low"),
     "section_stacked_manual": ("section_absence", "low"),
 }
 
@@ -139,26 +158,6 @@ def derive_visual_evidence(
     is populated with a short trace of which rule fired so debug surfaces
     can show the derivation path.
     """
-    # Rule 0 (overrides producer evidence): section_stacked_manual is a relabel
-    # of a collapsed hero-stack into a manual-review-queued distributed marker
-    # (diagnosis Fix #3). It is never a confident exact placement, so it MUST
-    # force section_absence/low even when the finding still carries the stale
-    # producer visual_evidence it had before the relabel (e.g. exact_element /
-    # high). Adversarial review 2026-06-03 §1 Fix#3 NIT / §4 #9.
-    effective_mm = match_method if match_method is not None else (
-        finding.get("match_method") if finding is not None else None
-    )
-    if effective_mm == "section_stacked_manual":
-        ve_type, confidence = _MATCH_METHOD_TO_TYPE["section_stacked_manual"]
-        return {
-            "type": ve_type,
-            "confidence": confidence,
-            "reason": (
-                "Forced from match_method=section_stacked_manual "
-                "(manual-review queue; overrides any stale producer evidence)"
-            ),
-        }
-
     if finding is not None:
         # Producer-authored visual_evidence always wins
         ve = finding.get("visual_evidence")

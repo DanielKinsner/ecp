@@ -30,13 +30,20 @@ from .utils import aspect_ratio_value, get_device_frame_css, escape_html
 from .path_safety import resolve_within_base
 
 
-# Placement methods that anchor a hotspot to a concrete element. Everything else
-# that still receives a position is a "weak" placement — surfaced in the render
-# summary so "0 unplaced" is not mistaken for "all hotspots are correct"
-# (Fix #4, docs/2026-06-02-hotspot-placement-diagnosis.md).
-_STRONG_PLACEMENT_METHODS = frozenset(
-    {"e_index_lookup", "proposed_anchor_element", "operator_override"}
-)
+# Exact-tier placement methods — the ONLY methods that auto-place a hotspot
+# per product.md §4.2 v1.2 (Phase-0 ruling A2). Kept in sync with
+# scripts/report/visual_evidence._MATCH_METHOD_TO_TYPE: a method is in this
+# set iff its derived visual_evidence is ("exact_element", "high"). After the
+# 2026-06-10 prune, the renderer only emits ``e_index_lookup`` (Strategy 1
+# on a real on-slide baton element) and ``operator_override`` (merge_markers
+# tagging a hand-placed marker from the --markers file). ``e_index`` is the
+# back-compat alias for ``e_index_lookup`` in older persisted review-state
+# shapes and stays in the set so it doesn't get tagged "weak" if a stale
+# state is reloaded. tests/test_g4_blank_below_confidence.py asserts this
+# set equals the (exact_element, high) slice of _MATCH_METHOD_TO_TYPE.
+_STRONG_PLACEMENT_METHODS = frozenset({
+    "e_index_lookup", "e_index", "operator_override",
+})
 
 
 def _placement_qa(merged_mappings: list[dict], slide_markers: dict) -> dict:
@@ -341,16 +348,13 @@ def generate_v2_report(
     output_path = engagement_path / output_file
     output_path.write_text(html, encoding="utf-8")
 
-    # CLI summary
+    # CLI summary — after the 2026-06-10 §4.2 v1.2 prune, the renderer only
+    # emits e_index_lookup / operator_override / unplaced (other historical
+    # match_methods are reported in an "other" bucket so a stale persisted
+    # state still surfaces clearly instead of getting silently rolled in).
     mapped = sum(len(m) for m in slide_markers.values())
     e_index_count = sum(
         1 for m in merged_mappings if m.get("match_method") == "e_index_lookup"
-    )
-    section_count = sum(
-        1 for m in merged_mappings if m.get("match_method") == "section_centroid"
-    )
-    banner_count = sum(
-        1 for m in merged_mappings if m.get("match_method") == "banner"
     )
     unplaced_count = sum(
         1 for m in merged_mappings if m.get("match_method") == "unplaced"
@@ -358,17 +362,9 @@ def generate_v2_report(
     op_count = sum(
         1 for m in merged_mappings if m.get("match_method") == "operator_override"
     )
-    pa_element = sum(
-        1 for m in merged_mappings if m.get("match_method") == "proposed_anchor_element"
-    )
-    pa_section = sum(
-        1 for m in merged_mappings if m.get("match_method") == "proposed_anchor_section"
-    )
-    pa_viewport = sum(
-        1 for m in merged_mappings if m.get("match_method") == "proposed_anchor_viewport"
-    )
-    ssm_count = sum(
-        1 for m in merged_mappings if m.get("match_method") == "section_stacked_manual"
+    _LIVE_METHODS = {"e_index_lookup", "operator_override", "unplaced"}
+    other_count = sum(
+        1 for m in merged_mappings if m.get("match_method") not in _LIVE_METHODS
     )
 
     qa = _placement_qa(merged_mappings, slide_markers)
@@ -380,9 +376,7 @@ def generate_v2_report(
     print(f"  Hotspots placed: {mapped}")
     print(
         f"  Match methods: e_index={e_index_count} "
-        f"proposed_anchor(element={pa_element} section={pa_section} viewport={pa_viewport}) "
-        f"section_centroid={section_count} section_stacked_manual={ssm_count} "
-        f"unplaced={unplaced_count} banner={banner_count} operator={op_count}"
+        f"operator={op_count} unplaced={unplaced_count} other={other_count}"
     )
     # Tier-0 placement QA (folded in from placement_audit.py so "0 unplaced" is
     # never mistaken for "all correct"): weak (non-element-anchored) placements

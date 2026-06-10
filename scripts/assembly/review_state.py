@@ -142,6 +142,14 @@ def build_initial_review_state(
                 "match_method": mapping.get("match_method"),
                 "element": finding.get("element", ""),
                 "section": finding.get("section", ""),
+                # Surface the specialist's proposed_anchor as an editor hint
+                # for absent findings the renderer left blank — the operator's
+                # "Place manually" queue can display the suggested kind /
+                # placement / reason without the renderer auto-pinning
+                # anything (product.md §4.2 v1.2 rulings A1+A2,
+                # operationalized 2026-06-10). Null for findings that don't
+                # carry one.
+                "proposed_anchor": finding.get("proposed_anchor"),
             },
         })
 
@@ -1103,53 +1111,46 @@ def _display_title(finding: dict[str, Any]) -> str:
 
 
 def _hotspot_confidence(match_method: str | None) -> str:
-    # Bug B fix (2026-05-02): expand the taxonomy to honestly reflect
-    # placement quality. The old map collapsed every Strategy-1 lookup
-    # to "exact-selector" even when the element had no geometry or
-    # landed off-slide — making the editor's "needs review" filter
-    # useless. Viewport proposed_anchor is a real positioning signal
-    # (page-global sticky CTAs etc), not a manual-placement bail-out —
-    # re-label as "section-match". operator_override is a real hand-placed
-    # marker and should carry exact-selector confidence.
-    # "unplaced" (2026-05-26, G4): Strategy 4 no longer auto-places a banner;
-    # it leaves the hotspot blank (product.md §4.2). Map it to needs-manual-
-    # marker so the editor surfaces it in the "Place manually" queue. "banner"
-    # is retained for back-compat with operator overrides / persisted review
-    # states written before the rename.
-    # C3 fix (2026-06-10): off-slide e_index hits used to emit
-    # match_method="e_index_lookup_offslide" -> "fallback-absence" while the
-    # renderer clamped them onto the wrong slide. They now fall through to
-    # Strategy 4 ("unplaced") and surface in the manual queue with no rendered
-    # marker. The "fallback-absence" label stays in the schema/editor for
-    # back-compat with persisted review states written before this fix.
+    # Per product.md §4.2 v1.2 (Phase-0 rulings A1+A2, operationalized
+    # 2026-06-10), only exact-tier match_methods auto-place: e_index_lookup
+    # (real on-slide element) and operator_override (human placed it). Every
+    # other historical value either no longer fires (Strategies 2/3 +
+    # section_stacked_manual were pruned with the absence-blank ruling) or
+    # never represented a confident placement to begin with — they all map
+    # to "needs-manual-marker" so the editor surfaces them in the "Place
+    # manually" queue. Old persisted review-state files may still carry the
+    # retired strings; the .get(..., "needs-manual-marker") default catches
+    # any drift without crashing.
     return {
         "e_index_lookup": "exact-selector",
-        "proposed_anchor_element": "exact-selector",
-        "proposed_anchor_section": "section-match",
-        "proposed_anchor_viewport": "section-match",
-        "section_centroid": "section-match",
-        "unplaced": "needs-manual-marker",
-        "banner": "needs-manual-marker",
         "operator_override": "exact-selector",
-        # Distributed hero-stack markers (diagnosis Fix #3): rendered at a
-        # spread position but explicitly queued for manual verification.
+        "unplaced": "needs-manual-marker",
+        # Back-compat with persisted states written before the 2026-06-10 prune.
+        "banner": "needs-manual-marker",
+        "section_centroid": "needs-manual-marker",
+        "proposed_anchor_element": "needs-manual-marker",
+        "proposed_anchor_section": "needs-manual-marker",
+        "proposed_anchor_viewport": "needs-manual-marker",
         "section_stacked_manual": "needs-manual-marker",
     }.get(match_method or "", "needs-manual-marker")
 
 
 def _marker_source(match_method: str | None) -> str:
-    # "unplaced" findings have no placement source — the operator owns it, so
-    # it maps to the schema's "manual" source (the default). "banner" is kept
-    # for back-compat with persisted states.
+    # Maps a marker's match_method to the persisted review-state ``source``
+    # enum (schema/review-state-v1.json). Only the live match_methods
+    # (e_index_lookup, operator_override -> e_index_lookup, plus the
+    # historical proposed_anchor_* values for back-compat with persisted
+    # states) have a non-"manual" provenance; everything else, including
+    # "unplaced", maps to "manual" because the operator owns the placement.
     return {
         "e_index_lookup": "e_index_lookup",
+        "operator_override": "e_index_lookup",
+        # Back-compat with persisted states written before the 2026-06-10 prune.
         "proposed_anchor_element": "proposed_anchor_element",
         "proposed_anchor_section": "proposed_anchor_section",
         "proposed_anchor_viewport": "proposed_anchor_viewport",
         "section_centroid": "proposed_anchor_section",
         "banner": "proposed_anchor_viewport",
-        # Distributed hero-stack markers keep their section provenance; the
-        # finding-level needs-manual-marker confidence is what flags them.
         "section_stacked_manual": "proposed_anchor_section",
     }.get(match_method or "", "manual")
 

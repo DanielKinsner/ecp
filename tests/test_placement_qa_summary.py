@@ -33,13 +33,18 @@ class TestPlacementQaWeak(unittest.TestCase):
         self.assertEqual(_placement_qa([{"match_method": "unplaced"}], {})["weak"], 0)
 
     def test_fallback_methods_are_weak(self):
+        # Post 2026-06-10 §4.2 v1.2 prune, only e_index_lookup and
+        # operator_override are strong. The renderer no longer emits the
+        # other match_methods on placed markers, but a stale persisted state
+        # may still carry them — surface those as weak so the operator sees
+        # the signal.
         mappings = [
             {"match_method": "e_index_lookup"},          # strong
-            {"match_method": "section_centroid"},        # weak
-            {"match_method": "proposed_anchor_section"}, # weak
-            {"match_method": "proposed_anchor_viewport"},# weak
-            {"match_method": "section_stacked_manual"},  # weak (Fix#3 method)
-            {"match_method": "banner"},                  # weak
+            {"match_method": "section_centroid"},        # weak (back-compat)
+            {"match_method": "proposed_anchor_section"}, # weak (back-compat)
+            {"match_method": "proposed_anchor_viewport"},# weak (back-compat)
+            {"match_method": "section_stacked_manual"},  # weak (back-compat)
+            {"match_method": "banner"},                  # weak (back-compat)
         ]
         self.assertEqual(_placement_qa(mappings, {})["weak"], 5)
 
