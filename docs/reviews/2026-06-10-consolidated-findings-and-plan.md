@@ -99,6 +99,20 @@ amends the spec, or as a one-line verdict in this doc when it confirms code must
 | **A8** | **hc-C6 ghost-zone placement** | **Recommend decline/park**: validation showed it won't silence the `proxy_overload` warn it targeted; high-risk geometry. Re-open only if LV3 vision-QA shows stacked-marker **or region-as-point** placement (two distinct failure classes from the awdmods addendum) is still hurting reports | — |
 | **A9** | **H4 gate strictness** — should `--mark-client-verified` mechanically refuse while `needs-manual-marker` markers remain (escape hatch `--force`)? | (a) yes (recommended) · (b) keep honor-system per spec's "manual pass stays manual" | Phase 2 |
 
+### ✅ Phase-0 rulings — DECIDED 2026-06-09 (all nine, by the owner)
+
+| # | Ruling |
+|---|---|
+| A1 | **Code conforms to spec.** Absence findings always blank + manual queue; `proposed_anchor` demoted to editor hint. (Recorded in the A2 §10 row as a no-spec-change companion ruling.) |
+| A2 | **Exact-tier categorical gate.** Only exact-tier placement methods auto-place; weaker strategies → blank. §10 v1.2 entry recorded. |
+| A3 | **Tier collapse.** The former "comprehensive" (all page-type-relevant clusters) becomes the default "standard"; the 3–4-cluster tier is retired; `everything`/`--focus all` and custom selection stay as explicit options. §10 v1.2 entry recorded; contracts follow (flags.md, cluster-routing.md, meta-schema.md — folded into Phase 5, or earlier as a standalone commit). |
+| A4 | **Reword text only.** Frozen interface rows stay (§7 shared-contract design); the Phase-5 sweep rewords all live-voiced text, including `device-semantics.md`. |
+| A5 | **Header tracks changelog.** product.md header bumped to v1.2; §9 Baseline reworded. **Done** (in the rulings commit). |
+| A6 | **Thin pointer AGENTS.md.** Replaced the Codex string-replace copy with a committed pointer (Claude Code plugin; Codex sessions read CLAUDE.md; shared-checkout git rules). **Done** (in the rulings commit). |
+| A7 | **Greenlit.** Normalizations canary (`hc-C4`) lands in Phase 7. |
+| A8 | **Declined/parked.** Ghost-zone (`hc-C6`) is not built. Re-open only if LV3 vision-QA shows stacked or region-as-point placement still hurting reports **after** the A1/A2 placement changes land. |
+| A9 | **Mechanical refusal.** `--mark-client-verified` refuses while `needs-manual-marker` markers remain; `--force` escape + attestation. Code-side; no spec change. |
+
 ## 5. Execution plan
 
 Sequenced for correctness-per-risk; every commit is small, on a short-lived branch
@@ -106,8 +120,10 @@ ff-merged to `main`, with its regression test (repo convention). Phases 3/4/6/7 
 spec ruling; Phase 1 is adjudication-free except items 12a/12b (trivial edits gated on
 A5/A6); Phases 2 and 5 consume the larger adjudications.
 
-### Phase 0 — Adjudication sitting (owner, no code)
-Rule A1–A9 above. Output: §10 entries where the spec moves; verdict lines here otherwise.
+### Phase 0 — Adjudication sitting (owner, no code) — ✅ DONE 2026-06-09
+All nine ruled (table above). §10 v1.2 entries landed for A2/A3/A5; A5/A6's trivial
+edits (spec header, AGENTS.md) shipped with the rulings commit, retiring Phase-1
+items 12a/12b.
 
 ### Phase 1 — Quick-wins batch (~13 S-effort, no-adjudication code true-ups)
 From the spec-audit's greenlightable batch, plus the trivial ruled items:
@@ -122,7 +138,7 @@ From the spec-audit's greenlightable batch, plus the trivial ruled items:
 9. **M3** schema allOf: CRITICAL ⇒ ethics only
 10. **L2 + L3** doc true-ups (README known-limitations; conformance-gaps test names)
 11. **Sweep-3 hygiene**: delete orphaned v1.4.1 plugin cache; update CLAUDE.md:45-55 stale-plugin note for this box
-12. (a) **M6** spec-version edit (gated on A5) · (b) **L1** AGENTS.md (gated on A6)
+12. ~~(a) **M6** spec-version edit · (b) **L1** AGENTS.md~~ — ✅ done with the Phase-0 rulings commit
 13. **CONVENTIONS-note**: `reference_*` family = operator maintenance, off the audit path
 
 ### Phase 2 — §4.2 placement ruling implementation (consumes A1/A2/A9)
@@ -163,8 +179,8 @@ grep-guards so it can't regress. File list (union):
 `dispatch-contract.md` (v1 teammate template ~129-269) · `team-lifecycle.md` ·
 `flags.md` (incl. `--ab-scaffold`/`--ab-tool` per H1) · `device-semantics.md` (per A4 —
 uncovered by the spec-audit; verify + reword) · `meta-schema.md` (per A4) ·
-`lead-discipline.md` (consent chain) · `cluster-routing.md` (dead SKILL anchors; H5
-labels per A3) · `skills/audit/SKILL.md` (load table itself: stop loading what's dead) ·
+`lead-discipline.md` (consent chain) · `cluster-routing.md` (dead SKILL anchors; A3
+tier collapse: standard := former comprehensive, 3–4-cluster tier retired) · `skills/audit/SKILL.md` (load table itself: stop loading what's dead) ·
 `SKILL.notes.md` routing rows. Keep the §7 carve-out: frozen *interface rows* stay;
 live-voiced *behavioral instructions* go. Fold in C18's contract half (ADJACENT hedge
 carve-out in `ethics-subagent-v2.md:184-188`) and C5's doc half. End with grep-guard

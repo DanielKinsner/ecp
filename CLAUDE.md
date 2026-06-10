@@ -8,8 +8,10 @@ ECP up and not break it across machines*. If anything here disagrees with `produ
 read it first. It consolidates + dedupes the two 2026-06-09 adversarial audits (Codex
 `a45d196`, Claude `5c645d7` — they independently converged on the same two top findings)
 and absorbs the 2026-06-08 handoff's deferred items into one inventory (33 ranked
-findings) and a 7-phase plan. **Next actions: the Phase-0 adjudication sitting (9 owner
-decisions, A1–A9), then the Phase-1 quick-wins batch.** ⚠️ Three colliding C-ID spaces —
+findings) and a 7-phase plan. **Phase 0 is DONE — all nine adjudications ruled
+2026-06-09 (roadmap §4 rulings table + product.md §10 v1.2 rows). Next action: the
+Phase-1 quick-wins batch, then Phase 2 (absences always blank + exact-tier placement
+gate).** ⚠️ Three colliding C-ID spaces —
 that doc's §"ID disambiguation" is mandatory reading before touching any C-number.
 **Before the next client run, do one live `--plugin-dir` audit** (the roadmap's Phase-4
 LV1–LV4 list is the full pending-live queue).

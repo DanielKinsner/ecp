@@ -1,7 +1,7 @@
 # product.md — ECP Canonical Product Specification
 
-**Spec version:** 1.0
-**Baseline date:** 2026-05-26
+**Spec version:** 1.2 (see §10 — the header always tracks the latest Spec Change Log row)
+**Baseline date:** 2026-05-26 (v1.0)
 **Status:** Authoritative. This file is the single source of truth for what ECP is and is not.
 
 > Prior version language elsewhere in the codebase ("v5.0", "Round N", plugin
@@ -54,7 +54,7 @@ A single-page conversion-psychology audit driven from a **URL**.
 
 ### 2.3 Domain breadth (the moat)
 
-The audit spans the **full cross-domain cluster set**. Breadth is the differentiator
+The audit draws on the **full cross-domain cluster set**. Breadth is the differentiator
 and is canonical:
 
 `visual-cta` · `trust-credibility` · `pricing` · `checkout-flows` ·
@@ -64,6 +64,13 @@ and is canonical:
 backed by the full evidence-tiered reference library (Gold / Silver / Bronze
 credibility tiers). The trust invariants in §4 apply **uniformly** to every cluster;
 no cluster is exempt.
+
+**Dispatch scope (v1.2).** A canonical audit dispatches **every cluster relevant to the
+detected page type** — the set previously called "comprehensive", which is now the
+default ("standard"). The legacy 3–4-cluster default tier is retired. All-10 dispatch
+(`everything` / `--focus all`) and fully custom cluster selection remain available on
+explicit operator request. Routing/override rules (`contracts/cluster-routing.md`) may
+ADD clusters to the relevant set, never silently remove them.
 
 ### 2.4 Deliverable boundary
 
@@ -138,7 +145,10 @@ Optimize for **precision over recall**: a *wrong* hotspot costs more than a *mis
 one. A false hotspot is net-negative; a blank is neutral.
 
 - **Auto-place a hotspot only at ~99.9% confidence.** Below threshold → **leave it
-  blank** for manual placement. Never auto-place a guess.
+  blank** for manual placement. Never auto-place a guess. *(v1.2 operationalization:
+  confidence is categorical — only exact-tier placement methods qualify for
+  auto-placement; every weaker strategy leaves the hotspot blank for the manual
+  queue.)*
 - **Wrong / wrong-page placement is the worst outcome** — a hard violation, worse
   than a blank.
 - **Absence findings** (recommending an element that does not exist, e.g. "no sticky
@@ -241,7 +251,8 @@ deleted. It is the quarry from which frozen modes (§5) are mined back when unfr
 Git history, the build/compare code, and the postmortem CHANGELOG are shelved, not
 lost.
 
-**Baseline.** This is Spec v1.0. All prior version language is historical.
+**Baseline.** Spec v1.0 (2026-05-26) is the baseline; the **effective** version is the
+header / latest §10 row. All prior version language is historical.
 
 ---
 
@@ -254,3 +265,6 @@ lost.
 | 2026-06-01 | 1.1 | P1 dispatch-contract restoration: re-added the multi-planner/relay dispatch structure (per-role + counter table rows, multi-planner subsection + dispatch row, SendMessage-row contradiction fix) and restored `contracts/relay-loop-protocol.md` + `contracts/multi-planner-protocol.md`. | The migration trim left line-69 self-contradictory and the multi-planner peer-negotiation contract absent, leaving v2 multi-planner dispatch unspecified. |
 | 2026-06-01 | 1.1 | Screenshot naming contract (#26): per-section screenshots are `section-N.jpg` (desktop/laptop) / `section-N-mobile.jpg` (mobile) in both single- and multi-device runs; `acquire_url.py` no longer emits `{device}-section-N.jpg`. | acquire emitted device-prefixed names in multi-device runs that the validator regex and the v1->v2 converter rejected. |
 | 2026-06-01 | 1.1 | Specialists off Agent Teams: cluster specialists migrated from Agent-Teams teammates to GA parallel one-shot subagents — the last teammate role removed from the audit path. `dispatch-contract.md` (per-role + how-to-dispatch rows drop `team_name`/`name`; rationale section retitled "Why specialists are one-shot subagents"; canonical counter `subagent_spawned_specialists`); `specialist-prompt-v2.md` / `ethics-subagent-v2.md` / `synthesizer-v2.md` (dispatch lines drop `team_name`/`name`, add `prompt=`); `skills/audit/SKILL.md` (team-create step deleted + Phase Order renumbered; full-parallel default + `--max-concurrent` fallback; fresh-re-dispatch recovery); `audit-reconciliation.md` (Steps 0/0b/0c recovery → fresh re-dispatch); `flags.md` (`--max-concurrent`); `trace-assertion-canary.md` + `scripts/assembly/canary_checks.py` + `determinism_gate.py` (canonical counter accepted at runtime; `team_spawned_specialists`/`team_spawned_auditors` retained as aliases); `team-lifecycle.md` (annotated dead-for-audit, retained for multi-planner). | Retire the last Agent-Teams (experimental) teammate role in the audit path per handoff §5b. File-presence collection (glob `cluster-{cluster}-{device}.json`) is transport-independent, so the lead loop is unchanged; only recovery delivery (SendMessage-bounce → fresh one-shot re-dispatch with the validation error embedded) and concurrency (waves-of-≤5 → full-parallel, `--max-concurrent N` rate-limit fallback) change. Aliases kept indefinitely so archived v1/v2 traces still validate. Follow-ups (out of scope): live `/ecp:audit` smoke + fixture regeneration; broad cosmetic `Task`→`Agent` rename of other roles. |
+| 2026-06-09 | 1.2 | Governance true-up (ruling A5): header version now tracks the latest §10 row (was stuck at 1.0 while four 1.1 amendments accrued); §9 Baseline reworded — v1.0 is the baseline, header/§10 is the effective version. | Two independent audits (`a45d196` P2; consolidated M6) showed the effective spec version was ambiguous: agents could not tell whether they were auditing v1.0 or v1.1. |
+| 2026-06-09 | 1.2 | §4.2 confidence gate operationalized (ruling A2): "~99.9%" means the categorical **exact tier** — only exact-tier placement methods auto-place; all weaker strategies leave the hotspot blank for manual placement. Code change to follow (gate the weaker marker strategies; align the placement-QA taxonomy). Companion ruling A1 (no spec change): absence findings stay **always blank** per the existing §4.2 text — the auto-place pipeline (schema-required `proposed_anchor`, autofix injection, section-centroid strategies) conforms to the spec, not vice versa. | The numeric threshold had no implementation surface (consolidated C1); a categorical gate is honest and testable where a synthetic numeric score would be arbitrary machinery. Both audits independently flagged absence auto-placement (C2 / Codex P0-2) as the top wrong-hotspot source. |
+| 2026-06-09 | 1.2 | §2.3 default dispatch scope (ruling A3): a canonical audit dispatches **all clusters relevant to the detected page type** (the former "comprehensive" set becomes the default "standard"); the 3–4-cluster default tier is retired; all-10 (`everything` / `--focus all`) and custom selection stay available on explicit request. Contracts to follow (flags.md, cluster-routing.md, meta-schema.md). | Default `--auto` shipped 3–4 clusters under a full-breadth claim with no reduced-scope label (consolidated H5 / Codex P1-1); page-type-relevant full coverage restores the breadth promise without forcing irrelevant clusters onto every page. |
