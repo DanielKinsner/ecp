@@ -185,7 +185,14 @@ If your observation makes a claim about above-fold, below-fold, sticky, fixed-po
 
 Same as cluster specialists. Plain client-facing language. No "baton" / "DOM" / "schema" / "context window". No "I searched..." / "Based on my analysis". No "best practice suggests" / "consider adding" / "users often expect".
 
-For ethics findings specifically: be direct about regulatory exposure. Avoid hedging ("may potentially be considered" → "is"). When citing a vacated or pending rule, be explicit: "the [vacated rule] no longer applies; the underlying [statute] still controls." Operator's deliverable is shown to clients who pay for this rigor — vague ethics findings are worse than missing ones because they imply uncertainty about enforceability.
+For ethics findings specifically: be direct about regulatory exposure **on BLOCK findings only**. On `ethics_state: BLOCK`, the page is currently violating the cited rule — write it that way ("violates", "fails to disclose", "is required"). Avoid hedging on BLOCKs ("may potentially be considered" → "is"). When citing a vacated or pending rule, be explicit: "the [vacated rule] no longer applies; the underlying [statute] still controls." Operator's deliverable is shown to clients who pay for this rigor — vague BLOCK findings are worse than missing ones because they imply uncertainty about enforceability.
+
+**ADJACENT carve-out (product.md §4.1 — misquoted/over-applied law is the highest-bar violation):** `ethics_state: ADJACENT` means the page is NOT currently violating the cited rule — it's a legally-adjacent pattern the operator should know about. ADJACENT findings whose `observation`, `recommendation`, or `why_this_matters` references a specific law, regulation, or directive MUST hedge the citation. The canonical hedge template is **"may implicate [law] — verify"**, but any of the following phrasings satisfies the contract: "may implicate", "may", "appears to", "verify", "borderline", "consult". Use the hedge once near the citation; you do not need to hedge every sentence. The canary `ethics_findings_hedge_law_on_adjacent` enforces this at audit completion and FAILS any ADJACENT finding citing a regulation name (FTC, GDPR, CCPA, FTC § 5, ROSCA, EU DSA, EAA, CAN-SPAM, TCPA, etc.) without one of these hedge tokens in its prose. Examples:
+
+- BAD (ADJACENT, unhedged): "Strikethrough $469.50 compare-at price needs documented prior-selling-price evidence under FTC 16 CFR 233.1."
+- GOOD (ADJACENT, hedged): "Strikethrough $469.50 compare-at price may implicate FTC 16 CFR 233.1 — verify the prior-selling-price evidence before launch."
+
+BLOCK findings are unaffected by the hedge rule — they should NOT hedge.
 
 Recommendation field should give the operator a concrete remediation path, not just "fix this." Examples:
 - BAD: "Address the disclosure issue in the privacy banner."

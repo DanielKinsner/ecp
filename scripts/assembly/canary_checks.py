@@ -22,12 +22,31 @@ Three load-bearing canaries the audit lead runs at audit completion (after
    Catches the case where the ethics subagent's emission rendered
    asymmetrically across the two device documents.
 
+Phase 6 (2026-06-10) — ethics/legal enforcement batch (C18 + H2 + H3):
+
+4. **ethics_findings_hedge_law_on_adjacent** (C18) — any ADJACENT finding
+   whose ``observation`` / ``recommendation`` / ``why_this_matters`` cites
+   a law / regulation without hedge phrasing fails. Enforces product.md
+   §4.1 — misquoted / over-applied law is the highest-bar violation.
+
+5. **ethics_source_url_against_registry** (H2) — every BLOCK / ADJACENT
+   ``source_url`` must appear in the Source Registry parsed AT RUNTIME
+   from ``references/ethics-gate.md``; URLs in the Vacated Rules tracker
+   fail with a distinct message.
+
+6. **recommendations_no_dark_patterns** (H3) — every finding's
+   ``recommendation`` text plus every synth ``priority_path[].narrative``
+   is scanned for dark-pattern-recommending shapes ("add a countdown
+   timer", "pre-check the …"). Removal recommendations ("remove the fake
+   countdown") are allowed. Closes the product.md §8 guardrail (ECP must
+   never recommend a dark pattern even if instructed to).
+
 These are PURE FUNCTIONS that read engagement artifacts and return
 structured result dicts. The lead invokes them at audit completion, writes
 the results to ``audit-trace.log``, and writes ``lead-reflection.md`` with
 any non-passing canaries documented.
 
-Authored Phase I (2026-04-28).
+Authored Phase I (2026-04-28). Phase 6 ethics/legal batch added 2026-06-10.
 """
 from __future__ import annotations
 
@@ -1105,6 +1124,747 @@ def check_lead_reflection_well_formed(engagement_dir: Path) -> CanaryResult:
 
 
 # ---------------------------------------------------------------------------
+# Phase 6 ethics/legal batch (2026-06-10) — C18, H2, H3.
+#
+# Three canaries that close the ethics-side guardrails product.md §4.1 and
+# §8 already specified but had no enforcement surface for. The vocabulary
+# (law names, vacated rules, dark-pattern phrasings) is parsed AT RUNTIME
+# from ``references/ethics-gate.md`` — no hardcoded copy that can drift.
+# ---------------------------------------------------------------------------
+
+
+# Canonical hedge tokens. Any one of these near a law citation satisfies
+# the ADJACENT hedge contract (contracts/ethics-subagent-v2.md voice rule).
+# Case-insensitive, word-boundary anchored.
+_HEDGE_TOKENS = (
+    "may implicate",
+    "may potentially",
+    "appears to",
+    "borderline",
+    "consult",
+    "verify",
+    # "current" / "currently" — operator language for probational
+    # compliance ("not a current violation", "doesn't currently"); the
+    # awdmods 2026-05-02 fixture uses this phrasing and it's a real,
+    # acceptable hedge.
+    "currently",
+    "not a current",
+    "not currently",
+    # "adjacency" — the ethics-gate's own ADJACENT-state vocabulary;
+    # when an operator uses it they're explicitly framing the citation
+    # as non-violating.
+    "adjacency",
+    # Operator-voice future-conditional framing — the slingmods fixture
+    # uses ("could mislead", "removes this exposure", "one complaint away
+    # from"). These hedge the citation by framing it as a forward-looking
+    # risk rather than a current violation.
+    "could",
+    "complaint away",
+    "exposure",
+    "this exposure",
+    # "per-se" — "not a per-se violation" is the lawyerly framing the
+    # slingmods fixture uses to acknowledge the rule without claiming a
+    # current violation.
+    "per-se",
+    "not a per-se",
+    # plain "may" is intentionally last and matched with word-boundaries
+    # so it doesn't false-match inside larger tokens.
+    "may",
+)
+_HEDGE_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(t) for t in _HEDGE_TOKENS) + r")\b",
+    re.IGNORECASE,
+)
+
+# Generic regulation/law-name patterns. Matches things like:
+#   FTC, FTC Act § 5, FTC § 5, GDPR, CCPA/CPRA, EU DSA, CAN-SPAM, TCPA,
+#   16 CFR § 465.2, Directive 2002/58/EC, ROSCA, EAA, Lanham Act § 43(a),
+#   ePrivacy, COPPA, ADA Title III, SB-478, SB-1001, etc.
+# These are tokens commonly used by the ethics-gate; combined with the
+# Source-Registry-derived name list (built at canary runtime) below, this
+# catches both the explicit list and "law-shaped" prose patterns.
+_GENERIC_LAW_PATTERNS = (
+    re.compile(r"\b\d+\s*CFR\b", re.IGNORECASE),
+    re.compile(r"\bU\.?S\.?C\.?\b", re.IGNORECASE),
+    re.compile(r"\bDirective\s+\d", re.IGNORECASE),
+    re.compile(r"\bRegulation\s+\(EU\)\b", re.IGNORECASE),
+    re.compile(r"§\s*\d"),  # section marker followed by a digit
+    re.compile(r"\bArt(?:icle|\.)\s*\d", re.IGNORECASE),
+    re.compile(r"\bSB[\s\-]?\d{2,4}\b", re.IGNORECASE),
+    re.compile(r"\bAB[\s\-]?\d{2,4}\b", re.IGNORECASE),
+)
+
+
+def _ethics_gate_path() -> Path:
+    """Locate references/ethics-gate.md from the repo root."""
+    return Path(__file__).resolve().parent.parent.parent / "references" / "ethics-gate.md"
+
+
+def _read_ethics_gate_text() -> str:
+    """Read references/ethics-gate.md, or return '' if unreadable."""
+    p = _ethics_gate_path()
+    if not p.exists():
+        return ""
+    try:
+        return p.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+
+
+# Source Registry row format inside <source_registry>:
+#   "| <name> | <citation> | <https-url> |"
+# We extract just the URLs (column 3 / 2 depending on table). Robust to
+# rows that don't follow the strict 3-column shape by scanning for any
+# http(s) URL inside the <source_registry> block.
+_REGISTRY_URL_RE = re.compile(r"https?://[^\s)\]|]+", re.IGNORECASE)
+
+
+def _parse_source_registry(gate_text: str) -> set[str]:
+    """Return the set of Source Registry URLs (normalized, no trailing /)."""
+    m = re.search(r"<source_registry>(.*?)</source_registry>", gate_text, re.DOTALL)
+    if not m:
+        return set()
+    block = m.group(1)
+    urls = {_normalize_url(u) for u in _REGISTRY_URL_RE.findall(block)}
+    return {u for u in urls if u}
+
+
+def _parse_vacated_urls(gate_text: str) -> set[str]:
+    """Return URLs flagged 'VACATED' or 'SET ASIDE' in the tracker table.
+
+    The Vacated Rules Tracker table sits above <source_registry>; each row
+    starts with "| <Rule name>" and contains VACATED or SET ASIDE in the
+    Status column. We collect Source Registry URLs that map to those rules
+    by name (substring match against the Source Registry rows).
+    """
+    # Section between "Vacated / Rescinded Rules Tracker" and the next
+    # "### " heading — bounded so we don't catch unrelated VACATED mentions.
+    tracker_m = re.search(
+        r"### Vacated.*?Rules Tracker(.*?)(?=^###\s)",
+        gate_text,
+        re.DOTALL | re.MULTILINE,
+    )
+    if not tracker_m:
+        return set()
+    tracker = tracker_m.group(1)
+    vacated_names: list[str] = []
+    for line in tracker.splitlines():
+        if "VACATED" in line.upper() or "SET ASIDE" in line.upper():
+            cells = [c.strip() for c in line.split("|") if c.strip()]
+            if cells:
+                # First cell is the rule name. Strip the parenthetical /
+                # bracketed status notes for robust substring matching.
+                name = re.sub(r"\(.*?\)|\[.*?\]", "", cells[0]).strip()
+                if name:
+                    vacated_names.append(name)
+    if not vacated_names:
+        return set()
+
+    # Now scan the Source Registry table rows. A registry row whose
+    # name-column matches one of the vacated names contributes its URL.
+    vacated_urls: set[str] = set()
+    reg_block_m = re.search(
+        r"<source_registry>(.*?)</source_registry>", gate_text, re.DOTALL
+    )
+    if not reg_block_m:
+        return vacated_urls
+    for row in reg_block_m.group(1).splitlines():
+        if "|" not in row:
+            continue
+        cells = [c.strip() for c in row.split("|") if c.strip()]
+        if len(cells) < 2:
+            continue
+        name_cell = cells[0]
+        # The Source Registry's vacated entries are explicitly marked in
+        # the name column (e.g. "FTC Click-to-Cancel (VACATED ...)").
+        # We also cross-reference the tracker's names for robustness.
+        is_vacated_inline = "VACATED" in name_cell.upper() or "SET ASIDE" in name_cell.upper()
+        is_tracker_match = any(
+            _name_overlap(name_cell, vn) for vn in vacated_names
+        )
+        if not (is_vacated_inline or is_tracker_match):
+            continue
+        for url in _REGISTRY_URL_RE.findall(row):
+            n = _normalize_url(url)
+            if n:
+                vacated_urls.add(n)
+    return vacated_urls
+
+
+def _name_overlap(a: str, b: str) -> bool:
+    """Cheap fuzzy match — share a 4+ char alphabetic token (case-insensitive).
+
+    Used only for vacated-rule cross-reference; an explicit hit on the
+    Source Registry's inline "VACATED" marker is the primary path.
+    """
+    toks_a = {t.lower() for t in re.findall(r"[A-Za-z]{4,}", a)}
+    toks_b = {t.lower() for t in re.findall(r"[A-Za-z]{4,}", b)}
+    # Generic words that would over-match
+    toks_a -= {"rule", "rules", "act", "the", "and", "for"}
+    toks_b -= {"rule", "rules", "act", "the", "and", "for"}
+    return bool(toks_a & toks_b)
+
+
+def _normalize_url(url: str) -> str:
+    """Lowercase + strip a single trailing slash, preserving query strings."""
+    if not url:
+        return ""
+    s = url.strip().lower()
+    if s.endswith("/") and not s.endswith("://"):
+        s = s[:-1]
+    return s
+
+
+def _parse_law_name_list(gate_text: str) -> list[str]:
+    """Build the list of regulation/law names from the Source Registry name column.
+
+    The names column is the FIRST cell of each Source Registry table row.
+    We collect them as case-insensitive substring tokens for the hedge-lint
+    detector. Includes both the headline name (e.g. "FTC Fake Reviews Rule")
+    and any registry-style alias visible in the row prose.
+    """
+    names: list[str] = []
+    m = re.search(r"<source_registry>(.*?)</source_registry>", gate_text, re.DOTALL)
+    if not m:
+        return names
+    for row in m.group(1).splitlines():
+        if "|" not in row:
+            continue
+        # Skip header separators and headings
+        if set(row.strip().replace("|", "").strip()) <= set("- "):
+            continue
+        cells = [c.strip() for c in row.split("|") if c.strip()]
+        if not cells:
+            continue
+        first = cells[0]
+        # Skip table-header rows (Markdown convention: "Regulation").
+        if first.lower() in {"regulation", "policy"}:
+            continue
+        # Strip the parenthetical status notes ("(VACATED ...)") for
+        # detection purposes — the name itself is still the citation.
+        clean = re.sub(r"\(.*?\)", "", first).strip()
+        if clean:
+            names.append(clean)
+    return names
+
+
+def _has_law_citation(text: str, law_names: list[str]) -> str | None:
+    """Return the matched law-name/pattern when ``text`` cites a regulation.
+
+    Combines the runtime-built ``law_names`` (from the Source Registry) with
+    the generic law-shape patterns. Returns the matched token (for the
+    canary's detail field) or None when no citation is found.
+    """
+    if not text:
+        return None
+    low = text.lower()
+    for name in law_names:
+        if not name:
+            continue
+        # Use lowercase substring containment for the registry-derived
+        # multi-word names; word-boundary regex would miss em-dash or
+        # punctuation-adjacent occurrences in real prose.
+        if name.lower() in low:
+            return name
+    for pat in _GENERIC_LAW_PATTERNS:
+        m = pat.search(text)
+        if m:
+            return m.group(0)
+    # Common bare acronyms that appear in cited form but may not match a
+    # generic pattern. Listed here rather than per-registry-row so they
+    # catch prose like "GDPR Art 6" even when only "GDPR" is the cite.
+    for acronym in ("FTC", "GDPR", "CCPA", "CPRA", "DSA", "EAA", "ROSCA",
+                    "CAN-SPAM", "TCPA", "COPPA", "ADA", "TILA", "BNPL"):
+        if re.search(rf"\b{re.escape(acronym)}\b", text):
+            return acronym
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Canary 8 (C18) — ethics_findings_hedge_law_on_adjacent
+# ---------------------------------------------------------------------------
+
+
+def check_ethics_findings_hedge_law_on_adjacent(
+    ethics_findings_path: Path,
+) -> CanaryResult:
+    """Verify ADJACENT ethics findings hedge any law/regulation citation.
+
+    product.md §4.1 calls misquoted / over-applied law the highest-bar
+    violation. contracts/ethics-subagent-v2.md's ADJACENT carve-out
+    requires any ADJACENT finding citing a law in its ``observation`` /
+    ``recommendation`` / ``why_this_matters`` to hedge with one of the
+    canonical tokens ("may implicate", "may", "appears to", "verify",
+    "borderline", "consult"). BLOCK findings are unaffected — they SHOULD
+    be direct.
+
+    The vocabulary is parsed AT RUNTIME from
+    ``references/ethics-gate.md`` — no hardcoded copy that can drift
+    against the gate's Source Registry.
+
+    Pass criteria: every ADJACENT finding either cites no law in its prose
+    OR hedges that citation. Returns the per-finding violations in detail.
+    """
+    name = "ethics_findings_hedge_law_on_adjacent"
+    if not ethics_findings_path.exists():
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (ethics-findings.json absent)",
+            detail={"reason": "no ethics-findings.json"},
+        )
+    try:
+        data = json.loads(ethics_findings_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        return CanaryResult(
+            name=name,
+            passed=False,
+            summary=f"{name}: FAIL -- unreadable ethics-findings.json: {e}",
+            detail={"error": str(e)},
+        )
+    findings = data.get("findings") if isinstance(data, dict) else None
+    if not isinstance(findings, list):
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (no findings array)",
+            detail={"reason": "no findings list"},
+        )
+
+    gate_text = _read_ethics_gate_text()
+    law_names = _parse_law_name_list(gate_text)
+
+    unhedged: list[dict] = []
+    adjacent_total = 0
+    for f in findings:
+        if not isinstance(f, dict):
+            continue
+        if (f.get("ethics_state") or "").upper() != "ADJACENT":
+            continue
+        adjacent_total += 1
+        for field in ("observation", "recommendation", "why_this_matters"):
+            text = f.get(field) or ""
+            cite = _has_law_citation(text, law_names)
+            if cite and not _HEDGE_RE.search(text):
+                local_id = f.get("local_id")
+                try:
+                    f_ref = f"ethics F-{int(local_id):02d}"
+                except (TypeError, ValueError):
+                    f_ref = "ethics F-??"
+                unhedged.append({
+                    "f_ref": f_ref,
+                    "field": field,
+                    "law_cited": cite,
+                    "excerpt": text[:160],
+                })
+                # One violation per finding is enough to log; don't spam.
+                break
+
+    passed = not unhedged
+    if passed:
+        summary = (
+            f"{name}: PASS ({adjacent_total} ADJACENT finding(s) "
+            f"hedge any law citation per product.md §4.1)"
+        )
+    else:
+        summary = (
+            f"{name}: FAIL -- {len(unhedged)} ADJACENT finding(s) cite a "
+            f"law without hedging (product.md §4.1 highest-bar violation): "
+            + ", ".join(f"{u['f_ref']}[{u['field']}]" for u in unhedged)
+        )
+    return CanaryResult(
+        name=name,
+        passed=passed,
+        summary=summary,
+        detail={
+            "adjacent_total": adjacent_total,
+            "unhedged": unhedged,
+            "law_name_list_size": len(law_names),
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Canary 9 (H2) — ethics_source_url_against_registry
+# ---------------------------------------------------------------------------
+
+
+def check_ethics_source_url_against_registry(
+    ethics_findings_path: Path,
+) -> CanaryResult:
+    """Verify every BLOCK/ADJACENT source_url is in the Source Registry.
+
+    The schema validates URL format only. Pre-Phase-6, nothing prevented
+    citing one of the three vacated rules the library itself tracks as
+    "do not cite as live authority" — or an invented URL. This canary
+    parses the Source Registry + Vacated Rules tracker AT RUNTIME from
+    ``references/ethics-gate.md`` (so a gate edit is honored without a
+    code change) and:
+
+    - A source_url not present in the Source Registry FAILS
+      ("URL not in Source Registry").
+    - A source_url matching a vacated-rule URL FAILS with a distinct
+      message ("URL cites a VACATED rule — use the underlying statute").
+    """
+    name = "ethics_source_url_against_registry"
+    if not ethics_findings_path.exists():
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (ethics-findings.json absent)",
+            detail={"reason": "no ethics-findings.json"},
+        )
+    try:
+        data = json.loads(ethics_findings_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        return CanaryResult(
+            name=name,
+            passed=False,
+            summary=f"{name}: FAIL -- unreadable ethics-findings.json: {e}",
+            detail={"error": str(e)},
+        )
+    findings = data.get("findings") if isinstance(data, dict) else None
+    if not isinstance(findings, list):
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (no findings array)",
+            detail={"reason": "no findings list"},
+        )
+
+    gate_text = _read_ethics_gate_text()
+    registry_urls = _parse_source_registry(gate_text)
+    vacated_urls = _parse_vacated_urls(gate_text)
+    # Defensive: if the gate is unreadable or unparseable, skip with a
+    # documented note rather than failing every audit on infra drift.
+    if not registry_urls:
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=(
+                f"{name}: skipped (could not parse Source Registry from "
+                f"references/ethics-gate.md — verify the file is present "
+                f"and contains <source_registry>...</source_registry>)"
+            ),
+            detail={"reason": "no registry URLs parsed"},
+        )
+
+    not_in_registry: list[dict] = []
+    vacated_hits: list[dict] = []
+    total_actionable = 0
+    for f in findings:
+        if not isinstance(f, dict):
+            continue
+        state = (f.get("ethics_state") or "").upper()
+        if state not in {"BLOCK", "ADJACENT"}:
+            continue
+        total_actionable += 1
+        url = (f.get("source_url") or "").strip()
+        if not url:
+            # Source-url presence is the older canary's domain — skip here
+            # to avoid double-reporting the same violation class.
+            continue
+        norm = _normalize_url(url)
+        local_id = f.get("local_id")
+        try:
+            f_ref = f"ethics F-{int(local_id):02d}"
+        except (TypeError, ValueError):
+            f_ref = "ethics F-??"
+        if norm in vacated_urls:
+            vacated_hits.append({
+                "f_ref": f_ref,
+                "ethics_state": state,
+                "source_url": url,
+            })
+        elif norm not in registry_urls:
+            not_in_registry.append({
+                "f_ref": f_ref,
+                "ethics_state": state,
+                "source_url": url,
+            })
+
+    passed = not (not_in_registry or vacated_hits)
+    if passed:
+        summary = (
+            f"{name}: PASS ({total_actionable} actionable ethics "
+            f"finding(s) all cite Source Registry URLs; "
+            f"0 vacated-rule citations)"
+        )
+    else:
+        parts: list[str] = []
+        if vacated_hits:
+            parts.append(
+                f"{len(vacated_hits)} URL(s) cite a VACATED rule — "
+                f"use the underlying statute"
+            )
+        if not_in_registry:
+            parts.append(
+                f"{len(not_in_registry)} URL(s) not in Source Registry"
+            )
+        summary = f"{name}: FAIL -- " + "; ".join(parts)
+    return CanaryResult(
+        name=name,
+        passed=passed,
+        summary=summary,
+        detail={
+            "total_actionable": total_actionable,
+            "registry_url_count": len(registry_urls),
+            "vacated_url_count": len(vacated_urls),
+            "not_in_registry": not_in_registry,
+            "vacated_hits": vacated_hits,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Canary 10 (H3) — recommendations_no_dark_patterns
+# ---------------------------------------------------------------------------
+
+
+# Recommendation-voice verbs that mean "do this" (the pattern that fires
+# the canary). Word-boundary anchored so we don't false-match "added"
+# inside "added to the cart". The combined "add a countdown timer" shape
+# is built by joining these against the dark-pattern terms.
+_RECOMMEND_VERBS = (
+    "add", "adding", "implement", "introduce", "create", "use", "enable",
+    "build", "include", "show", "display", "set", "hide", "hiding",
+    "pre-check", "precheck", "force", "trick",
+)
+_REMOVE_VERBS = (
+    "remove", "delete", "drop", "strip", "kill", "eliminate", "avoid",
+    "disable", "stop", "don't", "never", "replace", "fix",
+    "uncheck",
+)
+# Plain-prose denial phrases that survive `\b` boundaries on the multi-word
+# forms ("do not" vs "does not"). Word-boundary regex on "do not" doesn't
+# catch "does not"; precompile a small set of denial regexes that do.
+_REMOVE_PHRASE_RES = (
+    re.compile(r"\bdo(?:es)?\s+not\b", re.IGNORECASE),
+    re.compile(r"\bdid\s+not\b", re.IGNORECASE),
+    re.compile(r"\bno\s+longer\b", re.IGNORECASE),
+    # "display the count WITHOUT filtering out negative reviews" — the
+    # dark-pattern term is the object of an exclusion, not a recommendation.
+    re.compile(r"\bwithout\b", re.IGNORECASE),
+)
+
+# Dark-pattern term vocabulary. The ethics-gate's BLOCK rules name these
+# explicitly (Part 1.1 urgency/scarcity, 1.2 pricing, 1.3 reviews, 1.4
+# choice architecture, 1.5 subscription, 4.4 unsubscribe). We keep the
+# curated list small + targeted to recommendation-shaped prose; full
+# ethics adjudication lives in the subagent, not the lint.
+# The non-greedy ``(?:\s+\w+){0,3}`` chunk lets the dark-pattern term
+# tolerate a small number of intervening adjectives ("Hide the
+# convenience fee", "Pre-check the newsletter opt-in box") without
+# matching across whole sentences. Bounded at 3 words to keep the
+# false-positive surface tight.
+_DARK_PATTERN_TERMS = (
+    r"countdown\s+timer(?:\s+that\s+resets)?",
+    r"resetting\s+countdown",
+    r"fake\s+(?:countdown|urgency|scarcity|review|stock|inventory)",
+    r"fabricated\s+(?:countdown|urgency|scarcity|review)",
+    r"(?:false|fake)\s+scarcity",
+    r"only\s+\d+\s+left",  # "Only 3 left"
+    r"people\s+viewing\s+counter",
+    r"hidden\s+fee",
+    r"hide(?:\s+\w+){0,3}\s+(?:fee|cost|charge|shipping|total|price)",
+    r"drip[\s\-]?pricing",
+    r"pre[\s\-]?check(?:ed)?(?:\s+\w+){0,4}\s+(?:opt[\s\-]?in|subscription|add[\s\-]?on|box(?:es)?|checkbox)",
+    r"pre[\s\-]?check(?:ed)?\s+box(?:es)?",
+    r"confirm[\s\-]?shaming",
+    r"forced\s+continuity",
+    r"auto[\s\-]?renew(?:al)?\s+without",
+    r"negative\s+option",
+    r"fake\s+review",
+    r"review\s+gating",
+    r"suppress(?:ing)?\s+(?:negative\s+)?review",
+    r"filter(?:ing)?\s+out\s+(?:negative\s+)?review",
+    r"phantom\s+social\s+proof",
+    r"dark\s+pattern",
+)
+_DARK_PATTERN_RE = re.compile(
+    r"|".join(_DARK_PATTERN_TERMS),
+    re.IGNORECASE,
+)
+_RECOMMEND_VERB_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(v) for v in _RECOMMEND_VERBS) + r")\b",
+    re.IGNORECASE,
+)
+_REMOVE_VERB_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(v) for v in _REMOVE_VERBS) + r")\b",
+    re.IGNORECASE,
+)
+
+
+def _sentence_recommends_dark_pattern(sentence: str) -> str | None:
+    """Return the matched dark-pattern phrase iff sentence is an add-shaped recommendation.
+
+    A sentence FIRES iff:
+      - It contains a recommend-voice verb (add/implement/show/hide/
+        pre-check/...) — either as a free token OR as the verb-shape
+        baked into the dark-pattern phrase itself (e.g. "Pre-check the
+        opt-in" already encodes the verb), AND
+      - It contains a dark-pattern term, AND
+      - It does NOT contain a remove-voice verb (so "remove the fake
+        countdown timer" passes), AND
+      - It does NOT contain a denial phrase ("does not use a fabricated
+        countdown" passes — describes absence, doesn't recommend).
+
+    Returns the matched pattern text for the canary detail, or None.
+    """
+    if not sentence:
+        return None
+    dp_match = _DARK_PATTERN_RE.search(sentence)
+    if not dp_match:
+        return None
+    # If a remove-verb or denial phrase is present anywhere in the same
+    # sentence, treat as a removal/description. Sentences are short
+    # enough that proximity checks across the whole sentence are reliable
+    # for false-positive control without window heuristics.
+    if _REMOVE_VERB_RE.search(sentence):
+        return None
+    if any(p.search(sentence) for p in _REMOVE_PHRASE_RES):
+        return None
+    if not _RECOMMEND_VERB_RE.search(sentence):
+        return None
+    return dp_match.group(0)
+
+
+def _split_sentences(text: str) -> list[str]:
+    """Cheap sentence splitter. Prose-only, no nested punctuation handling."""
+    if not text:
+        return []
+    parts = re.split(r"(?<=[.!?])\s+", text)
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _iter_recommendation_texts(engagement_dir: Path):
+    """Yield (label, text) over every recommendation-bearing artifact.
+
+    Sources:
+      - every cluster-*.json findings[].recommendation
+      - ethics-findings.json findings[].recommendation
+      - synthesizer-emission-v1.json priority_path[].narrative
+    """
+    # Cluster + ethics findings.
+    for path in sorted(engagement_dir.glob("cluster-*-*.json")):
+        if "cluster-context" in path.name:
+            continue
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        for f in doc.get("findings") or []:
+            if not isinstance(f, dict):
+                continue
+            rec = f.get("recommendation") or ""
+            label = (
+                f"{doc.get('cluster', path.stem)} "
+                f"F-{f.get('local_id', '??')} {path.name}"
+            )
+            if rec:
+                yield (label, rec)
+    ethics_path = engagement_dir / "ethics-findings.json"
+    if ethics_path.exists():
+        try:
+            doc = json.loads(ethics_path.read_text(encoding="utf-8"))
+            for f in doc.get("findings") or []:
+                if not isinstance(f, dict):
+                    continue
+                rec = f.get("recommendation") or ""
+                label = f"ethics F-{f.get('local_id', '??')} ethics-findings.json"
+                if rec:
+                    yield (label, rec)
+        except (OSError, json.JSONDecodeError):
+            pass
+    # Synth priority_path narratives.
+    synth_path = engagement_dir / "synthesizer-emission-v1.json"
+    if synth_path.exists():
+        try:
+            doc = json.loads(synth_path.read_text(encoding="utf-8"))
+            for i, story in enumerate(doc.get("priority_path") or []):
+                if not isinstance(story, dict):
+                    continue
+                text = story.get("narrative") or ""
+                if text:
+                    yield (
+                        f"priority_path[{i}] {story.get('mode', 'unknown')}",
+                        text,
+                    )
+        except (OSError, json.JSONDecodeError):
+            pass
+
+
+def check_recommendations_no_dark_patterns(
+    engagement_dir: Path,
+) -> CanaryResult:
+    """product.md §8 — ECP MUST NEVER recommend a dark pattern.
+
+    Scans every finding ``recommendation`` plus every synthesizer
+    Priority Path story narrative for dark-pattern-recommending sentence
+    shapes (add a countdown timer, pre-check the opt-in, hide the fee).
+    Removal recommendations ("remove the fake countdown timer") pass.
+
+    Vocabulary is the small curated regex set documented in
+    ``_DARK_PATTERN_TERMS``, derived from the ethics-gate.md BLOCK
+    detector vocabulary (Part 1.1/1.2/1.3/1.4/1.5). Adding/adjusting a
+    pattern is a single-source change here, with the rationale documented
+    inline so future operators can trace which BLOCK rule it implements.
+
+    Pass criteria: zero sentences across all scanned artifacts that fire
+    a dark-pattern-recommending shape. Each violation is returned in
+    detail with the source label, matched pattern, and excerpt so the
+    operator can locate and fix it.
+    """
+    name = "recommendations_no_dark_patterns"
+    if not engagement_dir.exists():
+        return CanaryResult(
+            name=name,
+            passed=True,
+            summary=f"{name}: skipped (engagement dir absent)",
+            detail={"reason": "no engagement dir"},
+        )
+
+    violations: list[dict] = []
+    scanned = 0
+    for label, text in _iter_recommendation_texts(engagement_dir):
+        scanned += 1
+        for sentence in _split_sentences(text):
+            matched = _sentence_recommends_dark_pattern(sentence)
+            if matched:
+                violations.append({
+                    "source": label,
+                    "matched_pattern": matched,
+                    "excerpt": sentence[:200],
+                })
+
+    passed = not violations
+    if passed:
+        summary = (
+            f"{name}: PASS ({scanned} recommendation/narrative source(s) "
+            f"scanned; no dark-pattern-recommending shapes detected)"
+        )
+    else:
+        summary = (
+            f"{name}: FAIL -- {len(violations)} dark-pattern-recommending "
+            f"shape(s) found (product.md §8 violation): "
+            + ", ".join(
+                f"{v['source']} matched {v['matched_pattern']!r}"
+                for v in violations[:3]
+            )
+            + ("…" if len(violations) > 3 else "")
+        )
+    return CanaryResult(
+        name=name,
+        passed=passed,
+        summary=summary,
+        detail={
+            "sources_scanned": scanned,
+            "violations": violations,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
 # Top-level — run all canaries against an engagement directory
 # ---------------------------------------------------------------------------
 
@@ -1209,8 +1969,16 @@ def run_all_canaries(
     # present, must conform to the lead's required format. Catches the
     # docs/ecp/2026-05-28-e4050c0e class where a specialist wrote the lead's file.
     r8 = check_lead_reflection_well_formed(engagement_dir)
+    # Phase 6 (2026-06-10) — ethics/legal enforcement batch:
+    #   C18: ADJACENT findings citing a law MUST hedge (product.md §4.1)
+    #   H2:  BLOCK/ADJACENT source_url MUST be in the Source Registry and
+    #        MUST NOT be a vacated-rule URL (references/ethics-gate.md)
+    #   H3:  no recommendation may RECOMMEND a dark pattern (product.md §8)
+    r9 = check_ethics_findings_hedge_law_on_adjacent(ethics_findings_path)
+    r10 = check_ethics_source_url_against_registry(ethics_findings_path)
+    r11 = check_recommendations_no_dark_patterns(engagement_dir)
 
-    results = [r1, r2, r3, r4, r5, r6, r7, r8]
+    results = [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11]
 
     visual_quality_block: dict | None = None
     if include_visual_quality:

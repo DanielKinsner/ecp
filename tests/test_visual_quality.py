@@ -629,8 +629,10 @@ class TestCanaryIntegration:
         # G23-followup (2026-05-29) added lead_reflection_not_stale (7th) and
         # lead_reflection_well_formed (8th) baseline canaries — both skip with
         # PASS on this fixture (no completed-but-draft reflection; no/conforming
-        # lead-reflection.md).
-        assert len(result["results"]) == 8
+        # lead-reflection.md). Phase 6 ethics/legal batch (2026-06-10) added the
+        # three ethics enforcement canaries (C18 hedge, H2 source-url registry,
+        # H3 dark-pattern recommendations) → 11 baseline.
+        assert len(result["results"]) == 11
         assert "visual_quality" in result  # Block present even when empty
         assert result["visual_quality"]["per_device"] == {}
 
@@ -645,8 +647,10 @@ class TestCanaryIntegration:
         eng = REPO_ROOT / "tests" / "fixtures" / "v2_engagement_with_adjacent_ethics"
         result = run_all_canaries(eng, audited_domain="example.test", include_visual_quality=False)
         # G23-followup (2026-05-29) added lead_reflection_not_stale (7th) +
-        # lead_reflection_well_formed (8th) → 8 baseline.
-        assert len(result["results"]) == 8
+        # lead_reflection_well_formed (8th) → 8 baseline. Phase 6 ethics/legal
+        # batch (2026-06-10) added C18 hedge + H2 registry + H3 dark-pattern
+        # canaries → 11 baseline.
+        assert len(result["results"]) == 11
         assert "visual_quality" not in result
 
     def test_run_all_canaries_with_visual_quality_runs_when_review_state_present(self, tmp_path):

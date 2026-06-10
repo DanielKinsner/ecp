@@ -606,8 +606,10 @@ class TestValidateRun(unittest.TestCase):
         # field (pre-G23 back-compat — absent is not flagged). G25-followup
         # (2026-05-29) added lead_reflection_well_formed → 9: 8 substantive + 1
         # structural; PASSES because the slingmods fixture's lead-reflection.md
-        # conforms to the lead format.
-        self.assertEqual(len(report["canaries"]), 9)
+        # conforms to the lead format. Phase 6 ethics/legal batch (2026-06-10)
+        # added C18 hedge + H2 source-url registry + H3 dark-pattern canaries
+        # → 12: 11 substantive + 1 structural; all three PASS for slingmods.
+        self.assertEqual(len(report["canaries"]), 12)
         canary_names = [c["name"] for c in report["canaries"]]
         self.assertIn("ethics_findings_have_source_urls", canary_names)
         self.assertIn("element_index_match_rate", canary_names)

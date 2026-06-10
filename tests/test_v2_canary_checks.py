@@ -538,10 +538,14 @@ class TestRunAllCanaries(unittest.TestCase):
         # lead_reflection_not_stale as the seventh — it skips with PASS when
         # meta.json is absent (this fixture writes none). G25-followup
         # (2026-05-29) added lead_reflection_well_formed as the eighth, skipping
-        # with PASS when lead-reflection.md is absent. visual_quality block
-        # adds zero results when no review-state files are present (Phase 3
-        # default-on path).
-        self.assertEqual(len(out["results"]), 8)
+        # with PASS when lead-reflection.md is absent.
+        # Phase 6 ethics/legal batch (2026-06-10) added the three ethics
+        # enforcement canaries (C18 hedge, H2 source-url registry,
+        # H3 dark-pattern recommendations) → 11 baseline. They skip cleanly
+        # on fixtures whose ethics file is missing or whose recommendations
+        # are clean. visual_quality block adds zero results when no
+        # review-state files are present (Phase 3 default-on path).
+        self.assertEqual(len(out["results"]), 11)
 
     def test_aggregates_failure(self):
         # Ethics — block without source_url fails

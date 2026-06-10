@@ -17,7 +17,7 @@
       "local_id": 1,
       "verdict": "FAIL",
       "ethics_state": "ADJACENT",
-      "source_url": "https://www.ftc.gov/legal-library/browse/rules/guides-against-deceptive-pricing-16-cfr-part-233",
+      "source_url": "https://www.law.cornell.edu/uscode/text/15/45",
       "title": "Compare-At Price Unverifiable",
       "surface": "msrp-anchor",
       "element": {
@@ -45,9 +45,9 @@
           "tier": "Gold"
         }
       ],
-      "observation": "Strikethrough $469.50 compare-at price needs documented prior-selling-price evidence under FTC 16 CFR 233.1.",
-      "recommendation": "Provide pricing records demonstrating the $469.50 was a bona fide prior selling price.",
-      "why_this_matters": "Unsupported reference prices are deceptive under FTC Act § 5 and trigger §233.1 enforcement.",
+      "observation": "Strikethrough $469.50 compare-at price may implicate FTC 16 CFR 233.1 — verify documented prior-selling-price evidence is on file.",
+      "recommendation": "Provide pricing records demonstrating the $469.50 was a bona fide prior selling price; consult counsel if the documentation is borderline.",
+      "why_this_matters": "Unsupported reference prices may appear deceptive under FTC Act § 5 and may implicate §233.1 enforcement — verify before launch.",
       "evidence_tier": "Gold"
     },
     {
