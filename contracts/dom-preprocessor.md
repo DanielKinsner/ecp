@@ -62,7 +62,7 @@ After baton validation passes and baton normalization completes, before spawning
 
 7. **Empty slice handling:** If no baton sections route to a cluster after scope resolution (e.g., `post-purchase` on a product page with no post-purchase content), the lead **skips dispatching that auditor entirely**. Log to `audit-trace.log`: "Skipped {cluster} — no DOM sections routed to this cluster." Decrement `expected_auditor_count` accordingly. Do NOT spawn an auditor with an empty context file.
 
-8. **Fallback for missing section clusters:** When baton sections lack `clusters` arrays, use the keyword fallback rules from the coordinator's `<phase_audit>` "Fallback (malformed baton)" to infer cluster assignment before slicing. Log which sections used fallback: "Section '{label}' cluster assignment inferred via keyword fallback."
+8. **Fallback for missing section clusters:** When baton sections lack `clusters` arrays, use the keyword fallback rules from `${CLAUDE_PLUGIN_ROOT}/contracts/cluster-routing.md` to infer cluster assignment before slicing. Log which sections used fallback: "Section '{label}' cluster assignment inferred via keyword fallback."
 
 ## Recommended implementation: Python html.parser
 

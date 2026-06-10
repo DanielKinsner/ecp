@@ -37,7 +37,7 @@ Write this as the FIRST ~30 lines of `docs/ecp/{engagement-id}/audit-trace.log` 
 # Devices: {device-list}
 # Clusters: {cluster-list}
 # Flags: {space-separated list of flags actually set — e.g., "--deep --focus all" or empty}
-# Scope: {scope}                         ← focused, standard, comprehensive, or custom
+# Scope: {scope}                         ← focused, standard, everything, or custom (back-compat: pre-v1.2 traces may carry `comprehensive` — accept it as the legacy spelling of `everything`)
 # ASSERTIONS (must all be > 0 / true at audit completion):
 #   tasks_created_total: {N}              ← v1 only; v2 sets to the count of TaskCreate calls (specialists + multi-planners)
 #   expected_specialist_count: {N}        ← set at dispatch time after scope resolution + empty-slice pruning (v2 alias of v1 expected_auditor_count)
@@ -77,7 +77,7 @@ Write this as the FIRST ~30 lines of `docs/ecp/{engagement-id}/audit-trace.log` 
 # Devices: {device-list}
 # Clusters: {cluster-list}
 # Flags: {space-separated list of flags actually set — e.g., "--deep --focus all" or empty}
-# Scope: {scope}                         ← focused, standard, comprehensive, or custom
+# Scope: {scope}                         ← focused, standard, everything, or custom (back-compat: pre-v1.2 traces may carry `comprehensive` — accept it as the legacy spelling of `everything`)
 # ASSERTIONS (must all be > 0 / true at audit completion):
 #   tasks_created_total: {N}              ← from engagement setup step 8 minimum count
 #   expected_auditor_count: {N}           ← set at dispatch time after scope resolution + empty-slice pruning
@@ -158,7 +158,7 @@ Implementation: `scripts/assembly/canary_checks.py`. Pure functions; no LLM disp
 
 ### How the lead invokes the canaries
 
-After `<phase_synthesize_v2>` completes (or the v1 audit_assembly self-check runs), the lead invokes:
+After the v2 synthesizer dispatch completes (see `${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-v2.md`) — or the v1 audit-assembly self-check runs (see `${CLAUDE_PLUGIN_ROOT}/contracts/audit-assembly.md`) — the lead invokes:
 
 ```python
 from scripts.assembly.canary_checks import run_all_canaries
@@ -302,7 +302,7 @@ Before writing `phase: complete` to `meta.json`, the lead reads its own `audit-t
 - `idle_notification_total` from non-specialist roles SHOULD be <= 10 (soft warning if exceeded — possible teammate dispatch leak)
 
 **Dynamic `expected_auditor_count`:** The expected auditor count is no longer a static `clusters × devices` formula. With the scope selector and DOM preprocessor, the actual count depends on:
-1. The scope selected (focused = 1, standard = 3-4, comprehensive = 5-6, custom = variable)
+1. The scope selected (standard = page-type-relevant set (typically 2-6), everything = all 10, custom = variable, focused = 1)
 2. Empty-slice pruning from the DOM preprocessor (clusters with no DOM sections routed to them are skipped)
 3. Number of devices
 
@@ -384,9 +384,9 @@ The difference between those two numbers (~160K tokens) is the cost of `--deep` 
 
 ## Cross-references
 
-- **`skills/audit/SKILL.md`** — `<audit_trace_assertion_header>` and `<cost_trace_heuristic>` defer to this file. The audit lead reads this file when writing the initial trace header and when running the self-check at audit completion.
+- **`skills/audit/SKILL.md`** — P0-10 (structural assertions) and the "Validation, Synthesis, and Rendering" + "Exit Criteria" sections defer to this file. The audit lead reads this file when writing the initial trace header and when running the self-check at audit completion.
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/meta-schema.md`** — the canonical `phase` enum includes `blocked` for assertion-failure terminal state.
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/dispatch-contract.md`** — per-role model assignments and the `--deep` escape hatch rules (the cost trace's `model_*` lines and `--deep` cost multipliers derive from this).
 - **`${CLAUDE_PLUGIN_ROOT}/contracts/lead-discipline.md`** — anti-rogue rules that the canary is designed to catch slips against.
 
-When editing this file, the audit skill's pointer stubs in `<audit_trace_assertion_header>` and `<cost_trace_heuristic>` should reference this file as the source of truth.
+When editing this file, the audit skill's pointer stubs (P0-10 and the "Validation, Synthesis, and Rendering" + "Exit Criteria" sections in `skills/audit/SKILL.md`) should reference this file as the source of truth.
