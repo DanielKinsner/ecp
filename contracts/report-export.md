@@ -62,15 +62,17 @@ The **v2 renderer** (the canonical path — `--v2`, auto-detected from `synthesi
 A hotspot can be *placed* (it got a coordinate) yet *wrong* (the coordinate isn't on the element the finding describes). `generate-report.py --v2` therefore prints a deterministic, zero-token **Placement QA** line in its own render summary — no separate tool run, no remembered manual step:
 
 ```
-Match methods: e_index=… proposed_anchor(element=… section=… viewport=…) section_centroid=… section_stacked_manual=… unplaced=… banner=… operator=…
+Match methods: e_index=N operator=N unplaced=N other=N
 Placement QA: weak_placements=N stacks=M
   WARNING: stack of K findings on slide S @ (x, y): <f_refs>   ← stderr, one per stack
 ```
 
-- **`weak_placements`** — findings placed via a non-element anchor (section/viewport fallback, `section_centroid`, `section_stacked_manual`, `banner`). A high count means "0 unplaced" is hiding low-confidence placements.
+- **`weak_placements`** — findings placed via any match method outside the exact tier (`e_index_lookup` / `operator_override`). Since the v1.2 exact-tier-or-blank rule the live renderer no longer emits non-exact placements, so a non-zero count almost always means a stale persisted review-state still carrying a pre-v1.2 method (`proposed_anchor_*`, `section_centroid`, `section_stacked_manual`, `banner`) — treat it as a re-render/re-place signal.
 - **`stacks`** — `≥ STACK_MIN` (3) distinct findings resolving to the same rendered pixel (the section-bottom-overlay collapse class). Each stack is a stderr WARNING.
 
 The lead surfaces a non-zero `weak_placements`/`stacks` count at the audit checkpoint so the operator knows which hotspots to spot-check during the draft → client-verified pass (`product.md` §6). This is the **`free` tier** — it always runs, costs nothing, and is the CI-friendly regression signal.
+
+> **Promotion gate (Phase-0 A9):** `--mark-client-verified` mechanically refuses promotion while any review-state finding still carries `hotspot_confidence: "needs-manual-marker"` (or no review-state file exists). The operator must either finalize placement in the editor or pass `--force` to bypass (the attestation block records `forced: true`). See `contracts/meta-schema.md` `report_state` / `report_state_attestation`.
 
 ### Escalating to the visual-QA gate (vision verification)
 

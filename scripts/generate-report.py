@@ -79,7 +79,19 @@ def main() -> int:
         help=(
             "Promote the engagement's report from DRAFT to CLIENT-VERIFIED "
             "(product.md §6 manual verification pass). Operator action only — "
-            "refuses to run under --auto."
+            "refuses to run under --auto. Also refuses if review-state files "
+            "are missing or report hotspots still queued for manual placement "
+            "(§4.2); pass --force to override."
+        ),
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help=(
+            "With --mark-client-verified: override the placement gate (A9) "
+            "when hotspots still need manual placement or no review state "
+            "exists. The attestation block records forced=true. Has no "
+            "effect on the --auto refusal — that guard is absolute."
         ),
     )
     parser.add_argument(
@@ -155,17 +167,24 @@ def main() -> int:
             )
 
     if args.mark_client_verified:
-        from assembly.report_state import AutoPromotionError, set_client_verified
+        from assembly.report_state import (
+            AutoPromotionError,
+            UnplacedMarkerError,
+            set_client_verified,
+        )
 
         meta_path = engagement_path / "meta.json"
         if not meta_path.exists():
             print(f"meta.json not found: {meta_path}", file=sys.stderr)
             return 1
         try:
-            set_client_verified(meta_path, auto=args.auto)
+            set_client_verified(meta_path, auto=args.auto, force=args.force)
         except AutoPromotionError as exc:
             print(f"ERROR: {exc}", file=sys.stderr)
             return 2
+        except UnplacedMarkerError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 3
         print(f"report_state set to client-verified: {meta_path}")
         return 0
 

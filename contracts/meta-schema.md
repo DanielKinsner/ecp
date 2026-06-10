@@ -72,6 +72,7 @@ Valid if present, ignored if absent:
 | `screenshot_input` | object \| null | Set when `source_mode = "screenshot"` |
 | `scope` | string \| null | Audit scope selected by user. See enum below. Missing on legacy engagements → treat as `"comprehensive"` on resume. |
 | `report_state` | string \| null | `draft` or `client-verified` (product.md §6). Missing/null → treat as `draft`. See below. |
+| `report_state_attestation` | object \| null | Written by `set_client_verified` on successful promotion (Phase-0 A9, 2026-06-10). Records `promoted_at` (ISO 8601), `unplaced_counts` (per-device map of `needs-manual-marker` finding counts at promotion time), and `forced` (boolean — true when the operator bypassed the placement gate with `--force`). Absent on engagements that have not been promoted; readers MUST NOT infer state from its absence — `report_state` is the source of truth. See below. |
 | `reflection_state` | string \| null | `draft` or `complete` (G23, 2026-05-28). Missing/null → treat as `draft`. The lead's attestation that `lead-reflection.md` matches the pipeline's actual end-state. See below. |
 
 ### Valid `scope` values
@@ -94,6 +95,10 @@ On resume: if `scope` is missing (legacy v5.0 engagement created before the scop
 | `client-verified` | Set **only** by the operator's manual verification pass: re-check the live site, follow every legal/ethics citation link and confirm relevancy, and finalize hotspot placement (§4.2). |
 
 **The load-bearing invariant: automated / `--auto` execution can NEVER mark a report `client-verified`.** Promotion is a deliberate, explicit operator action — run `python ${CLAUDE_PLUGIN_ROOT}/scripts/generate-report.py --engagement <dir> --mark-client-verified`. That verb refuses (`AutoPromotionError`, non-zero exit) when invoked with `--auto`; the same guard lives in `scripts/assembly/report_state.py:set_client_verified(auto=...)`.
+
+**Placement gate (Phase-0 A9, 2026-06-10):** `set_client_verified` also refuses (`UnplacedMarkerError`, distinct non-zero exit) when the engagement's `review-state-{device}.json` file(s) report any finding with `hotspot_confidence == "needs-manual-marker"`, or when no review-state file exists at all (placement was never finalized — product.md §6 step 3 / §4.2). The CLI exposes `--force` as the operator escape hatch; the resulting attestation block records `forced: true` so the audit trail captures the bypass. `--force` does NOT bypass the `--auto` refusal — that guard is absolute.
+
+On successful promotion, `set_client_verified` stamps `report_state_attestation` on `meta.json`: `{ promoted_at, unplaced_counts: {device: count}, forced: bool }`. The block is informational (the source of truth for state is `report_state` itself) but the unplaced counts let a reader see exactly *what* the operator attested to at promotion time.
 
 On resume / when missing: treat absent, null, or blank `report_state` as `draft` (back-compat with engagements created before §6 tracking existed). `read_report_state()` in `report_state.py` is the canonical reader.
 
