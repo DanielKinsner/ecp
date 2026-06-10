@@ -296,6 +296,25 @@ def build_priority_tab_html(priority_path_stories, findings_by_fid):
 
     parts = []
     for i, story in enumerate(priority_path_stories, 1):
+        # C6a: sidecar load/validation failure -> visible ERROR card.
+        # contracts/priority-path-synthesis.md:15 requires the operator
+        # to see the failure instead of a silent markdown-regex fallback.
+        if story.get("priority_path_error"):
+            parts.append(
+                '<div class="priority-card priority-card-error" role="alert">'
+                '<div class="priority-card-head">'
+                '<span class="priority-card-num">!</span>'
+                '<span class="priority-card-title">{title}</span>'
+                '</div>'
+                '<div class="priority-card-meta">{detail}</div>'
+                '<div class="priority-card-action">{action}</div>'
+                '</div>'.format(
+                    title=escape_html(story.get("title") or "ERROR"),
+                    detail=escape_html(story.get("description") or ""),
+                    action=escape_html(story.get("action") or ""),
+                )
+            )
+            continue
         title = escape_html(story.get("title") or f"Priority {i}")
         spans = story.get("spans_clusters") or []
         # Parser uses "fixes_count" + "underlying" (not the earlier draft names

@@ -83,7 +83,33 @@ def _synth_stories_to_render_shape(stories):
     return out
 
 
-def _load_priority_path_stories(engagement_path, device, audit_file):
+def _priority_path_error_story(detail):
+    """Build a single-story sentinel that renders as a visible ERROR card.
+
+    Per ``contracts/priority-path-synthesis.md:15``, sidecar validation
+    failures must render a visible ERROR block — not silently fall back
+    to regex-scraping ``audit.md``, which has no F-N allowlist and could
+    surface hallucinated refs. ``priority_path_error`` is the operator
+    signal the templates layer keys off (see ``build_priority_tab_html``).
+    """
+    return [{
+        "number": "!",
+        "title": "ERROR: Priority Path sidecar could not be loaded",
+        "severity": "CRITICAL",
+        "fixes_count": 0,
+        "spans_clusters": [],
+        "description": detail,
+        "action": (
+            "Re-run assemble-audit.py with a valid --priority-path "
+            "synthesizer response, or remove the malformed sidecar "
+            "to fall back to legacy markdown parsing."
+        ),
+        "underlying": [],
+        "priority_path_error": True,
+    }]
+
+
+def _load_priority_path_stories(engagement_path, device, audit_file, findings=None):
     """Load Priority Path stories with sidecar-first preference.
 
     Read order (H1 fix — prevents stale-markdown drift):
@@ -93,13 +119,16 @@ def _load_priority_path_stories(engagement_path, device, audit_file):
        source of truth because it was produced under
        ``synthesizer_parser.validate_stories`` — every F-N ref is in the
        allowlist, every story structure passed schema checks.
+       Malformed/unreadable sidecar -> visible ERROR card (C6a). The
+       legacy silent fallback let regex-scraped audit.md refs leak into
+       the report with no allowlist (contracts/priority-path-synthesis.md:15).
 
-    2. Markdown fallback — ``parse_priority_path(audit.md)``. Used when
-       the sidecar is absent, which happens for legacy engagements
-       predating this sidecar or when ``assemble-audit.py`` was run
-       without ``--priority-path``. Parsing markdown is looser than the
-       sidecar (can't detect F-N refs invented by a hand-editor), but
-       it's the only option when no sidecar exists.
+    2. Markdown fallback — ``parse_priority_path(audit.md)``. Used only
+       when the sidecar is ABSENT (legacy engagement / pre-sidecar /
+       assemble-audit.py run without --priority-path). Parsing markdown
+       has no F-N allowlist, so we post-validate every parsed ref against
+       ``findings`` here (C6b) and drop refs that do not resolve, rather
+       than letting them render as "(not found)" rows downstream.
 
     Sidecar filename convention mirrors ``writer._sidecar_suffix``:
     laptop uses bare ``priority-path-stories.json``, others use
@@ -111,18 +140,49 @@ def _load_priority_path_stories(engagement_path, device, audit_file):
         try:
             with open(sidecar_path, "r", encoding="utf-8") as f:
                 payload = json.load(f)
-            stories = payload.get("stories") if isinstance(payload, dict) else None
-            if isinstance(stories, list) and stories:
-                return _synth_stories_to_render_shape(stories)
-        except (OSError, IOError, json.JSONDecodeError):
-            # Fall through to markdown parse — sidecar is present but
-            # unreadable or malformed. Log-via-stderr would be nicer
-            # but the existing code path doesn't log at this layer.
-            pass
-    return parse_priority_path(engagement_path / audit_file)
+        except (OSError, IOError) as exc:
+            return _priority_path_error_story(
+                f"Sidecar {sidecar_path.name} is unreadable: {exc}."
+            )
+        except json.JSONDecodeError as exc:
+            return _priority_path_error_story(
+                f"Sidecar {sidecar_path.name} is not valid JSON: {exc}."
+            )
+        stories = payload.get("stories") if isinstance(payload, dict) else None
+        if not isinstance(stories, list):
+            return _priority_path_error_story(
+                f"Sidecar {sidecar_path.name} is missing a \"stories\" list."
+            )
+        if not stories:
+            return _priority_path_error_story(
+                f"Sidecar {sidecar_path.name} contains zero stories."
+            )
+        return _synth_stories_to_render_shape(stories)
+
+    parsed = parse_priority_path(engagement_path / audit_file)
+    if findings is None:
+        return parsed
+    # C6b: post-validate every parsed ref against the actual findings set.
+    # parse_priority_path uses display_index (cluster_index) as the F-NN.
+    valid_refs = set()
+    for f in findings:
+        cluster = f.get("cluster")
+        idx = f.get("display_index") or f.get("cluster_index")
+        if cluster and idx:
+            valid_refs.add((cluster, int(idx)))
+    for story in parsed:
+        underlying = story.get("underlying") or []
+        story["underlying"] = [
+            u for u in underlying
+            if u.get("cluster") and u.get("index")
+            and (u["cluster"], int(u["index"])) in valid_refs
+        ]
+        # Keep fixes_count honest — header chips and meta lines use it.
+        story["fixes_count"] = len(story["underlying"])
+    return parsed
 
 
-def _attach_display_indices(findings, engagement_path):
+def _attach_display_indices(findings, engagement_path, device="laptop"):
     """Stamp each parsed finding with its canonical content-hashed
     ``display_index`` from ``finding-groups.json``.
 
@@ -137,8 +197,15 @@ def _attach_display_indices(findings, engagement_path):
     We match each parsed finding to its group by ``(cluster, section)`` and
     assign indices in parse order within a group. Absent/malformed groups file
     (legacy engagements) → no-op, positional fallback preserved.
+
+    Sidecar filename convention mirrors ``writer._sidecar_suffix``:
+    laptop uses bare ``finding-groups.json``, others use
+    ``finding-groups-{device}.json``. Without the suffix, every desktop /
+    mobile render misses its groups file, display indices stay positional,
+    and Priority Path refs degrade to "(not found)" (C4).
     """
-    fg_path = engagement_path / "finding-groups.json"
+    suffix = "" if device == "laptop" else f"-{device}"
+    fg_path = engagement_path / f"finding-groups{suffix}.json"
     if not fg_path.exists():
         return
     try:
@@ -192,8 +259,10 @@ def _load_inputs(engagement_path, baton_file, audit_file, plugin_path, device):
     findings = parse_findings(engagement_path / audit_file)
     # Stamp canonical content-hashed indices so the rendered body F-NN match the
     # validated Priority Path sidecar refs (prevents "(not found)" links).
-    _attach_display_indices(findings, engagement_path)
-    priority_path_stories = _load_priority_path_stories(engagement_path, device, audit_file)
+    _attach_display_indices(findings, engagement_path, device)
+    priority_path_stories = _load_priority_path_stories(
+        engagement_path, device, audit_file, findings=findings,
+    )
 
     # Extract the audited page URL so downstream stages (e.g., the ethics
     # SOURCE_URL integrity check in _resolve_citations) can detect when
