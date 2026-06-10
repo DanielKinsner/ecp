@@ -204,6 +204,18 @@ def build_canonical_frefs(engagement: Path) -> int:
             _engagement_cluster_emission_paths,
             _engagement_ethics_findings_path,
         )
+        # C8 (2026-06-09): the v1 writer persisted a dedup-review sidecar
+        # ({auto_merged, fuzzy_candidates}) per device — v2 was computing the
+        # same data inside build_canonical_view and discarding it, leaving the
+        # operator with no way to audit which findings collapsed and why
+        # (product.md §0 untraceability). Re-parse + re-run deduplicate_v2 here
+        # so the trail is serialized; same input universe (cluster paths +
+        # ethics path) and same dedup function as the canonical view, so the
+        # sidecar mirrors what the renderer used.
+        from assembly.json_parser import parse_emission_file
+        from assembly.dedup import deduplicate_v2
+        from assembly.anchor_candidates import load_anchor_candidates_sidecar_strict
+        from assembly.atomic_write import atomic_write_json
     except ImportError as e:
         print(f"[error] couldn't import renderer canonical-view builder: {e}", file=sys.stderr)
         return 3
@@ -297,6 +309,61 @@ def build_canonical_frefs(engagement: Path) -> int:
         encoding="utf-8",
     )
 
+    # C8 (2026-06-09): persist the v2 dedup audit trail. The v1 writer wrote
+    # dedup-review-{device}.json with {auto_merged, fuzzy_candidates} so the
+    # operator could see which findings collapsed and why; v2 was discarding
+    # the same data after build_canonical_view used it internally. Re-do the
+    # parse + dedup here against the SAME input universe so the sidecar
+    # matches what the canonical view used. One engagement-wide file (not
+    # per-device) because v2 dedup is cross-device by design (page-scope
+    # collapses across desktop/mobile). fuzzy_candidates is empty in v2 — the
+    # v1 layer-3 fuzzy flagger has no v2 equivalent yet — but the field stays
+    # for shape-parity with v1 consumers.
+    sidecar_by_device_dedup: dict[str, dict | None] = {
+        "desktop": None, "mobile": None, "laptop": None, "page": None,
+    }
+    for device in ("desktop", "mobile", "laptop", "page"):
+        sc_path = engagement / f"anchor-candidates-{device}.json"
+        sidecar_by_device_dedup[device] = load_anchor_candidates_sidecar_strict(sc_path)
+
+    findings_for_dedup: list = []
+    for p in cluster_paths:
+        sc = (
+            sidecar_by_device_dedup["desktop"] if "-desktop.json" in p.name
+            else sidecar_by_device_dedup["mobile"] if "-mobile.json" in p.name
+            else sidecar_by_device_dedup["laptop"] if "-laptop.json" in p.name
+            else None
+        )
+        try:
+            res = parse_emission_file(p, anchor_candidates_sidecar=sc)
+        except Exception:
+            # Drops are surfaced via canonical-frefs-dropped.json — silently
+            # skip here to match build_canonical_view's behavior (a partially-
+            # parsed emission can't be safely fed to dedup).
+            continue
+        findings_for_dedup.extend(res.findings)
+    if ethics_path and ethics_path.exists():
+        try:
+            eth_sc = (
+                sidecar_by_device_dedup.get("page")
+                or sidecar_by_device_dedup.get("desktop")
+            )
+            res = parse_emission_file(ethics_path, anchor_candidates_sidecar=eth_sc)
+            findings_for_dedup.extend(res.findings)
+        except Exception:
+            pass
+
+    deduped_for_audit = deduplicate_v2(findings_for_dedup)
+    dedup_review_path = engagement / "dedup-review.json"
+    atomic_write_json(
+        dedup_review_path,
+        {
+            "engagement": str(engagement),
+            "auto_merged": deduped_for_audit.auto_merged,
+            "fuzzy_candidates": deduped_for_audit.fuzzy_candidates,
+        },
+    )
+
     # G16 (2026-05-27): surface schema-validation drops that pre-G16 were
     # silently swallowed inside build_canonical_view. Always write the
     # dropped-emissions manifest (empty list on a clean run) so downstream
@@ -319,8 +386,9 @@ def build_canonical_frefs(engagement: Path) -> int:
         encoding="utf-8",
     )
 
-    print(f"[ok] wrote {consumer_path.name}, {json_path.name}, and {md_path.name}")
+    print(f"[ok] wrote {consumer_path.name}, {json_path.name}, {md_path.name}, and {dedup_review_path.name}")
     print(f"     {len(manifest_entries)} canonical f_refs across {len(by_cluster)} cluster(s)")
+    print(f"     {len(deduped_for_audit.auto_merged)} auto-merged group(s), {len(deduped_for_audit.fuzzy_candidates)} fuzzy candidate(s)")
 
     if dropped_emissions:
         # Loud stderr so the lead's CLI invocation sees the failure; non-zero
