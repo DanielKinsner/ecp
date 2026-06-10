@@ -126,7 +126,16 @@ def _build_elements_js(expected_hostname: str) -> str:
    '[class*="announce"]', '[class*="promo"]', '[aria-label]'
   ].flatMap(function(sel) {
     try {
-      return Array.from(document.querySelectorAll(sel)).slice(0, 10).map(function(el) {
+      /* C16 (workflows/acquire.md §638): capture-then-cap. The pre-fix
+         per-selector slice(0, 10) truncated a 36-card product grid down to
+         10 cards before the global cap ran, so most product cards never
+         entered the baton. Now we keep ALL matches per selector (bounded by
+         a sanity limit of 100 so a pathological 10k-match selector can't
+         OOM the eval), and the global 200-element cap is applied later by
+         _dedupe_elements_phys. Per-selector truncation was the root cause
+         of "36 product cards invisible to specialists" (workflows/acquire.md
+         §475-642 element-extraction contract). */
+      return Array.from(document.querySelectorAll(sel)).slice(0, 100).map(function(el) {
         let r = el.getBoundingClientRect();
         const scrollY = window.scrollY || document.documentElement.scrollTop;
         const tag = el.tagName.toLowerCase();
@@ -722,6 +731,63 @@ def _metrics(agent_browser: str, session: str | None) -> dict[str, Any]:
     return m if isinstance(m, dict) else {}
 
 
+_DOC_HEIGHT_PROBE_JS = r"""JSON.stringify((function(){
+  /* hc-C3 (handoff: true-height probe). A cold one-shot
+     `documentElement.scrollHeight` undercounts long pages whose lazy-loaded
+     sections only mount when scrolled into view (Shopify infinite-scroll
+     collection grids, IntersectionObserver-loaded reviews, virtualized
+     product lists). Probe the true height by scrolling to the end, reading
+     scrollY, looping until it stabilizes within ~4 px or after 12 rounds,
+     then restoring the prior scroll position.
+
+     Returns the maximum scrollY observed (the LAST stable value). Caller
+     pairs this with documentElement.scrollHeight as a floor so the page
+     height never shrinks below already-captured content. */
+  var prev = window.scrollY || 0;
+  function H(){
+    return Math.max(
+      document.documentElement ? document.documentElement.scrollHeight : 0,
+      document.body ? document.body.scrollHeight : 0
+    );
+  }
+  var last = -1, stable = 0, rounds = 0;
+  var maxY = 0;
+  while (rounds < 12 && stable < 2) {
+    var h = H();
+    try { window.scrollTo({top: h, behavior: 'instant'}); }
+    catch (e) { window.scrollTo(0, h); }
+    var y = window.scrollY || 0;
+    if (y > maxY) maxY = y;
+    if (last >= 0 && Math.abs(h - last) <= 4) {
+      stable++;
+    } else {
+      stable = 0;
+    }
+    last = h;
+    rounds++;
+  }
+  try { window.scrollTo({top: prev, behavior: 'instant'}); }
+  catch (e) { window.scrollTo(0, prev); }
+  return {true_max_scroll_px: Math.max(maxY, H() - (window.innerHeight||0)), doc_h: H(), rounds: rounds};
+})())"""
+
+
+def _probe_doc_height(eval_json: Any) -> dict[str, Any]:
+    """Scroll to the page end repeatedly until the documentElement height
+    stabilizes; return the probed max scroll position.
+
+    ``eval_json`` is a callable that runs ``agent-browser eval`` and returns
+    parsed JSON (same shape as ``_eval_json_object``). The probe is
+    best-effort — a network/eval failure returns ``{}`` so the caller can
+    fall back to the single-shot ``documentElement.scrollHeight``.
+    """
+    try:
+        out = eval_json(_DOC_HEIGHT_PROBE_JS)
+    except (OSError, RuntimeError, ValueError, TypeError):
+        return {}
+    return out if isinstance(out, dict) else {}
+
+
 def _count_visible_text(agent_browser: str, session: str | None) -> int:
     c = _eval_json_object(agent_browser, session, f"JSON.stringify({_PRE_HYDRATION_JS})")
     if not isinstance(c, dict):
@@ -1009,9 +1075,21 @@ def _run_one_device(
         rounds=max(1, int(overlay_rounds)),
         pause_s=max(0.1, float(overlay_pause_s)),
     )
-    ecp_ov.force_remove_blocking_overlays(lambda s: _ev(s))
+    # C11 (workflows/acquire.md §253-268): accumulate per-overlay removal
+    # records across BOTH force-remove passes so the v1 baton carries the
+    # identity of every JS-edited overlay; the v1->v2 converter then maps
+    # them to schema-valid `capture_state.overlays_detected[]` entries with
+    # method recorded, so the renderer's "DOM edited during capture" caveat
+    # banner can fire when it should. Pre-fix the two passes returned only
+    # a count, then `overlays_detected: []` was written unconditionally.
+    overlay_records: list[dict[str, Any]] = []
+    fr1 = ecp_ov.force_remove_blocking_overlays(lambda s: _ev(s))
+    if isinstance(fr1, dict) and isinstance(fr1.get("records"), list):
+        overlay_records.extend(r for r in fr1["records"] if isinstance(r, dict))
     time.sleep(0.5)
-    ecp_ov.force_remove_blocking_overlays(lambda s: _ev(s))
+    fr2 = ecp_ov.force_remove_blocking_overlays(lambda s: _ev(s))
+    if isinstance(fr2, dict) and isinstance(fr2.get("records"), list):
+        overlay_records.extend(r for r in fr2["records"] if isinstance(r, dict))
     time.sleep(0.5)
     vp0 = ecp_ov.read_viewport_state(lambda s: _ev(s))
     viewport_ok = bool(vp0.get("clear")) if isinstance(vp0, dict) else False
@@ -1038,6 +1116,24 @@ def _run_one_device(
     inner_w = int(m0.get("innerW") or prof.width)
     inner_h = int(m0.get("innerH") or prof.height)
     doc_h = int(m0.get("docH") or inner_h)
+
+    # hc-C3: probe the TRUE page height after the reveal pass — single-shot
+    # documentElement.scrollHeight undercounts lazy-loaded collection grids
+    # / virtualized lists, so the converter would emit a page_height_px
+    # that doesn't cover the actual content. The probe scrolls to end
+    # repeatedly until the height stabilizes; the converter's safety floor
+    # (sec_bottom) guarantees this can never shrink below already-captured
+    # content even if the probe goes wrong.
+    height_probe = _probe_doc_height(_ev)
+    try:
+        true_max_scroll = int(height_probe.get("true_max_scroll_px") or 0)
+    except (TypeError, ValueError):
+        true_max_scroll = 0
+    if true_max_scroll > 0:
+        # Also update doc_h to the larger of probed and one-shot, so the
+        # screenshot tiling plan covers the full page on this run.
+        probed_doc_h = int(height_probe.get("doc_h") or 0)
+        doc_h = max(doc_h, probed_doc_h)
     # C15 (schema/baton-v1.json viewport.dpr_requested/dpr_actual): record the
     # full request-vs-actual split so the downstream v1->v2 converter
     # (scripts/baton_v1_to_v2.py:246 reads `dpr_fallback`) can surface the
@@ -1269,7 +1365,12 @@ def _run_one_device(
                 continue
             element_rows.append(_dpr_scale_element_css_to_phys(item, dpr_i))
 
-    elements = _dedupe_elements_phys(element_rows, cap=140)
+    # C16 (workflows/acquire.md §638): the contract specifies a 200-element
+    # global cap (raised from v1's 100 to accommodate mobile always-include
+    # selectors). The pre-fix value of 140 silently clipped product grids
+    # and other dense selectors after per-selector truncation had already
+    # shaved them down further.
+    elements = _dedupe_elements_phys(element_rows, cap=200)
 
     styles_obj = _eval_json_object(agent_browser, session, f"JSON.stringify({_STYLES_JS})")
     if not isinstance(styles_obj, dict):
@@ -1300,6 +1401,12 @@ def _run_one_device(
             eng_dir=eng_dir,
             shot_jpeg=_cfg_shot,
             file_prefix=file_prefix,
+            # C13 (workflows/acquire.md §311-323): pass the audit URL so the
+            # configurator can pin the variant on every device when the URL
+            # carries ?variant=/?sku=/?variant_id= — otherwise desktop and
+            # mobile can silently capture different SKUs (awdmods 2026-05-18
+            # documented case).
+            target_url=url,
         )
     except (OSError, RuntimeError, TypeError, ValueError):
         configured_state = None
@@ -1360,6 +1467,28 @@ def _run_one_device(
         baton["timers"] = timer_baton
     if configured_state:
         baton["configured_state"] = configured_state
+    # hc-C3: persist the probed true page height so the v1->v2 converter can
+    # prefer it over the (often undercount) single-shot scrollHeight.
+    if true_max_scroll > 0:
+        baton["true_max_scroll_px"] = int(true_max_scroll)
+    # C11: persist the per-overlay force-removal records and the reveal-pass
+    # summary on the v1 baton so the v1->v2 converter can populate
+    # capture_state.overlays_detected[]. The reveal-pass summary becomes a
+    # synthetic "other" overlay record (counts the scroll-trigger /
+    # animate-* elements whose computed styles we mutated to force-paint).
+    if overlay_records:
+        baton["overlays"] = overlay_records[:30]
+    revealed_count = 0
+    if isinstance(reveal, dict):
+        try:
+            revealed_count = int(reveal.get("reveal_els") or 0)
+        except (TypeError, ValueError):
+            revealed_count = 0
+    if revealed_count > 0:
+        baton["reveal_summary"] = {
+            "reveal_els": revealed_count,
+            "lazy_imgs": int(reveal.get("lazy_imgs") or 0) if isinstance(reveal, dict) else 0,
+        }
 
     _write_text(eng_dir / baton_name, json.dumps(baton, indent=2) + "\n")
     occluded_sections = sum(1 for s in section_rows if bool(s.get("occluded")))

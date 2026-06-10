@@ -142,6 +142,108 @@ def _build_elements(v1: dict, vh: int) -> list[dict]:
     return out
 
 
+# C11 (workflows/acquire.md §253-268): force-removal method -> schema dismissal_method.
+# The schema's dismissal_method enum doesn't include js-remove/js-style-display-none
+# (workflows/acquire.md lists them, schema doesn't), so we map onto the
+# closest sanctioned values. The "skip" enum means "we bypassed normal
+# user-driven dismissal" — accurate for a JS force-removal. The fact that
+# the DOM was edited is conveyed by the overlay being present in
+# overlays_detected at all (combined with the lead-side caveat banner).
+_FORCE_REMOVE_METHOD_TO_SCHEMA = {
+    "js-remove": "skip",
+    "js-style-display-none": "skip",
+    "failed": "failed",
+}
+
+
+def _build_overlay_synth(v1: dict, start_idx: int) -> tuple[list[dict], list[dict]]:
+    """Build synthetic elements + matching overlays_detected[] entries for any
+    force-removed overlays and the reveal-pass summary recorded on the v1 baton.
+
+    Returns ``(synth_elements, overlays_detected)``. Synthetic elements are
+    appended after the real-element list so their e_index doesn't collide.
+    Schema requires ``overlays_detected[].e_index`` to match ``^e[0-9]+$``,
+    which means each overlay needs a corresponding entry in ``elements[]``
+    — we can't reference an element that doesn't exist. Pre-fix the
+    converter wrote ``overlays_detected: []`` ALWAYS because the v1 baton
+    didn't carry overlay identity (count-only), so the caveat banner
+    never fired. C11 wires the per-overlay identity (selector / class /
+    type / method) from ``scripts/ecp_acquire_overlays.force_remove_blocking_overlays``
+    through to here.
+    """
+    synth_elements: list[dict] = []
+    overlays_detected: list[dict] = []
+    next_idx = int(start_idx)
+
+    raw_overlays = v1.get("overlays")
+    if isinstance(raw_overlays, list):
+        for rec in raw_overlays:
+            if not isinstance(rec, dict):
+                continue
+            method_raw = str(rec.get("method") or "")
+            dismissal = _FORCE_REMOVE_METHOD_TO_SCHEMA.get(method_raw, "skip")
+            otype = str(rec.get("type") or "other")
+            if otype not in {"cookie-consent", "newsletter-modal", "age-gate",
+                             "privacy-banner", "promo-popup", "geo-router", "other"}:
+                otype = "other"
+            cls = str(rec.get("class") or "")[:120]
+            tag = str(rec.get("tag") or "div").lower()[:32]
+            selector_hint = (f".{cls.split()[0]}" if cls.split() else tag)[:512]
+            e_index = f"e{next_idx}"
+            synth_elements.append({
+                "e_index": e_index,
+                "tag": tag,
+                "selector": selector_hint,
+                "rect": {"x": 0.0, "y": 0.0, "width": 1.0, "height": 1.0},
+                "scroll_y_at_capture": 0,
+                "role": "dialog",
+                "accessible_name": (str(rec.get("aria_label") or cls) or "overlay")[:240],
+                "text_content": "",
+                "is_above_fold": True,
+                "is_sticky": True,
+                "is_offscreen": True,
+            })
+            overlays_detected.append({
+                "e_index": e_index,
+                "type": otype,
+                "dismissed": dismissal != "failed",
+                "dismissal_method": dismissal,
+            })
+            next_idx += 1
+
+    # Reveal-pass: when the acquirer fired scroll-trigger reveals or eager-
+    # loaded lazy media, the captured DOM also differs from a normal user's
+    # view. Record one synthetic "other" overlay so the caveat banner
+    # surfaces this too (the count lives in v1.reveal_summary).
+    reveal = v1.get("reveal_summary")
+    if isinstance(reveal, dict) and int(reveal.get("reveal_els") or 0) > 0:
+        e_index = f"e{next_idx}"
+        synth_elements.append({
+            "e_index": e_index,
+            "tag": "div",
+            "selector": ".scroll-trigger",
+            "rect": {"x": 0.0, "y": 0.0, "width": 1.0, "height": 1.0},
+            "scroll_y_at_capture": 0,
+            "role": "group",
+            "accessible_name": (
+                f"scroll-trigger reveal pass: {int(reveal.get('reveal_els') or 0)} "
+                f"elements force-painted"
+            )[:240],
+            "text_content": "",
+            "is_above_fold": True,
+            "is_sticky": False,
+            "is_offscreen": False,
+        })
+        overlays_detected.append({
+            "e_index": e_index,
+            "type": "other",
+            "dismissed": True,
+            "dismissal_method": "skip",
+        })
+
+    return synth_elements, overlays_detected
+
+
 def _build_sections(v1: dict, device: str, page_height: int, page_title: str, vh: int) -> list[dict]:
     # Shallow-copy section rows so enrichment never mutates the caller's v1.
     raw = [dict(s) for s in sorted(v1.get("sections", []) or [],
@@ -201,12 +303,28 @@ def convert_baton(
 
     page_title = (v1.get("title") or "").strip()
     elements = _build_elements(v1, vh)
+    # C11: synthesize element entries for force-removed overlays so they can
+    # be referenced by overlays_detected[].e_index (schema requires ^e[0-9]+$).
+    synth_overlay_els, overlays_detected = _build_overlay_synth(v1, start_idx=len(elements))
+    elements.extend(synth_overlay_els)
 
     el_bottom = max((e["rect"]["y"] + e["rect"]["height"] for e in elements), default=0.0)
     sec_bottom = max(
         (int(s.get("scrollY", 0)) + int(s.get("height", 0)) for s in v1.get("sections", []) or []),
         default=0)
-    page_height = int(max(el_bottom, sec_bottom, vh))
+    # hc-C3 (handoff: true-height probe): prefer the acquirer's probed
+    # documentElement.scrollHeight (after scrollTo(end), loop until stable)
+    # when available — single-pass `documentElement.scrollHeight` undercounts
+    # long pages because lazy-loaded sections don't grow until scrolled into
+    # view. Floor at sec_bottom so we can never shrink BELOW what we already
+    # captured (the safety invariant).
+    probed = 0
+    try:
+        probed = int(v1.get("true_max_scroll_px") or 0)
+    except (TypeError, ValueError):
+        probed = 0
+    base = probed if probed > 0 else int(el_bottom)
+    page_height = int(max(base, sec_bottom, vh))
 
     sections = _build_sections(v1, device, page_height, page_title, vh)
 
@@ -247,10 +365,11 @@ def convert_baton(
         },
         "capture_state": {
             "hydration": "pre-hydration" if v1.get("pre_hydration_warning") else "post-hydration",
-            # A v1 baton never records which element was the overlay, and the schema
-            # requires overlays_detected[].e_index to match ^e[0-9]+$ — so the only
-            # schema-valid, honest choice is an empty list (not {"e_index": None}).
-            "overlays_detected": [],
+            # C11: per-overlay records are synthesized in _build_overlay_synth
+            # from v1.overlays + v1.reveal_summary; pre-fix this was [] ALWAYS
+            # (the v1 baton was count-only), so the "DOM edited during capture"
+            # caveat banner could never fire (workflows/acquire.md §253-268).
+            "overlays_detected": overlays_detected,
             "page_height_px": page_height,
         },
         "elements": elements,

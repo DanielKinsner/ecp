@@ -452,8 +452,14 @@ def preprocess_device(
             continue
 
         # Filter baton elements to those overlapping a cluster section (or global).
+        # is_offscreen elements never enter visible evidence: real invisible
+        # elements are the spec's DOM-not-displayed class (product.md §4.1), and
+        # the v1→v2 converter synthesizes offscreen placeholder entries for
+        # force-removed overlays that must not be anchorable by specialists.
         cluster_elements = []
         for el in elements:
+            if el.get("is_offscreen"):
+                continue
             rect = element_rect_css(el, 1.0) or {}
             ey = int(rect.get("y", 0) or 0)
             eh = int(rect.get("height", 0) or 0)

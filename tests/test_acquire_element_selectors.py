@@ -27,7 +27,15 @@ class TestElementSelectors(unittest.TestCase):
             self.assertIn(sel, js, msg=f"missing selector: {sel}")
 
     def test_per_selector_cap_raised(self):
-        self.assertIn("slice(0, 10)", acquire_url._build_elements_js("example.com"))
+        # C16: per-selector cap is the sanity bound (100), NOT a real truncation.
+        # The contract is capture-then-cap — the global cap (200, applied by
+        # _dedupe_elements_phys) is the only intentional truncation point. A
+        # bare slice(0, 10) here regresses the 36-product-card case.
+        js = acquire_url._build_elements_js("example.com")
+        self.assertIn("slice(0, 100)", js)
+        # Use a closed-delimiter form so "slice(0, 100)" doesn't false-match.
+        self.assertNotIn("slice(0, 10).map", js)
+        self.assertNotIn("slice(0, 10);", js)
 
     def test_zero_sized_form_controls_are_kept(self):
         """RC#1(a): a zero-sized native <select>/<input>/<button> must NOT be

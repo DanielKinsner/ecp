@@ -39,8 +39,77 @@ JSON.stringify((function() {
 })())
 """
 
+"""C12 (workflows/acquire.md §222-228) — overlay dismissal must be semantic.
+
+Pre-fix the round had two phases: (1) try a list of "container" selectors like
+``[role="dialog"] button``, ``.modal button``, ``[class*="omnisend"] button``
+and click the FIRST match unconditionally; (2) only AFTER all containers
+missed, fall back to a text-constrained ``button`` scan. In an Omnisend
+newsletter popup the FIRST button is "Subscribe", so the pre-fix happily
+subscribed the operator's session to the brand's mailing list before any
+"no thanks" text match ran.
+
+Fix: semantic close-targeting (aria-label close/dismiss, ×/✕/close-class) runs
+on EVERY round, paired with a hard subscribe/sign-up/submit/accept BLOCKLIST
+that vetoes a click on any button whose accessible text matches those
+patterns — regardless of which selector matched it. The accept-list (for
+cookie/consent banners specifically) is preserved but is now whitelisted by
+text too, so a "subscribe" button in a ``[class*="consent"] button`` selector
+can never sneak through as "accept."
+
+The contract reference is ``workflows/acquire.md`` ~222-228 (the
+``aria-label*="close"`` / ``aria-label*="dismiss"`` / ``.close`` /
+``button:has-text("×")`` / ``button:has-text("No thanks")`` enumeration).
+"""
+
 _DISMISS_ROUND = r"""
 (function(){
+  /* C12: subscribe/sign-up patterns. ANY candidate whose accessible text
+     matches one of these is BLOCKED from clicking — newsletter popups
+     consistently put "Subscribe" / "Sign up" / "Get 10% off" as the
+     first button in the dialog. The blocklist runs on every round. */
+  var BLOCK_TXT = /(subscribe|sign\s*up|signup|join|register|submit|continue|get\s+\d+|10%\s*off|claim|yes please|tell me|count me in|notify me|remind me|gift|buy|add to (cart|bag)|reveal)/i;
+  var BLOCK_ARIA = /(subscribe|sign|register|submit|join)/i;
+
+  /* Semantic close-set: matches the workflows/acquire.md ~222-228 contract
+     (aria-label close/dismiss, .close/.dismiss classes, × / ✕ / X glyphs,
+     "no thanks" / "decline" / "close" text). */
+  var CLOSE_ARIA = /(close|dismiss|cancel|skip|reject|decline)/i;
+  var CLOSE_TXT = /^(?:close|dismiss|cancel|skip|no thanks|no thank you|maybe later|not now|reject|decline|continue without|x|×|✕|✖|⨯)$/i;
+  /* Accept-list (cookie/consent banners). NEVER applied to popups where the
+     accept text would mean "subscribe me" — paired with BLOCK_TXT below. */
+  var ACCEPT_TXT = /^(?:accept(?: all| cookies)?|agree(?: and continue)?|got it|ok|okay|allow(?: all)?|i accept|consent|confirm)$/i;
+
+  function txt(el){ return ((el.innerText || el.textContent || '').trim().slice(0, 80)); }
+  function aria(el){ return ((el.getAttribute && el.getAttribute('aria-label')) || '').trim().slice(0, 80); }
+  function visible(el){
+    if (!el) return false;
+    var r = el.getBoundingClientRect();
+    if (r.width < 2 && r.height < 2) return false;
+    var cs = (window.getComputedStyle ? window.getComputedStyle(el) : null);
+    if (cs && (cs.display === 'none' || cs.visibility === 'hidden')) return false;
+    return true;
+  }
+  /* The single per-button safety check — applies to EVERY click attempt in
+     EVERY phase. Returns true if the button is safe to dismiss with.
+     Close semantics WIN over the block-list: "Continue without accepting"
+     is a decline even though bare "continue" is a BLOCK_TXT token. */
+  function isCloseSemantic(el){
+    var t = txt(el), a = aria(el);
+    return CLOSE_TXT.test(t) || CLOSE_ARIA.test(a) || /^continue without\b/i.test(t);
+  }
+  function safeToClick(el){
+    if (!visible(el)) return false;
+    if (isCloseSemantic(el)) return true;
+    var t = txt(el), a = aria(el);
+    if (BLOCK_TXT.test(t) || BLOCK_TXT.test(a)) return false;
+    if (BLOCK_ARIA.test(a) && !CLOSE_ARIA.test(a)) return false;
+    return true;
+  }
+
+  /* Phase 1 — known cookie/consent OK-button selectors (semantically safe
+     because the IDs/classes are operator-specific and well-known). The
+     subscribe blocklist still vetoes if the matched element is mis-named. */
   var sels = [
     '#onetrust-accept-btn-handler',
     'button#onetrust-accept-btn-handler',
@@ -48,27 +117,113 @@ _DISMISS_ROUND = r"""
     '[id*="onetrust"] button',
     'button[aria-label*="ccept" i]',
     'button[aria-label*="Agree" i]',
-    'button[aria-label*="lose" i]',
-    '.osano-cm-accept',
-    '[class*="consent"] button',
-    '[role="dialog"] button',
-    '.modal button',
-    '[class*="omnisend"] button',
-    '[class*="klaviyo"] button',
-    '[class*="mailchimp"] button'
+    '.osano-cm-accept'
   ];
   for (var i=0;i<sels.length;i++) {
     var el = document.querySelector(sels[i]);
-    if (el) {
-      var r = el.getBoundingClientRect();
-      if (r.width<1 && r.height<1) continue;
-      try { el.click(); return {clicked: true, sel: sels[i]}; } catch (e) {}
+    if (el && safeToClick(el)) {
+      try { el.click(); return {clicked: true, sel: sels[i], phase: 'accept'}; } catch (e) {}
     }
   }
-  var b = document.querySelector('a[role="button"], a.btn, button, [role="button"]');
-  if (b) { var t = (b.innerText || '').trim().toLowerCase(); if (/accept|agree|got it|ok|dismiss|close|no thanks|decline/.test(t)) { try { b.click(); return {clicked: true, sel: 'text-match'}; } catch (e) {} } }
+
+  /* Phase 2 — close-semantic targeting on EVERY round (this is the C12 fix).
+     The pre-fix ran this only as a final text-fallback AFTER container
+     selectors had already happily clicked the first button in a dialog.
+     Now: walk dialogs/popups and look for an aria-label/class/text that
+     matches the close-set. */
+  var CLOSE_SEL = [
+    '[aria-label*="close" i]',
+    '[aria-label*="dismiss" i]',
+    '[aria-label*="cancel" i]',
+    '[aria-label*="skip" i]',
+    'button.close',
+    'button.dismiss',
+    '[class*="close-button"]',
+    '[class*="dismiss-button"]',
+    '[class*="popup-close"]',
+    '[class*="modal-close"]',
+    '[class*="newsletter"] [class*="close"]',
+    '[class*="omnisend"] [class*="close"]',
+    '[class*="klaviyo"] [class*="close"]',
+    '[role="dialog"] [aria-label*="close" i]',
+    '[role="dialog"] [aria-label*="dismiss" i]',
+    '.modal [aria-label*="close" i]'
+  ];
+  for (var ci=0; ci<CLOSE_SEL.length; ci++) {
+    var ce = document.querySelectorAll(CLOSE_SEL[ci]);
+    for (var cj=0; cj<ce.length; cj++) {
+      if (safeToClick(ce[cj])) {
+        try { ce[cj].click(); return {clicked: true, sel: CLOSE_SEL[ci], phase: 'close-semantic'}; } catch (e) {}
+      }
+    }
+  }
+
+  /* Phase 3 — scan buttons inside the known overlay containers, but ONLY
+     click ones whose text / aria-label matches a close-set or a true
+     consent-accept (cookie banner) AND survives the blocklist. The
+     pre-fix clicked the first button unconditionally here — the root
+     cause of the Subscribe regression. */
+  var CONTAINERS = [
+    '[role="dialog"]',
+    '[aria-modal="true"]',
+    '.modal',
+    '[class*="popup"]',
+    '[class*="overlay"]',
+    '[class*="consent"]',
+    '[class*="omnisend"]',
+    '[class*="klaviyo"]',
+    '[class*="mailchimp"]',
+    '[class*="newsletter"]',
+    '[class*="subscribe"]'
+  ];
+  for (var k=0; k<CONTAINERS.length; k++) {
+    var nodes = document.querySelectorAll(CONTAINERS[k]);
+    for (var n=0; n<nodes.length; n++) {
+      var btns = nodes[n].querySelectorAll('button, [role="button"], a.btn, a[role="button"]');
+      for (var bi=0; bi<btns.length; bi++) {
+        var bel = btns[bi];
+        if (!safeToClick(bel)) continue;
+        var bt = txt(bel), ba = aria(bel);
+        var isClose = CLOSE_TXT.test(bt) || CLOSE_ARIA.test(ba);
+        var isAccept = ACCEPT_TXT.test(bt);
+        if (!isClose && !isAccept) continue;
+        try {
+          bel.click();
+          return {clicked: true, sel: CONTAINERS[k]+' button', phase: isClose ? 'close-text' : 'accept-text', text: bt};
+        } catch (e) {}
+      }
+    }
+  }
+
+  /* Phase 4 — final text-match fallback over the whole document (preserved
+     from pre-fix behavior; gated by safeToClick + close/accept patterns). */
+  var any = document.querySelectorAll('a[role="button"], a.btn, button, [role="button"]');
+  for (var ai=0; ai<any.length; ai++) {
+    var ael = any[ai];
+    if (!safeToClick(ael)) continue;
+    var at = txt(ael);
+    if (CLOSE_TXT.test(at) || ACCEPT_TXT.test(at)) {
+      try { ael.click(); return {clicked: true, sel: 'text-match', phase: 'global-text', text: at}; } catch (e) {}
+    }
+  }
   return {clicked: false};
 })()
+"""
+
+"""C11 (workflows/acquire.md §253-268) — per-overlay removal records.
+
+Pre-fix this function returned only a count, then the converter wrote
+``overlays_detected: []`` unconditionally, so the contract's
+"DOM was edited during capture" caveat banner could never fire even when
+three auto-open overlays had been force-dismissed via JS style override
+(the awdmods 2026-05-18 mobile run is the documented case).
+
+Fix: capture per-overlay identity (tag / id / class / aria-label /
+coverage percent / dismissal method = ``js-remove`` or
+``js-style-display-none``) on EVERY removal, return them as a list, and
+let the Python wrapper and v1→v2 converter thread them onto the baton's
+``capture_state.overlays_detected[]`` so downstream renderers can surface
+the caveat.
 """
 
 _FORCE_REMOVE = r"""
@@ -76,6 +231,16 @@ _FORCE_REMOVE = r"""
   var sels = '[role="dialog"], .modal, [class*="consent"], [class*="newsletter"], [class*="omnisend"], [class*="overlay"], [class*="popup"]';
   var nodes = document.querySelectorAll(sels);
   var removed = 0;
+  var records = [];
+  function typeFromClasses(cls, id) {
+    var s = ((cls||'') + ' ' + (id||'')).toLowerCase();
+    if (/consent|onetrust|osano|cookie|privacy/.test(s)) return 'cookie-consent';
+    if (/newsletter|subscribe|omnisend|klaviyo|mailchimp/.test(s)) return 'newsletter-modal';
+    if (/age[-_ ]?gate/.test(s)) return 'age-gate';
+    if (/promo|popup/.test(s)) return 'promo-popup';
+    if (/geo|region|country/.test(s)) return 'geo-router';
+    return 'other';
+  }
   for (var i=0;i<nodes.length;i++) {
     var el = nodes[i];
     if (!el) continue;
@@ -84,10 +249,33 @@ _FORCE_REMOVE = r"""
     var vw = window.innerWidth, vh = window.innerHeight;
     var coverage = (Math.min(r.right, vw) - Math.max(r.left, 0)) * (Math.min(r.bottom, vh) - Math.max(r.top, 0));
     if (coverage > vw * vh * 0.1) {
-      try { el.remove(); removed++; } catch (e) { try { el.style.display = 'none'; removed++; } catch (e2) {} }
+      var clsRaw = (el.className && el.className.toString) ? el.className.toString() : '';
+      var idRaw = (el.id || '');
+      var rec = {
+        tag: (el.tagName||'').toLowerCase(),
+        id: String(idRaw).slice(0, 64),
+        class: clsRaw.slice(0, 120),
+        aria_label: ((el.getAttribute && el.getAttribute('aria-label')) || '').slice(0, 120),
+        coverage_pct: Math.round(coverage/(vw*vh)*100),
+        type: typeFromClasses(clsRaw, idRaw),
+        method: 'js-remove'
+      };
+      try {
+        el.remove();
+        removed++;
+      } catch (e) {
+        try {
+          el.style.display = 'none';
+          rec.method = 'js-style-display-none';
+          removed++;
+        } catch (e2) {
+          rec.method = 'failed';
+        }
+      }
+      records.push(rec);
     }
   }
-  return {removed: removed};
+  return {removed: removed, records: records};
 })()
 """
 
