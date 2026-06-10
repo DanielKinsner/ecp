@@ -1,5 +1,37 @@
 # Consolidated Review Findings & Execution Plan — 2026-06-10
 
+> ## ✅ EXECUTED 2026-06-10 — all code phases complete
+> Every phase below was implemented and pushed to `main` on 2026-06-10
+> (commits `3e39884..987f887`, 7 waves, every wave adversarially reviewed and
+> green on both runners before merge — final state **1306 pytest / 888
+> unittest, 0 failures**; suite grew from 1124/736).
+> **Done:** Phase 0 (9 rulings, spec→v1.2) · Phase 1 (all 13 quick wins) ·
+> Phase 2 (A1 absences-always-blank + A2 exact-tier gate, −520 LOC of weak
+> placement machinery; A9 promotion gate + attestation) · Phase 3 (C5/C7
+> + C17) · Phase 4 code (C10–C16, hc-C3) · Phase 5 (the FULL contract-reword
+> sweep: 17 files, 19 grep-guards + 8 coherence fixes) · Phase 6 (C18/H2/H3
+> canaries, run_all_canaries 8→12) · Phase 7 (M1 runner-parity guard, hc-C4
+> normalize trail+canary, M4, M5, W2, W3, M2 pins).
+> **Declined per rulings:** hc-C6 ghost-zone (A8). **Deliberately left:**
+> factory-dedup (optional, medium-risk), predicate-anchor tightening (waits
+> on LV3 vision-QA data per Phase 7 note).
+> **Live acquisition smoke (2026-06-10, awdmods.com, both devices, headless):**
+> verified live — C10 visibility filter, C11 `overlays_detected` non-empty for the
+> first time ever (3–4 recorded removals/device), C14 per-position occlusion flags
+> vary, C15 true 3× mobile DPR recorded, hc-C3 probe (`true_max_scroll_px` →
+> `page_height_px`), and the June-8 black-hero **evidence failure is gone**: the
+> hero band now carries 28 baton elements (announce/header/nav/search/selector)
+> vs "only the selector" before — baton ↔ screenshot self-consistent. The smoke
+> also caught + same-day-fixed two defects: the default engagement-id was the
+> legacy `ecp-cursor-*` shape (schema-invalid → auto-convert refused every
+> default-id run) and bare-CLI meta wrote `mode: "quick-scan"`. Operational note:
+> the `agent-browser` daemon holds the console pipe open after the script
+> finishes — redirect output to a file or expect the shell to wait.
+> **Still pending — the one remaining pre-client gate:** the full-pipeline live
+> `--plugin-dir` `/ecp:audit` session (LV2 full re-audit + LV3 `ecp-visual-qa` +
+> LV4 editor check; LV1's merge/auto-convert halves are unit-tested and the
+> convert half is now live-verified).
+
 **This is the single working roadmap.** It consolidates the three review-era commits
 (`a45d196` Codex adversarial audit, `5c645d7` Claude spec-conformance audit, `25c072f`
 GRAPHIFY) plus the still-open items from the 2026-06-08 handoff into one deduped

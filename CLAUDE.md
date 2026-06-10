@@ -4,17 +4,21 @@
 ECP up and not break it across machines*. If anything here disagrees with `product.md`, `product.md` is right.
 
 ## ▶ Start here (current work state)
-**Working roadmap: [`docs/reviews/2026-06-10-consolidated-findings-and-plan.md`](docs/reviews/2026-06-10-consolidated-findings-and-plan.md)** —
-read it first. It consolidates + dedupes the two 2026-06-09 adversarial audits (Codex
-`a45d196`, Claude `5c645d7` — they independently converged on the same two top findings)
-and absorbs the 2026-06-08 handoff's deferred items into one inventory (33 ranked
-findings) and a 7-phase plan. **Phase 0 is DONE — all nine adjudications ruled
-2026-06-09 (roadmap §4 rulings table + product.md §10 v1.2 rows). Next action: the
-Phase-1 quick-wins batch, then Phase 2 (absences always blank + exact-tier placement
-gate).** ⚠️ Three colliding C-ID spaces —
-that doc's §"ID disambiguation" is mandatory reading before touching any C-number.
-**Before the next client run, do one live `--plugin-dir` audit** (the roadmap's Phase-4
-LV1–LV4 list is the full pending-live queue).
+**Roadmap — EXECUTED: [`docs/reviews/2026-06-10-consolidated-findings-and-plan.md`](docs/reviews/2026-06-10-consolidated-findings-and-plan.md)**
+(see its "EXECUTED" banner). All code phases of the consolidated 2026-06-09 audit
+roadmap landed on `main` 2026-06-10 (`3e39884..987f887`): all 33 ranked findings fixed,
+declined-by-ruling, or pinned; spec is **v1.2**; placement is exact-tier-or-blank with
+absences always manual (the #1 wrong-hotspot class is gone); promotion mechanically
+refuses with unplaced markers; the v1/Agent-Teams contract sweep is DONE with grep-guard
+tests; 4 new trust canaries (hedge / source-registry / dark-pattern / normalizations).
+Suite: **1306 pytest / 888 unittest, both green — run BOTH (the runner-parity guard now
+enforces the floor).**
+**THE one remaining gate before a client run: a live `--plugin-dir` `/ecp:audit`**
+(roadmap Phase-4 LV1–LV4: full-pipeline smoke + awdmods hero re-audit + `ecp-visual-qa`
++ editor check). A headless live acquisition smoke ran 2026-06-10; the full-pipeline
+run needs a plugin session.
+⚠️ Three colliding C-ID spaces — the roadmap's §"ID disambiguation" is mandatory before
+touching any C-number.
 Prior handoffs: [`docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md`](docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md) ·
 [`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md).
 
