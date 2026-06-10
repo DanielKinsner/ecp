@@ -13,12 +13,17 @@ refuses with unplaced markers; the v1/Agent-Teams contract sweep is DONE with gr
 tests; 4 new trust canaries (hedge / source-registry / dark-pattern / normalizations).
 Suite: **1306 pytest / 888 unittest, both green — run BOTH (the runner-parity guard now
 enforces the floor).**
-**THE one remaining gate before a client run: a live `--plugin-dir` `/ecp:audit`**
+**⛔ NEW BLOCKING WORK FIRST — [`docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md`](docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md):**
+a post-execution 8-axis review confirmed (adversarially verified) 5 bugs, V1–V5; V1–V3
+corrupt the client deliverable (phantom (50,50) hotspots for unplaced/hidden markers in
+the `--from-review` v2 render; operator point/ellipse geometry collapse; wrong-device
+merge-metadata leak). **Fix V1–V3 before the live gate.**
+**THEN the live gate: a live `--plugin-dir` `/ecp:audit`**
 (roadmap Phase-4 LV1–LV4: full-pipeline smoke + awdmods hero re-audit + `ecp-visual-qa`
 + editor check). A headless live acquisition smoke ran 2026-06-10; the full-pipeline
 run needs a plugin session.
-⚠️ Three colliding C-ID spaces — the roadmap's §"ID disambiguation" is mandatory before
-touching any C-number.
+⚠️ FOUR colliding ID spaces now — the roadmap's §"ID disambiguation" (+ the fix-plan's
+V/S/U/O space) is mandatory before touching any C-number.
 Prior handoffs: [`docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md`](docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md) ·
 [`docs/2026-06-03-handoff-hotspot-accuracy.md`](docs/2026-06-03-handoff-hotspot-accuracy.md).
 
