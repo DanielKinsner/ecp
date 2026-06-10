@@ -13,9 +13,9 @@ The router keeps the active execution surface small and makes the source of trut
 - flags in `contracts/flags.md`
 - device semantics in `contracts/device-semantics.md`
 - audit state in `contracts/audit-state-machine.md`
-- cluster specialist instructions in `workflows/audit.md`
+- cluster specialist instructions in `contracts/specialist-prompt-v2.md` (v2 — JSON emission; the v1 markdown teammate template at `workflows/audit.md` is dead for the audit path)
 - acquisition instructions in `workflows/acquire.md`
-- assembly and report contracts in `contracts/audit-assembly.md`, `contracts/synthesizer-v2.md`, and `contracts/report-export.md`
+- assembly and report contracts in `contracts/synthesizer-v2.md` and `contracts/report-export.md` (the v1 `contracts/audit-assembly.md` template is dead for the audit path — v2 emits `audit-{device}.md` from the synthesizer directly)
 
 ## v1 To v2 Dispatch Context
 
@@ -84,21 +84,21 @@ Cluster failure has a different recovery model: failed specialist work becomes S
 | flags | `contracts/flags.md` |
 | mode_detection | `contracts/url-validation.md`, `contracts/lead-discipline.md`, router mode section |
 | device_selection | `contracts/device-semantics.md` |
-| engagement_setup | `contracts/team-lifecycle.md`, `contracts/meta-schema.md` |
+| engagement_setup | `contracts/meta-schema.md` (v2). The v1 entry pointed at `contracts/team-lifecycle.md` as well — **legacy: dead for the audit path since the 2026-06-01 §10 migration** (no `TeamCreate`, no env-var gate, no task ledger). |
 | audit_trace_assertion_header | `contracts/trace-assertion-canary.md` |
 | cost_trace_heuristic | `contracts/trace-assertion-canary.md` |
 | platform_detection | `contracts/platform-detection.md` |
 | page_type_detection and page_pattern_detection | `contracts/page-detection.md` |
 | cluster_selection and routing | `contracts/cluster-routing.md` |
-| team_lifecycle | `contracts/team-lifecycle.md` |
-| auditor_dispatch_template and phase_audit | `workflows/audit.md`, `contracts/specialist-prompt-v2.md` |
+| team_lifecycle | `contracts/team-lifecycle.md` — **legacy: dead for the audit path** (kept as a §7 interface contract for the frozen multi-planner family per `product.md` §5 / §10 (1.1, 2026-06-01); the v2 audit lead does not create a team). |
+| auditor_dispatch_template and phase_audit | `contracts/specialist-prompt-v2.md` (v2). The v1 entry also pointed at `workflows/audit.md` — **legacy v1 markdown emission** (Agent-Teams teammate model, `SYNTHESIS_HINT` peer messaging, SendMessage huddles); do NOT load it on a v2 run. |
 | finding_reconciliation | `contracts/audit-reconciliation.md` |
-| priority_path_synthesis | `contracts/priority-path-synthesis.md`, `contracts/synthesizer-subagent.md` |
+| priority_path_synthesis | `contracts/priority-path-synthesis.md` (v1 historical; the only live rule is the visible-ERROR-block at line 15, cited by `scripts/report/html_builder.py` + `components.py`). v2 scoring lives in `contracts/synthesizer-v2.md`. The v1 entry also pointed at `contracts/synthesizer-subagent.md` — **legacy v1 per-device synthesizer flow** (superseded by `contracts/synthesizer-v2.md`); do NOT load it on a v2 run. |
 | dom_preprocessor | `contracts/dom-preprocessor.md` |
 | phase_ethics_v2 | `contracts/ethics-subagent-v2.md` |
 | phase_synthesize_v2 | `contracts/synthesizer-v2.md` |
 | audit_assembly | `contracts/audit-assembly.md`, `scripts/assemble-audit.py` — **legacy v1 markdown path** (do NOT run on a v2 engagement; v2 assembles via the synthesizer, `contracts/synthesizer-v2.md`) |
-| progress_comparison | `contracts/progress-comparison.md` |
+| progress_comparison | `contracts/progress-comparison.md` — **frozen per `product.md` §5 (compare family)**; not loaded on a v2 audit run. |
 | report_export | `contracts/report-export.md` |
 | ethics | `references/ethics-gate.md`, `contracts/ethics-subagent-v2.md` |
 | reference_freshness | reference file `RESEARCH_DATE` watermarks and checkpoint warnings |

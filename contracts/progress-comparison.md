@@ -1,5 +1,11 @@
 # Progress comparison
 
+> **FROZEN per `product.md` §5 (compare family).** Not loaded by `skills/audit/SKILL.md` for v2 audit runs. Retained as a §7 interface contract — the algorithm definition stays so the frozen `compare` mode, when unfrozen via a §10 Spec Change Log entry, has a stable reference.
+>
+> Per `product.md` §5, `compare` is one of the frozen modes — "out of the canonical product until explicitly unfrozen via a Spec Change Log entry." The §10 (1.0, 2026-05-26) baseline froze it deliberately. This file reads from / writes to `audit.md`, which is itself a v1 markdown-emission artifact (v2 emits `audit-{device}.md` from the synthesizer — see `contracts/synthesizer-v2.md` + the dead annotation on `contracts/audit-assembly.md`), and the canonical audit per §2.4 stops at findings + Priority Path + visual report and does not run a progress-comparison pass. No script implements the algorithm as part of the live `/ecp:audit` flow.
+>
+> **Algorithm definition preserved below** as the §7 frozen-contract surface for a future unfreeze of `compare`. None of it is active runtime for `/ecp:audit`.
+
 Algorithm for comparing current audit findings against a previous engagement's findings on the same URL, producing a delta summary (fixed, regressed, new, unchanged, resolved).
 
 **Why this file exists:** The progress comparison algorithm is reusable across any skill that produces audit.md files and wants to show what changed since the last engagement. Extracting it from the audit skill makes it available to compare and quick-scan skills without loading the full audit orchestration spec.

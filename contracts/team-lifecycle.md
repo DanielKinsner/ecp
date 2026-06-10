@@ -1,5 +1,11 @@
 # Agent Teams lifecycle
 
+> **DEAD for the audit path since the 2026-06-01 §10 migration ("Specialists off Agent Teams").** Not loaded by `skills/audit/SKILL.md` for v2 audit runs. Retained as a §7 interface contract for the frozen multi-planner family (`build` / `compare` / `resume` are all frozen per `product.md` §5) and as the historical lifecycle quarry for a future Agent-Teams revival.
+>
+> Per `product.md` §10 (1.1, 2026-06-01), the last teammate role in the audit path (cluster specialists) migrated to GA one-shot subagents — the lead no longer calls `TeamCreate` at engagement start, the experimental env-var gate is gone, the `TaskCreate`/`TaskUpdate` task ledger is gone, and `TeamDelete` cleanup is gone. The v2 audit lead dispatches via `Agent(subagent_type="general-purpose", ...)` with NO `team_name` and NO `name` (see `contracts/dispatch-contract.md` "v2 Dispatch shape policy"). The v1 `Hard requirement` env-var check, the v1 `TeamCreate` naming convention, the v1 generic lifecycle (create → populate → spawn → coordinate → wait → reconcile → cleanup), and the v1 Resume team-recreation flow described below DO NOT run in `/ecp:audit`. The only retained role that uses Agent-Teams shape is **multi-planner peers** (`contracts/multi-planner-protocol.md`), which lives in the frozen build family.
+>
+> **Historical content preserved below.** None of it is active runtime for `/ecp:audit`.
+
 Canonical lifecycle contract for every ECP v5.0 skill that uses Claude Code's experimental Agent Teams feature (`/ecp:audit`, `/ecp:build`, `/ecp:compare`, `/ecp:resume`). `/ecp:quick-scan` intentionally does NOT use teams — it runs as a single-agent dispatch because quick-scan's value proposition is speed and quick-scan only ever has one auditor, so the team overhead would not pay for itself.
 
 Prior to ECP v5.0.x this lifecycle prose was duplicated across four skill files with the hard-requirement env var check, the `TeamCreate` naming convention, and the create/populate/spawn/coordinate/cleanup step list all copy-pasted. This reference is the single source of truth.

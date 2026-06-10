@@ -1,5 +1,11 @@
 # Audit assembly
 
+> **LEGACY-RENDER REFERENCE ONLY for the audit path — not loaded by `skills/audit/SKILL.md` for v2 runs.** Retained as the v1 `audit.md` template (legacy markdown-emission renderer fed by `scripts/assemble-audit.py`); v2 emits `audit-{device}.md` from the synthesizer directly.
+>
+> Per `product.md` §10 (1.1, 2026-04-27 v2 redesign), v2 assembly is the synthesizer's job: the single Opus call described in `contracts/synthesizer-v2.md` reads cluster-emission JSON + ethics-findings + canonical-f_refs manifest + trimmed batons and writes `audit-desktop.md` / `audit-mobile.md` plus `synthesizer-emission-v1.json` directly — there is no separate consolidated `audit.md` step, no reconcile-then-assemble round-trip, no Python-template render. The `## Priority Path` / `## Findings` / `## Cross-Cluster Connections` / `## Summary` structure documented below is the v1 template the legacy `assemble-audit.py` writer produced; v2 renders the customer-facing visual report from the synthesizer's structured emission via `scripts/generate-report.py --v2` (see `skills/audit/SKILL.md` "Validation, Synthesis, and Rendering"). `scripts/assemble-audit.py` is explicitly gated as "do NOT run on a v2 engagement" in SKILL.md.
+>
+> **Historical content preserved below** so anyone replaying an archived v1 markdown engagement (or maintaining the v1 renderer in the quarry) has the template, MANDATORY summary recount, and Priority Path citation validation procedure available. None of it is active runtime for `/ecp:audit` on a v2 engagement.
+
 Canonical template for the consolidated `audit.md` file, including the finding format, summary recount, Priority Path citation validation, and the assertion self-check cross-reference.
 
 **Why this file exists:** Prior to this extraction, the audit.md template structure lived inside `skills/audit/SKILL.md` where only the audit lead could reference it. But the Python renderer (`scripts/generate-report.py`), the reviewer, and the planner all consume audit.md — they deserve a canonical contract for its format.

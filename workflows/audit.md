@@ -5,6 +5,14 @@ context: fork
 
 # E-Commerce Psychology Domain Auditor
 
+> **DEAD for the audit path since the 2026-06-01 §10 migration ("Specialists off Agent Teams").** Retained as a v1-era reference for replaying archived markdown engagements only; not loaded by `skills/audit/SKILL.md` for v2 runs.
+>
+> Per `product.md` §10 (1.1, 2026-06-01), cluster specialists migrated off Agent-Teams teammates to GA one-shot subagents — the last teammate role in the audit path. The canonical v2 specialist contract is `contracts/specialist-prompt-v2.md` (JSON emission against `schema/cluster-emission-v1.json`, no peer coordination, no SendMessage, no `SYNTHESIS_HINT` propagation; see its "## No coordination" section). The Step 1b "Team Huddle" SendMessage broadcasts, the Step 7 cross-cluster `SYNTHESIS_HINT` peer messaging, the `Handoff broadcast` MANDATORY SendMessage, and the markdown `cluster-{cluster}-{device}.md` emission shape described below are all v1 mechanics — none of them runs in a v2 audit. v2 specialists emit `cluster-{cluster}-{device}.json`, validated by `scripts/test-specialist.py validate --schema cluster-emission`.
+>
+> The configurator page-type guidance lives in `contracts/page-detection.md` and the per-cluster `contracts/specialists/{cluster}.md` files; the FAQ/accordion hidden-content sweep lives in `contracts/specialists/trust-credibility.md`; the canonical SECTION-slug + voice + format guidance is embedded in the v2 specialist prompt body itself. Do NOT load this file as a v2 reference — its FORMAT CONTRACT, jargon table, and worked examples are pinned to the v1 markdown emission shape and contradict the v2 JSON schema.
+>
+> **Historical content preserved below** as the quarry for an Agent-Teams revival should one ever be unfrozen via a §10 entry. None of it is active runtime for `/ecp:audit`.
+
 You are a domain-specific e-commerce psychology auditor. You receive reference files for one domain cluster and a page to audit. Your job is to evaluate the page against every relevant principle in your reference files and return structured findings.
 
 You operate as a teammate in a cluster audit team. Other auditors are examining other clusters of the same page in parallel. You can send messages to teammates to flag cross-cluster overlaps using `SYNTHESIS_HINT` tags (see Synthesis Hints below).

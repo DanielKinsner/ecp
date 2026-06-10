@@ -51,13 +51,15 @@ Then load phase-specific files only when that phase is reached.
 
 | Phase | Load when needed |
 | --- | --- |
-| Input and setup | `contracts/url-validation.md`, `contracts/team-lifecycle.md`, `contracts/platform-detection.md`, `contracts/page-detection.md`, `contracts/cluster-routing.md` |
+| Input and setup | `contracts/url-validation.md`, `contracts/platform-detection.md`, `contracts/page-detection.md`, `contracts/cluster-routing.md` |
 | Acquisition | `workflows/acquire.md`, `contracts/dom-preprocessor.md` |
-| Specialist audit | `workflows/audit.md`, `contracts/specialist-prompt-v2.md`, relevant `references/**` files |
+| Specialist audit | `contracts/specialist-prompt-v2.md`, relevant `references/**` files |
 | Ethics | `contracts/ethics-subagent-v2.md`, `references/ethics-gate.md` |
-| Synthesis | `contracts/synthesizer-v2.md`, `contracts/synthesizer-subagent.md`, `contracts/priority-path-synthesis.md` |
-| Assembly and canaries | `contracts/audit-assembly.md`, `contracts/audit-reconciliation.md`, `contracts/trace-assertion-canary.md`, `contracts/progress-comparison.md` |
+| Synthesis | `contracts/synthesizer-v2.md`, `contracts/priority-path-synthesis.md` (only the line-15 visible-ERROR-block rule is live; rest is v1-historical — v2 scoring is in `synthesizer-v2.md`) |
+| Assembly and canaries | `contracts/audit-reconciliation.md`, `contracts/trace-assertion-canary.md` |
 | Export | `contracts/report-export.md` |
+
+> **Do NOT load these legacy files for an audit run** — they describe pre-v2 mechanics that contradict the v2 contracts above and each carries a dead/frozen header explaining why: `workflows/audit.md` (v1 Agent-Teams teammate model — SendMessage huddles, `SYNTHESIS_HINT` peer messaging, markdown emission); `contracts/synthesizer-subagent.md` (v1 per-device synthesizer post-`assemble-audit.py` flow — superseded by `contracts/synthesizer-v2.md`); `contracts/audit-assembly.md` (v1 `audit.md` template — v2 emits `audit-{device}.md` from the synthesizer directly); `contracts/progress-comparison.md` (frozen per §5, compare family); `contracts/team-lifecycle.md` (dead for the audit path since the 2026-06-01 §10 migration; retained as a §7 interface contract for the frozen multi-planner family).
 
 ## Mode Selection
 
@@ -108,7 +110,7 @@ Write audit artifacts inside `docs/ecp/{engagement-id}/`:
 - `meta.json`
 - `audit-trace.log`
 - acquisition artifacts: `baton.json` / `dom.html` for non-mobile, `baton-mobile.json` / `dom-mobile.html` for mobile
-- cluster emissions: `cluster-{cluster}-{device}.md` or v2 JSON emissions as specified by the loaded workflow
+- cluster emissions: `cluster-{cluster}-{device}.json` (v2 — live); the v1 `cluster-{cluster}-{device}.md` markdown form is legacy, not produced by a v2 run
 - ethics emission: `ethics-findings.json`
 - synthesizer emission: `synthesizer-emission-v1.json`
 - audit markdown: `audit-{device}.md` for v2 device output; preserve legacy `audit.md` behavior where the current scripts require it
@@ -120,7 +122,7 @@ Use the path and field names from `contracts/meta-schema.md`, `contracts/audit-s
 
 ## Validation, Synthesis, and Rendering
 
-This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the synthesizer emit structured JSON (`cluster-{cluster}-{device}.json`, `ethics-findings.json`, `synthesizer-emission-v1.json`) and hotspots resolve by `e_index` lookup. Run these steps in order once specialist and ethics emissions exist. Commands run from the repo root; substitute `{id}`, `{cluster}`, `{device}`, and `{plugin-root}`. The exact synthesizer dispatch wiring (canonical-f_refs file plumbing, prompt placeholders) lives in the Synthesis-phase contracts (`contracts/synthesizer-subagent.md`, `contracts/priority-path-synthesis.md`); the steps below are the orchestration spine and the commands that are stable regardless of that wiring.
+This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the synthesizer emit structured JSON (`cluster-{cluster}-{device}.json`, `ethics-findings.json`, `synthesizer-emission-v1.json`) and hotspots resolve by `e_index` lookup. Run these steps in order once specialist and ethics emissions exist. Commands run from the repo root; substitute `{id}`, `{cluster}`, `{device}`, and `{plugin-root}`. The exact synthesizer dispatch wiring (canonical-f_refs file plumbing, prompt placeholders) lives in the Synthesis-phase contracts (`contracts/synthesizer-v2.md`, `contracts/priority-path-synthesis.md`); the steps below are the orchestration spine and the commands that are stable regardless of that wiring.
 
 1. **Validate every specialist + ethics emission** (P0-08), one call per emission:
    ```powershell
@@ -140,7 +142,7 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
 
 3. **Trim each device baton to referenced elements** before synthesizer dispatch (mandatory — prevents 1M-context overflow). Use `scripts/assembly/synth_input.trim_baton_file`, which writes a trimmed baton plus a `baton-{device}-trimmed-summary.json` sidecar. The synthesizer prompt points at the trimmed batons.
 
-4. **Prepare and dispatch the synthesizer** (Task subagent) per `contracts/synthesizer-subagent.md`, feeding it the cluster emissions, ethics findings, the trimmed batons (step 3), and the canonical f_refs (step 2):
+4. **Prepare and dispatch the synthesizer** (Task subagent) per `contracts/synthesizer-v2.md`, feeding it the cluster emissions, ethics findings, the trimmed batons (step 3), and the canonical f_refs (step 2):
    ```powershell
    python scripts/test-specialist.py prepare-synthesizer --engagement-id {id} --cluster-emission docs/ecp/{id}/cluster-{cluster}-{device}.json --ethics-findings-path docs/ecp/{id}/ethics-findings.json --desktop-baton-path <trimmed-desktop-baton> --mobile-baton-path <trimmed-mobile-baton> --canonical-f-refs-path docs/ecp/{id}/canonical-f-refs.json --out docs/ecp/{id}/.prompts/synthesizer.txt
    ```

@@ -1,5 +1,11 @@
 # Priority Path Synthesizer — Subagent Prompt
 
+> **DEAD for the audit path — superseded by `contracts/synthesizer-v2.md`.** Retained as a v1-era reference for the per-device, post-`assemble-audit.py` synthesizer flow only; not loaded by `skills/audit/SKILL.md` for v2 runs.
+>
+> Per `product.md` §10 (1.1, 2026-04-27 v2 redesign, Phase F.2), v2 dispatches a **single** synthesizer subagent per engagement (or per device only in degraded-mode Phase F.3 fallback) that reads cluster-emission JSON + ethics-findings JSON + canonical-f_refs manifest + trimmed batons, writes BOTH `audit-{device}.md` files and emits `synthesizer-emission-v1.json`. The legacy "ONE synthesizer per device, post-dedup + F-N assignment, re-run `assemble-audit.py` with `--priority-path PATH`" workflow described below is v1 markdown-path mechanics that contradict v2's single-shot architecture and the `assemble-audit.py` legacy gate in `skills/audit/SKILL.md` ("Legacy v1 tools — do NOT run on a v2 engagement"). The canonical synthesizer dispatch is `contracts/synthesizer-v2.md`; the canonical Priority Path scoring is `contracts/priority-path-synthesis.md`.
+>
+> **Historical content preserved below.** None of it is active runtime for `/ecp:audit`.
+
 The lead dispatches ONE synthesizer subagent per device after dedup + F-N assignment. The subagent reads the post-dedup candidates + finalized findings, produces 3–5 "stories" in fenced JSON, and returns. The lead captures the response text to a file and re-runs `assemble-audit.py` with `--priority-path PATH` pointing at the file. Python-side parsing + validation lives in `scripts/assembly/synthesizer_parser.py`.
 
 ## Dispatch contract
