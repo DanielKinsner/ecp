@@ -48,10 +48,10 @@ import sys
 import unittest
 from pathlib import Path
 
-# Set ~30 below the actual collected count (1352 on 2026-06-10, after the
-# roadmap-execution waves grew the suite from 1187).
+# Set ~30 below the actual collected count (1360 on 2026-06-12, after the
+# V1-V3 pre-live gate guards grew the suite from 1352).
 # See "Floor update rule" in the module docstring before changing.
-EXPECTED_MIN_COLLECTED = 1322
+EXPECTED_MIN_COLLECTED = 1330
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = REPO_ROOT / "tests"
