@@ -1,5 +1,7 @@
 # Conformance gaps — code/docs vs `product.md`
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Tuning roadmap generated 2026-05-26 against **spec v1.0; the spec is now v1.2** and conformance has since been re-audited twice ([reviews/2026-06-10-spec-audit.md](reviews/2026-06-10-spec-audit.md): 178/216 requirements conform). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Generated:** 2026-05-26 · **Spec baseline:** `product.md` v1.0
 
 This is the **tuning roadmap**: where the current code/docs diverge from what
