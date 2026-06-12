@@ -1,5 +1,7 @@
 # Design — Migrate cluster specialists OFF Agent Teams (→ GA one-shot subagents)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time design doc (2026-06-01); the migration it designs **shipped** (see [handoff-2026-06-01-specialists-off-agent-teams-complete.md](handoff-2026-06-01-specialists-off-agent-teams-complete.md)). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 - **Date:** 2026-06-01
 - **Status:** DRAFT — design for review (precedes the implementation plan)
 - **Decision provenance:** `docs/handoff-2026-06-01-migration-fixes-and-post-audit.md` §5b
