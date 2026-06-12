@@ -564,7 +564,11 @@ def build_canonical_view(
             if d:
                 devices_to_add.add(d)
         for f in finalized.findings:
-            if f.cluster == kept_cluster and f.local_index == kept_local:
+            if (
+                f.cluster == kept_cluster
+                and f.local_index == kept_local
+                and (not kept_device or f.device == kept_device)
+            ):
                 ref = f"{f.cluster} F-{f.display_index:02d}"
                 if devices_to_add:
                     devices_presence[ref].update(devices_to_add)

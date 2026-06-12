@@ -21,6 +21,8 @@ from __future__ import annotations
 import json
 import sys
 import unittest
+from types import SimpleNamespace
+from unittest import mock
 from pathlib import Path
 
 _REPO = Path(__file__).resolve().parent.parent
@@ -77,6 +79,19 @@ def _write_emission(eng: Path, *, cluster: str, device: str, findings: list[dict
     p = eng / f"cluster-{cluster}-{device}.json"
     p.write_text(json.dumps(payload), encoding="utf-8")
     return p
+
+
+def _device_finding(*, device: str, title: str, citation_source: str) -> dict:
+    finding = _finding(
+        local_id=1,
+        severity="HIGH",
+        title=title,
+        citation_source=citation_source,
+        tier="Silver",
+        baton_index="e1",
+    )
+    finding["device"] = device
+    return finding
 
 
 class TestExtrasKeyedByLocalId(unittest.TestCase):
@@ -226,6 +241,221 @@ class TestExtrasKeyedByLocalId(unittest.TestCase):
                     [c["source"] for c in meta["reference_citations"]],
                     ["first.md"],
                 )
+
+    def test_auto_merge_metadata_uses_device_when_matching_kept_finding(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            eng = Path(tmp) / "engagement"
+            eng.mkdir()
+            desktop_path = _write_emission(
+                eng,
+                cluster="pricing",
+                device="desktop",
+                findings=[
+                    _device_finding(
+                        device="desktop",
+                        title="Desktop-only finding",
+                        citation_source="desktop-loser.md",
+                    )
+                ],
+            )
+            mobile_path = _write_emission(
+                eng,
+                cluster="pricing",
+                device="mobile",
+                findings=[
+                    _device_finding(
+                        device="mobile",
+                        title="Mobile kept finding",
+                        citation_source="mobile-kept.md",
+                    )
+                ],
+            )
+
+            desktop = SimpleNamespace(
+                cluster="pricing",
+                device="desktop",
+                local_index=1,
+                display_index=1,
+                title="Desktop-only finding",
+                scope="device",
+                verdict="FAIL",
+                priority="high",
+                baton_index="desktop-e1",
+                evidence_anchors=[],
+                visual_evidence=None,
+                ethics_state=None,
+                source_url=None,
+                confidence="MEDIUM",
+                tier="Silver",
+                observation="Desktop observation",
+                recommendation="Desktop recommendation",
+                why_matters="Desktop why",
+                change_type="copy",
+                change_scope="single-file",
+            )
+            mobile = SimpleNamespace(
+                cluster="pricing",
+                device="mobile",
+                local_index=1,
+                display_index=2,
+                title="Mobile kept finding",
+                scope="device",
+                verdict="FAIL",
+                priority="high",
+                baton_index="mobile-e1",
+                evidence_anchors=[],
+                visual_evidence=None,
+                ethics_state=None,
+                source_url=None,
+                confidence="MEDIUM",
+                tier="Silver",
+                observation="Mobile observation",
+                recommendation="Mobile recommendation",
+                why_matters="Mobile why",
+                change_type="copy",
+                change_scope="single-file",
+            )
+            deduped = SimpleNamespace(
+                auto_merged=[
+                    {
+                        "kept": {
+                            "cluster": "pricing",
+                            "device": "mobile",
+                            "finding_index": 1,
+                        },
+                        "merged_devices": ["desktop"],
+                        "merged_keys": [
+                            {
+                                "cluster": "pricing",
+                                "device": "desktop",
+                                "local_index": 1,
+                            }
+                        ],
+                    }
+                ],
+                all_actionable=lambda: [],
+            )
+
+            with mock.patch("assembly.dedup.deduplicate_v2", return_value=deduped), \
+                mock.patch(
+                    "assembly.pipeline.FinalizedFindings.build",
+                    return_value=SimpleNamespace(findings=[desktop, mobile]),
+                ), \
+                mock.patch(
+                    "assembly.pipeline.cross_device_title_merge",
+                    side_effect=lambda raw: (raw, {}),
+                ):
+                by_canon, _aliases, _drops = build_canonical_view(
+                    [desktop_path, mobile_path],
+                    None,
+                )
+
+            desktop_meta = by_canon["pricing F-01"]
+            mobile_meta = by_canon["pricing F-02"]
+            self.assertEqual(
+                [c["source"] for c in desktop_meta["reference_citations"]],
+                ["desktop-loser.md"],
+            )
+            self.assertEqual(
+                [c["source"] for c in mobile_meta["reference_citations"]],
+                ["mobile-kept.md", "desktop-loser.md"],
+            )
+            self.assertEqual(desktop_meta["devices_present"], ["desktop"])
+            self.assertEqual(mobile_meta["devices_present"], ["desktop", "mobile"])
+
+    def test_auto_merge_metadata_legacy_kept_without_device_still_matches(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            eng = Path(tmp) / "engagement"
+            eng.mkdir()
+            desktop_path = _write_emission(
+                eng,
+                cluster="pricing",
+                device="desktop",
+                findings=[
+                    _device_finding(
+                        device="desktop",
+                        title="Desktop kept finding",
+                        citation_source="desktop-kept.md",
+                    )
+                ],
+            )
+            mobile_path = _write_emission(
+                eng,
+                cluster="pricing",
+                device="mobile",
+                findings=[
+                    _device_finding(
+                        device="mobile",
+                        title="Mobile loser finding",
+                        citation_source="mobile-loser.md",
+                    )
+                ],
+            )
+
+            desktop = SimpleNamespace(
+                cluster="pricing",
+                device="desktop",
+                local_index=1,
+                display_index=1,
+                title="Desktop kept finding",
+                scope="device",
+                verdict="FAIL",
+                priority="high",
+                baton_index="e1",
+                evidence_anchors=[],
+                visual_evidence=None,
+                ethics_state=None,
+                source_url=None,
+                confidence="MEDIUM",
+                tier="Silver",
+                observation="Desktop observation",
+                recommendation="Desktop recommendation",
+                why_matters="Desktop why",
+                change_type="copy",
+                change_scope="single-file",
+            )
+            deduped = SimpleNamespace(
+                auto_merged=[
+                    {
+                        "kept": {
+                            "cluster": "pricing",
+                            "finding_index": 1,
+                        },
+                        "merged_devices": ["mobile"],
+                        "merged_keys": [
+                            {
+                                "cluster": "pricing",
+                                "device": "mobile",
+                                "local_index": 1,
+                            }
+                        ],
+                    }
+                ],
+                all_actionable=lambda: [],
+            )
+
+            with mock.patch("assembly.dedup.deduplicate_v2", return_value=deduped), \
+                mock.patch(
+                    "assembly.pipeline.FinalizedFindings.build",
+                    return_value=SimpleNamespace(findings=[desktop]),
+                ), \
+                mock.patch(
+                    "assembly.pipeline.cross_device_title_merge",
+                    side_effect=lambda raw: (raw, {}),
+                ):
+                by_canon, _aliases, _drops = build_canonical_view(
+                    [desktop_path, mobile_path],
+                    None,
+                )
+
+            desktop_meta = by_canon["pricing F-01"]
+            self.assertEqual(
+                [c["source"] for c in desktop_meta["reference_citations"]],
+                ["desktop-kept.md", "mobile-loser.md"],
+            )
+            self.assertEqual(desktop_meta["devices_present"], ["desktop", "mobile"])
 
 
 if __name__ == "__main__":
