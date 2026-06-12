@@ -1,5 +1,7 @@
 # Handoff — bloat prune + awdmods run-review fixes (2026-06-08)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-06-08). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 > Session goal (operator): "cut the bloat, the redundancy, wire it up properly,
 > commit + push to main in small chunks." Driven by two inputs: the
 > `docs/2026-06-08-audit-run-review-awdmods.md` post-run review (claims to
