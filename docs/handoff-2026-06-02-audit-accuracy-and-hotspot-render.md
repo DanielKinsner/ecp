@@ -1,5 +1,7 @@
 # Handoff 2026-06-02 — ECP audit claim-accuracy + hotspot-render: open problem & hunches
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time problem statement (2026-06-02); its "NOT fixed" status is stale — the hotspot-accuracy program, the placement doctrine (exact-tier-or-blank, spec v1.2), and the V1–V3 render fixes have landed since. Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). CLAUDE.md §"Start here" is the live pointer.
+
 **Status:** NOT fixed. This is a problem statement + hypotheses for the next instance, written deliberately to leave room for independent research. Do your own investigation before acting on anything here — treat every claim below as a hunch to verify, not a finding to trust.
 
 **Context artifacts**
