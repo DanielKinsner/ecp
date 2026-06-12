@@ -1,5 +1,7 @@
 # ECP Spec-Conformance Audit — 2026-06-10
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time audit (2026-06-10) whose findings were consolidated into [2026-06-10-consolidated-findings-and-plan.md](2026-06-10-consolidated-findings-and-plan.md) (EXECUTED) and followed by [2026-06-10-post-roadmap-review-and-fix-plan.md](2026-06-10-post-roadmap-review-and-fix-plan.md). ⚠️ This doc remains the **canonical home of the "spec-audit C-numbers"** (one of the colliding ID spaces) — keep it for ID resolution, but don't execute from it; CLAUDE.md §"Start here" is the live pointer.
+
 **Spec:** `product.md` v1.0 (baseline 2026-05-26, amendments through 2026-06-01)
 **Audited commit:** `a45d196` on `main` (working tree, Windows home checkout)
 **Mode:** audit-only. One pre-authorized fix was in scope (Sweep 3); it was **not applied** because the diagnosis it rested on is contradicted by the machine state — see Sweep 3 and finding L4.
