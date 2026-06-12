@@ -1,5 +1,7 @@
 # Plan — Dynamic Workflows & the Non-Determinism Diagnosis (2026-05-31)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time plan (2026-05-31). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). If something here still looks undone and worth doing, re-triage it against the current chain instead of executing from here — CLAUDE.md §"Start here" is the live pointer.
+
 **Status:** Diagnostic + plan. No pipeline code was changed by this pass — only a
 new read-only harness (`scripts/diagnostics/determinism_probe.py`) was added.
 **Author:** Claude (Opus 4.8), max-effort autonomous pass for Dan.
