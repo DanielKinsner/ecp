@@ -689,8 +689,10 @@ def build_hotspot_overlays_html(findings, slide_markers):
                 )
             else:
                 # Point fallback — head-scoped / absence / tiny-element findings.
-                cx = m.get("x_pct") or 92
-                cy = m.get("y_pct") or 10
+                cx = m.get("x_pct")
+                cx = 92 if cx is None else cx
+                cy = m.get("y_pct")
+                cy = 10 if cy is None else cy
                 marker_style = _hotspot_inline_style(m)
                 marker_class = _hotspot_class(m)
                 marker_data = _hotspot_data_attrs(m)
