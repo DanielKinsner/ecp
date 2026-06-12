@@ -118,3 +118,31 @@ def test_approved_deliberate_blank_review_state_stays_blank_in_v2_render():
 
     rendered_refs = {marker["f_ref"] for marker in patched.get(0, [])}
     assert "hero F-01" not in rendered_refs
+
+
+def test_point_review_state_marker_uses_cx_cy_geometry():
+    review_state = {
+        "slides": [{"slide_id": "slide-1"}],
+        "findings": [_review_finding("hero F-01")],
+        "markers": [
+            {
+                "marker_id": "hero-F-01-manual",
+                "f_ref": "hero F-01",
+                "slide_id": "slide-1",
+                "shape": "point",
+                "cx_pct": 17.25,
+                "cy_pct": 61.5,
+                "severity": "high",
+            },
+        ],
+    }
+
+    patched = _apply_review_state_to_slide_markers(
+        {},
+        review_state,
+        [_finding("hero F-01", 1)],
+    )
+
+    marker = patched[0][0]
+    assert marker["x_pct"] == 17.25
+    assert marker["y_pct"] == 61.5

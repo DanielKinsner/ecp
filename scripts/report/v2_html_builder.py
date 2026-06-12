@@ -605,8 +605,8 @@ def _apply_review_state_to_slide_markers(
         if slide_idx is None:
             continue
         shape = marker.get("shape") or "rect"
-        x = _review_float(marker.get("x_pct"), 50)
-        y = _review_float(marker.get("y_pct"), 50)
+        x = _review_float(marker.get("x_pct", marker.get("cx_pct")), 50)
+        y = _review_float(marker.get("y_pct", marker.get("cy_pct")), 50)
         w = _review_float(marker.get("w_pct"), 0)
         h = _review_float(marker.get("h_pct"), 0)
         # Phase 3 hardening (2026-05-18) — preserve visual_evidence through
