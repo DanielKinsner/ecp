@@ -1,5 +1,7 @@
 # ECP — Adversarial Type-Safety Review (findings)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time review findings (2026-06-03). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). ⚠️ This doc has its own finding numbering — one of the colliding ID spaces; cite its IDs only together with this doc's name. Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Date:** 2026-06-03  ·  **Base commit:** reviewed at `6e2c9be` (origin/main)  ·  **Branch:** `main`
 
 **Method:** 13 subsystem reviewers fanned across the full Python surface + the Node↔Python boundary; each candidate finding then run past **two independent skeptics** (a *reachability* lens — can the bad type actually arrive? — and a *masking/coverage* lens — is it already guarded or tested?). A finding is **confirmed** only if neither skeptic could refute it.
