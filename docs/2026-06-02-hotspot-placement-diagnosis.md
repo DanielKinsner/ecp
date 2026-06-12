@@ -1,5 +1,7 @@
 # Hotspot Placement Diagnosis — awdmods.com homepage audit (2026-06-02)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time diagnosis (2026-06-02). Placement is now exact-tier-or-blank with absences always manual (spec v1.2), and the live triage tool is `scripts/diagnose_engagement.py` (see [2026-06-08-hotspot-diagnosis-protocol.md](2026-06-08-hotspot-diagnosis-protocol.md)). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). CLAUDE.md §"Start here" is the live pointer.
+
 | Field | Value |
 | --- | --- |
 | Engagement ID | `2026-06-02-4f121e87` |
