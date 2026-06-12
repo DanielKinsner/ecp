@@ -1,5 +1,7 @@
 # Handoff — Cross-OS hardening + CLAUDE.md (the dynamic-workflows feature is still TODO)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-06-01); the title's "still TODO" no longer reflects the queue. Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Date:** 2026-06-01
 **Status:** Done and **on `main`** (commits `e089366`, `c1ba55c`, `49c5962`, + this doc). Test suite green.
 **Author:** Claude (Opus 4.8), on the macOS porting box (~5–10% machine; Dan is Windows-primary).
