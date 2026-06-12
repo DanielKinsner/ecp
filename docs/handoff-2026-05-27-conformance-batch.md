@@ -1,5 +1,7 @@
 # Handoff — 2026-05-27 conformance batch
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-05-27). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Audience:** the next Claude (or Codex, or human) picking this branch up — possibly on a different machine than the one the session ran on. Anything they need that's NOT in the committed repo is captured inline here. `docs/ecp/` (the engagement dirs) **is gitignored**; everything referenced from there is summarized below.
 
 **Session window:** 2026-05-27 (single multi-hour session). **Project root:** `C:\Users\SM - Dan\Documents\GitHub\ecp` on the originating machine; clone path may differ.
