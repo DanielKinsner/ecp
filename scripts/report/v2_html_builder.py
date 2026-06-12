@@ -559,6 +559,8 @@ def _apply_review_state_to_slide_markers(
     for marker in review_state.get("markers", []):
         if not isinstance(marker, dict):
             continue
+        if marker.get("hidden") is True:
+            continue
         ref = marker.get("f_ref")
         if ref not in active_refs:
             continue
