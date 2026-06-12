@@ -182,3 +182,53 @@ def test_ellipse_review_state_marker_uses_center_radius_geometry():
         "w_pct": 24,
         "h_pct": 16,
     }
+
+
+def test_polygon_review_state_marker_preserves_points_and_hidden_stays_blank():
+    points = [[10, 20], [30, 25], [25, 45]]
+    review_state = {
+        "slides": [{"slide_id": "slide-1"}],
+        "findings": [
+            _review_finding("hero F-01"),
+            _review_finding("hero F-02"),
+        ],
+        "markers": [
+            {
+                "marker_id": "hero-F-01-manual",
+                "f_ref": "hero F-01",
+                "slide_id": "slide-1",
+                "shape": "polygon",
+                "points": points,
+                "severity": "high",
+            },
+            {
+                "marker_id": "hero-F-02-manual",
+                "f_ref": "hero F-02",
+                "slide_id": "slide-1",
+                "shape": "point",
+                "hidden": True,
+                "severity": "high",
+            },
+        ],
+    }
+
+    patched = _apply_review_state_to_slide_markers(
+        {},
+        review_state,
+        [_finding("hero F-01", 1), _finding("hero F-02", 2)],
+    )
+
+    rendered_refs = {marker["f_ref"] for marker in patched.get(0, [])}
+    assert "hero F-02" not in rendered_refs
+    marker = patched[0][0]
+    assert marker["f_ref"] == "hero F-01"
+    assert marker["shape"] == "polygon"
+    assert marker["points"] == points
+    assert marker["x_pct"] == 20
+    assert marker["y_pct"] == 32.5
+    assert marker["zone"] == {
+        "left_pct": 10,
+        "top_pct": 20,
+        "w_pct": 20,
+        "h_pct": 25,
+    }

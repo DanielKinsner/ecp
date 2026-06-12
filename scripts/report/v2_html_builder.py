@@ -511,8 +511,36 @@ def _review_marker_has_geometry(marker: dict) -> bool:
     return any(marker.get(key) not in (None, "", []) for key in _REVIEW_MARKER_GEOMETRY_KEYS)
 
 
+def _review_marker_points(marker: dict) -> list[tuple[float, float]]:
+    points = marker.get("points")
+    if not isinstance(points, list):
+        return []
+    parsed = []
+    for point in points:
+        if isinstance(point, (list, tuple)) and len(point) >= 2:
+            x_raw, y_raw = point[0], point[1]
+        elif isinstance(point, dict) and "x" in point and "y" in point:
+            x_raw, y_raw = point["x"], point["y"]
+        else:
+            continue
+        try:
+            parsed.append((float(x_raw), float(y_raw)))
+        except (TypeError, ValueError):
+            continue
+    return parsed
+
+
 def _review_marker_geometry(marker: dict) -> tuple[float, float, float, float]:
     shape = (marker.get("shape") or "").lower()
+    if shape in {"polygon", "freeform"}:
+        points = _review_marker_points(marker)
+        if points:
+            xs = [point[0] for point in points]
+            ys = [point[1] for point in points]
+            left = min(xs)
+            top = min(ys)
+            return left, top, max(xs) - left, max(ys) - top
+
     if shape == "ellipse":
         cx = _review_float(marker.get("cx", marker.get("cx_pct")), 50)
         cy = _review_float(marker.get("cy", marker.get("cy_pct")), 50)
@@ -655,6 +683,10 @@ def _apply_review_state_to_slide_markers(
             "glow_opacity": marker.get("glow_opacity"),
             "visual_evidence": visual_evidence,
         }
+        if shape in {"polygon", "freeform"}:
+            out["points"] = marker.get("points")
+            if "closed" in marker:
+                out["closed"] = marker.get("closed")
         if w >= 1 and h >= 1:
             out["zone"] = {
                 "left_pct": max(0.0, min(100.0, x)),
