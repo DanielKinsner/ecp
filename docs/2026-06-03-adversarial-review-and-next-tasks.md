@@ -1,5 +1,7 @@
 # Adversarial Review + Next Tasks — Hotspot-Accuracy Batch (2026-06-03)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time review + task list (2026-06-03). Its "next tasks" are NOT the current queue — they were absorbed or overtaken by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **To:** the agent implementing the hotspot-accuracy program
 **From:** adversarial review pass (manual deep-read + a 9-agent refutation/sweep workflow; every claim below is code-cited)
 **Scope:** the 6 "latest commits" on `main` (`5634e18` → `31a2f2c`), the repo state as a whole, and whether `docs/2026-06-03-handoff-hotspot-accuracy.md` prescribed the right directions.
