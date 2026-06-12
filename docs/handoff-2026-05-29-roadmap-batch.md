@@ -1,5 +1,7 @@
 # Handoff — 2026-05-29 roadmap batch (session 8)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-05-29); the roadmap it tracks is NOT the current one. Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Audience:** Dan (possibly on a different machine) + the next Claude. Anything not
 in the committed repo is captured inline. `docs/ecp/` is gitignored.
 
