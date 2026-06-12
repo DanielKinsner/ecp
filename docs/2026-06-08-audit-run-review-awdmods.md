@@ -1,5 +1,7 @@
 # Audit Run Review — awdmods.com homepage (`2026-06-08-8e46b1c8`)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time run review (2026-06-08) of a specific engagement. Its findings fed the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)); the awdmods hero re-audit is part of the live LV1–LV4 gate. Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 > Read-only post-run review of the ECP v2 audit conducted 2026-06-08 against the AWDMods.com homepage (desktop + mobile, comprehensive scope). Produced by a 7-agent read-only review workflow (3 parallel gatherers → adversarial trust assessment → synthesize → strict verify → finalize), then **corrected by the lead after a ground-truth check overturned the workflow's central P0** (see §7 and §11). No audit artifacts were modified by this review.
 
 ---
