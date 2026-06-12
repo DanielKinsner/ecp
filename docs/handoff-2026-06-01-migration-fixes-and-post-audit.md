@@ -1,5 +1,7 @@
 # Handoff — Migration fixes + post-audit state (2026-06-01)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-06-01); its expected suite counts and verification steps describe that day's tree, not today's. Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 Audience: the next agent (and Dan) picking up ECP. This is a pointer document —
 read `product.md` (constitution) and the referenced docs rather than re-deriving.
 
@@ -169,7 +171,7 @@ sub-agents, workflows, agent-sdk/subagents, changelog.
 ## 7. How to verify on pickup
 
 ```powershell
-cd "C:\Users\SM - Dan\Documents\GitHub\ecp"
+cd <path-to-this-repo-checkout>   # per-machine paths: CLAUDE.md §"Platform reality"
 python -m pytest tests/ -q                              # expect 966 passed
 python -m pytest tests/test_v2_determinism_gate.py -q   # determinism gate (37)
 # B0 spot-check: render a specialist prompt, confirm 0 literal vars
