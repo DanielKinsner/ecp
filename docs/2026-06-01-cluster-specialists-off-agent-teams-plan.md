@@ -1,6 +1,8 @@
 ---
 # Migrate Cluster Specialists Off Agent Teams (GA One-Shot Subagents) — Implementation Plan
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time implementation plan (2026-06-01); the migration **shipped** (see [handoff-2026-06-01-specialists-off-agent-teams-complete.md](handoff-2026-06-01-specialists-off-agent-teams-complete.md)) — do NOT execute its tasks. Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). CLAUDE.md §"Start here" is the live pointer.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Migrate cluster specialists from Agent-Teams teammates to GA parallel one-shot subagents — retiring the last Agent-Teams teammate role in the audit path while preserving the file-presence lead loop, changing only recovery delivery and concurrency control.
@@ -19,7 +21,7 @@ The test suite MUST be green after every commit.
 
 ## Conventions for this plan
 
-- **Working directory** is the repo root (`C:\Users\SM - Dan\Documents\GitHub\ecp`). All commands are Windows / `python -m pytest ...`.
+- **Working directory** is the repo root (per-machine checkout paths: CLAUDE.md §"Platform reality"). All commands are Windows / `python -m pytest ...`.
 - **ONE new test file**, `tests/test_specialist_subagent_dispatch.py`, is created in Task 1 and APPENDED to in subsequent tasks so the suite stays green after every commit. All `kind=="new"` guard tests merge into this single file (deduped imports + helpers, distinct function names). `kind=="update"` guard tests against existing test files land in Task 12.
 - **Counter naming (consistency rule):** canonical counter is `subagent_spawned_specialists`. `team_spawned_specialists` AND `team_spawned_auditors` are retained as accepted backwards-compat aliases — **never remove alias logic.**
 - **Specialist dispatch call (consistency rule):** `Agent(subagent_type="general-purpose", description="<short>", model="sonnet"` (or `"opus"` with `--deep`)`, prompt=<rendered>)`. **NO `team_name`, NO `name`.** `Task` is the v2.1.63 legacy alias for `Agent` (both work); the broad `Task`→`Agent` rename of the OTHER one-shot roles is OUT OF SCOPE (see Task 4 note).
