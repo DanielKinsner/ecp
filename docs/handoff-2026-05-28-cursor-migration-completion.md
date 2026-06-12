@@ -1,5 +1,7 @@
 # Handoff — 2026-05-28 Cursor-migration completion batch
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-05-28); the Cursor-migration prune it completed is long done. Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Audience:** Dan (picking this up on a *different* work computer) + the next Claude. Anything not in the committed repo is captured inline. `docs/ecp/` is gitignored.
 
 **Previous handoff:** [docs/handoff-2026-05-28-observability-batch.md](handoff-2026-05-28-observability-batch.md) (G21–G24 + the `e4050c0e` engagement forensics). Read it second if cold-starting; the one before it is [docs/handoff-2026-05-27-conformance-batch.md](handoff-2026-05-27-conformance-batch.md). **This doc is the delta on top of the observability batch.**
