@@ -1,5 +1,7 @@
 # Handoff — Hotspot-Accuracy Program (2026-06-03)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-06-03). The hotspot-accuracy program it launched ran its course: placement is now exact-tier-or-blank (spec v1.2) and the remaining work was re-triaged into the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **North star:** the HTML report's hotspot overlays land on the element each finding
 is about — and we can *verify that visually* without a human eyeballing every box.
 Everything below serves that one goal.
@@ -141,7 +143,8 @@ typical Shopify PDPs.
 >
 > **`CLAUDE.md` ("Running the plugin" + "stale-plugin check") is the authority — follow it.** In short:
 > 1. Launch with `--plugin-dir` so v1.0.0 wins, e.g.
->    `claude --plugin-dir "C:\Users\SM - Dan\Documents\GitHub\ecp"` (never a marketplace install).
+>    `claude --plugin-dir <path-to-this-repo-checkout>` (never a marketplace install; per-machine
+>    checkout paths are recorded in CLAUDE.md §"Platform reality").
 > 2. Verify: `claude plugin list` → **v1.0.0 = this repo ✅ · v1.4.x = archived ❌**; on the clean
 >    plugin `/ecp:audit` is the ONLY ecp command (no `*-cursor` skills, no `ecp-*` agents).
 > 3. Best to fully remove the archived one: `claude plugin uninstall ecp@ecommerce-conversion-psychology`
