@@ -1,5 +1,7 @@
 # ECP Product v1 Adversarial Audit Findings
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time audit (2026-06-09, Codex session). Its findings converged with the broader [reviews/2026-06-10-spec-audit.md](reviews/2026-06-10-spec-audit.md) and were folded into the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). ⚠️ This doc has its own finding numbering — one of the colliding ID spaces; cite its IDs only together with this doc's name. CLAUDE.md §"Start here" is the live pointer.
+
 Audit date: 2026-06-09
 Scope: repository conformance to `product.md` Spec v1.0.
 Mode: audit-only. No code, test, or spec changes were made.
