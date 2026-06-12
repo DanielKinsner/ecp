@@ -11,17 +11,21 @@ declined-by-ruling, or pinned; spec is **v1.2**; placement is exact-tier-or-blan
 absences always manual (the #1 wrong-hotspot class is gone); promotion mechanically
 refuses with unplaced markers; the v1/Agent-Teams contract sweep is DONE with grep-guard
 tests; 4 new trust canaries (hedge / source-registry / dark-pattern / normalizations).
-Suite: **1306 pytest / 888 unittest, both green — run BOTH (the runner-parity guard now
-enforces the floor).**
-**⛔ NEW BLOCKING WORK FIRST — [`docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md`](docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md):**
-a post-execution 8-axis review confirmed (adversarially verified) 5 bugs, V1–V5; V1–V3
-corrupt the client deliverable (phantom (50,50) hotspots for unplaced/hidden markers in
-the `--from-review` v2 render; operator point/ellipse geometry collapse; wrong-device
-merge-metadata leak). **Fix V1–V3 before the live gate.**
-**THEN the live gate: a live `--plugin-dir` `/ecp:audit`**
+Suite: **1355 pytest / 895 unittest, both green — run BOTH (the runner-parity guard
+floors pytest collection at 1336).**
+**✅ V1–V3 FIXED (2026-06-12)** — the post-roadmap review's deliverable-corrupting bugs
+(phantom (50,50) hotspots, operator point/ellipse/polygon geometry collapse, wrong-device
+merge-metadata leak) landed on `main` with guard tests, including an end-to-end
+`--from-review` CLI guard. See the flipped banner in
+[`docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md`](docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md);
+its V4–V5 / S1–S3 / U1–U7 items remain open but do not block the gate.
+**⛔ CURRENT TASK — the live gate: a live `--plugin-dir` `/ecp:audit`**
 (roadmap Phase-4 LV1–LV4: full-pipeline smoke + awdmods hero re-audit + `ecp-visual-qa`
 + editor check). A headless live acquisition smoke ran 2026-06-10; the full-pipeline
-run needs a plugin session.
+run needs a plugin session. Pre-flight from the fix-plan Phase 5: O1 (remove the stale
+v1.4.1 plugin on the work box) and O2 (QA-workflow ROOT hardcoding breaks `ecp-visual-qa`
+cross-machine) — clear both as part of the live run; verify the rendered report has zero
+(50,50) phantom markers.
 ⚠️ FOUR colliding ID spaces now — the roadmap's §"ID disambiguation" (+ the fix-plan's
 V/S/U/O space) is mandatory before touching any C-number.
 Prior handoffs: [`docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md`](docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md) ·
@@ -99,10 +103,10 @@ setx ECP_PYTHON "C:\Path\To\python.exe"                # pins the global interpr
 python -m pytest tests/                # canonical — collects unittest classes AND bare pytest funcs
 python -m unittest discover -s tests   # cross-check; unittest-only HIDES pytest-style breakage
 ```
-- Green is **~1341 passed / ~11 skipped** with the optional deps (pillow/sentence-transformers)
-  and **889 unittest** (counts as of 2026-06-10); without the optional deps: fewer passed, more
+- Green is **~1355 passed / ~11 skipped** with the optional deps (pillow/sentence-transformers)
+  and **895 unittest** (counts as of 2026-06-12); without the optional deps: fewer passed, more
   skipped — same health, fewer optional tests. `tests/test_runner_parity_guard.py` floors pytest
-  collection at 1322; re-floor it in any wave that adds or removes tests.
+  collection at 1336; re-floor it in any wave that adds or removes tests.
 - **Missing `jsonschema` makes the determinism / canonical-frefs canaries *cascade-fail*** (false
   "logic" failures). Install deps first before trusting a red suite.
 
