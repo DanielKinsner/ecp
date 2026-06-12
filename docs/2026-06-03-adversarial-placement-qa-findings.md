@@ -1,5 +1,7 @@
 # ECP — Adversarial Review: placement-audit / visual-QA feature (findings)
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time review findings (2026-06-03). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). ⚠️ This doc has its own finding numbering — one of the colliding ID spaces; cite its IDs only together with this doc's name. Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Date:** 2026-06-03  ·  **Scope:** commits `133faab..d1a9a59` (HEAD), origin/main  ·  **Branch:** `main`
 
 **Files reviewed (purely additive — 5 commits, +881 / −0):**
