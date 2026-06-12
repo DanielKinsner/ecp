@@ -146,3 +146,39 @@ def test_point_review_state_marker_uses_cx_cy_geometry():
     marker = patched[0][0]
     assert marker["x_pct"] == 17.25
     assert marker["y_pct"] == 61.5
+
+
+def test_ellipse_review_state_marker_uses_center_radius_geometry():
+    review_state = {
+        "slides": [{"slide_id": "slide-1"}],
+        "findings": [_review_finding("hero F-01")],
+        "markers": [
+            {
+                "marker_id": "hero-F-01-manual",
+                "f_ref": "hero F-01",
+                "slide_id": "slide-1",
+                "shape": "ellipse",
+                "cx": 45,
+                "cy": 30,
+                "rx": 12,
+                "ry": 8,
+                "severity": "high",
+            },
+        ],
+    }
+
+    patched = _apply_review_state_to_slide_markers(
+        {},
+        review_state,
+        [_finding("hero F-01", 1)],
+    )
+
+    marker = patched[0][0]
+    assert marker["x_pct"] == 45
+    assert marker["y_pct"] == 30
+    assert marker["zone"] == {
+        "left_pct": 33,
+        "top_pct": 22,
+        "w_pct": 24,
+        "h_pct": 16,
+    }

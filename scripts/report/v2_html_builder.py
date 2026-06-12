@@ -497,6 +497,10 @@ _REVIEW_MARKER_GEOMETRY_KEYS = {
     "h_pct",
     "cx_pct",
     "cy_pct",
+    "cx",
+    "cy",
+    "rx",
+    "ry",
     "rx_pct",
     "ry_pct",
     "points",
@@ -505,6 +509,22 @@ _REVIEW_MARKER_GEOMETRY_KEYS = {
 
 def _review_marker_has_geometry(marker: dict) -> bool:
     return any(marker.get(key) not in (None, "", []) for key in _REVIEW_MARKER_GEOMETRY_KEYS)
+
+
+def _review_marker_geometry(marker: dict) -> tuple[float, float, float, float]:
+    shape = (marker.get("shape") or "").lower()
+    if shape == "ellipse":
+        cx = _review_float(marker.get("cx", marker.get("cx_pct")), 50)
+        cy = _review_float(marker.get("cy", marker.get("cy_pct")), 50)
+        rx = _review_float(marker.get("rx", marker.get("rx_pct")), 0)
+        ry = _review_float(marker.get("ry", marker.get("ry_pct")), 0)
+        return cx - rx, cy - ry, rx * 2, ry * 2
+
+    x = _review_float(marker.get("x_pct", marker.get("cx_pct")), 50)
+    y = _review_float(marker.get("y_pct", marker.get("cy_pct")), 50)
+    w = _review_float(marker.get("w_pct"), 0)
+    h = _review_float(marker.get("h_pct"), 0)
+    return x, y, w, h
 
 
 def _apply_review_state_to_findings(findings: list[dict], review_state: dict) -> None:
@@ -605,10 +625,7 @@ def _apply_review_state_to_slide_markers(
         if slide_idx is None:
             continue
         shape = marker.get("shape") or "rect"
-        x = _review_float(marker.get("x_pct", marker.get("cx_pct")), 50)
-        y = _review_float(marker.get("y_pct", marker.get("cy_pct")), 50)
-        w = _review_float(marker.get("w_pct"), 0)
-        h = _review_float(marker.get("h_pct"), 0)
+        x, y, w, h = _review_marker_geometry(marker)
         # Phase 3 hardening (2026-05-18) — preserve visual_evidence through
         # operator overrides so reviewed reports still emit the Phase 2
         # hotspot-ve-* CSS classes. Source priority: marker's own
