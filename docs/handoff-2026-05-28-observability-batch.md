@@ -1,5 +1,7 @@
 # Handoff — 2026-05-28 observability batch
 
+> **📜 HISTORICAL — banner added 2026-06-12.** Point-in-time handoff (2026-05-28). Superseded as a work pointer by the consolidated 2026-06-09/10 roadmap ([reviews/2026-06-10-consolidated-findings-and-plan.md](reviews/2026-06-10-consolidated-findings-and-plan.md), EXECUTED) and its post-roadmap fix plan ([reviews/2026-06-10-post-roadmap-review-and-fix-plan.md](reviews/2026-06-10-post-roadmap-review-and-fix-plan.md)). Re-triage anything that still looks undone against the current chain — CLAUDE.md §"Start here" is the live pointer.
+
 **Audience:** the next Claude (or Codex, or human) picking this branch up — most likely a different machine than the originating one. Anything not in the committed repo is captured inline. `docs/ecp/` is gitignored; the engagement evidence informing this batch is summarized below.
 
 **Previous handoff:** [docs/handoff-2026-05-27-conformance-batch.md](handoff-2026-05-27-conformance-batch.md). Read that one first if cold-starting — it covers the G16–G20 batch and architectural framing. This doc is the *delta* on top of it.
