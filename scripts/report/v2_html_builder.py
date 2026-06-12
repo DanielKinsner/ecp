@@ -490,6 +490,23 @@ def _review_float(value, default: float) -> float:
         return default
 
 
+_REVIEW_MARKER_GEOMETRY_KEYS = {
+    "x_pct",
+    "y_pct",
+    "w_pct",
+    "h_pct",
+    "cx_pct",
+    "cy_pct",
+    "rx_pct",
+    "ry_pct",
+    "points",
+}
+
+
+def _review_marker_has_geometry(marker: dict) -> bool:
+    return any(marker.get(key) not in (None, "", []) for key in _REVIEW_MARKER_GEOMETRY_KEYS)
+
+
 def _apply_review_state_to_findings(findings: list[dict], review_state: dict) -> None:
     review_by_ref = {
         f.get("f_ref"): f
@@ -560,6 +577,8 @@ def _apply_review_state_to_slide_markers(
         if not isinstance(marker, dict):
             continue
         if marker.get("hidden") is True:
+            continue
+        if not _review_marker_has_geometry(marker):
             continue
         ref = marker.get("f_ref")
         if ref not in active_refs:

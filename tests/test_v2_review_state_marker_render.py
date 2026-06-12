@@ -66,3 +66,28 @@ def test_hidden_review_state_markers_emit_no_v2_marker():
     rendered_refs = {marker["f_ref"] for marker in patched.get(0, [])}
     assert "hero F-01" not in rendered_refs
     assert "hero F-02" in rendered_refs
+
+
+def test_coordless_review_state_markers_emit_no_v2_marker():
+    review_state = {
+        "slides": [{"slide_id": "slide-1"}],
+        "findings": [_review_finding("hero F-01")],
+        "markers": [
+            {
+                "marker_id": "hero-F-01-manual",
+                "f_ref": "hero F-01",
+                "slide_id": "slide-1",
+                "shape": "point",
+                "severity": "high",
+            },
+        ],
+    }
+
+    patched = _apply_review_state_to_slide_markers(
+        {},
+        review_state,
+        [_finding("hero F-01", 1)],
+    )
+
+    rendered_refs = {marker["f_ref"] for marker in patched.get(0, [])}
+    assert "hero F-01" not in rendered_refs
