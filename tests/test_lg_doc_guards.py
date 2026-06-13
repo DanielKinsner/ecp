@@ -50,5 +50,20 @@ class TestLG9LoadOrderRepoRootAnchor(unittest.TestCase):
             self.assertTrue((_REPO / rel).exists(), f"{rel} must exist at repo root")
 
 
+class TestLG11NormalizeExampleNamesProposedAnchor(unittest.TestCase):
+    """LG11: SKILL.md's normalize example "a stray-anchor removal" was read as
+    evidence_anchors (not in NORMALIZE_ALLOWED_FIELDS), but the supported
+    mechanism is a whole-block proposed_anchor removal via the `<delete>`
+    sentinel. Name the allowlisted field so the example isn't misleading."""
+
+    def test_normalize_example_names_proposed_anchor(self):
+        skill = _read("skills", "audit", "SKILL.md")
+        idx = skill.index("a surface-field correction")
+        end = skill.index("coercion", idx)
+        para = skill[idx : end + len("coercion")]
+        self.assertIn("proposed_anchor", para)
+        self.assertNotIn("stray-anchor removal", para)
+
+
 if __name__ == "__main__":
     unittest.main()
