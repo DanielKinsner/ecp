@@ -790,7 +790,7 @@ def _probe_doc_height(eval_json: Any) -> dict[str, Any]:
     """
     try:
         out = eval_json(_DOC_HEIGHT_PROBE_JS)
-    except (OSError, RuntimeError, ValueError, TypeError):
+    except (OSError, RuntimeError, ValueError, TypeError, subprocess.CalledProcessError):
         return {}
     return out if isinstance(out, dict) else {}
 

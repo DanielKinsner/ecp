@@ -39,6 +39,7 @@ Run:
 from __future__ import annotations
 
 import sys
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -528,6 +529,13 @@ class TestHcC3TrueHeightProbe(unittest.TestCase):
     def test_probe_helper_returns_dict_on_eval_failure(self):
         def boom(_src):
             raise RuntimeError("eval failed")
+
+        out = acquire_url._probe_doc_height(boom)
+        self.assertEqual(out, {})
+
+    def test_probe_helper_returns_dict_on_process_failure(self):
+        def boom(_src):
+            raise subprocess.CalledProcessError(1, ["agent-browser", "eval"])
 
         out = acquire_url._probe_doc_height(boom)
         self.assertEqual(out, {})
