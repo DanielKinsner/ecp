@@ -80,5 +80,16 @@ class TestLG16EthicsAdjacentHedgeCoversAllFields(unittest.TestCase):
         self.assertIn("MUST hedge", para)
 
 
+class TestLGMinorPrepareSynthHelpScope(unittest.TestCase):
+    """LG-MINOR: the --cluster-emission help said "10 specialists per device",
+    which only holds under --focus all. The canonical scope is page-type-aware
+    (2-10 per contracts/cluster-routing.md; product-page standard is 6)."""
+
+    def test_help_string_not_stale_specialist_count(self):
+        src = _read("scripts", "test-specialist.py")
+        self.assertNotIn("10 specialists per device", src)
+        self.assertIn("per cluster per device", src)
+
+
 if __name__ == "__main__":
     unittest.main()

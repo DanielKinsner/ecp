@@ -1599,7 +1599,7 @@ def main(argv: list[str] | None = None) -> int:
         action="append",
         default=[],
         required=True,
-        help="Path to a cluster-emission-v1.json. Pass once per file (10 specialists per device).",
+        help="Path to a cluster-emission-v1.json. Pass once per file (one per cluster per device — 2-10 depending on the detected page-type scope per contracts/cluster-routing.md; product-page standard is 6).",
     )
     p_prep_synth.add_argument("--ethics-findings-path", required=True)
     p_prep_synth.add_argument("--desktop-baton-path", required=True)
