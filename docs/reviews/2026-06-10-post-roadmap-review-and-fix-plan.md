@@ -116,6 +116,7 @@ that produces the client deliverable.**
 ## Phase 2 — evidence-quality bugs (fix before or shortly after the gate)
 
 ### V4 — spec-audit C15: DPR-fallback signal erased by the v1→v2 converter
+**Status 2026-06-12:** FIXED `3c916c5`; legacy no-field behavior pinned `57c7c3e`.
 - **Where:** `scripts/baton_v1_to_v2.py:360,364`.
 - **Bug (verified):** acquire now writes `viewport.dpr_requested/dpr_actual/
   dpr_fallback` on the v1 baton (`acquire_url.py:616-642,1176-1180`), but the
