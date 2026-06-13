@@ -339,6 +339,11 @@ class TestC13FirstAvailableResolvedVariantJs(unittest.TestCase):
         self.assertIn("shopify-selectedVariantId", js)
         self.assertIn("shopify-product-first-variant", js)
 
+    def test_product_first_variant_is_labeled_last_resort(self):
+        js = cfg._APPLY_FIRST_AVAILABLE_JS
+        self.assertLess(js.index("selected-option-value"), js.index("shopify-product-first-variant"))
+        self.assertIn("last resort", js)
+
 
 class TestC13RecordsVariantSource(unittest.TestCase):
     """try_configured_state_capture wires variant_source / variant_id into
