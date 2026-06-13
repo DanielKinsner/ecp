@@ -133,6 +133,22 @@ class TestBatonIndexRule(unittest.TestCase):
         baton_violations = [v for v in violations if "baton" in v.rule]
         self.assertEqual(len(baton_violations), 0)
 
+    def test_fabricated_element_self_skips_when_baton_proves_absence(self):
+        f = _finding(
+            element={"baton_index": "e999"},
+            evidence_anchors=[{"type": "dom", "reference": "e999"}],
+        )
+        violations = validate_business_rules(_emission([f]), baton=_baton(["e7"]))
+        rules = {v.rule for v in violations}
+
+        self.assertIn("baton_index_resolves", rules)
+        self.assertIn("anchor_baton_resolves", rules)
+
+        prompt = build_retry_prompt("pricing", "mobile", violations)
+        self.assertIn("If you cannot ground a finding to a real baton element", prompt)
+        self.assertIn("do not", prompt)
+        self.assertIn("emit it", prompt)
+
 
 class TestAnchorResolutionRule(unittest.TestCase):
     def test_visual_anchor_with_screenshot_pattern_passes(self):
