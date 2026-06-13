@@ -11,21 +11,27 @@ declined-by-ruling, or pinned; spec is **v1.2**; placement is exact-tier-or-blan
 absences always manual (the #1 wrong-hotspot class is gone); promotion mechanically
 refuses with unplaced markers; the v1/Agent-Teams contract sweep is DONE with grep-guard
 tests; 4 new trust canaries (hedge / source-registry / dark-pattern / normalizations).
-Suite: **1375 pytest / 911 unittest, both green — run BOTH (the runner-parity guard
-floors pytest collection at 1356).**
+Suite: **both runners green — run BOTH.** Pytest collection is machine-dependent
+(the mojibake guard parametrizes over working-tree-only `docs/ecp/`): a clean clone
+collects **1342**; boxes with local engagements collect more (work box 2026-06-12:
+1375 passed / 911 unittest). The runner-parity guard floors collection at **1312**
+(clean-clone-derived — read its "Floor update rule" before re-flooring).
 **✅ V1–V3 FIXED (2026-06-12)** — the post-roadmap review's deliverable-corrupting bugs
 (phantom (50,50) hotspots, operator point/ellipse/polygon geometry collapse, wrong-device
 merge-metadata leak) landed on `main` with guard tests, including an end-to-end
 `--from-review` CLI guard. See the flipped banner in
 [`docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md`](docs/reviews/2026-06-10-post-roadmap-review-and-fix-plan.md);
-its V4–V5 / S1–S3 / U1–U7 items remain open but do not block the gate.
+**✅ Its V4–V5 / S1(min) / S2–S3 / U1–U7 / O2 backlog closed 2026-06-12** — each item
+fixed, pinned, deferred, or refuted (per-item statuses + U-verdicts in that doc; O2
+needed a second pass after the first fix hit the Workflow-sandbox no-Node-API
+`ReferenceError`, then live-verified cross-machine from the home checkout).
 **⛔ CURRENT TASK — the live gate: a live `--plugin-dir` `/ecp:audit`**
 (roadmap Phase-4 LV1–LV4: full-pipeline smoke + awdmods hero re-audit + `ecp-visual-qa`
 + editor check). A headless live acquisition smoke ran 2026-06-10; the full-pipeline
 run needs a plugin session. Pre-flight from the fix-plan Phase 5: O1 (remove the stale
-v1.4.1 plugin on the work box) and O2 (QA-workflow ROOT hardcoding breaks `ecp-visual-qa`
-cross-machine) — clear both as part of the live run; verify the rendered report has zero
-(50,50) phantom markers.
+v1.4.1 plugin on the work box) — clear it as part of the live run. O2 is ✅ DONE
+(QA-workflow roots are sandbox-safe; `ecp-report-qa` live-verified from the home
+checkout 2026-06-12). Verify the rendered report has zero (50,50) phantom markers.
 ⚠️ FOUR colliding ID spaces now — the roadmap's §"ID disambiguation" (+ the fix-plan's
 V/S/U/O space) is mandatory before touching any C-number.
 Prior handoffs: [`docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md`](docs/2026-06-08-handoff-bloat-prune-and-runreview-fixes.md) ·
@@ -103,10 +109,14 @@ setx ECP_PYTHON "C:\Path\To\python.exe"                # pins the global interpr
 python -m pytest tests/                # canonical — collects unittest classes AND bare pytest funcs
 python -m unittest discover -s tests   # cross-check; unittest-only HIDES pytest-style breakage
 ```
-- Green is **~1375 passed / ~11 skipped** with the optional deps (pillow/sentence-transformers)
-  and **911 unittest** (counts as of 2026-06-12); without the optional deps: fewer passed, more
-  skipped — same health, fewer optional tests. `tests/test_runner_parity_guard.py` floors pytest
-  collection at 1356; re-floor it in any wave that adds or removes tests.
+- Green on a **clean clone** is **1342 collected** (~12 fixture/dep skips) and **911 unittest**
+  (counts as of 2026-06-12); local `docs/ecp/` engagements add machine-specific mojibake-scan
+  cases on top (work box: 1375 passed; home box: 1342 passed), and missing optional deps
+  (pillow/sentence-transformers) flip some passes to skips — same health either way.
+  `tests/test_runner_parity_guard.py` floors pytest collection at **1312**; re-floor in any
+  wave that adds or removes tests, **deriving from clean-clone collection per its "Floor
+  update rule" — never from a box with local engagements** (a work-box-derived floor turned
+  both runners red on every other machine, found 2026-06-12).
 - **Missing `jsonschema` makes the determinism / canonical-frefs canaries *cascade-fail*** (false
   "logic" failures). Install deps first before trusting a red suite.
 
@@ -125,7 +135,8 @@ python -m unittest discover -s tests   # cross-check; unittest-only HIDES pytest
   immediately before any add/commit/push; stage explicit paths, never `git add -A`** — a sibling
   window moving HEAD can silently land commits on the wrong branch (this has happened).
 - **Commit cadence:** branch from `main` → push branch → `git merge --ff-only` to `main` → push →
-  delete branch. Trailer: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
+  delete branch. Trailer: `Co-Authored-By: <driving Claude model> <noreply@anthropic.com>`
+  (e.g. `Claude Fable 5`).
 - `docs/ecp/` is **gitignored** (engagement output is working-tree-only) — summarize results inline
   to carry them across machines.
 - Source taxonomy (runtime vs contracts vs references vs fixtures vs generated vs archives):
