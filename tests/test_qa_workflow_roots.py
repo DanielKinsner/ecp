@@ -25,3 +25,9 @@ def test_visual_qa_workflow_uses_no_node_api():
 def test_report_qa_workflow_has_no_machine_root_literal():
     text = (REPO / ".claude" / "workflows" / "ecp-report-qa.js").read_text(encoding="utf-8")
     assert not MACHINE_PATH_RE.search(text)
+
+
+def test_report_qa_workflow_uses_no_node_api():
+    """Same sandbox constraint as the visual-QA guard above."""
+    text = (REPO / ".claude" / "workflows" / "ecp-report-qa.js").read_text(encoding="utf-8")
+    assert not re.search(r"\bprocess\s*\.", text)

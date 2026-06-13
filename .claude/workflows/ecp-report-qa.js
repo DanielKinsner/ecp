@@ -9,8 +9,12 @@ export const meta = {
   ],
 }
 
-// Override via args or ECP_ROOT for another machine/engagement.
-const ROOT = (args && args.root) || process.env.ECP_ROOT || process.cwd()
+// Workflow scripts run in a sandboxed JS context with NO Node API: `process`
+// is not defined (a bare reference dies with ReferenceError before any agent
+// spawns). Default to '.' — paths resolve against the session cwd, which is
+// the repo root in the canonical --plugin-dir session; pass args.root to run
+// against another checkout.
+const ROOT = (args && args.root) || '.'
 const ENG = (args && args.engagement) || `${ROOT}/fixtures/slingmods-pdp`
 const SAMPLE = (args && args.sample) || 6
 
@@ -60,7 +64,7 @@ const VERDICT_SCHEMA = {
 
 phase('Sample')
 const sampled = await agent(
-  `You are sampling findings from an ECP audit engagement for a QA pass. Read these cluster-emission JSON files (absolute paths):
+  `You are sampling findings from an ECP audit engagement for a QA pass. Read these cluster-emission JSON files (paths resolve from the session working directory):
 - ${ENG}/cluster-visual-cta-desktop.json
 - ${ENG}/cluster-pricing-desktop.json
 - ${ENG}/cluster-trust-credibility-desktop.json
