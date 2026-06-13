@@ -11,7 +11,7 @@ export const meta = {
 }
 
 // ---- Inputs (override via Workflow args) ----
-const ROOT = (args && args.root) || 'C:/Users/SM - Dan/Documents/GitHub/ecp'
+const ROOT = (args && args.root) || process.env.ECP_ROOT || process.cwd()
 const ENG = (args && args.engagement) || `${ROOT}/docs/ecp/2026-06-01-749a3c3d`
 const DEVICE = (args && args.device) || 'desktop'
 const TIER = (args && args.tier) || 'standard' // 'free' | 'standard' | 'deep'
