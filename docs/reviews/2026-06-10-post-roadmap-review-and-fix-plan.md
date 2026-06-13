@@ -177,10 +177,6 @@ that produces the client deliverable.**
   non-invokability gate. DEFERRED — §5 frozen-input rejection has skill/contract
   text and surface guards, but no runtime input parser to reject screenshot/codebase
   inputs. Each deferred clause needs a product decision before code is added.
-  Still test-free after the wave: §2.2 URL-only-input rejection, §2.4
-  audit-stops (no plan/review artifact), §5 frozen-inputs rejected, §4.1
-  fabrication self-skip (`scripts/assembly/business_rules.py` untouched in
-  range). Pin or formally defer each.
 
 ## Phase 4 — unverified mediums (single-reviewer claims; verify before fixing)
 
