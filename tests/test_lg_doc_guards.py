@@ -65,5 +65,20 @@ class TestLG11NormalizeExampleNamesProposedAnchor(unittest.TestCase):
         self.assertNotIn("stray-anchor removal", para)
 
 
+class TestLG16EthicsAdjacentHedgeCoversAllFields(unittest.TestCase):
+    """LG16 (already enforced — regression pin): the ethics ADJACENT hedge rule
+    already covers observation, recommendation, AND why_this_matters (the canary
+    ethics_findings_hedge_law_on_adjacent scans all three). Pin the contract so a
+    future edit can't silently drop why_this_matters from the carve-out."""
+
+    def test_adjacent_carveout_names_all_three_prose_fields(self):
+        ethics = _read("contracts", "ethics-subagent-v2.md")
+        idx = ethics.index("ADJACENT carve-out")
+        para = ethics[idx : idx + 700]
+        for field in ("observation", "recommendation", "why_this_matters"):
+            self.assertIn(field, para)
+        self.assertIn("MUST hedge", para)
+
+
 if __name__ == "__main__":
     unittest.main()
