@@ -28,15 +28,28 @@ the full suite (which would deadlock pytest inside itself).
 
 Floor update rule
 -----------------
-``EXPECTED_MIN_COLLECTED`` is set ~30 below the actual collected count
-at the time of writing (1352 collected -> floor 1322). If the suite
-*legitimately* shrinks below the floor (real test removal, not a
-collection bug), bump the floor down to ``new_count - 30`` in the SAME
-commit that removes the tests. Never raise the floor casually — a high
-floor turns small refactors into red builds. The inverse also rots:
-when a wave ADDS tests, re-floor to ``new_count - 30`` in that wave,
-or the guard's slack silently grows past what it was designed to catch
-(found at 195 tests of slack on 2026-06-10).
+``EXPECTED_MIN_COLLECTED`` is set ~30 below the CLEAN-CLONE collected
+count — NOT below whatever this machine collects. Collection is
+machine-dependent: ``test_no_mojibake_in_fixtures.py`` parametrizes
+over files under ``docs/ecp/``, which is working-tree-only engagement
+output, so a box with live engagements collects more (2026-06-12:
+work box 1386, home box 1354, clean clone 1342). Flooring against a
+box with local engagements makes the guard red on every other machine
+— that happened with the 1356 floor set from the work box's 1386.
+
+To re-floor: compute the tracked-files-only count — either measure on
+a fresh clone, or subtract the untracked cases:
+``pytest tests/test_no_mojibake_in_fixtures.py --collect-only -q``
+and count parametrized ids whose file is NOT in ``git ls-files``.
+Then set ``clean_count - 30``.
+
+If the suite *legitimately* shrinks below the floor (real test
+removal, not a collection bug), bump the floor down in the SAME commit
+that removes the tests. Never raise the floor casually — a high floor
+turns small refactors into red builds. The inverse also rots: when a
+wave ADDS tests, re-floor in that wave, or the guard's slack silently
+grows past what it was designed to catch (found at 195 tests of slack
+on 2026-06-10).
 """
 from __future__ import annotations
 
@@ -48,10 +61,11 @@ import sys
 import unittest
 from pathlib import Path
 
-# Set ~30 below the actual collected count (1386 on 2026-06-12, after the
-# post-roadmap backlog guards grew the suite from 1366).
+# Set ~30 below the CLEAN-CLONE collected count (1342 on 2026-06-12 after
+# the post-roadmap backlog guards; local docs/ecp engagements add
+# machine-specific mojibake-scan cases on top — do NOT floor against those).
 # See "Floor update rule" in the module docstring before changing.
-EXPECTED_MIN_COLLECTED = 1356
+EXPECTED_MIN_COLLECTED = 1312
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = REPO_ROOT / "tests"
