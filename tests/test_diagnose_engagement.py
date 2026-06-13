@@ -18,6 +18,41 @@ sys.path.insert(0, str(_REPO / "scripts"))
 import diagnose_engagement as dx  # noqa: E402
 
 
+class TestLG4StacksSkipHiddenMarkers(unittest.TestCase):
+    """LG4 Part 1 (2026-06-12 live gate): _stacks_and_dupes coerced a
+    coord-less marker's (None, None) to (0, 0) via ``a.get("x_pct", 0) or 0``,
+    so every hidden absence marker (12 desktop / 15 mobile in the repro) piled
+    onto (0, 0) and was counted as a STACK. That inflated the live-gate
+    'STACKED 10-11 / DUPLICATE 3-4 per device' signal — absences are not
+    rendered, so they must not count toward placement stacks.
+    """
+
+    def test_hidden_and_coordless_markers_are_not_stacked(self):
+        markers = [
+            {"f_ref": f"ethics/F-{i:02d}", "slide_id": "desktop-section-1",
+             "hidden": True, "x_pct": None, "y_pct": None}
+            for i in range(12)
+        ] + [
+            {"f_ref": "pricing/F-01", "slide_id": "desktop-section-1", "x_pct": 30, "y_pct": 40},
+            {"f_ref": "pricing/F-02", "slide_id": "desktop-section-1", "x_pct": 70, "y_pct": 80},
+        ]
+        stacked, duped = dx._stacks_and_dupes(markers)
+        self.assertEqual(stacked, set())
+        self.assertEqual(duped, set())
+
+    def test_real_same_element_overlap_still_flagged(self):
+        # Two placed markers at the same pixel are a genuine overlap — keep
+        # flagging those (the fix only excludes hidden/coord-less markers).
+        markers = [
+            {"f_ref": "a/F-1", "slide_id": "desktop-section-1", "x_pct": 12.0, "y_pct": 13.0},
+            {"f_ref": "b/F-2", "slide_id": "desktop-section-1", "x_pct": 12.0, "y_pct": 13.0},
+            {"f_ref": "c/F-3", "slide_id": "desktop-section-1", "x_pct": 12.1, "y_pct": 13.1},
+        ]
+        stacked, duped = dx._stacks_and_dupes(markers)
+        self.assertEqual(stacked, {"a/F-1", "b/F-2", "c/F-3"})
+        self.assertTrue({"a/F-1", "b/F-2"} <= duped)
+
+
 class TestPredicateMismatch(unittest.TestCase):
     def test_over_threshold_anchored_to_cheaper_element_flags(self):
         msg = dx._predicate_mismatch(

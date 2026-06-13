@@ -198,6 +198,14 @@ def _stacks_and_dupes(markers: list[dict]) -> tuple[set[str], set[str]]:
     """Return (f_refs in a stack, f_refs that duplicate another marker's geometry)."""
     by_slide: dict[Any, list[dict]] = {}
     for m in markers:
+        # LG4: a hidden absence marker (or any coord-less marker) is not
+        # rendered on the slide — it must not be counted toward stacks/dupes.
+        # Without this guard, (None, None) coerced to (0, 0) below and every
+        # absence piled onto one pixel, inflating the STACKED/DUPLICATE counts.
+        if m.get("hidden") is True:
+            continue
+        if m.get("x_pct") is None or m.get("y_pct") is None:
+            continue
         by_slide.setdefault(m.get("slide_id"), []).append(m)
     stacked: set[str] = set()
     duped: set[str] = set()
