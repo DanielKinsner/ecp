@@ -91,5 +91,18 @@ class TestLGMinorPrepareSynthHelpScope(unittest.TestCase):
         self.assertIn("per cluster per device", src)
 
 
+class TestLGMinorAcquireSchemaVersionDisambiguation(unittest.TestCase):
+    """LG-MINOR: a baton with schema_version: 1 inside a meta schema_version: 3
+    engagement read as a contradiction. acquire.md's Implementation note must
+    state baton- and meta-schema versioning are separate axes."""
+
+    def test_acquire_note_disambiguates_schema_axes(self):
+        acquire = _read("workflows", "acquire.md")
+        self.assertIn(
+            "baton schema versioning and meta schema versioning are separate axes",
+            acquire,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
