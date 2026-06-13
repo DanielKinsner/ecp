@@ -199,6 +199,7 @@ contract).
   (uninstall user+project scope, marketplace remove, restart) and re-verify
   before any live session there.
 - **O2 — per-machine ROOT hardcoding in the QA workflows (CONFIRMED):**
+  **Status 2026-06-12:** FIXED `88172cf` and `244cd0c`.
   `.claude/workflows/ecp-visual-qa.js:14` defaults to the work-box path,
   `ecp-report-qa.js:13` to the home-box path — each breaks on the other
   machine, and the canonical invocation (`contracts/report-export.md:82`)
