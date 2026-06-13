@@ -132,6 +132,7 @@ that produces the client deliverable.**
   fixture uses stale `viewport.dpr=3`).
 
 ### V5 — spec-audit C13: variant "pin" records a selection-independent constant on Shopify
+**Status 2026-06-12:** FIXED `f2de7b0` and `f55530d`; JS regression guard `6f8f323`.
 - **Where:** `_APPLY_FIRST_AVAILABLE_JS`, `scripts/ecp_configurator.py:81-96`.
 - **Bug (verified):** resolves variant identity as
   `ShopifyAnalytics.meta.product.variants[0].id` — the product's FIRST variant,
