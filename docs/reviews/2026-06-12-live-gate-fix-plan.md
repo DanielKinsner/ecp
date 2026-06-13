@@ -1,6 +1,35 @@
 # Live-gate fix plan — post-`/ecp:audit` LV2–LV4 findings (2026-06-12)
 
-> **Status:** OPEN — Codex wave. Authored by the reviewer terminal after the first
+> **Status: ✅ EXECUTED (2026-06-12 → 2026-06-13).** All LG1–LG16 + the Minor
+> nits landed on `main` as tiny guard-test-first commits (`24c21bd..9fda9f8`):
+> LG1–LG3 first (`98aa402`/`fa76b71`/`16f1505`), then LG4–LG16 (`43186fc..9fda9f8`).
+> Suite green on BOTH runners — **1402 pytest passed / 12 skipped / 963 unittest**
+> (this box); parity floor re-floored to **1366** (clean-clone 1396).
+>
+> **Per-item outcome (several plan claims were stale — verified against current code):**
+> - **Code:** LG1 (hero decode-wait + srcset/fetchpriority/stepped-scroll), LG2
+>   (device-scoped baton precedence), LG3 (edge-punct quote strip), LG4 part 1
+>   (diagnose skip hidden markers) + part 2 (callout de-stack), LG5 (small exact
+>   element → box), LG6 (`anchor_satisfies_numeric_predicate` business rule + contract),
+>   LG7 (visual-qa requires `args.engagement`), LG8 (`--from-review` honors demotions).
+> - **Doc/contract reconciliations:** LG9 (load-order repo-root anchor), LG10
+>   (device-keyed baton naming), LG11 (`proposed_anchor` normalize example), LG12
+>   (v2 loader doc + parser trap), LG13 (acquirer counter = per-baton), LG14
+>   (two Placement-QA flavors), LG15 (full canary set), Minor (schema-axes + help string).
+> - **Refuted / already-fixed (no code change needed):** LG4's "`-ai` duplicate in
+>   render set" and "absence findings stack" were already fixed; LG9 was an
+>   omission, not a wrong base header; LG12's v2 loader already exists
+>   (`json_parser.parse_emission_file(s)`); **LG16** was already enforced (ADJACENT
+>   hedge already covers `why_this_matters`) — pinned with a regression test.
+> - **Operator follow-ups (not unit-testable):** LG1 — re-run the live awdmods
+>   `--plugin-dir /ecp:audit … --visual` and confirm `section-1.jpg` renders the
+>   hero + `diagnose` `CAPTURE_SUSPECT` → 0; LG4 part 2 — eyeball the editor's
+>   fanned-out callouts on a same-element stack. `O1` (stale v1.4.1 plugin on the
+>   work box) remains an operator action.
+>
+> ---
+>
+> _Original plan (as authored, OPEN) follows._ Authored by the reviewer terminal after the first
 > live `--plugin-dir /ecp:audit https://awdmods.com/ --visual` run
 > (engagement `2026-06-12-d662a8d3`, on disk for repro). The roadmap's live gate
 > (`O3`) is **DONE**; this plan is the work that gate surfaced, merged with the
