@@ -257,6 +257,37 @@ class TestC12SemanticDismiss(unittest.TestCase):
         self.assertIn("onetrust", self.js.lower())
         self.assertIn("osano", self.js.lower())
 
+    def test_overlay_free_viewport_does_not_run_dismiss_click(self):
+        calls = []
+
+        def fake_eval(source):
+            calls.append(source)
+            if "blocking.length === 0" in source:
+                return {"clear": True, "blocking": []}
+            return {"clicked": True, "phase": "global-text"}
+
+        self.assertEqual(ovl.dismiss_overlays(fake_eval, rounds=3, pause_s=0), [])
+        self.assertEqual(len(calls), 1)
+        self.assertIn("blocking.length === 0", calls[0])
+
+    def test_dismiss_loop_stops_when_click_makes_no_overlay_progress(self):
+        dismiss_calls = 0
+
+        def fake_eval(source):
+            nonlocal dismiss_calls
+            if "blocking.length === 0" in source:
+                return {
+                    "clear": False,
+                    "blocking": [{"tag": "div", "id": "modal", "coverage": 40}],
+                }
+            dismiss_calls += 1
+            return {"clicked": True, "phase": "close-semantic"}
+
+        out = ovl.dismiss_overlays(fake_eval, rounds=6, pause_s=0)
+
+        self.assertEqual(len(out), 1)
+        self.assertEqual(dismiss_calls, 1)
+
 
 # ---------------------------------------------------------------------------
 # C13 — URL-pinned variant selection

@@ -288,13 +288,38 @@ def viewport_clear_eval_source() -> str:
     return _VIEWPORT_CHECK
 
 
+def _blocking_signature(state: dict[str, Any]) -> tuple[tuple[str, str, str, str], ...]:
+    blocking = state.get("blocking")
+    if not isinstance(blocking, list):
+        return ()
+    sig: list[tuple[str, str, str, str]] = []
+    for item in blocking:
+        if not isinstance(item, dict):
+            continue
+        sig.append(
+            (
+                str(item.get("tag") or ""),
+                str(item.get("id") or ""),
+                str(item.get("class") or ""),
+                str(item.get("coverage") or ""),
+            )
+        )
+    return tuple(sig)
+
+
 def dismiss_overlays(eval_json: EvalJson, *, rounds: int = 6, pause_s: float = 1.0) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for _ in range(max(0, int(rounds))):
+        before = read_viewport_state(eval_json)
+        if before.get("clear") is True:
+            break
+        before_sig = _blocking_signature(before)
+
         r = eval_json("JSON.stringify(" + _DISMISS_ROUND + ")")
         if not isinstance(r, dict):
             break
         out.append(r)
+        clicked = r.get("clicked") is True
         if r.get("clicked") is not True:
             # try escape once in case focus trap
             eval_json("JSON.stringify(" + _KEYDOWN_ESC + ")")
@@ -302,9 +327,16 @@ def dismiss_overlays(eval_json: EvalJson, *, rounds: int = 6, pause_s: float = 1
             r2 = eval_json("JSON.stringify(" + _DISMISS_ROUND + ")")
             if isinstance(r2, dict) and r2.get("clicked") is True:
                 out.append(r2)
+                clicked = True
             else:
                 break
         time.sleep(max(0.0, float(pause_s)))
+        if clicked:
+            after = read_viewport_state(eval_json)
+            if after.get("clear") is True:
+                break
+            if before_sig and _blocking_signature(after) == before_sig:
+                break
     return out
 
 
