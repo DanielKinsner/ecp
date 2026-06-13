@@ -86,27 +86,31 @@ When `--device` is not set AND `--auto` mode is active:
 
 ## Dual-device file naming conventions
 
-When a skill runs with a dual-device comma-pair (e.g., `--device mobile,desktop`), it captures and writes separate files for each device. The **first** device in the pair uses the bare filename; the **second** device uses the `-{device}` suffix.
+When a skill runs with a dual-device comma-pair (e.g., `--device mobile,desktop`), it captures and writes separate files for each device. Baton, DOM, and section-screenshot filenames are **device-keyed, not order-keyed**: mobile files carry a `-mobile` suffix; non-mobile (desktop or laptop) files use the bare name. The order of the comma-pair does NOT affect the on-disk filenames — a non-mobile baton is never written with a `-<non-mobile-device>` suffix.
 
-| File type | First device (e.g., mobile) | Second device (e.g., desktop) |
+This is the runtime convention, not a description to interpret: `scripts/acquire_url.py` writes `baton_name = "baton-mobile.json" if device == "mobile" else "baton.json"`, and `scripts/generate-report.py` resolves its `baton_file` default by mapping both `desktop` and `laptop` to the bare `baton.json` and `mobile` to `baton-mobile.json`.
+
+| File type | Non-mobile (desktop / laptop) | Mobile |
 |---|---|---|
-| Baton file | `baton.json` | `baton-desktop.json` |
-| Preprocessed DOM | `dom.html` | `dom-desktop.html` |
-| Sectioned screenshots | `section-1.jpg`, `section-2.jpg`, ... | `section-desktop-1.jpg`, `section-desktop-2.jpg`, ... |
-| Per-cluster audit file | `cluster-{cluster}-mobile.md` | `cluster-{cluster}-desktop.md` |
-| Final audit report | `audit.md` | `audit-desktop.md` |
-| Visual report | `visual-report.html` | `visual-report-desktop.html` |
+| Baton file | `baton.json` | `baton-mobile.json` |
+| Preprocessed DOM | `dom.html` | `dom-mobile.html` |
+| Sectioned screenshots | `section-1.jpg`, `section-2.jpg`, ... | `section-1-mobile.jpg`, `section-2-mobile.jpg`, ... |
+| Per-cluster emission (v2) | `cluster-{cluster}-{device}.json` | `cluster-{cluster}-mobile.json` |
+| Audit markdown (v2) | `audit-{device}.md` | `audit-mobile.md` |
+| Visual report (v2) | `visual-report-{device}-v2.html` (laptop: `visual-report-v2.html`) | `visual-report-mobile-v2.html` |
+
+Per the SKILL.md Artifact Contract, the v2 audit markdown is `audit-{device}.md` and the v2 renderer writes `visual-report-{device}-v2.html`; the legacy v1 renderer writes the un-suffixed `visual-report.html` / `visual-report-{device}.html`.
 
 **Rationale for this naming convention:**
-- The first device is the "default" — if a consumer reads just `audit.md` they get a coherent single-device report.
-- The second device is the "addendum" — explicitly suffixed so the pair is greppable and the directory listing is sortable.
-- Per-cluster files ALWAYS use the device suffix (including for the first device, e.g., `cluster-pricing-mobile.md`) so cluster auditors can write deterministically without needing to know which device is "first".
+- `baton.json` is the long-standing single-device default; mobile is the only device-suffixed variant because it is the only device with a distinct DPR/viewport shape the v2 pipeline cares about.
+- Per-cluster emissions ALWAYS carry the device suffix (including mobile, e.g. `cluster-pricing-mobile.json`) so cluster auditors write deterministically without needing to know pair order.
+- The trimmed synth-input batons (`baton-{device}-trimmed.json`, produced by the lead's trim step, not by acquisition) DO name every device explicitly — that is a separate file family from the acquisition baton above.
 
-**Compare-specific variant:** compare adds a `-competitor` suffix on top of the device convention:
-- `baton.json` (your page, first device)
-- `baton-competitor.json` (competitor, first device)
-- `baton-mobile.json` (your page, second device if different from first)
-- `baton-competitor-mobile.json` (competitor, second device)
+**Compare-specific variant (§5-frozen):** compare adds a `-competitor` suffix on top of the device-keyed convention — mobile gets `-mobile`, the competitor capture gets `-competitor`, non-mobile is bare, all independent of pair order:
+- `baton.json` (your page, non-mobile)
+- `baton-competitor.json` (competitor, non-mobile)
+- `baton-mobile.json` (your page, mobile)
+- `baton-competitor-mobile.json` (competitor, mobile)
 
 This file covers the device half of the naming only.
 

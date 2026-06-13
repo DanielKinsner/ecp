@@ -104,5 +104,28 @@ class TestLGMinorAcquireSchemaVersionDisambiguation(unittest.TestCase):
         )
 
 
+class TestLG10DeviceKeyedNaming(unittest.TestCase):
+    """LG10: device-semantics.md prescribed ORDER-keyed naming (first device
+    bare, second `-{device}`, table showing `baton-desktop.json`) but the
+    runtime is DEVICE-keyed — mobile gets `-mobile`, non-mobile (desktop/laptop)
+    is bare. `baton-desktop.json` is never written by acquisition."""
+
+    def test_doc_states_device_keyed(self):
+        doc = _read("contracts", "device-semantics.md")
+        self.assertIn("device-keyed", doc)
+        self.assertNotIn("baton-desktop.json", doc)
+
+    def test_runtime_writes_device_keyed_baton(self):
+        acq = _read("scripts", "acquire_url.py")
+        self.assertIn("baton-mobile.json", acq)
+        self.assertIn('"baton.json"', acq)
+        self.assertNotIn("baton-desktop.json", acq)
+
+    def test_skill_artifact_contract_has_no_desktop_or_laptop_baton_literal(self):
+        skill = _read("skills", "audit", "SKILL.md")
+        self.assertNotIn("baton-desktop.json", skill)
+        self.assertNotIn("baton-laptop.json", skill)
+
+
 if __name__ == "__main__":
     unittest.main()
