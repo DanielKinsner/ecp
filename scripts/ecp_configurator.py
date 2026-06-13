@@ -72,30 +72,45 @@ _APPLY_FIRST_AVAILABLE_JS = r"""(function(){
     s.dispatchEvent(new Event("input", {bubbles: true}));
     s.dispatchEvent(new Event("change", {bubbles: true}));
   }
-  /* Resolved-identity probe: read window.ShopifyAnalytics first (Shopify
-     PDPs expose the live variant id there post-select), then fall back to
-     a `data-variant-id` attribute on a `.product-form__input--variant`-ish
-     ancestor, then the last selected option value. Best-effort; null on
-     non-Shopify sites is acceptable. */
+  /* Resolved-identity probe: read Shopify's live selectedVariantId first,
+     then DOM attributes/options, with product.variants[0] only as a labeled
+     last resort. Best-effort; null on non-Shopify sites is acceptable. */
   var resolved = null;
+  var resolvedSource = null;
   try {
     var meta = window.ShopifyAnalytics && window.ShopifyAnalytics.meta;
-    if (meta && meta.product && meta.product.variants && meta.product.variants.length) {
-      var first = meta.product.variants[0];
-      if (first && first.id != null) resolved = String(first.id);
+    if (meta && meta.selectedVariantId != null) {
+      resolved = String(meta.selectedVariantId);
+      resolvedSource = 'shopify-selectedVariantId';
     }
     if (!resolved) {
       var dv = document.querySelector('[data-variant-id]');
-      if (dv) resolved = String(dv.getAttribute('data-variant-id') || '').trim() || null;
+      if (dv) {
+        resolved = String(dv.getAttribute('data-variant-id') || '').trim() || null;
+        if (resolved) resolvedSource = 'data-variant-id';
+      }
     }
     if (!resolved && selects.length) {
       var last = selects[selects.length - 1];
       if (last && last.options && last.selectedIndex >= 0 && last.options[last.selectedIndex]) {
         resolved = String(last.options[last.selectedIndex].value || '').trim() || null;
+        if (resolved) resolvedSource = 'selected-option-value';
+      }
+    }
+    if (!resolved && meta && meta.product && meta.product.variants && meta.product.variants.length) {
+      var first = meta.product.variants[0];
+      if (first && first.id != null) {
+        resolved = String(first.id);
+        resolvedSource = 'shopify-product-first-variant';
       }
     }
   } catch (e) {}
-  return {ok: true, n: selects.length, resolved_variant_id: resolved};
+  return {
+    ok: true,
+    n: selects.length,
+    resolved_variant_id: resolved,
+    resolved_variant_source: resolvedSource
+  };
 })()"""
 
 
@@ -275,6 +290,7 @@ def try_configured_state_capture(
     target_variant = extract_target_variant_from_url(target_url or "")
     variant_id: str | None = None
     variant_source: str = "first-available"
+    variant_resolution_source: str | None = None
     try:
         if target_variant:
             url_pinned_raw = ev("JSON.stringify(" + _build_apply_url_pinned_js(target_variant) + ")")
@@ -293,6 +309,9 @@ def try_configured_state_capture(
                 resolved = ap.get("resolved_variant_id")
                 if isinstance(resolved, str) and resolved.strip():
                     variant_id = resolved.strip()
+                resolved_source = ap.get("resolved_variant_source")
+                if isinstance(resolved_source, str) and resolved_source.strip():
+                    variant_resolution_source = resolved_source.strip()
     except (OSError, RuntimeError, TypeError, ValueError):
         return None
     time.sleep(1.5)
@@ -319,6 +338,8 @@ def try_configured_state_capture(
     }
     if variant_id:
         result["variant_id"] = variant_id
+    if variant_resolution_source:
+        result["variant_resolution_source"] = variant_resolution_source
     return result
 
 

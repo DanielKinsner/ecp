@@ -322,6 +322,19 @@ class TestC13ApplyUrlPinnedJs(unittest.TestCase):
         self.assertIn("selectedIndex", js)
 
 
+class TestC13FirstAvailableResolvedVariantJs(unittest.TestCase):
+    def test_selected_variant_id_precedes_product_first_variant_fallback(self):
+        js = cfg._APPLY_FIRST_AVAILABLE_JS
+        self.assertIn("selectedVariantId", js)
+        self.assertLess(js.index("selectedVariantId"), js.index("variants[0]"))
+
+    def test_resolved_variant_source_is_reported(self):
+        js = cfg._APPLY_FIRST_AVAILABLE_JS
+        self.assertIn("resolved_variant_source", js)
+        self.assertIn("shopify-selectedVariantId", js)
+        self.assertIn("shopify-product-first-variant", js)
+
+
 class TestC13RecordsVariantSource(unittest.TestCase):
     """try_configured_state_capture wires variant_source / variant_id into
     the configured_state dict via a fake eval + fake shot pair.
@@ -338,7 +351,12 @@ class TestC13RecordsVariantSource(unittest.TestCase):
             if "url_pinned" in src:
                 return {"url_pinned": url_pinned, "target_variant_id": "12345"}
             if "resolved_variant_id" in src:
-                return {"ok": True, "n": 2, "resolved_variant_id": resolved_id}
+                return {
+                    "ok": True,
+                    "n": 2,
+                    "resolved_variant_id": resolved_id,
+                    "resolved_variant_source": "shopify-selectedVariantId",
+                }
             if "ctaText" in src:
                 return {"ctaText": "Add to cart", "ctaEnabled": True, "price": "$99"}
             return {}
@@ -384,6 +402,7 @@ class TestC13RecordsVariantSource(unittest.TestCase):
             assert res is not None
             self.assertEqual(res["variant_source"], "first-available")
             self.assertEqual(res["variant_id"], "555")
+            self.assertEqual(res["variant_resolution_source"], "shopify-selectedVariantId")
 
     def test_url_present_but_variant_uncatchable_falls_back(self):
         import tempfile
