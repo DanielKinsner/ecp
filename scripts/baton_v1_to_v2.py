@@ -298,6 +298,11 @@ def convert_baton(
 
     vp = v1.get("viewport") or {}
     dpr = float(vp.get("dpr") or (3 if device == "mobile" else 1))
+    dpr_requested = float(vp.get("dpr_requested") or dpr)
+    dpr_actual = float(
+        vp.get("dpr_actual")
+        or (1.0 if (vp.get("dpr_fallback") or v1.get("dpr_fallback")) else dpr)
+    )
     vw = int(vp.get("width") or (390 if device == "mobile" else 1920))
     vh = int(vp.get("height") or (844 if device == "mobile" else 1080))
 
@@ -357,11 +362,11 @@ def convert_baton(
         "viewport": {
             "width": vw,
             "height": vh,
-            "dpr_requested": dpr,
+            "dpr_requested": dpr_requested,
             # v1 'overlays' carry no element index, so we cannot emit a schema-valid
             # overlays_detected[].e_index; record dpr fallback instead and leave
             # overlays empty (see capture_state below).
-            "dpr_actual": 1.0 if v1.get("dpr_fallback") else dpr,
+            "dpr_actual": dpr_actual,
         },
         "capture_state": {
             "hydration": "pre-hydration" if v1.get("pre_hydration_warning") else "post-hydration",

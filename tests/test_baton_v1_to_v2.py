@@ -194,6 +194,18 @@ class TestCaptureState(unittest.TestCase):
         self.assertEqual(v2["viewport"]["dpr_requested"], 3)
         self.assertEqual(v2["viewport"]["dpr_actual"], 1.0)
 
+    def test_dpr_fallback_preserves_explicit_requested_and_actual(self):
+        v2 = _convert("mobile", viewport={
+            "width": 390,
+            "height": 844,
+            "dpr": 1,
+            "dpr_requested": 3.0,
+            "dpr_actual": 1.0,
+            "dpr_fallback": True,
+        })
+        self.assertEqual(v2["viewport"]["dpr_requested"], 3.0)
+        self.assertEqual(v2["viewport"]["dpr_actual"], 1.0)
+
 
 class TestEngagementId(unittest.TestCase):
     def test_bad_engagement_id_raises(self):
