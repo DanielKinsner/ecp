@@ -151,7 +151,9 @@ that produces the client deliverable.**
 
 ## Phase 3 — gaps in the EXECUTED claim (spec axis)
 
-- **S1 — spec-audit C11 is half-done.** Recording is real; the reveal pass is
+- **S1 — spec-audit C11 is half-done.** **Status 2026-06-12:** FIXED minimum
+  placeholder issue `ca7cd1d`; contract/schema wording reconciled in this docs
+  wave. Recording is real; the reveal pass is
   unscoped (`acquire_url.py:825-833` still force-paints global selectors +
   kills all animation), the contract's `dom_state_modified` field is
   unemittable under the v2 schema (`workflows/acquire.md:243-268` vs

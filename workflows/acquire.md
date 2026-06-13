@@ -237,10 +237,10 @@ After settle time, check for overlays that obstruct the page:
    - If `clear: true` → proceed to Step 1c.
    - If `clear: false` → at least one overlay is still covering >10% of the viewport. For each blocking element:
      a. **Capture a "before" screenshot** of the overlay state: `overlay-{N}-before.jpg` where N is the 1-based overlay index. Skip this if the previous viewport-clear check already shows an empty viewport.
-     b. Try removing it via JS: `agent-browser {session_flag} eval "document.querySelector('{selector}').remove()"`. If this succeeds, record `dismissal_method: "js-remove"` in the overlays_detected entry.
-     c. If removal fails (e.g., React re-renders it), try hiding: `agent-browser {session_flag} eval "document.querySelector('{selector}').style.display = 'none'"`. If this succeeds, record `dismissal_method: "js-style-display-none"`.
-     d. Wait 500ms, re-run the viewport-clear check. **Capture an "after" screenshot:** `overlay-{N}-after.jpg`.
-     e. Set `dom_state_modified: true` on the overlays_detected entry. This flag propagates into the rendered visual report as a caveat banner so downstream readers know the captured DOM differs from a normal user state.
+    b. Try removing it via JS: `agent-browser {session_flag} eval "document.querySelector('{selector}').remove()"`. If this succeeds, record an `overlays_detected[]` entry with `dismissed: true` and `dismissal_method: "skip"` (schema convention: JS force-removal bypassed user-driven dismissal).
+    c. If removal fails (e.g., React re-renders it), try hiding: `agent-browser {session_flag} eval "document.querySelector('{selector}').style.display = 'none'"`. If this succeeds, record an `overlays_detected[]` entry with `dismissed: true` and `dismissal_method: "skip"`.
+    d. Wait 500ms, re-run the viewport-clear check. **Capture an "after" screenshot:** `overlay-{N}-after.jpg`.
+    e. Do not emit a `dom_state_modified` field; schema v1 has no such field. The presence of a force-removal/reveal-pass entry in `capture_state.overlays_detected[]` is the caveat signal downstream renderers use to show that the captured DOM differs from a normal user state.
    - If the viewport is STILL not clear after JS removal attempts: **capture a single "occluded" screenshot, log `viewport_clear: false` in the baton, and report to the coordinator:**
      ```
      STATUS: PARTIAL — Viewport not clear after overlay dismissal. {N} overlays still blocking {coverage}% of viewport. Screenshots will show overlays. Elements: {class names}.
@@ -250,22 +250,18 @@ After settle time, check for overlays that obstruct the page:
 
 This step is critical for screenshot quality. Undismissed overlays produce occluded screenshots that downstream auditors cannot evaluate. The SlingMods NRG wing audit (2026-04-13) captured 6 mobile screenshots with an Omnisend popup covering 100% of the viewport — the acquirer dismissed the Termly cookie banner but missed the Omnisend newsletter popup that appeared underneath it.
 
-**Overlay dismissal observability schema (added 2026-05-18 — Phase 5.2).** Every entry in `capture_state.overlays_detected[]` MUST carry:
+**Overlay dismissal observability schema (added 2026-05-18 — Phase 5.2).** Every entry in `capture_state.overlays_detected[]` MUST match `schema/baton-v1.json`:
 
 ```json
 {
-  "e_index": "e3",                       // baton index if the overlay element is in elements[]; else null
-  "type": "cookie-consent" | "newsletter-popup" | "cart-drawer" | "media-modal" | "nav-drawer" | "other",
-  "selector": ".omnisend-popup",         // the actual selector matched
+  "e_index": "e3",
+  "type": "cookie-consent" | "newsletter-modal" | "age-gate" | "privacy-banner" | "promo-popup" | "geo-router" | "other",
   "dismissed": true,
-  "dismissal_method": "close-button" | "escape-key" | "outside-click" | "js-remove" | "js-style-display-none" | "failed",
-  "dom_state_modified": true,            // true if dismissal_method starts with "js-" (DOM was edited, not user-driven dismissal)
-  "before_screenshot": "overlay-1-before.jpg",   // optional; only when JS-override was used
-  "after_screenshot": "overlay-1-after.jpg"      // optional; only when JS-override was used
+  "dismissal_method": "close-button" | "decline-button" | "accept-button" | "click-outside" | "skip" | "failed"
 }
 ```
 
-`dom_state_modified: true` is the signal downstream renderers use to surface a "DOM was edited during capture" caveat on the visual report. The awdmods 2026-05-18 mobile capture force-dismissed three auto-open overlays (cart drawer, media modal, nav drawer) via JS style override; without the structured log, the operator couldn't tell from the trimmed artifacts that the captured DOM diverged from a normal user's view.
+For JS force-removal or force-hide, use `dismissal_method: "skip"`; for reveal-pass force-painting, synthesize a schema-valid `type: "other"` entry. The presence of either entry in `capture_state.overlays_detected[]` is the downstream signal to surface a "DOM was edited during capture" caveat on the visual report. The awdmods 2026-05-18 mobile capture force-dismissed three auto-open overlays via JS style override; without the structured list, the operator couldn't tell from the trimmed artifacts that the captured DOM diverged from a normal user's view.
 
 Closes Phase 5.2 of `docs/ecp/2026-05-18-report-accuracy-and-hotspot-remediation-plan.md`.
 
