@@ -166,8 +166,8 @@ that produces the client deliverable.**
   the contract/schema on `dom_state_modified` or rewrite the contract to the
   presence-in-list convention.
 - **S2 — the promised G21-style frozen-mode non-invokability guard was never
-  built** (roadmap Phase 5 end-item; spec-audit M2 list "§5 frozen modes not
-  invokable"). The test labeled as it guards a different property. Build: a
+  built.** **Status 2026-06-12:** PINNED `50360b7`.
+  The test labeled as it guards a different property. Build: a
   test asserting `skills/` contains no build/compare/quick-scan/resume skill
   dirs and the plugin surface exposes only `/ecp:audit`.
 - **S3 — spec-audit M2 is pins-partial.** Still test-free after the wave: §2.2
