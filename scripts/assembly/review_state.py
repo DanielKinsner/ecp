@@ -67,6 +67,9 @@ def build_initial_review_state(
     slides = _build_slides(baton, device)
     markers: list[dict[str, Any]] = []
     findings: list[dict[str, Any]] = []
+    # LG4: count placed findings per (slide, element) so callouts stacked on
+    # the same element fan out in the editor instead of overlapping.
+    callout_stack: dict[tuple[str, Any], int] = {}
 
     for finding in inputs["findings"]:
         f_ref = finding.get("f_ref") or f"{finding.get('cluster', 'finding')}/F-{finding.get('index', 0):02d}"
@@ -92,6 +95,15 @@ def build_initial_review_state(
         ai_copy["marker_id"] = ai_marker_id
         ai_copy["source"] = _marker_source(mapping.get("match_method"))
         markers.extend([marker, ai_copy])
+
+        # LG4: stagger callouts of multiple findings on the same placed element.
+        snapped = marker.get("snapped_baton_index")
+        if snapped is not None and not marker.get("hidden"):
+            stack_key = (slide_id, snapped)
+            callout_stack_index = callout_stack.get(stack_key, 0)
+            callout_stack[stack_key] = callout_stack_index + 1
+        else:
+            callout_stack_index = 0
 
         summary = finding.get("plain_english_summary") or finding.get("observation") or finding.get("title", "")
         action = finding.get("plain_english_action") or finding.get("recommendation") or ""
@@ -124,7 +136,7 @@ def build_initial_review_state(
             "callout_body": action,
             "callout_color": severity_stroke(severity),
             "callout_slide_id": slide_id,
-            "callout_position": _default_callout_position(marker),
+            "callout_position": _default_callout_position(marker, callout_stack_index),
             "callout_visible": True,
             "marker_id": marker_id,
             "ai_suggested_marker_id": ai_marker_id,
@@ -637,11 +649,26 @@ def _unplaced_marker(
     }
 
 
-def _default_callout_position(marker: dict[str, Any]) -> dict[str, float | str]:
+_CALLOUT_STACK_STEP_PCT = 8.0
+
+
+def _default_callout_position(
+    marker: dict[str, Any], stack_index: int = 0
+) -> dict[str, float | str]:
+    """Default editor callout box for a marker.
+
+    LG4 (2026-06-12): when several findings cite the SAME baton element their
+    markers share one center, so the numbered callouts overlapped pixel-for-
+    pixel in the editor. ``stack_index`` (0 for the first finding on an element,
+    1 for the next, …) steps each subsequent callout sideways so they fan out.
+    Only the horizontal offset changes — the marker rect is untouched (the box
+    still frames the exact element, §4.2-safe), and the report is unaffected
+    (it renders only the selected hotspot).
+    """
     x = marker.get("cx_pct", marker.get("x_pct", 50))
     y = marker.get("cy_pct", marker.get("y_pct", 50))
     return {
-        "x_pct": min(74, max(4, float(x) + 8)),
+        "x_pct": min(74, max(4, float(x) + 8 + stack_index * _CALLOUT_STACK_STEP_PCT)),
         "y_pct": min(82, max(4, float(y) - 8)),
         "w_pct": 22,
         "h_pct": 8,
