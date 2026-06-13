@@ -213,6 +213,30 @@ class LoadPriorityPathStoriesLoudFallback(unittest.TestCase):
         html = build_priority_tab_html(stories, findings_by_fid=findings_by_fid)
         self.assertNotIn("(not found)", html)
 
+    def test_absent_sidecar_preserves_legacy_positional_refs(self) -> None:
+        """Legacy markdown-only engagements have no finding-groups sidecar or
+        stamped display_index, so markdown refs must validate against the same
+        positional fallback the renderer uses for finding cards."""
+        self._write_audit_md(
+            "## Priority Path\n\n"
+            "### 1. Legacy story (HIGH)\n\n"
+            "Body.\n\n"
+            "**Do this:** something\n\n"
+            "**Underlying findings:** pricing F-1\n\n"
+        )
+        legacy_findings = [{
+            "cluster": "pricing",
+            "section": "price",
+            "title": "Legacy finding",
+        }]
+        stories = _load_priority_path_stories(
+            self.tmpdir, "laptop", "audit.md", findings=legacy_findings,
+        )
+        self.assertEqual(len(stories), 1)
+        underlying = stories[0].get("underlying") or []
+        self.assertEqual([(u.get("cluster"), u.get("index")) for u in underlying], [("pricing", 1)])
+        self.assertEqual(stories[0].get("fixes_count"), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

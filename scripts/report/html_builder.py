@@ -164,6 +164,10 @@ def _load_priority_path_stories(engagement_path, device, audit_file, findings=No
         return parsed
     # C6b: post-validate every parsed ref against the actual findings set.
     # parse_priority_path uses display_index (cluster_index) as the F-NN.
+    # Legacy markdown-only engagements may have neither display_index nor
+    # finding-groups sidecars, so stamp the same positional fallback the
+    # renderer uses before validating parsed Priority Path refs.
+    assign_cluster_indices(findings)
     valid_refs = set()
     for f in findings:
         cluster = f.get("cluster")
