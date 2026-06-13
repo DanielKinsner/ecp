@@ -194,5 +194,31 @@ class TestLG14TwoPlacementQAFlavors(unittest.TestCase):
         self.assertIn("by design", sec)
 
 
+class TestLG15CanaryDocCoverage(unittest.TestCase):
+    """LG15: trace-assertion-canary.md documented 3 Phase-I canaries while
+    run_all_canaries returns 12 (+3 visual-quality when review-state exists).
+    Pin that every canary run_all_canaries actually runs is named in the doc,
+    so a future canary addition can't silently go undocumented."""
+
+    def test_doc_names_every_canary_run_all_runs(self):
+        import sys as _sys
+        import tempfile
+
+        _sys.path.insert(0, str(_REPO / "scripts"))
+        from assembly.canary_checks import run_all_canaries
+
+        with tempfile.TemporaryDirectory() as d:
+            eng = Path(d) / "docs" / "ecp" / "empty"
+            eng.mkdir(parents=True)
+            out = run_all_canaries(eng, audited_domain="example.com")
+
+        names = {r["name"] for r in out["results"]}
+        doc = _read("contracts", "trace-assertion-canary.md")
+        missing = sorted(n for n in names if n not in doc)
+        self.assertEqual(
+            missing, [], f"trace-assertion-canary.md is missing canaries: {missing}"
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

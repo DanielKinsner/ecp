@@ -156,6 +156,33 @@ Implementation: `scripts/assembly/canary_checks.py`. Pure functions; no LLM disp
 
 **Failure handling:** soft canary — does NOT phase-block. Lead writes `canary_cross_device_ethics_diff: {diff}` to audit-trace.log; if failed, also lists the asymmetric refs (refs in one but not the other) in `lead-reflection.md` under "Anomalies". Operator decides whether to investigate.
 
+### Full substantive canary set (`run_all_canaries`)
+
+`run_all_canaries` returns **12 always-on canaries** (the three Phase-I canaries above plus nine added in later phases) and — when `include_visual_quality=True` (the default) AND `review-state-{device}.json` files exist — **up to 3 visual-quality canaries per device** appended from `scripts/assembly/visual_quality.run_visual_quality_gates`. Each result carries a `name`; the lead writes every `summary` to the SUBSTANTIVE CANARIES block.
+
+Always-on (12):
+
+1. `ethics_findings_have_source_urls` — every actionable ethics finding cites a non-self `source_url` (Canary 1 above).
+2. `element_index_match_rate` — ≥ `element_threshold` of present-element findings cite a real baton `e_index` (Canary 2 above).
+3. `cross_device_ethics_diff` — actionable-ethics render counts across the two audit docs differ by ≤ `ethics_max_diff` (Canary 3 above).
+4. `priority_path_count_parity` — the priority-path story count matches the synthesizer's emitted priority paths (Phase 6, 2026-05-18; soft, page-scope).
+5. `clusters_represented` — every dispatched cluster appears in the canonical findings (G16, 2026-05-27); a silent cluster drop is a trust violation.
+6. `trace_counters_reconcile_with_artifacts` — each dispatch counter ≥ the artifacts on disk for that role (G22+G24, 2026-05-28); a trace that under-counts reality FAILs.
+7. `lead_reflection_not_stale` — on a complete engagement, `lead-reflection.md` is not a stale/draft placeholder (G23 follow-up).
+8. `lead_reflection_well_formed` — the reflection has the required structure (G25 follow-up; file-ownership proxy).
+9. `ethics_findings_hedge_law_on_adjacent` — ADJACENT findings citing a named regulation hedge the citation (C18 / product.md §4.1).
+10. `ethics_source_url_against_registry` — ethics `source_url`s resolve against `references/ethics-gate.md` (H2 / Phase 6, 2026-06-10).
+11. `recommendations_no_dark_patterns` — no recommendation proposes a dark pattern (H3 / product.md §8).
+12. `lead_normalizations_consistent` — the lead's `normalize` trail is internally consistent (ruling A7 / hc-C4, 2026-06-10).
+
+Visual-quality (up to 3 per device, only when `review-state-{device}.json` exists):
+
+- `giant_exact_rectangles` — no exact-tier hotspot spans an oversized parent-container rect.
+- `proxy_overload` — the share of proxy / non-exact markers stays within bounds.
+- `priority_path_needs_review` — priority-path findings whose placement needs manual review are flagged.
+
+When a run legitimately skips the visual-quality canaries (no review-state captured yet), only the 12 always-on results appear — that is expected, not a missing canary.
+
 ### How the lead invokes the canaries
 
 After the v2 synthesizer dispatch completes (see `${CLAUDE_PLUGIN_ROOT}/contracts/synthesizer-v2.md`) — or the v1 audit-assembly self-check runs (see `${CLAUDE_PLUGIN_ROOT}/contracts/audit-assembly.md`) — the lead invokes:
@@ -171,7 +198,7 @@ result = run_all_canaries(
 )
 ```
 
-The result dict contains `all_passed` (bool) and `results` (list of three CanaryResult dicts). The lead writes each canary's `summary` to audit-trace.log under a new "SUBSTANTIVE CANARIES" section:
+The result dict contains `all_passed` (bool) and `results` (a list of CanaryResult dicts — the 12 always-on canaries, plus up to 3 visual-quality canaries per device when review-state files exist; see "Full substantive canary set" above). The lead writes each canary's `summary` to audit-trace.log under a new "SUBSTANTIVE CANARIES" section:
 
 ```
 # SUBSTANTIVE CANARIES (Phase I — soft assertions, do NOT phase-block on failure):
