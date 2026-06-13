@@ -321,6 +321,11 @@ class TestC13ApplyUrlPinnedJs(unittest.TestCase):
         self.assertIn("required", js)  # the first-available fallback path
         self.assertIn("selectedIndex", js)
 
+    def test_variant_index_swatch_click_is_not_reported_as_url_pinned(self):
+        js = cfg._build_apply_url_pinned_js("12345")
+        self.assertIn("heuristic_variant_index", js)
+        self.assertNotIn("swatches[vi].click(); found = true", js)
+
 
 class TestC13FirstAvailableResolvedVariantJs(unittest.TestCase):
     def test_selected_variant_id_precedes_product_first_variant_fallback(self):

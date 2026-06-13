@@ -134,6 +134,7 @@ def _build_apply_url_pinned_js(variant_id: str) -> str:
     return r"""(function(){
   var target = """ + vid_lit + r""";
   var found = false;
+  var heuristicVariantIndex = null;
 
   /* 1. data-variant-id swatch / radio. */
   var dv = document.querySelector('[data-variant-id="' + target + '"]');
@@ -172,7 +173,9 @@ def _build_apply_url_pinned_js(variant_id: str) -> str:
     }
   }
 
-  /* 4. ShopifyAnalytics index match — click swatch by index. */
+  /* 4. ShopifyAnalytics index match — heuristic only. The variant id
+     matched the product list, but an index-based swatch click is not a
+     verifiable URL pin because the swatch NodeList may not share that order. */
   if (!found) {
     try {
       var meta = window.ShopifyAnalytics && window.ShopifyAnalytics.meta;
@@ -181,7 +184,11 @@ def _build_apply_url_pinned_js(variant_id: str) -> str:
           if (String(meta.product.variants[vi].id) === target) {
             var swatches = document.querySelectorAll('[class*="swatch"], [class*="variant"] [role="button"], [class*="variant"] button');
             if (swatches.length > vi) {
-              try { swatches[vi].click(); found = true; break; } catch (e) {}
+              try {
+                swatches[vi].click();
+                heuristicVariantIndex = vi;
+                break;
+              } catch (e) {}
             }
           }
         }
@@ -191,7 +198,7 @@ def _build_apply_url_pinned_js(variant_id: str) -> str:
 
   /* If the URL variant couldn't be located, fall back to first-available
      so we still produce a configured screenshot — but report it. */
-  if (!found) {
+  if (!found && heuristicVariantIndex === null) {
     var rsels = Array.from(document.querySelectorAll('select')).filter(function(s){
       return s.required || s.getAttribute('aria-required') === 'true';
     });
@@ -206,7 +213,11 @@ def _build_apply_url_pinned_js(variant_id: str) -> str:
       ss.dispatchEvent(new Event('change', {bubbles: true}));
     }
   }
-  return {url_pinned: !!found, target_variant_id: target};
+  return {
+    url_pinned: !!found,
+    target_variant_id: target,
+    heuristic_variant_index: heuristicVariantIndex
+  };
 })()"""
 
 _CTA_PRICE_JS = r"""(function(){
@@ -302,6 +313,9 @@ def try_configured_state_capture(
                 # URL variant couldn't be located on this page — the JS already
                 # fell back to first-available, so record it honestly.
                 variant_source = "first-available"
+                if up and up.get("heuristic_variant_index") is not None:
+                    variant_id = str(up.get("target_variant_id") or target_variant)
+                    variant_resolution_source = "heuristic-variant-index"
         else:
             apply_raw = ev("JSON.stringify(" + _APPLY_FIRST_AVAILABLE_JS + ")")
             ap = _parse_obj(apply_raw) if not isinstance(apply_raw, dict) else apply_raw
