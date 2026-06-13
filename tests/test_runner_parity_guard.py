@@ -32,10 +32,11 @@ Floor update rule
 count — NOT below whatever this machine collects. Collection is
 machine-dependent: ``test_no_mojibake_in_fixtures.py`` parametrizes
 over files under ``docs/ecp/``, which is working-tree-only engagement
-output, so a box with live engagements collects more (2026-06-12:
-work box 1386, home box 1354, clean clone 1342). Flooring against a
-box with local engagements makes the guard red on every other machine
-— that happened with the 1356 floor set from the work box's 1386.
+output, so a box with live engagements collects more (2026-06-12 after
+the LG1-LG3 live-gate wave added 15 tracked tests: clean clone 1357,
+home box 1375). Flooring against a box with local engagements makes the
+guard red on every other machine — that happened with the 1356 floor set
+from the work box's 1386.
 
 To re-floor: compute the tracked-files-only count — either measure on
 a fresh clone, or subtract the untracked cases:
@@ -61,11 +62,12 @@ import sys
 import unittest
 from pathlib import Path
 
-# Set ~30 below the CLEAN-CLONE collected count (1342 on 2026-06-12 after
-# the post-roadmap backlog guards; local docs/ecp engagements add
-# machine-specific mojibake-scan cases on top — do NOT floor against those).
-# See "Floor update rule" in the module docstring before changing.
-EXPECTED_MIN_COLLECTED = 1312
+# Set ~30 below the CLEAN-CLONE collected count (1357 on 2026-06-12 after
+# the LG1-LG3 live-gate wave added 15 tracked tests; was 1342 before it.
+# Local docs/ecp engagements add machine-specific mojibake-scan cases on top
+# — do NOT floor against those). See "Floor update rule" in the module
+# docstring before changing.
+EXPECTED_MIN_COLLECTED = 1327
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = REPO_ROOT / "tests"
