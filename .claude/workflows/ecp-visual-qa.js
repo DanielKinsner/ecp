@@ -11,7 +11,12 @@ export const meta = {
 }
 
 // ---- Inputs (override via Workflow args) ----
-const ROOT = (args && args.root) || process.env.ECP_ROOT || process.cwd()
+// Workflow scripts run in a sandboxed JS context with NO Node API: `process`
+// is not defined (a bare reference dies with ReferenceError before any agent
+// spawns). Default to '.' — paths resolve against the session cwd, which is
+// the repo root in the canonical --plugin-dir session; pass args.root to run
+// against another checkout.
+const ROOT = (args && args.root) || '.'
 const ENG = (args && args.engagement) || `${ROOT}/docs/ecp/2026-06-01-749a3c3d`
 const DEVICE = (args && args.device) || 'desktop'
 const TIER = (args && args.tier) || 'standard' // 'free' | 'standard' | 'deep'
