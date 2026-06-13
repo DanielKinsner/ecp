@@ -38,7 +38,7 @@ This skill is the runtime router for the ECP audit. It produces cited, element-a
 
 ## Runtime Load Order
 
-Read these files at invocation start:
+Read these files at invocation start (all paths in this section and the table below resolve from the **repo root** — the same anchor as the shell commands under "Validation, Synthesis, and Rendering", NOT relative to `skills/audit/`):
 
 1. `contracts/lead-discipline.md`
 2. `contracts/flags.md`
