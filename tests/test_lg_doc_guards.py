@@ -127,5 +127,31 @@ class TestLG10DeviceKeyedNaming(unittest.TestCase):
         self.assertNotIn("baton-laptop.json", skill)
 
 
+class TestLG12V2LoaderDocumented(unittest.TestCase):
+    """LG12: the v2 Findings loader (assembly.json_parser.parse_emission_file(s))
+    exists and is used in production (lead_prep.py), but SKILL.md's trim step
+    didn't name it — leaving the lead to improvise — and assembly/parser.py (the
+    v1 markdown loader, FileNotFoundError on v2) wasn't in the "do NOT run" list.
+    """
+
+    def test_skill_trim_step_names_v2_loader(self):
+        skill = _read("skills", "audit", "SKILL.md")
+        step3 = _section(
+            skill, "Trim each device baton", "Prepare and dispatch the synthesizer"
+        )
+        self.assertIn("json_parser", step3)
+
+    def test_dont_run_list_names_v1_markdown_loader(self):
+        skill = _read("skills", "audit", "SKILL.md")
+        idx = skill.index("Legacy v1 tools")
+        para = skill[idx : idx + 800]
+        self.assertIn("assembly/parser.py", para)
+        self.assertIn("load_all_cluster_files", para)
+
+    def test_determinism_gate_has_no_phantom_trim_cli(self):
+        src = _read("scripts", "run-determinism-gate.py")
+        self.assertNotIn("synth_input.py trim-batons", src)
+
+
 if __name__ == "__main__":
     unittest.main()

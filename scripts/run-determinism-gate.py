@@ -67,7 +67,8 @@ session BETWEEN ``prep-run`` and ``validate-run`` invocations.
         # Lead waits for 20 cluster-emission-v1.json files
         # Lead dispatches ethics subagent
         # Lead waits for ethics-findings.json
-        # Lead runs lead_prep.py build-canonical-frefs + synth_input.py trim-batons
+        # Lead runs lead_prep.py build-canonical-frefs + synth_input.trim_baton_file
+        #   (trim is an in-process function call fed by json_parser.parse_emission_files, not a CLI)
         # Lead dispatches synthesizer subagent (opus)
         # Lead waits for audit-{device}.md + synthesizer-emission-v1.json
         # Lead writes audit-trace.log header + counters per Phase H/I contract
