@@ -200,6 +200,9 @@ that produces the client deliverable.**
 - **U1:** CONFIRMED + FIXED `580d395` — overlay dismissal now requires viewport-clear evidence and stops when click attempts make no progress.
 - **U2:** CONFIRMED + FIXED `e696d9b` for missing per-device review-state; corrupt review-state remains deliberately weaker-than-missing per the existing pinned ruling.
 - **U3:** CONFIRMED + FIXED `0be0d9c` — normalize now runs business-rule validation with explicit/discovered baton and anchor-candidate context before writing.
+- **U4:** CONFIRMED + FIXED `7408c83` — skill and dispatch contracts now require the normalize chokepoint and its sidecar trail instead of the old hand-edit flow.
+- **U5:** CONFIRMED + FIXED `d69c5cb` — `_probe_doc_height` now treats `subprocess.CalledProcessError` as best-effort probe failure and falls back cleanly.
+- **U6:** CONFIRMED + FIXED `b875034` — converter now derives `page_height_px` from `true_max_scroll_px + viewport_height`, and the old conflated pin was corrected.
 
 Also recorded, info-tier, no action required: W2 `malformed_refs` has no render
 surface; the hedge canary's token list is permissive (bare `may` matches the
