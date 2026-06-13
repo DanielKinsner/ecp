@@ -90,6 +90,13 @@ _E_INDEX_RE = re.compile(r"^e(\d+)$")
 GIANT_EXACT_WIDTH_PCT = 85.0
 GIANT_EXACT_HEIGHT_PCT = 70.0
 
+# LG5 (2026-06-12): the minimum visible size of a rectangle hotspot zone, as a
+# percent of the slide. An exactly-resolved element thinner than this in one
+# dimension (e.g. a strikethrough price: ~2.9%w x ~1.9%h) used to fall through
+# to a single point; we expand the sub-minimum dimension up to this floor,
+# centered on the element, so a region renders as a box.
+MIN_VISIBLE_ZONE_PCT = 2.0
+
 
 def parse_baton_index(baton_index: str | None) -> int | None:
     """Convert a baton e_index ('e5') to its 0-based array position.
@@ -591,13 +598,26 @@ def compute_marker_positions_v2(
         rect_w_pct = max(0.0, min(rect_w_pct, 100.0 - rect_left_pct))
         rect_h_pct = max(0.0, min(rect_h_pct, 100.0 - rect_top_pct))
 
+        # LG5: emit a rectangle for any non-degenerate element rect. When one
+        # dimension is below the minimum visible size (a thin strikethrough
+        # price, ~1.9%h), expand THAT dimension up to the floor, centered on the
+        # element, so a region renders as a box instead of a single point. The
+        # element center is preserved; a zero-area rect stays a point (None).
         zone = None
-        if rect_w_pct >= 2.0 and rect_h_pct >= 2.0:
+        if rect_w_pct > 0.0 and rect_h_pct > 0.0:
+            z_left, z_top = rect_left_pct, rect_top_pct
+            z_w, z_h = rect_w_pct, rect_h_pct
+            if z_w < MIN_VISIBLE_ZONE_PCT:
+                z_left = max(0.0, z_left - (MIN_VISIBLE_ZONE_PCT - z_w) / 2)
+                z_w = min(MIN_VISIBLE_ZONE_PCT, 100.0 - z_left)
+            if z_h < MIN_VISIBLE_ZONE_PCT:
+                z_top = max(0.0, z_top - (MIN_VISIBLE_ZONE_PCT - z_h) / 2)
+                z_h = min(MIN_VISIBLE_ZONE_PCT, 100.0 - z_top)
             zone = {
-                "left_pct": rect_left_pct,
-                "top_pct": rect_top_pct,
-                "w_pct": rect_w_pct,
-                "h_pct": rect_h_pct,
+                "left_pct": z_left,
+                "top_pct": z_top,
+                "w_pct": z_w,
+                "h_pct": z_h,
             }
 
         slide_markers[slide].append({
