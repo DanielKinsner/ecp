@@ -11,3 +11,8 @@ MACHINE_PATH_RE = re.compile(r"(?:[A-Za-z]:[\\/]+Users[\\/]+|/Users/)")
 def test_visual_qa_workflow_has_no_machine_root_literal():
     text = (REPO / ".claude" / "workflows" / "ecp-visual-qa.js").read_text(encoding="utf-8")
     assert not MACHINE_PATH_RE.search(text)
+
+
+def test_report_qa_workflow_has_no_machine_root_literal():
+    text = (REPO / ".claude" / "workflows" / "ecp-report-qa.js").read_text(encoding="utf-8")
+    assert not MACHINE_PATH_RE.search(text)

@@ -9,8 +9,8 @@ export const meta = {
   ],
 }
 
-// Forward slashes work on Windows; override via args for another machine/engagement.
-const ROOT = (args && args.root) || 'C:/Users/Daniel Kinsner/OneDrive/Documents/GitHub/ecp'
+// Override via args or ECP_ROOT for another machine/engagement.
+const ROOT = (args && args.root) || process.env.ECP_ROOT || process.cwd()
 const ENG = (args && args.engagement) || `${ROOT}/fixtures/slingmods-pdp`
 const SAMPLE = (args && args.sample) || 6
 
