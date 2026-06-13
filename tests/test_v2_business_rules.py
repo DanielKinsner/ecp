@@ -945,6 +945,47 @@ class TestLG6PredicateMismatchRule(unittest.TestCase):
         spec = (_REPO / "contracts" / "specialist-prompt-v2.md").read_text(encoding="utf-8")
         self.assertIn("anchor_satisfies_numeric_predicate", spec)
 
+    def test_real_f16_engagement_case(self):
+        """Pinned to the live mis-anchor on disk at
+        docs/ecp/2026-06-12-d662a8d3/cluster-pricing-desktop.json (gitignored,
+        so the real title / e90 text / threshold are baked in here): pricing
+        F-16 "No MSRP Anchor on 9 of 10 Featured Prices" claims prices up to
+        $1,766.00 but anchors e90 whose text is "Regular price From $135.99".
+        The rule flags it; re-anchoring the set-level claim to absent is clean.
+        """
+        e90_text = "Regular price\n          \n            From $135.99\n          "
+        obs = (
+            "Across the ten Featured Collection product tiles from $19.99 through "
+            "$1,766.00, only the Borla exhaust shows a compare-at strikethrough. "
+            "The other nine tiles over $1,500 carry no MSRP anchor — " + "x" * 25
+        )
+        mis = _finding(
+            title="No MSRP Anchor on 9 of 10 Featured Prices",
+            element={"baton_index": "e90"},
+            evidence_anchors=[{"type": "dom", "reference": "e90"}],
+            observation=obs,
+        )
+        baton = {"elements": [{"e_index": "e90", "text_content": e90_text}]}
+        rules = [
+            v.rule
+            for v in validate_business_rules(_emission([mis]), baton=baton)
+        ]
+        self.assertIn("anchor_satisfies_numeric_predicate", rules)
+
+        # The correct fix — a set-level claim anchors absent at the section.
+        fixed = _finding(
+            title="No MSRP Anchor on 9 of 10 Featured Prices",
+            element={"baton_index": "absent"},
+            observation=obs,
+            evidence_anchors=[
+                {"type": "visual", "reference": "section-1.jpg", "scroll_y": 100}
+            ],
+        )
+        fixed_rules = [
+            v.rule for v in validate_business_rules(_emission([fixed]), baton=baton)
+        ]
+        self.assertNotIn("anchor_satisfies_numeric_predicate", fixed_rules)
+
 
 if __name__ == "__main__":
     unittest.main()
