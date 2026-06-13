@@ -76,6 +76,18 @@ _NEEDS_MANUAL_MARKER = "needs-manual-marker"
 _OPERATOR_RESOLVED_STATUSES = ("hidden", "approved")
 
 
+def _device_artifact_names(device: str) -> tuple[str, ...]:
+    names = (
+        f"audit-{device}.md",
+        f"visual-report-{device}.html",
+        f"baton-{device}.json",
+        f"dom-{device}.html",
+    )
+    if device == "desktop":
+        return names + ("visual-report.html", "baton.json", "dom.html")
+    return names
+
+
 class AutoPromotionError(PermissionError):
     """Raised when automated/--auto execution tries to mark a report client-ready."""
 
@@ -146,6 +158,17 @@ def _count_unplaced_per_device(engagement_dir: Path) -> dict[str, int]:
     return counts
 
 
+def _missing_review_state_devices(engagement_dir: Path) -> list[str]:
+    missing: list[str] = []
+    for device, filename in _REVIEW_STATE_FILENAMES.items():
+        review_state_path = engagement_dir / filename
+        if review_state_path.exists():
+            continue
+        if any((engagement_dir / name).exists() for name in _device_artifact_names(device)):
+            missing.append(device)
+    return missing
+
+
 def set_client_verified(
     meta_path: str | Path,
     *,
@@ -184,8 +207,21 @@ def set_client_verified(
     meta_path = Path(meta_path)
     engagement_dir = meta_path.parent
     unplaced_counts = _count_unplaced_per_device(engagement_dir)
+    missing_review_state_devices = _missing_review_state_devices(engagement_dir)
 
     if not force:
+        if missing_review_state_devices:
+            filenames = ", ".join(
+                _REVIEW_STATE_FILENAMES[device] for device in missing_review_state_devices
+            )
+            raise UnplacedMarkerError(
+                "Refusing to mark report client-verified: missing "
+                f"{filenames} for device artifact(s) present in the engagement. "
+                "Hotspot placement was not finalized for every rendered device "
+                "(product.md §6 step 3). Run the v2 render/editor for each device, "
+                "then retry. Pass --force to override.",
+                unplaced_counts=dict(unplaced_counts),
+            )
         if not unplaced_counts:
             raise UnplacedMarkerError(
                 "Refusing to mark report client-verified: no review-state-{device}.json "

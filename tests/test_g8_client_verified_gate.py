@@ -276,6 +276,19 @@ class TestPlacementGate(unittest.TestCase):
         )
         self.assertFalse(meta["report_state_attestation"]["forced"])
 
+    def test_missing_review_state_for_known_device_refuses(self):
+        path = _write_meta(self._tmp)
+        _write_review_state(self._tmp, "desktop", unplaced=0, placed=5)
+        (self._tmp / "audit-mobile.md").write_text("# mobile audit\n", encoding="utf-8")
+        before = path.read_text(encoding="utf-8")
+
+        with self.assertRaises(UnplacedMarkerError) as cm:
+            set_client_verified(path, auto=False)
+
+        self.assertEqual(cm.exception.unplaced_counts, {"desktop": 0})
+        self.assertIn("review-state-mobile.json", str(cm.exception))
+        self.assertEqual(path.read_text(encoding="utf-8"), before)
+
     def test_malformed_review_state_file_is_skipped(self):
         # A single broken review-state file must not block a real engagement
         # whose other devices are clean. (And the corresponding device is
