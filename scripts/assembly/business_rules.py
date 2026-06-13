@@ -64,6 +64,21 @@ _MAX_VIOLATIONS_IN_RETRY_PROMPT: int = 24
 # Verbatim-quoted strings in finding prose: 2-80 chars, plain or curly quotes
 _VERBATIM_QUOTE_PATTERN = re.compile(r'["“”]([^"“”]{2,80})["“”]')
 
+# LG3 (2026-06-12): the verbatim-quote capture keeps inner punctuation, so a
+# quote that ends a sentence inside the quotes ("$1,847.99.") carries a
+# trailing period that never substring-matches element text "$1,847.99".
+# Strip leading/trailing punctuation (+ whitespace) ONLY in the substring
+# comparison loops — NOT at the _is_substantive_quote gate, where a stripped
+# 9-char price could fail the ≥10-char/multi-word substantive test and
+# silently disable the price check. Internal punctuation stays intact.
+_QUOTE_EDGE_PUNCT = " .,;:!?()[]'\"“”"
+
+
+def _strip_quote_edges(q: str) -> str:
+    """Strip leading/trailing punctuation + whitespace from a verbatim quote,
+    leaving internal punctuation intact (``"($1,847.99)."`` -> ``$1,847.99``)."""
+    return q.strip(_QUOTE_EDGE_PUNCT)
+
 # HTML-attribute pattern (`name="value"`, `data-x='y'`, etc.). The quoted
 # token inside an attribute is the attribute *literal* — NOT authoritative
 # element text — so it must be stripped from the prose before the verbatim-
@@ -967,14 +982,16 @@ def _check_baton_precedence(
     cited_text = (cited.get("text_content") or "").lower()
 
     # If any quoted phrase matches the cited element's text, we're good.
+    # LG3: compare on the edge-stripped quote so trailing sentence punctuation
+    # ("$1,847.99.") doesn't reject a correct bare-price anchor.
     for q in quotes:
-        ql = q.lower().strip()
+        ql = _strip_quote_edges(q.lower())
         if ql and ql in cited_text:
             return []
 
     # No quote matched the cited element. Find any element where some quote does match.
     for q in quotes:
-        ql = q.lower().strip()
+        ql = _strip_quote_edges(q.lower())
         if not ql:
             continue
         for el in elements:

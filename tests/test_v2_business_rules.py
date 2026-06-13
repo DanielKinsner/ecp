@@ -774,5 +774,106 @@ class TestLG2BatonPrecedenceDeviceScoping(unittest.TestCase):
         )
 
 
+class TestLG3VerbatimQuoteEdgePunctuation(unittest.TestCase):
+    """LG3 (2026-06-12 live gate): ``_VERBATIM_QUOTE_PATTERN`` captures inner
+    punctuation, so prose ending a sentence inside the quotes — ``"$1,847.99."``
+    — yields the quote ``$1,847.99.`` (trailing period). That never substring-
+    matches element text ``$1,847.99``, so the correct anchor (e166) was
+    rejected and the check bounced to a wrong element.
+
+    Fix: strip leading/trailing punctuation from each quote ONLY in the
+    substring comparison loops (not at the ``_is_substantive_quote`` gate,
+    where a stripped 9-char price would risk failing the substantive test).
+    Internal punctuation stays intact — ``$1,847.99`` must remain ``$1,847.99``.
+    """
+
+    def test_trailing_punct_quote_matches_cited_element(self):
+        # Correct anchor: e166 IS the bare strikethrough price. A decoy
+        # sentence-element (e50) contains the price WITH a trailing period, so
+        # pre-fix the period-bearing quote skips the correct e166 and bounces
+        # to e50.
+        f = _finding(
+            element={"baton_index": "e166"},
+            evidence_anchors=[{"type": "dom", "reference": "e166"}],
+            observation=(
+                'The strikethrough lists the prior price as "$1,847.99." next '
+                "to the sale figure — " + "x" * 25
+            ),
+        )
+        baton = {
+            "elements": [
+                {"e_index": "e166", "text_content": "$1,847.99"},
+                {"e_index": "e50", "text_content": "Compare at $1,847.99. Limited time"},
+            ]
+        }
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        precedence = [v for v in violations if v.rule.startswith("baton_precedence")]
+        self.assertEqual(
+            precedence,
+            [],
+            "LG3: a quote with a trailing period ('$1,847.99.') must still "
+            "match the bare-price element it correctly anchors. Got: "
+            f"{precedence}",
+        )
+
+    def test_mis_anchored_price_with_trailing_punct_still_flags(self):
+        # Stripping must not disable the rule: a genuinely mis-anchored price
+        # (cites e10 'Add to Cart', quotes the price) must still bounce to the
+        # element that actually holds it.
+        f = _finding(
+            element={"baton_index": "e10"},
+            evidence_anchors=[{"type": "dom", "reference": "e10"}],
+            observation=(
+                'The figure "$1,847.99." is the prior price but the cite '
+                "points elsewhere — " + "x" * 25
+            ),
+        )
+        baton = {
+            "elements": [
+                {"e_index": "e10", "text_content": "Add to Cart"},
+                {"e_index": "e166", "text_content": "$1,847.99"},
+            ]
+        }
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        rules = [v.rule for v in violations]
+        self.assertIn(
+            "baton_precedence_verbatim_anchor",
+            rules,
+            "LG3: stripping edge punctuation must not suppress real anchor "
+            f"mismatches. Got rules: {rules}",
+        )
+
+    def test_internal_punctuation_preserved(self):
+        # Quote "($1,847.99)." carries BOTH leading and trailing edge punct;
+        # edge-only stripping yields "$1,847.99" (internal comma+decimal
+        # intact) → matches the cited price element → no violation. A digit-
+        # only decoy (e50 = "$184799 bundle") would be bounced to ONLY if the
+        # fix wrongly stripped the internal comma+decimal too — so this test
+        # turns red on an over-stripping regression while staying green for
+        # the correct edge-only strip.
+        f = _finding(
+            element={"baton_index": "e166"},
+            evidence_anchors=[{"type": "dom", "reference": "e166"}],
+            observation=(
+                'The card shows the crossed-out figure "($1,847.99)." beside '
+                "the sale price — " + "x" * 25
+            ),
+        )
+        baton = {
+            "elements": [
+                {"e_index": "e166", "text_content": "$1,847.99"},
+                {"e_index": "e50", "text_content": "$184799 bundle"},
+            ]
+        }
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        precedence = [v for v in violations if v.rule.startswith("baton_precedence")]
+        self.assertEqual(
+            precedence,
+            [],
+            "LG3: edge-only stripping must leave '$1,847.99' intact (internal "
+            f"comma+decimal preserved), not bounce to a digit-only decoy. Got: {precedence}",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
