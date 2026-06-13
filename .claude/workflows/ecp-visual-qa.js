@@ -17,12 +17,25 @@ export const meta = {
 // the repo root in the canonical --plugin-dir session; pass args.root to run
 // against another checkout.
 const ROOT = (args && args.root) || '.'
-const ENG = (args && args.engagement) || `${ROOT}/docs/ecp/2026-06-01-749a3c3d`
+// Engagement IDs are per-run (YYYY-MM-DD-<hex>) and gitignored under docs/ecp/.
+// There is NO default — a hardcoded engagement id silently ran the wrong, stale
+// engagement when args.engagement wasn't forwarded (observed live 2026-06-12).
+// Require it and fail fast if missing.
+const ENG = args && args.engagement
 const DEVICE = (args && args.device) || 'desktop'
 const TIER = (args && args.tier) || 'standard' // 'free' | 'standard' | 'deep'
 const MIX = (args && args.mix) || (TIER === 'deep' ? 40 : 8)
 const VOTES = TIER === 'deep' ? 3 : 1
 const REPAIR = (args && args.repair) !== false // auto-repair misplaced findings (default on)
+
+if (!ENG) {
+  return {
+    error:
+      'ecp-visual-qa requires args.engagement (e.g. "docs/ecp/<engagement-id>"). ' +
+      'Engagement IDs are per-run — there is no default.',
+    verified: [],
+  }
+}
 
 const MANIFEST_SCHEMA = {
   type: 'object',
