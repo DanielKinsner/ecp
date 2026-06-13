@@ -646,5 +646,118 @@ class TestC11PlaceholdersNotSpecialistVisible(unittest.TestCase):
         self.assertTrue(placeholder["is_offscreen"])
 
 
+class TestLG1HeroRevealDecodeWait(unittest.TestCase):
+    """LG1 (2026-06-12 live gate): the hero band captured as a black void
+    because srcset-only ``<img>`` heroes never downloaded + decoded before the
+    above-fold screenshot. The reveal flipped ``loading=lazy->eager`` but the
+    page's images were ``srcset``-only (25 srcset / 1 src / 0 ``<picture>`` in
+    ``2026-06-12-d662a8d3``'s DOM) and capture then waited a flat
+    ``time.sleep(1.0)`` — too weak for a CDN hero to paint.
+
+    Live paint needs a browser; here we cover the JS string contract (the
+    reveal force-picks a concrete src for srcset-only imgs, sets
+    ``fetchpriority=high`` on above-fold media, and steps through the page)
+    and the decode-wait helper (polls ``img.complete && naturalWidth>0`` up to
+    a bounded number of attempts before capture). True acceptance is the
+    operator's live awdmods re-run.
+    """
+
+    # ---- reveal JS string contract (prongs 2 & 3) ----
+
+    def test_reveal_js_forces_src_for_srcset_only_imgs(self):
+        js = acquire_url._REVEAL_LAZY_AND_ANIMATIONS_JS
+        self.assertIn("img[srcset]", js)
+        self.assertIn("currentSrc", js)  # force a concrete source pick
+
+    def test_reveal_js_sets_fetchpriority_on_above_fold_media(self):
+        js = acquire_url._REVEAL_LAZY_AND_ANIMATIONS_JS
+        self.assertIn("fetchpriority", js)
+        self.assertIn("getBoundingClientRect", js)  # viewport-awareness
+
+    def test_reveal_js_steps_through_page(self):
+        js = acquire_url._REVEAL_LAZY_AND_ANIMATIONS_JS
+        self.assertIn("scroll_steps", js)  # stepped scroll-through marker
+
+    # ---- decode-status JS + wait helper (prong 1) ----
+
+    def test_decode_status_js_reads_decode_state(self):
+        js = acquire_url._ABOVE_FOLD_IMG_DECODE_JS
+        self.assertIn("naturalWidth", js)
+        self.assertIn("complete", js)
+
+    def test_decode_wait_polls_until_decoded(self):
+        seq = [
+            {"total": 2, "decoded": 0},
+            {"total": 2, "decoded": 1},
+            {"total": 2, "decoded": 2},
+        ]
+        calls = {"n": 0}
+
+        def fake_ev(src):
+            i = min(calls["n"], len(seq) - 1)
+            calls["n"] += 1
+            return seq[i]
+
+        report = acquire_url._wait_for_above_fold_images(
+            fake_ev, max_attempts=10, interval_s=0
+        )
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["attempts"], 3)
+        self.assertEqual(report["decoded"], 2)
+
+    def test_decode_wait_bounded_when_never_decodes(self):
+        def fake_ev(src):
+            return {"total": 3, "decoded": 1}
+
+        report = acquire_url._wait_for_above_fold_images(
+            fake_ev, max_attempts=4, interval_s=0
+        )
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["attempts"], 4)  # stops at the bound, no infinite loop
+
+    def test_decode_wait_no_above_fold_imgs_proceeds(self):
+        # A non-loading page (no first-viewport imgs) must still proceed fast.
+        def fake_ev(src):
+            return {"total": 0, "decoded": 0}
+
+        report = acquire_url._wait_for_above_fold_images(
+            fake_ev, max_attempts=10, interval_s=0
+        )
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["attempts"], 1)
+
+    def test_decode_wait_swallows_eval_failure(self):
+        def boom(src):
+            raise RuntimeError("agent-browser eval failed")
+
+        report = acquire_url._wait_for_above_fold_images(
+            boom, max_attempts=5, interval_s=0
+        )
+        self.assertIsInstance(report, dict)
+        self.assertFalse(report["ok"])
+
+    # ---- capture path is wired to the decode wait, not a flat sleep (prong 1) ----
+
+    def test_capture_path_waits_on_decode_not_flat_sleep(self):
+        import inspect
+
+        src = inspect.getsource(acquire_url)
+        reveal_idx = src.index("reveal = _reveal_lazy_and_animations(")
+        metrics_idx = src.index("m0 = _metrics(", reveal_idx)
+        region = src[reveal_idx:metrics_idx]
+        self.assertIn(
+            "_wait_for_above_fold_images",
+            region,
+            "LG1: the post-reveal capture path must wait on image decode "
+            "before the screenshot.",
+        )
+        self.assertNotIn(
+            "time.sleep(1.0)",
+            region,
+            "LG1: the flat 1.0s sleep must be replaced by the bounded decode "
+            "wait (no flat-sleep-only path to the screenshot).",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

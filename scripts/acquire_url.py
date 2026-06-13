@@ -822,6 +822,29 @@ _REVEAL_LAZY_AND_ANIMATIONS_JS = """JSON.stringify((function(){
       if(el.dataset.srcset && !el.getAttribute('srcset')) el.setAttribute('srcset', el.dataset.srcset);
       r.lazy_imgs++;
     });
+    var vh=window.innerHeight||0;
+    // LG1: srcset-only <img> with no usable src never paints under a cold
+    // headless capture (the awdmods hero: 25 srcset / 1 src). Force a concrete
+    // source so the CDN image downloads+decodes before the screenshot.
+    document.querySelectorAll('img[srcset]').forEach(function(img){
+      if(!img.getAttribute('src')){
+        var pick=img.currentSrc||'';
+        if(!pick && img.srcset){ pick=(img.srcset.split(',')[0]||'').trim().split(/\\s+/)[0]||''; }
+        if(pick){ img.setAttribute('src', pick); r.lazy_imgs++; }
+      }
+    });
+    document.querySelectorAll('picture source[srcset]').forEach(function(s2){
+      if(!s2.getAttribute('srcset') && s2.dataset && s2.dataset.srcset){ s2.setAttribute('srcset', s2.dataset.srcset); }
+    });
+    // Prioritize above-fold hero media so it wins the download queue.
+    document.querySelectorAll('img').forEach(function(img){
+      var ir=img.getBoundingClientRect();
+      if(ir.bottom>=0 && ir.top<=vh && ir.width>0 && ir.height>0){
+        img.setAttribute('fetchpriority','high');
+        img.loading='eager';
+        r.fetch_priority=(r.fetch_priority||0)+1;
+      }
+    });
     document.querySelectorAll('.scroll-trigger,[class*="animate--"],[data-cascade]').forEach(function(el){
       el.classList.remove('scroll-trigger--offscreen');
       el.classList.add('scroll-trigger--active');
@@ -832,11 +855,23 @@ _REVEAL_LAZY_AND_ANIMATIONS_JS = """JSON.stringify((function(){
     s.setAttribute('data-ecp-reveal','1');
     s.textContent='.scroll-trigger,[class*="animate--"]{opacity:1!important;transform:none!important;visibility:visible!important;}*{animation-duration:0s!important;transition-duration:0s!important;}';
     (document.head||document.documentElement).appendChild(s);
+    // LG1: step through the whole page (bounded) so every scroll-trigger and
+    // IntersectionObserver-driven lazy image fires, then return to top. A
+    // single viewport hop missed loads below the first fold.
     var y=window.scrollY||0;
-    window.scrollTo(0, Math.min((document.body?document.body.scrollHeight:0)||0, window.innerHeight));
+    var docH=(document.body?document.body.scrollHeight:0)||document.documentElement.scrollHeight||0;
+    var step=Math.max(1, vh||600);
+    var scroll_steps=0;
+    for(var pos=step; pos<docH && scroll_steps<24; pos+=step){
+      window.scrollTo(0, pos);
+      window.dispatchEvent(new Event('scroll'));
+      scroll_steps++;
+    }
+    window.scrollTo(0, docH);
     window.dispatchEvent(new Event('scroll'));
     window.scrollTo(0, y);
     window.dispatchEvent(new Event('scroll'));
+    r.scroll_steps=scroll_steps;
   } catch(e){ r.error=String((e&&e.message)||e); }
   return r;
 })())"""
@@ -852,6 +887,56 @@ def _reveal_lazy_and_animations(ev) -> dict[str, Any]:
         return out if isinstance(out, dict) else {}
     except (OSError, RuntimeError, ValueError, TypeError):
         return {}
+
+
+# LG1 (2026-06-12): report how many first-viewport <img> have actually decoded
+# (`complete && naturalWidth>0`). Used to wait for hero paint before capture
+# instead of a flat sleep — a srcset-only CDN hero needs time to download+decode
+# and a fixed 1.0s wasn't enough (the awdmods black-void hero cascade).
+_ABOVE_FOLD_IMG_DECODE_JS = """JSON.stringify((function(){
+  var vh=window.innerHeight||0;
+  var total=0, decoded=0;
+  Array.prototype.forEach.call(document.querySelectorAll('img'), function(img){
+    var r=img.getBoundingClientRect();
+    if(r.bottom<0 || r.top>vh) return;       // outside the first viewport
+    if(r.width===0 || r.height===0) return;  // not laid out / hidden
+    total++;
+    if(img.complete && img.naturalWidth>0) decoded++;
+  });
+  return {total: total, decoded: decoded};
+})())"""
+
+
+def _wait_for_above_fold_images(
+    ev, *, max_attempts: int = 25, interval_s: float = 0.2
+) -> dict[str, Any]:
+    """Poll until first-viewport ``<img>`` have decoded, up to a bounded number
+    of attempts, then return. Best-effort — any eval failure or non-dict result
+    ends the wait so a non-loading page still captures promptly. Returns a small
+    report ``{attempts, total, decoded, ok}`` for the trace.
+
+    ``max_attempts * interval_s`` bounds the wall-clock wait (default ~5s).
+    A page with no above-fold images (``total==0``) returns ``ok=True`` on the
+    first poll. ``ev`` is the engagement's JSON-eval callable."""
+    report: dict[str, Any] = {"attempts": 0, "total": 0, "decoded": 0, "ok": False}
+    for attempt in range(1, max_attempts + 1):
+        report["attempts"] = attempt
+        try:
+            out = ev(_ABOVE_FOLD_IMG_DECODE_JS)
+        except (OSError, RuntimeError, ValueError, TypeError):
+            break
+        if not isinstance(out, dict):
+            break
+        total = int(out.get("total") or 0)
+        decoded = int(out.get("decoded") or 0)
+        report["total"] = total
+        report["decoded"] = decoded
+        if total == 0 or decoded >= total:
+            report["ok"] = True
+            break
+        if attempt < max_attempts:
+            time.sleep(interval_s)
+    return report
 
 
 def _outer_html(agent_browser: str, session: str | None) -> str:
@@ -1135,7 +1220,8 @@ def _run_one_device(
 
     # Reveal scroll-trigger animations + eager-load lazy media BEFORE capture so
     # above-fold heroes/banners actually paint (root-cause fix for the black-hero
-    # false-finding cascade). Then give images a beat to decode.
+    # false-finding cascade). Then WAIT on above-fold image decode (LG1) — a flat
+    # 1.0s wasn't enough for a srcset-only CDN hero to download+decode.
     reveal = _reveal_lazy_and_animations(_ev)
     if reveal:
         print(
@@ -1144,7 +1230,13 @@ def _run_one_device(
             + (f" (error: {reveal['error']})" if reveal.get("error") else ""),
             file=sys.stderr,
         )
-        time.sleep(1.0)
+        decode_wait = _wait_for_above_fold_images(_ev)
+        print(
+            f"DECODE-WAIT: {decode_wait.get('decoded', 0)}/{decode_wait.get('total', 0)} "
+            f"above-fold images decoded after {decode_wait.get('attempts', 0)} poll(s)"
+            + ("" if decode_wait.get("ok") else " (timed out - capturing anyway)"),
+            file=sys.stderr,
+        )
 
     m0 = _metrics(agent_browser, session)
     inner_w = int(m0.get("innerW") or prof.width)
