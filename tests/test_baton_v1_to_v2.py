@@ -206,6 +206,11 @@ class TestCaptureState(unittest.TestCase):
         self.assertEqual(v2["viewport"]["dpr_requested"], 3.0)
         self.assertEqual(v2["viewport"]["dpr_actual"], 1.0)
 
+    def test_legacy_dpr_without_explicit_fields_uses_viewport_dpr(self):
+        v2 = _convert("mobile", viewport={"width": 390, "height": 844, "dpr": 2})
+        self.assertEqual(v2["viewport"]["dpr_requested"], 2.0)
+        self.assertEqual(v2["viewport"]["dpr_actual"], 2.0)
+
 
 class TestEngagementId(unittest.TestCase):
     def test_bad_engagement_id_raises(self):
