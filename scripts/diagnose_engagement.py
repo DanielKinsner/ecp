@@ -238,6 +238,7 @@ STAGE_OWNER = {
     "STACKED": "PLACEMENT",
     "DUPLICATE": "PLACEMENT",
     "LOW_CONF_PLACEMENT": "PLACEMENT",
+    "UNPLACED": "-",  # expected blank (manual-placement queue), not a defect
     "OK": "-",
 }
 TUNE_HINT = {
@@ -288,6 +289,14 @@ def attribute(finding: dict, marker: dict | None, anchor_el: dict | None,
     pm = _predicate_mismatch(title, anchor_text)
     if pm:
         return "PREDICATE_MISMATCH", pm
+
+    # LG4: a hidden / unplaced marker is blank (queued for manual placement per
+    # §4.2 exact-tier-or-blank) — it is NOT rendered, so the placement-stage
+    # defects below (point-for-region, stacked, dupe, low-confidence) do not
+    # apply. The content checks above (capture-suspect premise, predicate
+    # mismatch) still run because they're about the finding, not its placement.
+    if marker is not None and marker.get("hidden") is True:
+        return "UNPLACED", "blank, queued for manual placement (absence/unplaced, §4.2)"
 
     # 3. Weak/absent anchor: no concrete on-page element backs the marker.
     if ve_type in ("generated_expected_zone", "generated_expected") or "proposed_anchor" in str(source):
@@ -425,7 +434,9 @@ def _verdict(dev: dict) -> tuple[str, list[str]]:
             f"with {cap['dom_scroll_trigger']} scroll-trigger / {cap['dom_lazy_img']} lazy / "
             f"{cap['dom_video']} video elements in the DOM - hero likely UNRENDERED")
     n = sum(dev["counts"].values()) or 1
-    bad = n - dev["counts"].get("OK", 0)
+    # UNPLACED is an expected blank (manual-placement queue per §4.2), not a
+    # defect — exclude it from the bad-finding ratio like OK.
+    bad = n - dev["counts"].get("OK", 0) - dev["counts"].get("UNPLACED", 0)
     if cap["above_fold_element_desert_px"] >= 220:
         reasons.append(
             f"{cap['above_fold_element_desert_px']}px above-fold element desert "

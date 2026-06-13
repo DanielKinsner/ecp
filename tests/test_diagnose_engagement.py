@@ -18,6 +18,51 @@ sys.path.insert(0, str(_REPO / "scripts"))
 import diagnose_engagement as dx  # noqa: E402
 
 
+class TestLG4UnplacedAttribution(unittest.TestCase):
+    """LG4 (diagnose honesty, follow-on to the _stacks_and_dupes fix): a hidden /
+    unplaced marker is blank (§4.2 manual-placement queue), not rendered — so it
+    must NOT be attributed a PLACEMENT defect (point-for-region / stacked / dupe)
+    nor counted as a ship-blocker. It is its own non-defect category, UNPLACED.
+
+    Without this, the diagnose POINT_FOR_REGION count was inflated by hidden
+    absence markers whose title happened to contain a region word (the same
+    instrumentation class the _stacks_and_dupes fix addressed for STACKED), and
+    the ship verdict counted those expected blanks as defects.
+    """
+
+    def test_hidden_marker_with_region_word_is_unplaced(self):
+        finding = {"finding_title": "Hero section has no headline"}
+        marker = {"shape": "point", "hidden": True, "snapped_baton_index": None}
+        label, _ = dx.attribute(
+            finding, marker, None, capture_suspect=False, stacked=False, duped=False
+        )
+        self.assertEqual(label, "UNPLACED")
+
+    def test_placed_region_point_still_point_for_region(self):
+        # A real (non-hidden) region point is still a genuine placement defect.
+        finding = {"finding_title": "Hero banner section issue"}
+        marker = {"shape": "point", "snapped_baton_index": "e5"}
+        label, _ = dx.attribute(
+            finding, marker, None, capture_suspect=False, stacked=False, duped=False
+        )
+        self.assertEqual(label, "POINT_FOR_REGION")
+
+    def test_unplaced_does_not_block_ship_verdict(self):
+        dev = {
+            "capture": {
+                "capture_suspect": False,
+                "above_fold_void_frac": 0.0,
+                "above_fold_element_desert_px": 0,
+                "dom_scroll_trigger": 0,
+                "dom_lazy_img": 0,
+                "dom_video": 0,
+            },
+            "counts": {"OK": 5, "UNPLACED": 10},
+        }
+        verdict, _ = dx._verdict(dev)
+        self.assertNotIn("DO NOT SHIP", verdict)
+
+
 class TestLG4StacksSkipHiddenMarkers(unittest.TestCase):
     """LG4 Part 1 (2026-06-12 live gate): _stacks_and_dupes coerced a
     coord-less marker's (None, None) to (0, 0) via ``a.get("x_pct", 0) or 0``,
