@@ -596,6 +596,16 @@ class TestC11PlaceholdersNotSpecialistVisible(unittest.TestCase):
         self.assertIn("e1", indexes)
         self.assertNotIn("e2", indexes, "is_offscreen element leaked into cluster context")
 
+    def test_reveal_pass_placeholder_is_synthesized_offscreen(self):
+        v1 = _v1_baton(reveal_summary={"reveal_els": 2})
+        v2 = conv.convert_baton(v1, _MINIMAL_DOM, device="desktop",
+                                engagement_id=_EID, captured_at=_CAPTURED)
+        placeholder = next(
+            el for el in v2["elements"]
+            if str(el.get("accessible_name", "")).startswith("scroll-trigger reveal pass")
+        )
+        self.assertTrue(placeholder["is_offscreen"])
+
 
 if __name__ == "__main__":
     unittest.main()

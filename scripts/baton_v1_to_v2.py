@@ -232,7 +232,7 @@ def _build_overlay_synth(v1: dict, start_idx: int) -> tuple[list[dict], list[dic
             "text_content": "",
             "is_above_fold": True,
             "is_sticky": False,
-            "is_offscreen": False,
+            "is_offscreen": True,
         })
         overlays_detected.append({
             "e_index": e_index,
