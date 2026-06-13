@@ -648,5 +648,131 @@ class TestRetryPromptDeterminism(unittest.TestCase):
         self.assertEqual(prompt_a, prompt_b)
 
 
+class TestLG2BatonPrecedenceDeviceScoping(unittest.TestCase):
+    """LG2 (2026-06-12 live gate): ``_check_baton_precedence`` pooled
+    desktop + mobile elements into one ``by_e_index`` map (dict-comp =
+    last-baton-wins) and scanned BOTH devices' elements. e_index spaces
+    overlap across devices, so a correct desktop anchor was resolved to /
+    bounced toward a mobile element.
+
+    Live repro ``2026-06-12-d662a8d3`` (ethics, page-scope, both batons):
+    desktop ``e166`` = ``$1,847.99`` (the strikethrough price — the correct
+    anchor) while mobile ``e166`` = ``Quick view``. The pooled map let mobile
+    e166 shadow desktop e166, falsely bouncing the factually-correct anchor.
+    The fix scopes the check to a SINGLE baton chosen by the finding's device
+    (page-scope ethics defaults to the desktop/primary baton).
+    """
+
+    def test_cross_device_collision_does_not_false_fire(self):
+        # Page-scope ethics finding (no proposed_anchor → desktop default),
+        # cites e166. Desktop e166 IS the quoted strikethrough price; mobile
+        # e166 is an unrelated "Quick view". A mobile decoy (e200) also holds
+        # the price string, so the pre-fix pooled scan would resolve the cited
+        # e166 to mobile "Quick view", miss the quote, then BOUNCE to e200.
+        f = _finding(
+            cluster="ethics",
+            device="page",
+            element={"baton_index": "e166"},
+            surface="other",
+            surface_note="strikethrough price comparison",
+            evidence_anchors=[{"type": "dom", "reference": "e166"}],
+            observation=(
+                'The strikethrough comparison shows "$1,847.99" as the prior '
+                "price next to the sale figure on the Borla card — " + "x" * 25
+            ),
+        )
+        desktop_baton = {
+            "elements": [
+                {"e_index": "e166", "text_content": "$1,847.99"},
+                {"e_index": "e10", "text_content": "Add to Cart"},
+            ]
+        }
+        mobile_baton = {
+            "elements": [
+                {"e_index": "e166", "text_content": "Quick view"},
+                {"e_index": "e200", "text_content": "$1,847.99"},
+            ]
+        }
+        violations = validate_business_rules(
+            _emission([f], cluster="ethics", device="page"),
+            desktop_baton=desktop_baton,
+            mobile_baton=mobile_baton,
+        )
+        precedence = [v for v in violations if v.rule.startswith("baton_precedence")]
+        self.assertEqual(
+            precedence,
+            [],
+            "LG2: a page-scope finding correctly anchored to desktop e166 "
+            "($1,847.99) must not be bounced by a colliding mobile e166 / "
+            f"decoy. Got: {precedence}",
+        )
+
+    def test_other_device_element_cannot_satisfy_a_real_mismatch(self):
+        # A genuinely mis-anchored DESKTOP finding: cites e166 (desktop
+        # "Quick view") but quotes "Add to Cart", which lives at desktop e10.
+        # Mobile e166 happens to be "Add to Cart" — pre-fix, the pooled
+        # last-wins map resolved the cited e166 to the MOBILE element, which
+        # matched the quote and silently SATISFIED (masked) the real desktop
+        # mismatch. Scoped to desktop, the rule must still fire.
+        f = _finding(
+            element={"baton_index": "e166"},
+            proposed_anchor={"kind": "element", "viewport": "desktop"},
+            evidence_anchors=[{"type": "dom", "reference": "e166"}],
+            observation=(
+                'The "Add to Cart" control is the intended anchor here — '
+                + "x" * 25
+            ),
+        )
+        desktop_baton = {
+            "elements": [
+                {"e_index": "e166", "text_content": "Quick view"},
+                {"e_index": "e10", "text_content": "Add to Cart"},
+            ]
+        }
+        mobile_baton = {
+            "elements": [
+                {"e_index": "e166", "text_content": "Add to Cart"},
+            ]
+        }
+        violations = validate_business_rules(
+            _emission([f], cluster="ethics", device="page"),
+            desktop_baton=desktop_baton,
+            mobile_baton=mobile_baton,
+        )
+        rules = [v.rule for v in violations]
+        self.assertIn(
+            "baton_precedence_verbatim_anchor",
+            rules,
+            "LG2: scoping to the finding's device must not let the OTHER "
+            "device's same-index element mask a real anchor mismatch. "
+            f"Got rules: {rules}",
+        )
+
+    def test_single_device_emission_check_stays_active(self):
+        # Regression guard for the fix's edge: a per-device emission passes
+        # only ``baton`` (desktop/mobile None). The check must NOT be disabled
+        # — a real mismatch there still fires (baton wins regardless of any
+        # viewport hint on the finding).
+        f = _finding(
+            element={"baton_index": "e8"},
+            proposed_anchor={"kind": "element", "viewport": "mobile"},
+            observation='The product price renders as "$59.95" — ' + "x" * 25,
+        )
+        baton = {
+            "elements": [
+                {"e_index": "e7", "text_content": "$59.95"},
+                {"e_index": "e8", "text_content": "Add to Cart"},
+            ]
+        }
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        rules = [v.rule for v in violations]
+        self.assertIn(
+            "baton_precedence_verbatim_anchor",
+            rules,
+            "LG2: single-baton emissions must keep the precedence check "
+            f"active regardless of a finding's viewport hint. Got: {rules}",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

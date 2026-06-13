@@ -880,6 +880,36 @@ def _check_surface_in_vocabulary(
     return []
 
 
+def _scoped_baton_for_finding(
+    finding: dict,
+    baton: dict | None,
+    desktop_baton: dict | None,
+    mobile_baton: dict | None,
+) -> dict | None:
+    """Pick the SINGLE baton a finding's anchor must be validated against.
+
+    LG2 (2026-06-12 live gate): when both device batons are present (ethics /
+    page-scope emissions), the ``e_index`` spaces overlap across devices —
+    desktop ``e166`` and mobile ``e166`` are different elements. Pooling them
+    into one ``by_e_index`` map (last-baton-wins) let a correct desktop anchor
+    be resolved to / bounced toward a mobile element. Scope to one device:
+
+    - a single ``baton`` (per-device emission) IS the finding's device — it
+      wins regardless of any ``proposed_anchor.viewport`` hint, so the check is
+      never silently disabled by selecting a ``None`` device baton;
+    - otherwise pick by ``proposed_anchor.viewport`` (``'mobile'``|``'desktop'``);
+    - page-scope findings (no viewport hint, e.g. ethics) default to the
+      desktop/primary baton — mirroring ``_baton_element_by_index``'s
+      desktop-first resolution so the two checks agree.
+    """
+    if baton is not None:
+        return baton
+    viewport = _as_dict(finding.get("proposed_anchor")).get("viewport")
+    if viewport == "mobile":
+        return mobile_baton or desktop_baton
+    return desktop_baton or mobile_baton
+
+
 def _check_baton_precedence(
     finding: dict,
     path: str,
@@ -924,10 +954,11 @@ def _check_baton_precedence(
     if not quotes:
         return []
 
-    elements: list[dict] = []
-    for b in (baton, desktop_baton, mobile_baton):
-        if b is not None:
-            elements.extend(b.get("elements") or [])
+    # LG2: scope to the finding's single device baton — pooling desktop +
+    # mobile collides overlapping e_index spaces (last-baton-wins) and lets a
+    # correct anchor be compared against the wrong device's element.
+    scoped = _scoped_baton_for_finding(finding, baton, desktop_baton, mobile_baton)
+    elements: list[dict] = list((scoped or {}).get("elements") or [])
     if not elements:
         return []
 
