@@ -390,6 +390,24 @@ def _load_review_state(review_state_file, engagement_path):
     return state if isinstance(state, dict) else None
 
 
+# LG8: hotspot_confidence values the placement-repair pass writes to demote a
+# vision-rejected / non-exact finding. A demoted finding renders BLANK (manual
+# queue) per product.md §4.2 — its stale auto-marker must not survive
+# --from-review. (Strong value: "exact-selector".)
+_DEMOTED_HOTSPOT_CONFIDENCE = frozenset({"needs-manual-marker", "section-match"})
+
+
+def _demoted_refs(review_state):
+    """f_refs whose persisted hotspot_confidence is a demotion (LG8)."""
+    return {
+        f.get("f_ref")
+        for f in review_state.get("findings", [])
+        if isinstance(f, dict)
+        and f.get("f_ref")
+        and f.get("hotspot_confidence") in _DEMOTED_HOTSPOT_CONFIDENCE
+    }
+
+
 def _review_override_enabled(review_finding):
     status = (review_finding.get("status") or "").lower()
     if status in {"edited", "approved"}:
@@ -553,7 +571,11 @@ def _apply_review_state_to_slide_markers(slide_markers, review_state, findings):
             continue
         markers_by_ref[ref] = marker
 
-    if not markers_by_ref:
+    # LG8: drop auto-mapped markers for repair-demoted findings (render blank),
+    # even when there are no override markers (a demotion-only review state).
+    demoted_refs = _demoted_refs(review_state)
+
+    if not markers_by_ref and not demoted_refs:
         return slide_markers
 
     patched = {}
@@ -562,11 +584,18 @@ def _apply_review_state_to_slide_markers(slide_markers, review_state, findings):
         for ref in markers_by_ref
         if ref in findings_by_ref
     }
+    demoted_indices = {
+        findings_by_ref[ref].get("index")
+        for ref in demoted_refs
+        if ref in findings_by_ref
+    }
     for slide_idx, markers in slide_markers.items():
         kept = [
             m for m in markers
             if m.get("f_ref") not in markers_by_ref
             and m.get("finding_index") not in active_indices
+            and m.get("f_ref") not in demoted_refs
+            and m.get("finding_index") not in demoted_indices
         ]
         if kept:
             patched[slide_idx] = kept

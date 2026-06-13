@@ -415,6 +415,24 @@ def _review_ref_to_fid(f_ref: str | None) -> str | None:
     return f"{parts[0]}/{parts[1]}"
 
 
+# LG8: hotspot_confidence values the placement-repair pass writes to demote a
+# vision-rejected / non-exact finding. A demoted finding must render BLANK
+# (manual queue) per product.md §4.2 exact-tier-or-blank — its stale auto-mapped
+# marker must not survive a --from-review render. (Strong value: "exact-selector".)
+_DEMOTED_HOTSPOT_CONFIDENCE = frozenset({"needs-manual-marker", "section-match"})
+
+
+def _demoted_refs(review_state: dict) -> set[str]:
+    """f_refs whose persisted hotspot_confidence is a demotion (LG8)."""
+    return {
+        f.get("f_ref")
+        for f in review_state.get("findings", [])
+        if isinstance(f, dict)
+        and f.get("f_ref")
+        and f.get("hotspot_confidence") in _DEMOTED_HOTSPOT_CONFIDENCE
+    }
+
+
 def _review_override_enabled(review_finding: dict) -> bool:
     status = (review_finding.get("status") or "").lower()
     if status in {"edited", "approved"}:
@@ -636,12 +654,23 @@ def _apply_review_state_to_slide_markers(
             continue
         markers_by_ref[ref] = marker
 
-    if not markers_by_ref:
+    # LG8: drop auto-mapped markers for findings the repair pass demoted, so a
+    # vision-rejected finding renders blank instead of at its rejected coords.
+    # Must run even when there are NO override markers (a demotion-only review
+    # state), so it shares the early-return guard with markers_by_ref.
+    demoted_refs = _demoted_refs(review_state)
+
+    if not markers_by_ref and not demoted_refs:
         return slide_markers
 
     patched = {}
     for slide_idx, markers in slide_markers.items():
-        kept = [m for m in markers if m.get("f_ref") not in markers_by_ref]
+        kept = [
+            m
+            for m in markers
+            if m.get("f_ref") not in markers_by_ref
+            and m.get("f_ref") not in demoted_refs
+        ]
         if kept:
             patched[slide_idx] = kept
 
