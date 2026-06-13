@@ -127,6 +127,27 @@ class TestTraceCountersReconcileCanary(unittest.TestCase):
         )
         self.assertEqual(result["detail"]["violations"], [])
 
+    def test_both_devices_single_task_counter_two_passes(self):
+        """LG13: `acquire_url.py --both` is ONE Task that emits TWO batons, so
+        `subagent_spawned_acquirers: 2` reconciles against the 2 batons on disk.
+        Pins the per-baton (not per-Task) counter semantic."""
+        self._write_meta(["pricing"], ["desktop", "mobile"])
+        for device in ("desktop", "mobile"):
+            self._touch_baton(device)
+        self._write_trace({"subagent_spawned_acquirers": 2})
+        result = check_trace_counters_reconcile_with_artifacts(self.eng)
+        self.assertTrue(result["passed"], f"summary={result['summary']!r}")
+
+    def test_both_devices_counter_one_fails(self):
+        """LG13: under-counting `--both` as 1 (per-Task thinking) must still
+        trip the canary — 2 batons on disk need counter >= 2."""
+        self._write_meta(["pricing"], ["desktop", "mobile"])
+        for device in ("desktop", "mobile"):
+            self._touch_baton(device)
+        self._write_trace({"subagent_spawned_acquirers": 1})
+        result = check_trace_counters_reconcile_with_artifacts(self.eng)
+        self.assertFalse(result["passed"], f"summary={result['summary']!r}")
+
     def test_counter_over_count_still_passes(self):
         """Counter > observed (e.g., lead recorded a spawn whose emission
         later failed to land) is NOT a §0 violation — the lead's record

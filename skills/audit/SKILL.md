@@ -94,7 +94,7 @@ Run this sequence:
 
 Default to v2 dispatch:
 
-- Acquirer: `Task` subagent, one per device.
+- Acquirer: one `Task` subagent per engagement — `scripts/acquire_url.py --both` captures both devices in a single Task (the canonical path), or one Task per device if the lead fans out by hand. The acquirer counter increments **per baton emitted** (1 per device captured), NOT per Task call, so a `--both` run records `subagent_spawned_acquirers: 2` (see `contracts/trace-assertion-canary.md`).
 - Cluster specialists: one-shot subagent (`Agent` tool, no `team_name`).
 - Ethics: `Task` subagent.
 - Synthesizer: `Task` subagent.

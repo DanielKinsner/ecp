@@ -153,5 +153,27 @@ class TestLG12V2LoaderDocumented(unittest.TestCase):
         self.assertNotIn("synth_input.py trim-batons", src)
 
 
+class TestLG13AcquirerCounterPerBaton(unittest.TestCase):
+    """LG13: "Acquirer: one per device" (SKILL/dispatch-contract) vs the
+    deterministic `--both` single process (1 Task, 2 batons) vs the canary
+    that counts batons — a three-way contradiction that made the lead's
+    honest `subagent_spawned_acquirers: 2` look like a fudge. The counter is
+    per-baton-emitted; document that consistently."""
+
+    def test_trace_canary_doc_says_batons_emitted(self):
+        doc = _read("contracts", "trace-assertion-canary.md")
+        self.assertIn("batons emitted", doc)
+
+    def test_skill_dispatch_shape_documents_both(self):
+        skill = _read("skills", "audit", "SKILL.md")
+        shape = _section(skill, "## Dispatch Shape", "## Artifact Contract")
+        self.assertIn("--both", shape)
+        self.assertIn("per baton", shape)
+
+    def test_dispatch_contract_states_per_baton(self):
+        doc = _read("contracts", "dispatch-contract.md")
+        self.assertIn("batons emitted", doc)
+
+
 if __name__ == "__main__":
     unittest.main()

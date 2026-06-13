@@ -41,7 +41,7 @@ Write this as the FIRST ~30 lines of `docs/ecp/{engagement-id}/audit-trace.log` 
 # ASSERTIONS (must all be > 0 / true at audit completion):
 #   tasks_created_total: {N}              ← v1 only; v2 sets to the count of TaskCreate calls (specialists + multi-planners)
 #   expected_specialist_count: {N}        ← set at dispatch time after scope resolution + empty-slice pruning (v2 alias of v1 expected_auditor_count)
-#   subagent_spawned_acquirers: 0         ← v2: incremented after each Task call dispatching an acquirer
+#   subagent_spawned_acquirers: 0         ← v2: incremented per baton emitted (1 per device captured), NOT per Task call; `acquire_url.py --both` is one Task that emits 2 batons and counts as 2
 #   subagent_spawned_specialists: 0       ← v2: incremented after each Agent call dispatching a cluster specialist (one-shot subagent dispatch)
 #   team_spawned_specialists: 0           ← v2: legacy teammate dispatch; retained for backwards compatibility (see alias rules below)
 #   subagent_spawned_ethics: 0            ← v2: incremented after the Layer 1.5 ethics subagent dispatch
@@ -294,7 +294,7 @@ Before writing `phase: complete` to `meta.json`, the lead reads its own `audit-t
 - `ethics_gate_executed == true`
 
 **v2 path (Pipeline: v2 — Phase H 2026-04-28):**
-- `subagent_spawned_acquirers >= 1` (or `>= 2` for dual-device) — OR v1 alias `team_spawned_acquirers`
+- `subagent_spawned_acquirers >= 1` (or `>= 2` for dual-device — the counter is **batons emitted**, not Task dispatches; the deterministic `acquire_url.py --both` is 1 Task = 2 batons) — OR v1 alias `team_spawned_acquirers`
 - `(subagent_spawned_specialists + team_spawned_specialists) >= expected_specialist_count` — one-shot subagent dispatch (primary) or legacy teammate dispatch (both counted toward the expected total); OR v1 alias `team_spawned_auditors`
 - `cluster_files_written == (subagent_spawned_specialists + team_spawned_specialists)` (every spawned specialist produced a file; one-shot subagent or legacy teammate counter)
 - `subagent_spawned_ethics >= 1` AND `ethics_gate_executed == true` (Layer 1.5 fired and produced valid ethics-findings.json)

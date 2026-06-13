@@ -155,6 +155,8 @@ The v2 dispatch flip introduces `subagent_spawned_*` counters alongside the exis
 | Reviewer | subagent | `subagent_spawned_reviewer` |
 | Builder | subagent | `subagent_spawned_builder` |
 
+**Acquirer counter unit (per baton, not per Task).** `subagent_spawned_acquirers` counts **batons emitted** (1 per device captured), not Task dispatches. The canonical `scripts/acquire_url.py --both` is a single Task that emits two batons (`baton.json` + `baton-mobile.json`) and increments the counter by 2 — the `trace_counters_reconcile_with_artifacts` canary reconciles the counter against the on-disk batons, so a dual-device `--both` run correctly records 2, not 1. Spawning one Task per device by hand reaches the same count.
+
 **Backwards compatibility:** v1 audit runs continue to increment `team_spawned_acquirers` and `team_spawned_auditors`. The audit-completion self-check accepts EITHER counter as valid evidence the role ran. v2 runs SHOULD use the new counter names; the assertion check treats `subagent_spawned_acquirers >= 1` and `team_spawned_acquirers >= 1` as equivalent for the purpose of "acquirer ran at least once."
 
 See `${CLAUDE_PLUGIN_ROOT}/contracts/trace-assertion-canary.md` for the full counter contract and self-check rules, including the v2 header format.
