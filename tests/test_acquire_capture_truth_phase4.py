@@ -29,9 +29,9 @@ C16 — capture-then-cap: scripts/acquire_url._build_elements_js raises the
       (workflows/acquire.md §638), so a 36-product-card grid survives.
 
 hc-C3 — true-height probe: scripts/acquire_url adds _probe_doc_height; the
-      v1 baton carries true_max_scroll_px; scripts/baton_v1_to_v2 prefers
-      the probed value with a sec_bottom safety floor so the converter
-      can never shrink page_height below already-captured content.
+      v1 baton carries true_max_scroll_px; scripts/baton_v1_to_v2 derives
+      page height from that max scroll with a sec_bottom safety floor so the
+      converter can never shrink page_height below already-captured content.
 
 Run:
     python -m pytest tests/test_acquire_capture_truth_phase4.py
@@ -551,15 +551,15 @@ class TestHcC3TrueHeightProbe(unittest.TestCase):
 
 
 class TestHcC3ConverterPrefersProbe(unittest.TestCase):
-    """The converter prefers the probed height when present; falls back to
+    """The converter derives page height from the probed max scroll when present; falls back to
     el_bottom otherwise; never shrinks below sec_bottom."""
 
-    def test_positive_probe_value_is_preferred(self):
-        # Probed value 5000 beats el_bottom (~30) and sec_bottom (~900).
+    def test_positive_probe_value_adds_viewport_height(self):
+        # true_max_scroll_px is a scrollY maximum, so page height is max scroll + viewport.
         v1 = _v1_baton(true_max_scroll_px=5000)
         v2 = conv.convert_baton(v1, _MINIMAL_DOM, device="desktop",
                                 engagement_id=_EID, captured_at=_CAPTURED)
-        self.assertEqual(v2["capture_state"]["page_height_px"], 5000)
+        self.assertEqual(v2["capture_state"]["page_height_px"], 6080)
 
     def test_absent_probe_falls_back_to_el_bottom(self):
         # No true_max_scroll_px -> el_bottom path; sec_bottom 900 wins here.

@@ -317,18 +317,16 @@ def convert_baton(
     sec_bottom = max(
         (int(s.get("scrollY", 0)) + int(s.get("height", 0)) for s in v1.get("sections", []) or []),
         default=0)
-    # hc-C3 (handoff: true-height probe): prefer the acquirer's probed
-    # documentElement.scrollHeight (after scrollTo(end), loop until stable)
-    # when available — single-pass `documentElement.scrollHeight` undercounts
-    # long pages because lazy-loaded sections don't grow until scrolled into
-    # view. Floor at sec_bottom so we can never shrink BELOW what we already
-    # captured (the safety invariant).
+    # hc-C3 (handoff: true-height probe): prefer the acquirer's probed max
+    # scrollY when available. Convert it back into document height by adding
+    # the viewport height, then floor at sec_bottom so we can never shrink
+    # BELOW what we already captured (the safety invariant).
     probed = 0
     try:
         probed = int(v1.get("true_max_scroll_px") or 0)
     except (TypeError, ValueError):
         probed = 0
-    base = probed if probed > 0 else int(el_bottom)
+    base = probed + vh if probed > 0 else int(el_bottom)
     page_height = int(max(base, sec_bottom, vh))
 
     sections = _build_sections(v1, device, page_height, page_title, vh)
