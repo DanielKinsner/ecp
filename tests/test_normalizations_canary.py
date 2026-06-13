@@ -469,5 +469,18 @@ class TestNormalizationsCanary(unittest.TestCase):
             )
 
 
+class TestNormalizeContractDocs(unittest.TestCase):
+    def test_skill_and_dispatch_contract_name_normalize_chokepoint(self):
+        skill = (_REPO / "skills" / "audit" / "SKILL.md").read_text(encoding="utf-8")
+        dispatch = (_REPO / "contracts" / "dispatch-contract.md").read_text(
+            encoding="utf-8"
+        )
+
+        for text in (skill, dispatch):
+            self.assertIn("scripts/test-specialist.py normalize", text)
+            self.assertIn("<emission>.normalizations.json", text)
+            self.assertNotIn("future structured", text.lower())
+
+
 if __name__ == "__main__":
     unittest.main()
