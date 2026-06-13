@@ -72,7 +72,14 @@ Across them, select the first ${SAMPLE} findings whose verdict is FAIL or PARTIA
   { schema: FINDINGS_SCHEMA, label: 'sample-findings', phase: 'Sample' },
 )
 
-const findings = (sampled && sampled.findings) || []
+// Enforce the cap in code: the sampler agent is asked for SAMPLE findings
+// but may over-return (observed 6-for-2 on 2026-06-12, tripling verifier
+// agent cost). Each extra finding fans out 3 verifier agents.
+const allFindings = (sampled && sampled.findings) || []
+const findings = allFindings.slice(0, SAMPLE)
+if (allFindings.length > findings.length) {
+  log(`sampler over-returned ${allFindings.length}; capped to ${findings.length}`)
+}
 log(`sampled ${findings.length} finding(s) for QA`)
 
 const ref = (f) => `${f.cluster} F-${String(f.local_id).padStart(2, '0')}`
