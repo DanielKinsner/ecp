@@ -175,5 +175,24 @@ class TestLG13AcquirerCounterPerBaton(unittest.TestCase):
         self.assertIn("batons emitted", doc)
 
 
+class TestLG14TwoPlacementQAFlavors(unittest.TestCase):
+    """LG14: two reports share the name "Placement QA" and count different
+    things — the renderer-folded _placement_qa line (weak_placements, exact-tier
+    match_method) reads 0 in v1.2 steady state, while standalone placement_audit.py
+    counts 18/22 weak (proxy/page-level/oversize/stacked) on the same render.
+    report-export.md documented only the first; document both + the divergence."""
+
+    def test_report_export_documents_both_flavors(self):
+        doc = _read("contracts", "report-export.md")
+        sec = _section(
+            doc, "## Post-render placement QA", "### Escalating to the visual-QA gate"
+        )
+        self.assertIn("Flavor 1", sec)
+        self.assertIn("Flavor 2", sec)
+        self.assertIn("placement_audit.py", sec)
+        self.assertIn("_placement_qa", sec)
+        self.assertIn("by design", sec)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -72,6 +72,13 @@ Placement QA: weak_placements=N stacks=M
 
 The lead surfaces a non-zero `weak_placements`/`stacks` count at the audit checkpoint so the operator knows which hotspots to spot-check during the draft → client-verified pass (`product.md` §6). This is the **`free` tier** — it always runs, costs nothing, and is the CI-friendly regression signal.
 
+**Two reports share the name "Placement QA" — know which one you're reading; they can disagree on the same render by design, not by bug.**
+
+- **Flavor 1 — renderer-folded** (the `weak_placements` line above): `scripts/report/v2_html_builder.py::_placement_qa`, computed from the post-render `merged_mappings`. `weak_placements` = mappings whose `match_method` is outside the exact tier (`e_index_lookup` / `operator_override`) and not `unplaced`; `stacks` are reported separately and are NOT folded into `weak_placements`. Since the v1.2 exact-tier-or-blank rule the live renderer emits only exact or unplaced, so the steady-state value is `0`. This is the always-on, zero-token signal in the render summary.
+- **Flavor 2 — standalone placement audit** (`python scripts/report/placement_audit.py audit ...`, output `placement-audit.json`, CLI `WEAK PLACEMENTS (N)`): `scripts/report/placement_audit.py::score_marker`, reading the persisted `review-state-{device}.json` markers (not `merged_mappings`). A marker is weak on ANY of: `source` ∈ {`proposed_anchor_section`, `proposed_anchor_viewport`}; `visual_evidence.confidence == "low"`; `visual_evidence.type` ∈ {`proxy_element`, `generated_expected_zone`, `section_absence`, `page_level`}; box width > 85% or height > 70% (parent-container heuristic); a `proposed_anchor_*` source with no `snapped_baton_index`; OR stack membership (stacked markers ARE counted here, unlike Flavor 1). Its weak total is therefore strictly broader.
+
+On a clean v1.2 render whose persisted review-state still carries pre-prune `page_level`/`proxy` markers, Flavor 1 can read `0` while Flavor 2 reads e.g. 18/22. The divergence is **by design**: Flavor 1 asks "did the resolver pick an exact strategy?"; Flavor 2 asks "do the resulting hotspots look plausible on the page?" When they disagree, trust Flavor 2 for "should we spot-check?" and Flavor 1 for "did this render's resolver behave?"
+
 > **Promotion gate (Phase-0 A9):** `--mark-client-verified` mechanically refuses promotion while any review-state finding still carries `hotspot_confidence: "needs-manual-marker"` (or no review-state file exists). The operator must either finalize placement in the editor or pass `--force` to bypass (the attestation block records `forced: true`). See `contracts/meta-schema.md` `report_state` / `report_state_attestation`.
 
 ### Escalating to the visual-QA gate (vision verification)
