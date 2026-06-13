@@ -189,6 +189,33 @@ class TestNormalizeVerbWritesSidecar(unittest.TestCase):
                     f"refused normalize must not have written {prose_field!r}",
                 )
 
+    def test_revalidates_business_rules_before_writing(self):
+        self._write_emission(_make_emission())
+        baton_path = self.eng / "baton.json"
+        baton_path.write_text(
+            json.dumps({"elements": [{"e_index": "e7"}]}),
+            encoding="utf-8",
+        )
+        before = self.emission_path.read_text(encoding="utf-8")
+
+        result = _run_normalize(
+            "--emission-path", str(self.emission_path),
+            "--field", "element.baton_index",
+            "--new-value", "e999",
+            "--finding-local-id", "1",
+            "--reason", "probe fabricated baton index",
+            "--baton-path", str(baton_path),
+            "--in-place",
+        )
+
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("BUSINESS", result.stderr)
+        self.assertIn("baton_index_resolves", result.stderr)
+        self.assertEqual(self.emission_path.read_text(encoding="utf-8"), before)
+        self.assertFalse(
+            (self.eng / "cluster-trust-credibility-desktop.normalizations.json").exists()
+        )
+
     def test_refuses_proposed_anchor_reason_prose(self):
         """proposed_anchor.reason is operator-tooltip prose (schema 200-char
         cap; renderer MUST NOT parse it). It's prose-class and must be

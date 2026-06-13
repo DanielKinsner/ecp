@@ -962,6 +962,10 @@ def run_normalize(
     out_path: Path | None,
     trail_out_path: Path | None,
     in_place: bool,
+    baton_path: Path | None = None,
+    desktop_baton_path: Path | None = None,
+    mobile_baton_path: Path | None = None,
+    anchor_candidates_path: Path | None = None,
 ) -> int:
     """CLI entry for the normalize verb.
 
@@ -1030,6 +1034,81 @@ def run_normalize(
         for e in schema_errors_raw[:5]:
             print(f"  SCHEMA: path={list(e.absolute_path)} message={e.message}", file=sys.stderr)
         return 1
+
+    def _load_json_context(path: Path | None, label: str) -> dict[str, Any] | None:
+        if path is None:
+            return None
+        if not path.is_file():
+            raise FileNotFoundError(f"{label} not found: {path}")
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    try:
+        loaded_baton = _load_json_context(baton_path, "baton file")
+        loaded_desktop = _load_json_context(desktop_baton_path, "desktop baton file")
+        loaded_mobile = _load_json_context(mobile_baton_path, "mobile baton file")
+    except FileNotFoundError as e:
+        print(str(e), file=sys.stderr)
+        return 3
+    except json.JSONDecodeError as e:
+        print(f"business-rule context is not valid JSON: {e}", file=sys.stderr)
+        return 1
+
+    from assembly.anchor_candidates import (
+        SidecarLoadError, load_anchor_candidates_sidecar_strict,
+    )
+
+    loaded_sidecar: dict[str, Any] | None = None
+    sidecar_source: Path | None = anchor_candidates_path
+    if anchor_candidates_path is not None:
+        if not anchor_candidates_path.is_file():
+            print(
+                f"anchor-candidates sidecar not found: {anchor_candidates_path}",
+                file=sys.stderr,
+            )
+            return 3
+        try:
+            loaded_sidecar = load_anchor_candidates_sidecar_strict(anchor_candidates_path)
+        except SidecarLoadError as e:
+            print(str(e), file=sys.stderr)
+            return 1
+    else:
+        auto = _auto_discover_anchor_candidates_path(emission_path)
+        if auto is not None:
+            try:
+                loaded_sidecar = load_anchor_candidates_sidecar_strict(auto)
+                sidecar_source = auto
+            except SidecarLoadError as e:
+                print(str(e), file=sys.stderr)
+                return 1
+
+    if any(
+        context is not None
+        for context in (loaded_baton, loaded_desktop, loaded_mobile, loaded_sidecar)
+    ):
+        try:
+            violations = _run_business_rules(
+                normalized,
+                loaded_baton,
+                None,
+                None,
+                desktop_baton=loaded_desktop,
+                mobile_baton=loaded_mobile,
+                anchor_candidates_sidecar=loaded_sidecar,
+            )
+        except ValueError as e:
+            print(f"FAIL -- normalize edit failed business-rule setup: {e}", file=sys.stderr)
+            return 1
+        if violations:
+            print(
+                f"FAIL -- normalize edit on {field!r} produced "
+                f"{len(violations)} business-rule error(s); not writing.",
+                file=sys.stderr,
+            )
+            for v in violations[:5]:
+                print(f"  BUSINESS: [{v.rule}] {v}", file=sys.stderr)
+            if sidecar_source is not None:
+                print(f"  anchor-candidates: {sidecar_source}", file=sys.stderr)
+            return 1
 
     # Resolve output paths.
     if in_place:
@@ -1693,6 +1772,32 @@ def main(argv: list[str] | None = None) -> int:
             "writes to --trail-out (defaults next to the input)."
         ),
     )
+    p_normalize.add_argument(
+        "--baton-path",
+        type=Path,
+        help=(
+            "Optional baton.json context. When present, normalize re-runs "
+            "business-rule validation before writing."
+        ),
+    )
+    p_normalize.add_argument(
+        "--desktop-baton-path",
+        type=Path,
+        help="Optional desktop baton context for ethics/page emissions.",
+    )
+    p_normalize.add_argument(
+        "--mobile-baton-path",
+        type=Path,
+        help="Optional mobile baton context for ethics/page emissions.",
+    )
+    p_normalize.add_argument(
+        "--anchor-candidates-path",
+        type=Path,
+        help=(
+            "Optional anchor-candidates sidecar. If omitted, normalize "
+            "auto-discovers the conventional sidecar next to the emission."
+        ),
+    )
 
     args = parser.parse_args(argv)
 
@@ -1799,6 +1904,10 @@ def main(argv: list[str] | None = None) -> int:
             out_path=args.out,
             trail_out_path=args.trail_out,
             in_place=args.in_place,
+            baton_path=args.baton_path,
+            desktop_baton_path=args.desktop_baton_path,
+            mobile_baton_path=args.mobile_baton_path,
+            anchor_candidates_path=args.anchor_candidates_path,
         )
 
     parser.error(f"unknown mode {args.mode!r}")
