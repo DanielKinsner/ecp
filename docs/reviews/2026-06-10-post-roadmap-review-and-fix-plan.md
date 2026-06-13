@@ -213,12 +213,21 @@ contract).
   (uninstall user+project scope, marketplace remove, restart) and re-verify
   before any live session there.
 - **O2 — per-machine ROOT hardcoding in the QA workflows (CONFIRMED):**
-  **Status 2026-06-12:** FIXED `88172cf` and `244cd0c`.
-  `.claude/workflows/ecp-visual-qa.js:14` defaults to the work-box path,
-  `ecp-report-qa.js:13` to the home-box path — each breaks on the other
-  machine, and the canonical invocation (`contracts/report-export.md:82`)
-  passes no root. Fix: derive ROOT from cwd or an env var; pre-existing but
-  LV3 depends on it.
+  **Status 2026-06-12:** FIXED — but in two passes. The first fix
+  (`88172cf`, `244cd0c`) replaced the literals with
+  `process.env.ECP_ROOT || process.cwd()`, which dies with
+  `ReferenceError: process is not defined` in the Workflow sandbox (no
+  Node API there) on every invocation without `args.root` — including the
+  canonical no-root form (`contracts/report-export.md:82`); its grep-guard
+  passed while the scripts couldn't start. Repaired in `400be87`/`03ca5ec`:
+  ROOT defaults to `'.'` (session cwd = repo root in the canonical
+  `--plugin-dir` session) and `tests/test_qa_workflow_roots.py` now also
+  forbids any `process.` reference. **Cross-machine live-verified
+  2026-06-12:** `ecp-report-qa` ran end-to-end from the home checkout
+  (20 agents, real QA output on the slingmods fixture).
+  `.claude/workflows/ecp-visual-qa.js:14` defaulted to the work-box path,
+  `ecp-report-qa.js:13` to the home-box path — each broke on the other
+  machine; pre-existing but LV3 depends on it.
 - **O3 — the live LV2–LV4 `--plugin-dir` `/ecp:audit` session** (the roadmap's
   one remaining gate) — run only after Phase 1 lands; the session doubles as
   live verification for V1/V2 (check the rendered report has zero (50,50)
