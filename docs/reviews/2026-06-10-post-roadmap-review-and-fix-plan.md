@@ -203,6 +203,7 @@ that produces the client deliverable.**
 - **U4:** CONFIRMED + FIXED `7408c83` — skill and dispatch contracts now require the normalize chokepoint and its sidecar trail instead of the old hand-edit flow.
 - **U5:** CONFIRMED + FIXED `d69c5cb` — `_probe_doc_height` now treats `subprocess.CalledProcessError` as best-effort probe failure and falls back cleanly.
 - **U6:** CONFIRMED + FIXED `b875034` — converter now derives `page_height_px` from `true_max_scroll_px + viewport_height`, and the old conflated pin was corrected.
+- **U7:** CONFIRMED + FIXED `ccc8c97` for legacy markdown Priority Path refs validating before positional fallback; C5 residual REFUTED/PINNED `32b6473` because hallucinated refs with a canonical ref universe are flagged `ref_resolution_failed`, not "applies on other device."
 
 Also recorded, info-tier, no action required: W2 `malformed_refs` has no render
 surface; the hedge canary's token list is permissive (bare `may` matches the
