@@ -81,6 +81,29 @@ class TestV2PriorityPathLoader(unittest.TestCase):
         self.assertEqual(stories[0]["underlying"][0]["label"], "visual-cta F-31")
         self.assertEqual(stories[0]["missing_refs"], ["visual-cta F-99"])
 
+    def test_canonical_ref_universe_marks_hallucinated_refs_unresolved(self):
+        self._write_synth([
+            {
+                "title": "Hallucinated ref story",
+                "severity": "HIGH",
+                "f_refs": ["visual-cta F-99"],
+            }
+        ])
+        stories = load_v2_priority_path(
+            self.engagement,
+            {"pricing F-10"},
+            device="desktop",
+            canonical_refs={"pricing F-10", "visual-cta F-31"},
+        )
+        self.assertEqual(len(stories), 1)
+        story = stories[0]
+        self.assertFalse(story["applies_on_other_device"])
+        self.assertEqual(story["missing_refs"], [])
+        self.assertEqual(story["unresolved_refs"], ["visual-cta F-99"])
+        self.assertEqual(story["unresolved_ref_count"], 1)
+        self.assertTrue(story["underlying"][0].get("ref_resolution_failed"))
+        self.assertFalse(story["underlying"][0].get("applies_on_other_device", False))
+
 
 if __name__ == "__main__":
     unittest.main()
