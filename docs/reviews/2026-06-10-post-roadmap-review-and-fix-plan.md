@@ -195,6 +195,12 @@ that produces the client deliverable.**
 | U6 | hc-C3 unit conflation: `true_max_scroll_px` (a scrollY) used as `page_height_px` base → undercounts ~1 viewport in single-shot path; test pins the conflated value | `scripts/baton_v1_to_v2.py:321-327` |
 | U7 | C6b ref validation runs before positional index assignment → legacy engagements (no sidecars) lose ALL Priority Path links; C5 residual renders false "applies on the other device" chip for PASS/CLEAR-filtered refs | `scripts/report/html_builder.py:165-182`, `scripts/report/v2_loader.py:1162-1167` |
 
+## U-item verdicts (2026-06-12)
+
+- **U1:** CONFIRMED + FIXED `580d395` — overlay dismissal now requires viewport-clear evidence and stops when click attempts make no progress.
+- **U2:** CONFIRMED + FIXED `e696d9b` for missing per-device review-state; corrupt review-state remains deliberately weaker-than-missing per the existing pinned ruling.
+- **U3:** CONFIRMED + FIXED `0be0d9c` — normalize now runs business-rule validation with explicit/discovered baton and anchor-candidate context before writing.
+
 Also recorded, info-tier, no action required: W2 `malformed_refs` has no render
 surface; the hedge canary's token list is permissive (bare `may` matches the
 month); duplicate local_ids silently share extras (first-wins is the pinned
