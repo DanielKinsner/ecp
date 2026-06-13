@@ -8,10 +8,9 @@
 > (92,10) default. Review-verified by running every new guard against the
 > pre-fix code (they fail there). Suites after: **1355 pytest / 895 unittest,
 > parity floor 1336, both green.**
-> **Still open (not gate-blocking):** V4–V5 (Phase 2), S1–S3 (Phase 3), U1–U7
-> (Phase 4, verify before fixing), and Phase 5's O1 (stale work-box plugin) +
-> O2 (QA-workflow ROOT hardcoding), which must be cleared as part of running O3,
-> the live session itself.
+> **Post-backlog status 2026-06-12:** V4–V5, S1(min), S2, S3, U1–U7, and O2
+> are fixed, pinned, deferred, or refuted below. O1 and O3 remain operator/live
+> session items and were intentionally not touched by this branch.
 >
 > *Original 2026-06-10 banner, for the record:* an 8-axis review of the executed
 > roadmap (`959eaeb..b97d8d7`) found five adversarially-confirmed bugs (V1–V5),
