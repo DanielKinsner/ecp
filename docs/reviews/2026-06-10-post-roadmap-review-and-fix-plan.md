@@ -170,11 +170,18 @@ that produces the client deliverable.**
   The test labeled as it guards a different property. Build: a
   test asserting `skills/` contains no build/compare/quick-scan/resume skill
   dirs and the plugin surface exposes only `/ecp:audit`.
-- **S3 — spec-audit M2 is pins-partial.** Still test-free after the wave: §2.2
-  URL-only-input rejection, §2.4 audit-stops (no plan/review artifact), §5
-  frozen-inputs rejected, §4.1 fabrication self-skip
-  (`scripts/assembly/business_rules.py` untouched in range). Pin or formally
-  defer each.
+- **S3 — spec-audit M2 is pins-partial.** **Status 2026-06-12:** PINNED
+  `73dce63` for §4.1 fabricated element rejection in
+  `scripts/assembly/business_rules.py`. DEFERRED — §2.2 URL-only-input
+  rejection has skill/contract text but no executable command boundary. DEFERRED
+  — §2.4 audit-stops has skill/contract text but no artifact-generation
+  non-invokability gate. DEFERRED — §5 frozen-input rejection has skill/contract
+  text and surface guards, but no runtime input parser to reject screenshot/codebase
+  inputs. Each deferred clause needs a product decision before code is added.
+  Still test-free after the wave: §2.2 URL-only-input rejection, §2.4
+  audit-stops (no plan/review artifact), §5 frozen-inputs rejected, §4.1
+  fabrication self-skip (`scripts/assembly/business_rules.py` untouched in
+  range). Pin or formally defer each.
 
 ## Phase 4 — unverified mediums (single-reviewer claims; verify before fixing)
 
