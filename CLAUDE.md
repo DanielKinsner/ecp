@@ -11,8 +11,8 @@ declined-by-ruling, or pinned; spec is **v1.2**; placement is exact-tier-or-blan
 absences always manual (the #1 wrong-hotspot class is gone); promotion mechanically
 refuses with unplaced markers; the v1/Agent-Teams contract sweep is DONE with grep-guard
 tests; 4 new trust canaries (hedge / source-registry / dark-pattern / normalizations).
-Suite: **1355 pytest / 895 unittest, both green — run BOTH (the runner-parity guard
-floors pytest collection at 1336).**
+Suite: **1375 pytest / 911 unittest, both green — run BOTH (the runner-parity guard
+floors pytest collection at 1356).**
 **✅ V1–V3 FIXED (2026-06-12)** — the post-roadmap review's deliverable-corrupting bugs
 (phantom (50,50) hotspots, operator point/ellipse/polygon geometry collapse, wrong-device
 merge-metadata leak) landed on `main` with guard tests, including an end-to-end
@@ -103,10 +103,10 @@ setx ECP_PYTHON "C:\Path\To\python.exe"                # pins the global interpr
 python -m pytest tests/                # canonical — collects unittest classes AND bare pytest funcs
 python -m unittest discover -s tests   # cross-check; unittest-only HIDES pytest-style breakage
 ```
-- Green is **~1355 passed / ~11 skipped** with the optional deps (pillow/sentence-transformers)
-  and **895 unittest** (counts as of 2026-06-12); without the optional deps: fewer passed, more
+- Green is **~1375 passed / ~11 skipped** with the optional deps (pillow/sentence-transformers)
+  and **911 unittest** (counts as of 2026-06-12); without the optional deps: fewer passed, more
   skipped — same health, fewer optional tests. `tests/test_runner_parity_guard.py` floors pytest
-  collection at 1336; re-floor it in any wave that adds or removes tests.
+  collection at 1356; re-floor it in any wave that adds or removes tests.
 - **Missing `jsonschema` makes the determinism / canonical-frefs canaries *cascade-fail*** (false
   "logic" failures). Install deps first before trusting a red suite.
 
