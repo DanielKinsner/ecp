@@ -32,11 +32,12 @@ Floor update rule
 count — NOT below whatever this machine collects. Collection is
 machine-dependent: ``test_no_mojibake_in_fixtures.py`` parametrizes
 over files under ``docs/ecp/``, which is working-tree-only engagement
-output, so a box with live engagements collects more (2026-06-12 after the
-LG1-LG16 live-gate waves added 54 tracked tests total — 15 in the LG1-LG3
-wave, then 39 in the LG4-LG16 wave: clean clone 1396, home box 1414).
-Flooring against a box with local engagements makes the guard red on every
-other machine — that happened with the 1356 floor set from the work box's 1386.
+output, so a box with live engagements collects more (2026-06-13 after the
+LG1-LG16 live-gate waves added 58 tracked tests total — 15 in the LG1-LG3
+wave, 39 in the LG4-LG16 wave, then 4 in the LG4/LG6 integration-verify pass:
+clean clone 1400, home box 1418). Flooring against a box with local
+engagements makes the guard red on every other machine — that happened with
+the 1356 floor set from the work box's 1386.
 
 To re-floor: compute the tracked-files-only count — either measure on
 a fresh clone, or subtract the untracked cases:
@@ -62,12 +63,12 @@ import sys
 import unittest
 from pathlib import Path
 
-# Set ~30 below the CLEAN-CLONE collected count (1396 on 2026-06-12 after the
-# LG4-LG16 live-gate wave added 39 tracked tests; was 1357 after LG1-LG3 and
-# 1342 before the waves. Local docs/ecp engagements add machine-specific
-# mojibake-scan cases on top — do NOT floor against those). See "Floor update
-# rule" in the module docstring before changing.
-EXPECTED_MIN_COLLECTED = 1366
+# Set ~30 below the CLEAN-CLONE collected count (1400 on 2026-06-13 after the
+# LG4/LG6 integration-verify pass added 4 tracked tests; was 1396 after LG4-LG16,
+# 1357 after LG1-LG3, 1342 before the waves. Local docs/ecp engagements add
+# machine-specific mojibake-scan cases on top — do NOT floor against those).
+# See "Floor update rule" in the module docstring before changing.
+EXPECTED_MIN_COLLECTED = 1370
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = REPO_ROOT / "tests"
