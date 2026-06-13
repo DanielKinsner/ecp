@@ -275,6 +275,14 @@ When multiple baton elements could plausibly anchor the same finding, pick in th
 
 This rule resolves the inter-run drift Phase K observed: same conceptual finding cited at `e10` in run 1, `e14` in run 2, `absent` in run 3. Following the precedence stack collapses that variance.
 
+### Element references — numeric-predicate satisfaction (LG6, 2026-06-12)
+
+When a finding's prose carries a **numeric predicate** (`over $X`, `above $X`, `more than $X`, `north of $X`, `under $X`, `below $X`, `less than $X`), the cited element's text MUST satisfy that predicate. Do not anchor an "items over $1,766" claim to a `$135.99` element just because it is the nearest price; if no single element satisfies the predicate (e.g. the claim is about a *set* of prices), use `baton_index: "absent"` and surface at the section.
+
+The lead's post-validation layer (`scripts/assembly/business_rules.py:_check_predicate_mismatch`, rule `anchor_satisfies_numeric_predicate`) cross-checks the cited element's `$N` text against the predicate and bounces an obvious contradiction (OVER claim anchored to an element cheaper than the threshold, or UNDER claim anchored to a dearer one). It fires only when both an over/under marker and a `$N` threshold appear in the title/observation/recommendation, so non-pricing findings are unaffected.
+
+**Documented failure case (do NOT repeat):** awdmods.com 2026-06-12 desktop, pricing `F-16` "No MSRP Anchor on 9 of 10 Featured Prices" (a claim about prices *over $1,766*) cited `e90` whose text is `From $135.99`. The correct anchor is `baton_index: "absent"` at the pricing section (the claim is about the set, not one element).
+
 ### Uncertainty — defer to the operator when placement is unclear
 
 The finding itself can be ironclad while the *exact* hotspot placement is unclear (e.g., you know the trust strip is missing somewhere in the purchase zone but can't determine which sub-region without the operator's read on the screenshot). In that case, **emit the finding with the lowest-precision anchor that is still defensible**, and let the operator dial in the precise marker in the editor.

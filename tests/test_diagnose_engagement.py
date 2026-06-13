@@ -53,6 +53,25 @@ class TestLG4StacksSkipHiddenMarkers(unittest.TestCase):
         self.assertTrue({"a/F-1", "b/F-2"} <= duped)
 
 
+class TestLG6PredicateRegexLockstep(unittest.TestCase):
+    """LG6: the runtime business rule (business_rules._check_predicate_mismatch)
+    ports the operator diagnostic's OVER/UNDER/PRICE regexes. They MUST stay
+    identical — drift means a finding the diagnostic flags as PREDICATE_MISMATCH
+    could escape the lead's runtime bounce, which is the gap LG6 closes.
+    """
+
+    def test_predicate_regexes_match_between_modules(self):
+        from assembly.business_rules import (
+            _PREDICATE_OVER,
+            _PREDICATE_PRICE,
+            _PREDICATE_UNDER,
+        )
+
+        self.assertEqual(_PREDICATE_OVER.pattern, dx._OVER.pattern)
+        self.assertEqual(_PREDICATE_UNDER.pattern, dx._UNDER.pattern)
+        self.assertEqual(_PREDICATE_PRICE.pattern, dx._PRICE.pattern)
+
+
 class TestPredicateMismatch(unittest.TestCase):
     def test_over_threshold_anchored_to_cheaper_element_flags(self):
         msg = dx._predicate_mismatch(

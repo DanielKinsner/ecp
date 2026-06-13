@@ -58,6 +58,23 @@ _SCREENSHOT_PATTERN = re.compile(r"^section-[0-9]+(-mobile)?\.jpg$")
 _ABSOLUTE_URL_PATTERN = re.compile(r"^https?://", re.IGNORECASE)
 _E_INDEX_PATTERN = re.compile(r"^e[0-9]+$")
 
+# LG6 (2026-06-12) — numeric-predicate detection. These MUST stay byte-identical
+# to scripts/diagnose_engagement.py (_PRICE / _OVER / _UNDER) so a finding the
+# operator diagnostic flags as PREDICATE_MISMATCH is also bounced at validation.
+# tests/test_diagnose_engagement.py::TestLG6PredicateRegexLockstep pins the
+# equality. (diagnose_engagement is an operator script, never imported here.)
+_PREDICATE_PRICE = re.compile(r"\$\s?([0-9][0-9,]*(?:\.[0-9]{1,2})?)")
+_PREDICATE_OVER = re.compile(r"\b(over|above|more than|greater than|exceed[s]?|north of)\b|>\s?\$", re.I)
+_PREDICATE_UNDER = re.compile(r"\b(under|below|less than|cheaper than)\b|<\s?\$", re.I)
+
+
+def _money_value(s: str) -> float:
+    """Parse a price string ("1,847.99") to float; NaN on failure (filtered out)."""
+    try:
+        return float(s.replace(",", ""))
+    except ValueError:
+        return float("nan")
+
 # Phase L constants
 _ABSENT_FINDING_JACCARD_THRESHOLD: float = 0.7
 _MAX_VIOLATIONS_IN_RETRY_PROMPT: int = 24
@@ -326,6 +343,11 @@ def validate_business_rules(
             # 2026-05-01 e15-hallucination class.
             violations.extend(
                 _check_element_text_match(f, path, baton, desktop_baton, mobile_baton)
+            )
+            # LG6 (2026-06-12): numeric-predicate ("over $X") findings must anchor
+            # an element that satisfies the predicate.
+            violations.extend(
+                _check_predicate_mismatch(f, path, baton, desktop_baton, mobile_baton)
             )
             violations.extend(
                 _check_evidence_anchor_consistency(f, path, baton, desktop_baton, mobile_baton)
@@ -1014,6 +1036,83 @@ def _check_baton_precedence(
                 ]
 
     # No clear match either way — accept (heuristic can't decide).
+    return []
+
+
+def _check_predicate_mismatch(
+    finding: dict,
+    path: str,
+    baton: dict | None,
+    desktop_baton: dict | None,
+    mobile_baton: dict | None,
+) -> list[BusinessRuleViolation]:
+    """LG6: a finding whose prose carries a numeric predicate ("over $X" /
+    "under $X") MUST anchor an element whose price text satisfies it.
+
+    Mirrors the operator-side ``diagnose_engagement._predicate_mismatch`` so a
+    finding the diagnostic flags as PREDICATE_MISMATCH is bounced at validation
+    (e.g. awdmods pricing F-16 "9 of 10 prices over $1,766" anchored to a
+    $135.99 element). Soft check — fires only when BOTH an OVER/UNDER marker AND
+    a ``$N`` threshold are present in title/observation/recommendation, so it
+    never touches non-pricing findings. ``why_this_matters`` is excluded (it
+    paraphrases mechanism and often quotes non-predicate prices). Numeric
+    OVER/UNDER only; superlatives ("cheapest") need page-wide comparison and are
+    out of scope.
+    """
+    bi = _as_dict(finding.get("element")).get("baton_index", "")
+    if not bi or bi == "absent":
+        return []
+    if not _E_INDEX_PATTERN.match(bi):
+        return []  # format issue handled by _check_baton_index
+
+    text = "\n".join(
+        str(finding.get(k) or "") for k in ("title", "observation", "recommendation")
+    )
+    over = bool(_PREDICATE_OVER.search(text))
+    under = bool(_PREDICATE_UNDER.search(text))
+    if not (over or under):
+        return []
+
+    thresholds = [
+        v for v in (_money_value(m) for m in _PREDICATE_PRICE.findall(text)) if v == v
+    ]
+    if not thresholds:
+        return []
+
+    # LG2-safe: resolve the cited element against the finding's single device
+    # baton only (overlapping e_index spaces across devices otherwise collide).
+    scoped = _scoped_baton_for_finding(finding, baton, desktop_baton, mobile_baton)
+    el = _baton_element_by_index(bi, scoped, None, None) if scoped is not None else None
+    if el is None:
+        return []
+    anchor_text = el.get("text_content") or el.get("accessible_name") or ""
+    anchor_prices = [
+        v for v in (_money_value(m) for m in _PREDICATE_PRICE.findall(anchor_text)) if v == v
+    ]
+    if not anchor_prices:
+        return []
+
+    t = max(thresholds)
+    p = anchor_prices[0]
+    if (over and p < t) or (under and p > t):
+        direction = "over" if over else "under"
+        return [
+            BusinessRuleViolation(
+                rule="anchor_satisfies_numeric_predicate",
+                finding_path=path,
+                field="element.baton_index",
+                actual=bi,
+                expected=(
+                    "an element whose price text satisfies the finding's numeric "
+                    "predicate, OR baton_index='absent' anchored at the section"
+                ),
+                message=(
+                    f"Finding prose says {direction.upper()} ${t:,.0f} but cites {bi!r} "
+                    f"whose text is ${p:,.2f} — anchor an element that satisfies the "
+                    f"predicate, or use baton_index='absent' at the section."
+                ),
+            )
+        ]
     return []
 
 

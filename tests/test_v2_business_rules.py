@@ -875,5 +875,76 @@ class TestLG3VerbatimQuoteEdgePunctuation(unittest.TestCase):
         )
 
 
+class TestLG6PredicateMismatchRule(unittest.TestCase):
+    """LG6 (= PR-97, 2026-06-12 live gate): a finding whose prose carries a
+    numeric predicate ("over $X" / "under $X") must anchor an element whose
+    price text satisfies it. Previously this was caught only post-hoc by the
+    operator diagnostic (diagnose_engagement._predicate_mismatch); nothing
+    bounced it at validation, so awdmods pricing F-16 ("9 of 10 prices OVER
+    $1,766") shipped anchored to a $135.99 element.
+
+    The runtime rule mirrors the diagnostic and is gated on BOTH an OVER/UNDER
+    marker AND a $N threshold in title/observation/recommendation, so it never
+    fires on non-pricing findings.
+    """
+
+    def test_over_threshold_anchored_to_cheaper_element_violates(self):
+        f = _finding(
+            title="No MSRP Anchor on Items Over $1,000",
+            element={"baton_index": "e7"},
+            evidence_anchors=[{"type": "dom", "reference": "e7"}],
+            observation="Nine of ten featured prices sit over $1,000 with no MSRP anchor — "
+            + "x" * 25,
+        )
+        baton = {"elements": [{"e_index": "e7", "text_content": "From $135.99"}]}
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        rules = [v.rule for v in violations]
+        self.assertIn("anchor_satisfies_numeric_predicate", rules)
+
+    def test_over_threshold_anchored_to_qualifying_element_passes(self):
+        f = _finding(
+            title="No MSRP Anchor on Items Over $1,000",
+            element={"baton_index": "e7"},
+            evidence_anchors=[{"type": "dom", "reference": "e7"}],
+            observation="Nine of ten featured prices sit over $1,000 with no MSRP anchor — "
+            + "x" * 25,
+        )
+        baton = {"elements": [{"e_index": "e7", "text_content": "$1,899.00"}]}
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        rules = [v.rule for v in violations]
+        self.assertNotIn("anchor_satisfies_numeric_predicate", rules)
+
+    def test_no_predicate_no_check(self):
+        # Anchor has a price, but the prose carries no over/under predicate —
+        # must not fire (gate on predicate presence).
+        f = _finding(
+            element={"baton_index": "e7"},
+            evidence_anchors=[{"type": "dom", "reference": "e7"}],
+            observation="The hero has no headline above the fold — " + "x" * 25,
+        )
+        baton = {"elements": [{"e_index": "e7", "text_content": "From $135.99"}]}
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        rules = [v.rule for v in violations]
+        self.assertNotIn("anchor_satisfies_numeric_predicate", rules)
+
+    def test_absent_skips_check(self):
+        f = _finding(
+            title="Items Over $1,000 lack an MSRP anchor",
+            element={"baton_index": "absent"},
+            observation="Nine of ten featured prices sit over $1,000 — " + "x" * 25,
+            evidence_anchors=[
+                {"type": "visual", "reference": "section-1-mobile.jpg", "scroll_y": 100}
+            ],
+        )
+        baton = {"elements": [{"e_index": "e7", "text_content": "$135.99"}]}
+        violations = validate_business_rules(_emission([f]), baton=baton)
+        rules = [v.rule for v in violations]
+        self.assertNotIn("anchor_satisfies_numeric_predicate", rules)
+
+    def test_contract_documents_the_predicate_rule(self):
+        spec = (_REPO / "contracts" / "specialist-prompt-v2.md").read_text(encoding="utf-8")
+        self.assertIn("anchor_satisfies_numeric_predicate", spec)
+
+
 if __name__ == "__main__":
     unittest.main()
