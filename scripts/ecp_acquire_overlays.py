@@ -10,6 +10,8 @@ import time
 from typing import Any, Callable, Optional
 from urllib.parse import urlparse
 
+from url_validation import validate_url
+
 EvalJson = Callable[[str], Any]
 
 _VIEWPORT_CHECK = r"""
@@ -382,8 +384,14 @@ def guardrails_fail_reason(*, request_url: str, final_href: str) -> str | None:
         b = urlparse(final_href)
     except (ValueError, TypeError):
         return "URL parse error"
-    if a.scheme not in ("http", "https") or b.scheme not in ("http", "https"):
-        return "Non-HTTP(S) final URL"
+    # Deterministic per-URL validation (scheme + private/reserved IP ranges +
+    # encoding bypass) on BOTH the request and the post-redirect final URL, so a
+    # same-host redirect to a private/metadata IP is caught too — not just a
+    # cross-host redirect. See contracts/url-validation.md / scripts/url_validation.py.
+    for label, candidate in (("request", request_url), ("final", final_href)):
+        reason = validate_url(candidate)
+        if reason:
+            return f"{reason} ({label} URL)"
     an = (a.netloc or "").lower()
     bn = (b.netloc or "").lower()
     an2 = an[4:] if an.startswith("www.") else an
