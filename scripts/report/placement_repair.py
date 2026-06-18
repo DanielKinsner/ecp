@@ -176,9 +176,18 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
                    "box": {k: marker.get(k) for k in ("x_pct", "y_pct", "w_pct", "h_pct")}}
             marker.update({"slide_id": best["slide_id"], "x_pct": best["x_pct"], "y_pct": best["y_pct"],
                            "w_pct": best["w_pct"], "h_pct": best["h_pct"],
+                           "shape": "rect",  # a re-anchor produces a BOX. The editor renders any
+                                             # non-rect/ellipse/poly shape (incl. 'point') from
+                                             # cx_pct/cy_pct (default 50,50), so a stale shape='point'
+                                             # would ignore the new box and keep the old/center spot.
                            "snapped_baton_index": best.get("e_index"),
                            "source": "e_index_lookup",  # valid schema enum; it is now e_index-anchored
                            "repair_status": "re_anchored_unverified"})
+            # Drop stale center/ellipse/polygon geometry so no renderer falls back
+            # to the pre-repair coords (mirrors the editor's convert-to-rect at
+            # tools/editor/editor.js:1478).
+            for _stale in ("cx_pct", "cy_pct", "rx_pct", "ry_pct", "points"):
+                marker.pop(_stale, None)
             # Fail safe: an UNVERIFIED re-anchor must read "Check placement", never "Likely OK".
             # The workflow re-verify upgrades (confirmed) or downgrades (reverted) this finding.
             if finding is not None:
