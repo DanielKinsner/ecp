@@ -55,11 +55,14 @@ DEDUP_PATH = _SCRIPTS / "assembly" / "dedup.py"
 PROBE_PATH = _SCRIPTS / "diagnostics" / "determinism_probe.py"
 
 # The slingmods fixture is the frozen reference engagement. Its deterministic
-# canonical-ref count is pinned by the determinism probe's own contract
-# (see scripts/diagnostics/determinism_probe.py module docstring: slingmods ->
-# 83 refs, STABLE). Coupling to this number guards against a silent shrink in
-# cluster coverage (the G16 failure mode) as well as ref drift.
-EXPECTED_SLINGMODS_REFCOUNT = 83
+# canonical-ref count is pinned here. Coupling to this number guards against a
+# silent shrink in cluster coverage (the G16 failure mode) as well as ref drift.
+# 2026-06-18: lowered 83 -> 82. The cross-cluster structural dedup layer was
+# keying on `device` for page-scope findings, which are device-agnostic; one
+# real cross-cluster page-scope duplicate in this fixture (Layer-1 collapsed to
+# divergent winner-device labels) therefore survived. The dedup fix merges it
+# (dropped still 0, fingerprint still STABLE) — an intended one-ref shrink.
+EXPECTED_SLINGMODS_REFCOUNT = 82
 
 
 # ---------------------------------------------------------------------------
@@ -154,11 +157,12 @@ def test_inprocess_build_is_byte_stable():
 
 
 def test_inprocess_refcount_matches_probe_contract():
-    """Coupling guard: the slingmods canonical-ref count is pinned at 83.
+    """Coupling guard: the slingmods canonical-ref count is pinned at 82.
 
     A change here means either the fixture changed or the dedup/merge algo
     changed the canonical universe -- both warrant an explicit review, not a
-    silent drift.
+    silent drift. (Lowered 83 -> 82 on 2026-06-18 by the page-scope dedup fix;
+    see EXPECTED_SLINGMODS_REFCOUNT note above.)
     """
     refs, _fp, dropped = _build_once(SLINGMODS_FIXTURE)
     assert dropped == 0
