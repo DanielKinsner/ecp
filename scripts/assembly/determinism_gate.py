@@ -6,7 +6,7 @@ every run's substantive + structural canaries pass, runs a citations-validity
 fabrication check on each emission, and computes TARr@N + TARa@N agreement
 metrics against a designated reference run.
 
-**Architectural constraint (carried from `scripts/test-fixture-stability.py`):**
+**Architectural constraint:**
 Python cannot dispatch specialists/ethics/synthesizer agents — that's the
 Claude Code lead's responsibility. This module operates only on completed
 run directories. The outer CLI (`scripts/run-determinism-gate.py`) provides

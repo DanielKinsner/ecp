@@ -2,9 +2,9 @@
 
 Compares two findings (a "golden" reference and a "candidate" re-run) and
 returns a structured pass/fail result with the underlying metrics. Used by
-the v2 fixture-diff CI script (``scripts/test-fixture-stability.py``) to
-detect drift between the captured fixture's golden outputs and the audit
-chain's re-run output.
+the determinism gate (``scripts/assembly/determinism_gate.py`` via
+``scripts/run-determinism-gate.py``) to detect drift between the captured
+fixture's golden outputs and the audit chain's re-run output.
 
 Per the canonical plan §J.3, "substantially similar" decomposes into:
 
@@ -572,8 +572,8 @@ def main(argv: list[str] | None = None) -> int:
     """CLI: compare two finding JSON files. Exits non-zero on stability failure.
 
     Useful for spot-checking individual finding pairs during fixture
-    development. The full fixture-vs-fixture diff lives in
-    ``scripts/test-fixture-stability.py``.
+    development. The full multi-run fixture diff lives in the determinism
+    gate (``scripts/run-determinism-gate.py``).
     """
     import argparse
     import json
