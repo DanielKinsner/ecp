@@ -614,7 +614,13 @@ def _v2_layer_cross_cluster_structural(
             # 'absent' baton_index findings can't dedup structurally — preserve all
             groups[(f"_absent_{_absent_content_key(f)}", "", "", "")].append(f)
             continue
-        key = (f.baton_index, f.surface, f.verdict, f.device)
+        # Page-scope findings are device-agnostic. Layer 1 collapses them across
+        # devices per cluster, so two cross-cluster page dupes can arrive here
+        # with divergent winner-device labels; keying on device would let those
+        # dupes survive (dedup-too-narrow). Neutralize device for page-scope
+        # findings only — device-scope findings still key on device (unchanged).
+        device_key = "page" if f.scope == "page" else f.device
+        key = (f.baton_index, f.surface, f.verdict, device_key)
         groups[key].append(f)
 
     kept: List[Finding] = []
