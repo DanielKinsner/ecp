@@ -10,7 +10,13 @@ import time
 from typing import Any, Callable, Optional
 from urllib.parse import urlparse
 
-from url_validation import validate_url
+try:
+    from url_validation import validate_url
+except ImportError:  # pragma: no cover - ensure the sibling scripts/ dir is importable
+    import sys as _sys
+    from pathlib import Path as _Path
+    _sys.path.insert(0, str(_Path(__file__).resolve().parent))
+    from url_validation import validate_url
 
 EvalJson = Callable[[str], Any]
 

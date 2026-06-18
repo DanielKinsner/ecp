@@ -1792,6 +1792,15 @@ def _upgrade_batons_to_v2(eng_dir: Path, devices, engagement_id: str) -> None:
 def main() -> int:
     args = build_arg_parser().parse_args()
 
+    # Pre-navigation gate: reject disallowed schemes, private/reserved IP ranges,
+    # and IP-encoding bypasses BEFORE launching the browser or touching disk
+    # (contracts/url-validation.md §1-§4). Fail fast — don't fetch a bad URL.
+    _url_validation = _load_script_module("url_validation", SCRIPTS_DIR / "url_validation.py")
+    _url_block = _url_validation.validate_url(args.url)
+    if _url_block:
+        print(f"ERROR: {_url_block}", file=sys.stderr)
+        return 2
+
     devices = _parse_devices(args)
     non_mobile = [d for d in devices if d in ("laptop", "desktop")]
     if len(non_mobile) > 1:
