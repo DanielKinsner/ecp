@@ -100,13 +100,27 @@ def _dedup_by_fref(markers: list[dict]) -> list[dict]:
     return out
 
 
+def _marker_xy(m: dict) -> tuple[float | None, float | None]:
+    """Resolve a marker's on-slide position percent. Box/rect markers carry
+    x_pct/y_pct (top-left); point markers carry only cx_pct/cy_pct (center).
+    Reading x_pct alone makes point hotspots invisible to stack detection and
+    crops them to the (0,0) corner — so fall back to the center keys."""
+    x = m.get("x_pct")
+    if not isinstance(x, (int, float)):
+        x = m.get("cx_pct")
+    y = m.get("y_pct")
+    if not isinstance(y, (int, float)):
+        y = m.get("cy_pct")
+    return (x if isinstance(x, (int, float)) else None,
+            y if isinstance(y, (int, float)) else None)
+
+
 def _find_stacks(markers: list[dict]) -> dict[tuple, list[str]]:
     """Group distinct f_refs by (slide_id, rounded pixel); keep stacks >= STACK_MIN."""
     groups: dict[tuple, list[str]] = defaultdict(list)
     for m in markers:
-        x = m.get("x_pct")
-        y = m.get("y_pct")
-        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
+        x, y = _marker_xy(m)
+        if x is None or y is None:
             continue
         key = (m.get("slide_id"), round(x, 1), round(y, 1))
         fref = _marker_id(m)
@@ -243,8 +257,14 @@ def make_crop(engagement: Path, marker: dict, finding: dict | None,
         v = marker.get(k)
         return max(0.0, min(100.0, float(v))) if isinstance(v, (int, float)) else 0.0
 
-    left, top = pct("x_pct") / 100 * W, pct("y_pct") / 100 * H
+    cx, cy = _marker_xy(marker)
+    left = max(0.0, min(100.0, cx if cx is not None else 0.0)) / 100 * W
+    top = max(0.0, min(100.0, cy if cy is not None else 0.0)) / 100 * H
     bw, bh = pct("w_pct") / 100 * W, pct("h_pct") / 100 * H
+    if bw < 6 and bh < 6:  # point marker (center, no box) -> synthesize a visible box
+        bw = bh = max(bw, bh, 48)
+        left -= bw / 2
+        top -= bh / 2
 
     draw = ImageDraw.Draw(img)
     draw.rectangle([left, top, left + bw, top + bh], outline=(249, 115, 22),

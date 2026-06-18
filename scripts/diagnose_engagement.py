@@ -194,29 +194,45 @@ def _element_desert(baton: dict | None) -> int:
 # Stack / duplicate detection across markers
 # ---------------------------------------------------------------------------
 
+def _marker_center(m: dict) -> tuple[float | None, float | None]:
+    """Resolve a marker's on-slide position percent. Box/rect markers carry
+    x_pct/y_pct (top-left); point markers carry only cx_pct/cy_pct (center).
+    Reading x_pct alone makes point hotspots invisible to stack/dupe detection
+    and crops them to the (0,0) corner — so fall back to the center keys."""
+    x = m.get("x_pct")
+    if not isinstance(x, (int, float)):
+        x = m.get("cx_pct")
+    y = m.get("y_pct")
+    if not isinstance(y, (int, float)):
+        y = m.get("cy_pct")
+    return (x if isinstance(x, (int, float)) else None,
+            y if isinstance(y, (int, float)) else None)
+
+
 def _stacks_and_dupes(markers: list[dict]) -> tuple[set[str], set[str]]:
     """Return (f_refs in a stack, f_refs that duplicate another marker's geometry)."""
-    by_slide: dict[Any, list[dict]] = {}
+    by_slide: dict[Any, list[tuple[dict, float, float]]] = {}
     for m in markers:
-        # LG4: a hidden absence marker (or any coord-less marker) is not
-        # rendered on the slide — it must not be counted toward stacks/dupes.
-        # Without this guard, (None, None) coerced to (0, 0) below and every
-        # absence piled onto one pixel, inflating the STACKED/DUPLICATE counts.
+        # LG4: a hidden absence marker (or any genuinely coord-less marker) is
+        # not rendered on the slide — it must not be counted toward stacks/dupes.
+        # Point markers DO render (their position lives in cx_pct/cy_pct), so
+        # _marker_center resolves them rather than dropping them as coord-less.
         if m.get("hidden") is True:
             continue
-        if m.get("x_pct") is None or m.get("y_pct") is None:
+        x, y = _marker_center(m)
+        if x is None or y is None:
             continue
-        by_slide.setdefault(m.get("slide_id"), []).append(m)
+        by_slide.setdefault(m.get("slide_id"), []).append((m, x, y))
     stacked: set[str] = set()
     duped: set[str] = set()
     for _slide, ms in by_slide.items():
-        for i, a in enumerate(ms):
+        for i, (a, ax, ay) in enumerate(ms):
             close = 0
-            for j, b in enumerate(ms):
+            for j, (b, bx, by) in enumerate(ms):
                 if i == j:
                     continue
-                dx = (a.get("x_pct", 0) or 0) - (b.get("x_pct", 0) or 0)
-                dy = (a.get("y_pct", 0) or 0) - (b.get("y_pct", 0) or 0)
+                dx = ax - bx
+                dy = ay - by
                 if abs(dx) <= 0.5 and abs(dy) <= 0.5 and a.get("f_ref") != b.get("f_ref"):
                     duped.add(a.get("f_ref"))
                 if (dx * dx + dy * dy) ** 0.5 <= STACK_RADIUS_PCT:
@@ -334,8 +350,9 @@ def crop_marker(eng: Path, slide: dict, marker: dict, out_path: Path, label: str
     except Exception:  # noqa: BLE001
         return False
     W, H = im.size
-    x = (marker.get("x_pct", 0) or 0) / 100.0 * W
-    y = (marker.get("y_pct", 0) or 0) / 100.0 * H
+    cx, cy = _marker_center(marker)
+    x = (cx if cx is not None else 0.0) / 100.0 * W
+    y = (cy if cy is not None else 0.0) / 100.0 * H
     w = (marker.get("w_pct", 0) or 0) / 100.0 * W
     h = (marker.get("h_pct", 0) or 0) / 100.0 * H
     if w < 6 or h < 6:  # point marker -> synthesize a visible box
