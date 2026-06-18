@@ -178,9 +178,24 @@ def screenshot_natural_size(
     """Return screenshot natural pixel dimensions with honest fallbacks."""
     viewport = viewport or {}
     if screenshot_ref and engagement_dir is not None:
-        actual = image_dimensions(engagement_dir / screenshot_ref)
-        if actual:
-            return actual
+        # Path containment: screenshot_ref is baton/section-controlled. Reject
+        # refs that escape the engagement dir (e.g. "../../../etc/passwd") before
+        # opening the file, mirroring the guarded read in html_builder
+        # _process_screenshots. Without this, a crafted baton could point this
+        # at an arbitrary local file. On escape, fall through to the viewport
+        # fallback rather than reading outside the engagement.
+        try:
+            from .path_safety import resolve_within_base
+        except ImportError:  # pragma: no cover - direct-script import
+            from report.path_safety import resolve_within_base
+        try:
+            safe_path = resolve_within_base(screenshot_ref, engagement_dir)
+        except ValueError:
+            safe_path = None
+        if safe_path is not None:
+            actual = image_dimensions(safe_path)
+            if actual:
+                return actual
 
     dpr = viewport_dpr(viewport)
     try:
