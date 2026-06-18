@@ -51,6 +51,27 @@ First fetch per domain per session requires user confirmation:
 - In --auto mode: confirmation is skipped (the agent opted in by providing the URL)
 - Track confirmed domains to avoid re-prompting
 
+## Enforcement
+
+Steps **§1–§4 are code-pinned** (deterministic), not prose-only:
+
+- `scripts/url_validation.py` — `validate_url(url)` returns a human-readable block
+  reason or `None`. Enforces §1 (scheme), §2 (IPv4 private/reserved), §3 (IPv6,
+  incl. IPv4-mapped), §4 (hex/octal/decimal/abbreviated encoding bypass).
+- Applied at two points in acquisition: the **pre-navigation gate**
+  (`scripts/acquire_url.py` `main()` — rejects with exit 2 before any browser
+  launch or disk write) and the **post-redirect guard**
+  (`scripts/ecp_acquire_overlays.py` `guardrails_fail_reason` — re-checks both the
+  request and the final URL, so a same-host redirect to a private/metadata IP is
+  also blocked, not just a cross-host redirect).
+- Tests: `tests/test_url_validation.py`, `tests/test_guardrails_private_redirect.py`,
+  `tests/test_acquire_url_pre_nav_gate.py`.
+
+Steps **§5 (DNS rebinding) and §6 (per-domain confirmation) remain runtime/agent
+concerns**: §5 requires re-checking the RESOLVED IP at fetch time (the browser
+does the fetch; a pure validator can't resolve deterministically), and §6 is
+operator/agent behavior. `validate_url` deliberately does not attempt them.
+
 ## URL Normalization (for progress memory matching)
 
 When normalizing URLs for comparison (NOT for fetching — fetch the original URL):
