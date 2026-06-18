@@ -7,7 +7,7 @@ Dark chrome preserved from the v5/v6 scroll-document shell:
 - Text      rgba(255,255,255,0.92)
 - Dim       rgba(255,255,255,0.50)
 - Amber     #ff9f00 (headline accent)
-- Severity  critical #9300a (red-black) / high #ef4444 / medium #eab308 / low #22c55e / pass #22c55e
+- Severity  critical #93000a (red-black) / high #ef4444 / medium #eab308 / low #22c55e / pass #22c55e
 
 Layout is a flex 3-panel app shell: 400px left (tabs + cluster/priority/
 ethics list), flex:1 center (screenshot + hotspot zones), 400px right
@@ -36,7 +36,7 @@ _BASE_CSS = """
   --amber: #ff9f00;
   --amber-dim: rgba(255,159,0,0.18);
 
-  --severity-critical: #9300a;
+  --severity-critical: #93000a;
   --severity-critical-bg: rgba(147,0,10,0.14);
   --severity-critical-border: rgba(147,0,10,0.52);
   --severity-high: #ef4444;
