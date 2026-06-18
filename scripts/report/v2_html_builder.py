@@ -345,8 +345,10 @@ def generate_v2_report(
         else:
             output_file = f"visual-report-{device}-v2.html"
 
+    from assembly.atomic_write import atomic_write_text
     output_path = engagement_path / output_file
-    output_path.write_text(html, encoding="utf-8")
+    # Atomic write: never ship a half-written client deliverable on a crash.
+    atomic_write_text(output_path, html)
 
     # CLI summary — after the 2026-06-10 §4.2 v1.2 prune, the renderer only
     # emits e_index_lookup / operator_override / unplaced (other historical

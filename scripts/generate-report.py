@@ -291,8 +291,10 @@ def main() -> int:
             return 0
 
         html = render_final_report(state, engagement_path, device=device)
+        from assembly.atomic_write import atomic_write_text
         output_path = engagement_path / output_name
-        output_path.write_text(html, encoding="utf-8")
+        # Atomic write: never ship a half-written client deliverable on a crash.
+        atomic_write_text(output_path, html)
         print(f"final report written to: {output_path}")
         return 0
 

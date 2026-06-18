@@ -972,9 +972,11 @@ def _write_output(engagement_path, device, output_file, html, device_label,
         else:
             output_file = f"visual-report-{device}.html"
 
+    from assembly.atomic_write import atomic_write_text
     output_path = engagement_path / output_file
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(html)
+    # Atomic write: the report is the client deliverable; a crash mid-write must
+    # never ship a half-written HTML file (contracts/lead-discipline.md).
+    atomic_write_text(output_path, html)
 
     mapped = sum(len(m) for m in slide_markers.values())
     print(f"Report written to: {output_path}")
