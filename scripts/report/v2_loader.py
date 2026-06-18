@@ -240,7 +240,11 @@ def _finding_dict(cluster: str, device: str, raw: dict) -> dict:
         "title": raw.get("title", ""),
         "observation": raw.get("observation", ""),
         "recommendation": raw.get("recommendation", ""),
-        "why_matters": raw.get("why_matters", ""),
+        # Cluster-emission findings name this field `why_this_matters`
+        # (schema/cluster-emission-v1.json), matching the active json_parser
+        # path (json_parser.py:404). Reading `why_matters` here silently
+        # dropped the stakes prose; fall back to it for any internal dict.
+        "why_matters": raw.get("why_this_matters", raw.get("why_matters", "")),
         "severity": raw.get("severity", "MEDIUM"),
         "verdict": raw.get("verdict", "FAIL"),
         "scope": raw.get("scope", "device"),
