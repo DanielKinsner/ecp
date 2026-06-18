@@ -656,6 +656,11 @@ def _process_screenshots(engagement_path, baton, slide_markers):
 
     slide_base64 = []
     slide_aspect_ratios = []
+    # Maps absolute screenshot index -> compacted slide index. A missing
+    # screenshot file is skipped below, which compacts slide_base64; markers
+    # (keyed by absolute slide index) must be remapped to this space by the
+    # caller, or every later slide's hotspots render on the wrong image.
+    slide_index_remap: dict[int, int] = {}
     for i, ss_path in enumerate(screenshot_paths):
         # Path containment: reject baton-supplied screenshot paths that
         # escape the engagement directory. A crafted baton.json with
@@ -683,6 +688,7 @@ def _process_screenshots(engagement_path, baton, slide_markers):
             )
         )
 
+        slide_index_remap[i] = len(slide_base64)
         slide_base64.append(encode_image_base64(str(full_path)))
 
     if not slide_base64:
@@ -705,6 +711,7 @@ def _process_screenshots(engagement_path, baton, slide_markers):
         "slide_base64": slide_base64,
         "slide_aspect_ratios": slide_aspect_ratios,
         "default_slide_aspect_ratio": default_slide_aspect_ratio,
+        "slide_index_remap": slide_index_remap,
     }
 
 
@@ -1104,6 +1111,16 @@ def generate_report(
     screenshots = _process_screenshots(
         engagement_path, inputs["baton"], slide_markers
     )
+    # Realign hotspot markers to the compacted slide list. _process_screenshots
+    # drops missing screenshot files, which shifts later slide indices;
+    # slide_markers is keyed by absolute slide index, so without this remap a
+    # single missing screenshot would render every later slide's hotspots on the
+    # wrong image (product.md §4.2 — a wrong hotspot is the worst outcome).
+    # Identity no-op when every screenshot is present; markers for a missing
+    # slide are dropped (there is no image to place them on).
+    _remap = screenshots.get("slide_index_remap") or {}
+    if len(_remap) < len(inputs["baton"].get("screenshots") or []):
+        slide_markers = {_remap[k]: v for k, v in slide_markers.items() if k in _remap}
 
     # Phase 4: Compute metrics and check ethics
     metrics = _compute_metrics(inputs["findings"])
