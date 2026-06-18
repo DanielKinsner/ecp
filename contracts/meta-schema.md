@@ -70,7 +70,7 @@ Valid if present, ignored if absent:
 | `plans_queue` | array | Multi-planner mode only — per-cluster plan queue |
 | `reconciled` | boolean | `true` after finding reconciliation step |
 | `screenshot_input` | object \| null | Set when `source_mode = "screenshot"` |
-| `scope` | string \| null | Audit scope selected by user. See enum below. Missing on legacy engagements → treat as `"comprehensive"` on resume. |
+| `scope` | string \| null | Audit scope selected by user. See enum below. Missing on legacy engagements → treat as `"standard"` on resume (the page-type-relevant set; see resume note below). |
 | `report_state` | string \| null | `draft` or `client-verified` (product.md §6). Missing/null → treat as `draft`. See below. |
 | `report_state_attestation` | object \| null | Written by `set_client_verified` on successful promotion (Phase-0 A9, 2026-06-10). Records `promoted_at` (ISO 8601), `unplaced_counts` (per-device map of `needs-manual-marker` finding counts at promotion time), and `forced` (boolean — true when the operator bypassed the placement gate with `--force`). Absent on engagements that have not been promoted; readers MUST NOT infer state from its absence — `report_state` is the source of truth. See below. |
 | `reflection_state` | string \| null | `draft` or `complete` (G23, 2026-05-28). Missing/null → treat as `draft`. The lead's attestation that `lead-reflection.md` matches the pipeline's actual end-state. See below. |
