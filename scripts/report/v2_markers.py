@@ -113,53 +113,6 @@ def parse_baton_index(baton_index: str | None) -> int | None:
     return int(m.group(1))
 
 
-def _slide_for_y(scroll_y: float, viewport_h: float, screenshots: list) -> int:
-    """Pick the slide that views ``scroll_y`` most centrally.
-
-    Mobile section captures often overlap (slides at scrollY=2100 and
-    scrollY=2360 both contain y=2486 because each slide's rendered
-    height equals one full viewport, ~844px). The naive "last scrollY
-    below target" picks slide 5 even though slide 4 frames the element
-    closer to its visual center. We instead score every slide that
-    contains the element by distance-to-viewport-center and pick the
-    smallest. Falls back to nearest-slide-by-scrollY when the element
-    sits above all slides or below all slides.
-    """
-    if not screenshots:
-        return 0
-
-    best_slide = -1
-    best_distance = float("inf")
-    for i, ss in enumerate(screenshots):
-        if not isinstance(ss, dict):
-            continue
-        ss_scroll = float(ss.get("scrollY", 0) or 0)
-        # Element visible on this slide if scroll_y in [ss_scroll, ss_scroll + viewport_h)
-        if ss_scroll <= scroll_y < ss_scroll + viewport_h:
-            relative_y = scroll_y - ss_scroll
-            distance_from_center = abs(relative_y - viewport_h / 2.0)
-            if distance_from_center < best_distance:
-                best_distance = distance_from_center
-                best_slide = i
-
-    if best_slide >= 0:
-        return best_slide
-
-    # Fallback: element is outside every slide's viewport. Pick the
-    # nearest slide by absolute scrollY distance.
-    best_slide = 0
-    best_distance = float("inf")
-    for i, ss in enumerate(screenshots):
-        if not isinstance(ss, dict):
-            continue
-        ss_scroll = float(ss.get("scrollY", 0) or 0)
-        d = abs(ss_scroll - scroll_y)
-        if d < best_distance:
-            best_distance = d
-            best_slide = i
-    return best_slide
-
-
 def _coerce_pct(value: object, default: float = 50.0) -> float:
     """Coerce an operator-supplied percentage to a float; default on bad input.
 

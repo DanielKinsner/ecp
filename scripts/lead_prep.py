@@ -7,7 +7,7 @@ gaps that surfaced during 2026-05-02 (engagement 9cd2a2ac) post-mortem:
 1. ``normalize-scrolly`` — runs AFTER acquisition, BEFORE specialist
    dispatch. Acquirers sometimes report STATUS: COMPLETE but leave
    ``baton.{screenshots,sections}[].scrollY`` empty. The renderer's
-   ``_slide_for_y`` then collapses every element to slide 0 because
+   ``slide_for_css_y`` then collapses every element to slide 0 because
    every slide reports ``scrollY=0``. This step recovers the real
    per-section scroll position from ``elements-{?mobile-}sN.json``'s
    ``scroll_y_at_capture`` field (which the acquirer DOES populate

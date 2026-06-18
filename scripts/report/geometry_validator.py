@@ -18,7 +18,6 @@ try:  # Support both `python -m report.geometry_validator` and direct script use
     from .markers import _infer_element_coord_scale
     from .v2_loader import load_v2_engagement
     from .v2_markers import (
-        _slide_for_y,
         auto_map_markers_v2,
         compute_marker_positions_v2,
         merge_markers,
@@ -29,7 +28,6 @@ except ImportError:  # pragma: no cover - exercised by manual direct invocation.
     from report.markers import _infer_element_coord_scale
     from report.v2_loader import load_v2_engagement
     from report.v2_markers import (
-        _slide_for_y,
         auto_map_markers_v2,
         compute_marker_positions_v2,
         merge_markers,
