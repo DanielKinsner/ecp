@@ -80,5 +80,68 @@ class TestSnapTargetYProjection(unittest.TestCase):
         self.assertAlmostEqual(y_pct, 50.0, delta=0.01)
 
 
+class TestPlacementYAcrossSections(unittest.TestCase):
+    """End-to-end placement-Y invariant for section_h != viewport_h.
+
+    The suite's other placement fixtures use one-viewport sections
+    (section_h == viewport_h), which makes section_h- and viewport_h-normalized
+    Y identical and hides the whole coordinate-space bug class (see
+    docs / the 2026-07-07 snap-Y fix). This drives the REAL renderer across two
+    sections — one shorter than the viewport, one equal — and pins that the
+    rendered marker Y equals the element's true position in its viewport-height
+    section image, and that the editor snap target agrees.
+    """
+
+    _VW, _VH = 1440.0, 900.0
+
+    def _two_section_baton(self):
+        return {
+            "device": "laptop",
+            "viewport": {"width": int(self._VW), "height": int(self._VH)},
+            "screenshots": [
+                {"path": "s1.jpg", "scrollY": 0, "naturalWidth": 1440, "naturalHeight": 900},
+                {"path": "s2.jpg", "scrollY": 700, "naturalWidth": 1440, "naturalHeight": 900},
+            ],
+            "sections": [
+                {"slug": "hero", "scroll_y_top": 0, "scroll_y_bottom": 700,  # 700 != 900
+                 "screenshot_ref": "s1.jpg"},
+                {"slug": "mid", "scroll_y_top": 700, "scroll_y_bottom": 1600,
+                 "screenshot_ref": "s2.jpg"},
+            ],
+            # e0 near the bottom of the short first section; e1 in the second.
+            "elements": [
+                {"e_index": "e0", "rect": {"x": 100, "y": 600, "width": 200, "height": 40}},
+                {"e_index": "e1", "rect": {"x": 100, "y": 1000, "width": 200, "height": 40}},
+            ],
+        }
+
+    def _renderer_top_pct(self, baton, f_ref, baton_index):
+        mappings = auto_map_markers_v2(
+            [{"index": 0, "f_ref": f_ref, "baton_index": baton_index, "priority": "HIGH"}],
+            baton,
+        )
+        slide_markers = compute_marker_positions_v2(mappings, baton)
+        marker = next(m for marks in slide_markers.values() for m in marks)
+        return marker["zone"]["top_pct"]
+
+    def test_bottom_of_short_section_not_pushed_down(self):
+        baton = self._two_section_baton()
+        # e0: absolute y=600 in a viewport-height (900) image captured at scrollY 0.
+        expected = (600 - 0) / self._VH * 100  # 66.7%, NOT 600/700 = 85.7%
+        renderer = self._renderer_top_pct(baton, "visual-cta/F-01", "e0")
+        _x, snap_y, _w, _h = _element_snap_pct(100, 600, 200, 40, 0.0, self._VW, self._VH)
+        self.assertAlmostEqual(renderer, expected, delta=0.2)
+        self.assertAlmostEqual(snap_y, expected, delta=0.2)
+
+    def test_second_section_uses_its_screenshot_scroll(self):
+        baton = self._two_section_baton()
+        # e1: absolute y=1000, image captured at scrollY 700 -> (1000-700)/900.
+        expected = (1000 - 700) / self._VH * 100  # 33.3%
+        renderer = self._renderer_top_pct(baton, "pricing/F-02", "e1")
+        _x, snap_y, _w, _h = _element_snap_pct(100, 1000, 200, 40, 700.0, self._VW, self._VH)
+        self.assertAlmostEqual(renderer, expected, delta=0.2)
+        self.assertAlmostEqual(snap_y, expected, delta=0.2)
+
+
 if __name__ == "__main__":
     unittest.main()
