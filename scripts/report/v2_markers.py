@@ -65,15 +65,22 @@ exact-tier-or-blank shape 2026-06-10 (Phase-0 rulings A1+A2).
 """
 from __future__ import annotations
 
-import re
 from typing import Sequence
 
 from .geometry import (
     element_rect_css,
-    element_rect_raw,
     infer_element_coord_scale,
-    slide_for_css_y,
     viewport_dpr,
+)
+
+# The place-or-blank decision (product.md §4.2) lives behind the placement seam;
+# auto_map_markers_v2 is its first consumer. parse_baton_index / _element_y /
+# _element_height moved there with it — they had no other callers.
+from .placement import (
+    Blank,
+    Placed,
+    PlacementContext,
+    decide_placement,
 )
 
 # The giant-rectangle threshold has one home — the giant_exact_rectangles gate
@@ -84,8 +91,6 @@ from assembly.visual_quality import (
     DEFAULT_GIANT_WIDTH_PCT,
 )
 
-
-_E_INDEX_RE = re.compile(r"^e(\d+)$")
 
 # G6 (product.md §4.2 precision-first) — an exact_element hotspot whose baton
 # rect spans more than this share of the viewport is almost always anchored to a
@@ -103,21 +108,6 @@ GIANT_EXACT_HEIGHT_PCT = DEFAULT_GIANT_HEIGHT_PCT
 # to a single point; we expand the sub-minimum dimension up to this floor,
 # centered on the element, so a region renders as a box.
 MIN_VISIBLE_ZONE_PCT = 2.0
-
-
-def parse_baton_index(baton_index: str | None) -> int | None:
-    """Convert a baton e_index ('e5') to its 0-based array position.
-
-    Returns None for None input or 'absent'. Returns None for malformed
-    strings rather than raising — the caller falls through to the absent
-    handler.
-    """
-    if not baton_index or baton_index == "absent":
-        return None
-    m = _E_INDEX_RE.match(baton_index)
-    if not m:
-        return None
-    return int(m.group(1))
 
 
 def _coerce_pct(value: object, default: float = 50.0) -> float:
@@ -160,109 +150,16 @@ def auto_map_markers_v2(
     proposed_anchor still flows through to the editor's manual queue via
     review_state's per-finding ``raw`` block.
     """
-    elements = baton.get("elements", [])
-    sections = baton.get("sections", [])
-    screenshots = baton.get("screenshots", [])
-    viewport = baton.get("viewport", {})
-    viewport_h = float(viewport.get("height", 844) or 844)
-    dpr = viewport_dpr(viewport)
-    # Mobile baton stores element coords in DEVICE pixels (DPR-multiplied);
-    # desktop stores CSS pixels. The v1 helper infers which scheme the baton
-    # uses by comparing element extents against screenshot scrollY + viewport
-    # envelope. Returns 1.0 for CSS px (passthrough) or dpr for device px.
-    element_coord_scale = infer_element_coord_scale(elements, screenshots, viewport, dpr, sections)
+    # The place-or-blank decision (Strategy 1 e_index_lookup, else Strategy 4
+    # unplaced — product.md §4.2 v1.2) lives behind the placement seam. Each
+    # typed Placed | Blank is converted straight back into the legacy mapping
+    # dict here, so this function's output stays byte-identical while the
+    # decision becomes independently testable and typed for later consumers.
+    ctx = PlacementContext.from_baton(baton)
 
     mappings: list[dict] = []
     for f in findings:
-        finding_idx = f.get("index")
-        f_ref = f.get("f_ref")
-        baton_index_str = f.get("baton_index")
-        scope = f.get("scope") or "device"
-        severity = (f.get("priority") or "MEDIUM").lower()
-        burn_number = f.get("cluster_index") or finding_idx
-
-        # Strategy 1: e_index lookup. The ONLY auto-placement path — proves the
-        # marker lands on a real on-slide element with concrete geometry.
-        # Absent findings (baton_index="absent") skip this branch (elem_idx is
-        # None) and fall through to Strategy 4 per ruling A1.
-        elem_idx = parse_baton_index(baton_index_str)
-        if elem_idx is not None and 0 <= elem_idx < len(elements):
-            elem = elements[elem_idx]
-            # Find the slide this element sits on. v1 baton: element.y is
-            # absolute scroll_y. v2 baton: element.rect.y is absolute scroll_y.
-            # Normalize element y to CSS pixels before slide selection.
-            elem_y_raw = _element_y(elem)
-            elem_y_css = elem_y_raw / element_coord_scale if element_coord_scale else elem_y_raw
-            # Tall elements (footer, hero, full-page gallery) span multiple
-            # slides. Using the TOP y biases slide selection toward the slide
-            # ending at the element's start — e.g. a footer starting at the
-            # exact scrollY of slide N+1 gets pinned on slide N because
-            # element.top sits near slide N's viewport center. Use the
-            # element CENTER for slide picking; coordinate math downstream
-            # still uses element.top via _compute_marker_positions_v2.
-            elem_h_raw = _element_height(elem)
-            elem_h_css = elem_h_raw / element_coord_scale if element_coord_scale else elem_h_raw
-            # Bug A/B/C3 (2026-05-02, refined 2026-06-10): an element with no
-            # usable rect, OR whose rect sits outside every captured screenshot's
-            # viewport band, must NOT be pinned onto an arbitrary slide. The
-            # earlier mitigation kept emitting a mapping with the nearest slide
-            # + full element geometry under match_method="e_index_lookup_offslide";
-            # the renderer then clamped the rect onto the wrong slide
-            # (product.md §4.2 — wrong-page placement is worse than blank).
-            # Both cases now fall through to Strategy 4 ("unplaced") and review_state
-            # queues the finding for manual placement — matching the G4 blank-below-
-            # confidence representation (see tests/test_g4_blank_below_confidence.py).
-            if elem_y_raw <= 0 and elem_h_raw <= 0:
-                pass
-            else:
-                slide_pick_y = elem_y_css + elem_h_css / 2.0
-                slide = slide_for_css_y(slide_pick_y, viewport_h, screenshots, sections)
-                offslide = True
-                if 0 <= slide < len(screenshots):
-                    ss = screenshots[slide] if isinstance(screenshots[slide], dict) else {}
-                    ss_scroll = float(ss.get("scrollY", 0) or 0)
-                    if ss_scroll <= slide_pick_y < ss_scroll + viewport_h:
-                        offslide = False
-                if offslide:
-                    # Fall through to Strategy 4 — never auto-place on the
-                    # wrong slide.
-                    pass
-                else:
-                    mappings.append({
-                        "finding_index": finding_idx,
-                        "f_ref": f_ref,
-                        "burn_number": burn_number,
-                        "baton_element_index": elem_idx,
-                        "slide": slide,
-                        "match_method": "e_index_lookup",
-                        "severity": severity,
-                        "fallback_role": None,
-                        "fallback_position": None,
-                        "scope": scope,
-                    })
-                    continue
-
-        # Strategy 4: unplaced (everything else) — product.md §4.2 v1.2.
-        # No exact-tier placement signal resolved: an absent finding, an
-        # off-slide element, an unusable rect, or any other sub-exact signal.
-        # The spec is explicit: below the auto-place confidence threshold,
-        # LEAVE IT BLANK for manual placement — never auto-place a guess.
-        # compute_marker_positions_v2 renders nothing, and review_state
-        # queues the finding for manual placement (hotspot_confidence=
-        # "needs-manual-marker"). slide=0 is a nominal anchor only so the
-        # review-state marker has a valid slide_id; no marker is drawn there.
-        mappings.append({
-            "finding_index": finding_idx,
-            "f_ref": f_ref,
-            "burn_number": burn_number,
-            "baton_element_index": None,
-            "slide": 0,
-            "match_method": "unplaced",
-            "severity": severity,
-            "fallback_role": "absent_unplaced",
-            "fallback_position": None,
-            "scope": scope,
-        })
+        mappings.append(_to_mapping(decide_placement(f, ctx)))
 
     # Augment each mapping with visual_evidence so downstream
     # consumers (review-state writer, HTML builder, Phase 3 quality gates)
@@ -274,6 +171,7 @@ def auto_map_markers_v2(
     findings_by_index: dict[int, dict] = {
         f.get("index"): f for f in findings if f.get("index") is not None
     }
+    viewport = baton.get("viewport", {})
     for m in mappings:
         f = findings_by_index.get(m.get("finding_index"))
         if f is None:
@@ -290,7 +188,7 @@ def auto_map_markers_v2(
         # G6: down-rank an oversized exact_element marker to an approximate
         # proxy_element (renders dashed) so it stops claiming pixel-precise
         # placement it doesn't have, and the giant_exact_rectangles gate passes.
-        _downrank_oversized_exact(m, elements, viewport, element_coord_scale)
+        _downrank_oversized_exact(m, ctx.elements, viewport, ctx.element_coord_scale)
 
     return mappings
 
@@ -342,16 +240,41 @@ def _downrank_oversized_exact(
         }
 
 
-def _element_y(elem: dict) -> float:
-    """Return absolute scroll_y of an element, accommodating both v1 and v2 baton shapes."""
-    rect = element_rect_raw(elem)
-    return rect["y"] if rect else 0.0
+def _to_mapping(result: Placed | Blank) -> dict:
+    """Convert a typed placement decision back into the legacy mapping dict.
 
-
-def _element_height(elem: dict) -> float:
-    """Return element height (CSS px), 0 when unavailable."""
-    rect = element_rect_raw(elem)
-    return rect["height"] if rect else 0.0
+    Keeps ``auto_map_markers_v2``'s output byte-identical while the decision
+    itself lives behind the placement seam. ``Placed`` -> an ``e_index_lookup``
+    mapping; ``Blank`` -> the ``unplaced`` mapping (``slide=0`` is a nominal
+    anchor only; ``compute_marker_positions_v2`` draws nothing for it). All
+    blanks render identically, so ``Blank.reason`` is not emitted here —
+    consumers that want it read the typed result directly.
+    """
+    if isinstance(result, Placed):
+        return {
+            "finding_index": result.finding_index,
+            "f_ref": result.f_ref,
+            "burn_number": result.burn_number,
+            "baton_element_index": result.baton_element_index,
+            "slide": result.slide,
+            "match_method": "e_index_lookup",
+            "severity": result.severity,
+            "fallback_role": None,
+            "fallback_position": None,
+            "scope": result.scope,
+        }
+    return {
+        "finding_index": result.finding_index,
+        "f_ref": result.f_ref,
+        "burn_number": result.burn_number,
+        "baton_element_index": None,
+        "slide": 0,
+        "match_method": "unplaced",
+        "severity": result.severity,
+        "fallback_role": "absent_unplaced",
+        "fallback_position": None,
+        "scope": result.scope,
+    }
 
 
 def merge_markers(
