@@ -33,7 +33,13 @@ from cli_io import force_utf8_io  # noqa: E402
 _TOKEN = re.compile(r"[a-z0-9]+")
 _STOP = frozenset({"the", "a", "an", "of", "for", "to", "in", "on", "and", "or",
                    "your", "with", "is", "are", "this", "that", "low", "no", "not"})
-GIANT_W, GIANT_H = 85.0, 70.0           # oversized = likely parent container
+# oversized = likely parent container; threshold from its one home in
+# assembly/visual_quality.py (a dependency-light import keeps this tool standalone).
+from assembly.visual_quality import (  # noqa: E402
+    DEFAULT_GIANT_HEIGHT_PCT as GIANT_H,
+    DEFAULT_GIANT_WIDTH_PCT as GIANT_W,
+)
+
 MATCH_MIN = 0.34                         # min token-overlap to trust a re-anchor
 MATCH_MARGIN = 0.12                      # top match must beat 2nd by this to be unambiguous
 

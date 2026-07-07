@@ -55,10 +55,21 @@ def _ve_by_ref(mappings):
 
 
 class TestThresholdSync(unittest.TestCase):
-    def test_downrank_threshold_matches_gate(self):
-        # If these drift, down-ranking would not actually clear the gate.
+    def test_all_consumers_share_one_home(self):
+        # The giant-rectangle threshold now has ONE home
+        # (assembly/visual_quality.py DEFAULT_GIANT_*). Every consumer imports it,
+        # so the v2_markers down-rank, the visual_quality gate, and the two
+        # operator CLI tools (placement_audit / placement_repair) that used to
+        # inline their own untested copies can no longer drift apart.
+        from report.placement_audit import GIANT_HEIGHT_PCT, GIANT_WIDTH_PCT
+        from report.placement_repair import GIANT_H, GIANT_W
+
         self.assertEqual(GIANT_EXACT_WIDTH_PCT, DEFAULT_GIANT_WIDTH_PCT)
         self.assertEqual(GIANT_EXACT_HEIGHT_PCT, DEFAULT_GIANT_HEIGHT_PCT)
+        self.assertEqual(GIANT_WIDTH_PCT, DEFAULT_GIANT_WIDTH_PCT)
+        self.assertEqual(GIANT_HEIGHT_PCT, DEFAULT_GIANT_HEIGHT_PCT)
+        self.assertEqual(GIANT_W, DEFAULT_GIANT_WIDTH_PCT)
+        self.assertEqual(GIANT_H, DEFAULT_GIANT_HEIGHT_PCT)
 
 
 class TestOversizedDownRank(unittest.TestCase):

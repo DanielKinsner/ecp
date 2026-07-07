@@ -76,6 +76,14 @@ from .geometry import (
     viewport_dpr,
 )
 
+# The giant-rectangle threshold has one home — the giant_exact_rectangles gate
+# in assembly/visual_quality.py. Importing it (a dependency-light, jsonschema-free
+# leaf) keeps the down-rank here and that gate from ever drifting apart.
+from assembly.visual_quality import (
+    DEFAULT_GIANT_HEIGHT_PCT,
+    DEFAULT_GIANT_WIDTH_PCT,
+)
+
 
 _E_INDEX_RE = re.compile(r"^e(\d+)$")
 
@@ -83,12 +91,11 @@ _E_INDEX_RE = re.compile(r"^e(\d+)$")
 # rect spans more than this share of the viewport is almost always anchored to a
 # parent container (full header/drawer/body), not the subject element. Such
 # markers are auto-down-ranked to proxy_element so they render as approximate
-# (dashed) markers instead of misleading solid "exact" rects. Kept in sync with
-# assembly/visual_quality.py DEFAULT_GIANT_WIDTH_PCT / DEFAULT_GIANT_HEIGHT_PCT
-# (the giant_exact_rectangles gate) — tests/test_g6_oversized_downrank.py asserts
-# the two stay equal, so down-ranking here makes that gate pass.
-GIANT_EXACT_WIDTH_PCT = 85.0
-GIANT_EXACT_HEIGHT_PCT = 70.0
+# (dashed) markers instead of misleading solid "exact" rects. The threshold IS
+# the giant_exact_rectangles gate threshold, imported above from its one home in
+# assembly/visual_quality.py so the down-rank and the gate cannot drift.
+GIANT_EXACT_WIDTH_PCT = DEFAULT_GIANT_WIDTH_PCT
+GIANT_EXACT_HEIGHT_PCT = DEFAULT_GIANT_HEIGHT_PCT
 
 # LG5 (2026-06-12): the minimum visible size of a rectangle hotspot zone, as a
 # percent of the slide. An exactly-resolved element thinner than this in one

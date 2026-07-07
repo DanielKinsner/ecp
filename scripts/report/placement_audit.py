@@ -36,10 +36,14 @@ if str(_SCRIPTS) not in sys.path:
 
 from cli_io import force_utf8_io  # noqa: E402
 
-# Thresholds mirror scripts/assembly/visual_quality.py (kept in sync by intent;
-# inlined so this tool stays dependency-light and standalone).
-GIANT_WIDTH_PCT = 85.0
-GIANT_HEIGHT_PCT = 70.0
+# The giant-rectangle thresholds have one home — scripts/assembly/visual_quality.py.
+# That package is dependency-light (imports no jsonschema), so pulling the constant
+# keeps this operator tool standalone while removing the inlined copy that used to
+# drift from the gate untested.
+from assembly.visual_quality import (  # noqa: E402
+    DEFAULT_GIANT_HEIGHT_PCT as GIANT_HEIGHT_PCT,
+    DEFAULT_GIANT_WIDTH_PCT as GIANT_WIDTH_PCT,
+)
 NON_EXACT_TYPES = frozenset(
     {"proxy_element", "generated_expected_zone", "section_absence", "page_level"}
 )
