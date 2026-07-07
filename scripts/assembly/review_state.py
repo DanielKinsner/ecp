@@ -324,6 +324,29 @@ def generate_editor_artifacts(
     return outputs
 
 
+def _element_snap_pct(
+    ex: float, ey: float, ew: float, eh: float,
+    section_top: float, viewport_w: float, viewport_h: float,
+) -> tuple[float, float, float, float]:
+    """Project an element bbox (CSS px, absolute scroll_y) to slide-relative %.
+
+    Matches compute_marker_positions_v2: x/w by viewport WIDTH, y/h by viewport
+    HEIGHT. The per-section screenshot is a viewport-height capture and the
+    marker layer overlays the full image (.slide-stage img{width:100%;
+    height:auto}; .marker-layer{inset:0}), so a snap target's y must be a
+    fraction of the viewport-height image. Normalizing by section height
+    (scroll_y_bottom - scroll_y_top) placed snapped / placement-repaired markers
+    low by (1 - section_h/viewport_h) — the 2026-07-07 hotspot-Y regression.
+    """
+    vw = viewport_w or 1.0
+    vh = viewport_h or 1.0
+    x_pct = max(0.0, min(100.0, (ex / vw) * 100))
+    w_pct = max(0.5, min(100.0 - x_pct, (ew / vw) * 100))
+    y_pct = max(0.0, min(100.0, ((ey - section_top) / vh) * 100))
+    h_pct = max(0.5, min(100.0 - y_pct, (eh / vh) * 100))
+    return x_pct, y_pct, w_pct, h_pct
+
+
 def _build_snap_targets(engagement_dir: Path, plugin_root: Path, device: str) -> dict[str, list[dict[str, Any]]]:
     """Per-slide snap targets from baton element bboxes (in slide-relative %)."""
     from report.geometry import (
@@ -345,6 +368,10 @@ def _build_snap_targets(engagement_dir: Path, plugin_root: Path, device: str) ->
     backfill_screenshots_from_sections(baton, engagement_dir)
     screenshots = baton.get("screenshots") or []
     page_w = float(viewport.get("width") or 1920)
+    # y/h normalize by viewport height (the section screenshot is a
+    # viewport-height capture), matching compute_marker_positions_v2 — see
+    # _element_snap_pct. Normalizing by section height mis-placed snapped markers.
+    viewport_h = float(viewport.get("height") or 1080)
     sections = baton.get("sections") or []
     elements = baton.get("elements") or []
     scale = infer_element_coord_scale(
@@ -359,7 +386,6 @@ def _build_snap_targets(engagement_dir: Path, plugin_root: Path, device: str) ->
         slide_id = _slide_id(device, i)
         top = float(section.get("scroll_y_top") or 0)
         bot = float(section.get("scroll_y_bottom") or top + 1080)
-        section_h = max(bot - top, 1.0)
         targets: list[dict[str, Any]] = []
         for el in elements:
             rect = element_rect_css(el, scale) or {}
@@ -372,10 +398,9 @@ def _build_snap_targets(engagement_dir: Path, plugin_root: Path, device: str) ->
             center_y = ey + eh / 2
             if center_y < top or center_y >= bot:
                 continue
-            x_pct = max(0.0, min(100.0, (ex / page_w) * 100))
-            w_pct = max(0.5, min(100.0 - x_pct, (ew / page_w) * 100))
-            y_pct = max(0.0, min(100.0, ((ey - top) / section_h) * 100))
-            h_pct = max(0.5, min(100.0 - y_pct, (eh / section_h) * 100))
+            x_pct, y_pct, w_pct, h_pct = _element_snap_pct(
+                ex, ey, ew, eh, top, page_w, viewport_h
+            )
             targets.append({
                 "e_index": el.get("e_index"),
                 "label": (el.get("text_content") or el.get("role") or el.get("tag") or "")[:60],
