@@ -239,9 +239,13 @@ class TestElementIndexMatchRateCanary(unittest.TestCase):
         self.assertEqual(result["detail"]["matched"], 3)
         self.assertEqual(result["detail"]["total_elements"], 3)
 
-    def test_all_absent_lines_fail_no_present_elements(self):
-        # No present elements at all — rate is 0.0, canary fails (the
-        # audit has nothing to measure baton_index coverage against).
+    def test_all_absent_lines_skip_pass_no_present_elements(self):
+        # Operator ruling 2026-07-08 (adversarial review #17): an audit whose
+        # findings are ALL correctly absence findings has zero present-element
+        # denominators, so the match rate is undefined — the canary skip-passes
+        # (mirroring the module's other zero-data canaries) rather than hard-
+        # failing a legitimate all-absent audit. FAIL is reserved for "present
+        # elements exist but too few cite a baton index."
         content = (
             "**ELEMENT:** (absent — proposed location: above hero)\n"
             "**ELEMENT:** (absent — proposed location: footer)\n"
@@ -249,8 +253,9 @@ class TestElementIndexMatchRateCanary(unittest.TestCase):
         )
         path = self._write_audit("audit-desktop.md", content)
         result = check_element_index_match_rate([path])
-        self.assertFalse(result["passed"])
-        self.assertEqual(result["detail"]["rate"], 0.0)
+        self.assertTrue(result["passed"])
+        self.assertTrue(result["detail"]["skipped_no_present_elements"])
+        self.assertIsNone(result["detail"]["rate"])
         self.assertEqual(result["detail"]["absent"], 3)
         self.assertEqual(result["detail"]["present_elements"], 0)
 

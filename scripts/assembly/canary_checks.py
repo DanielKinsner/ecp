@@ -398,6 +398,33 @@ def check_element_index_match_rate(
         grand_absent += absent
 
     grand_present = grand_total - grand_absent
+    if grand_total > 0 and grand_present == 0:
+        # Findings EXIST but every one is correctly an ABSENCE finding (the
+        # audited element genuinely does not exist), so the match rate has no
+        # present-element denominator. Skip-pass, mirroring the module's other
+        # zero-data canaries — hard-failing there punishes a legitimate
+        # all-absent audit; FAIL is reserved for "present elements exist but too
+        # few cite a baton index." A truly EMPTY audit (grand_total == 0: no
+        # ELEMENT lines / missing file) still fails via the tail below — nothing
+        # was audited. (adversarial review 2026-07-08 #17; operator ruling.)
+        return CanaryResult(
+            name="element_index_match_rate",
+            passed=True,
+            summary=(
+                f"element_index_match_rate: no present-element findings "
+                f"(all {grand_absent} absent of {grand_total} total) -> skip-pass"
+            ),
+            detail={
+                "total_elements": grand_total,
+                "present_elements": 0,
+                "matched": grand_matched,
+                "absent": grand_absent,
+                "rate": None,
+                "threshold": threshold,
+                "skipped_no_present_elements": True,
+                "per_file": per_file,
+            },
+        )
     overall_rate = grand_matched / grand_present if grand_present else 0.0
     passed = overall_rate >= threshold and grand_present > 0
     summary = (
