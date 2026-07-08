@@ -23,6 +23,11 @@ REVIEW_STATE_FILENAMES = {
 }
 
 
+def _finding_ref(finding: dict[str, Any]) -> str:
+    """The finding's stable f_ref (or a deterministic cluster/index fallback)."""
+    return finding.get("f_ref") or f"{finding.get('cluster', 'finding')}/F-{finding.get('index', 0):02d}"
+
+
 def build_initial_review_state(
     engagement_dir: Path,
     device: str,
@@ -37,6 +42,7 @@ def build_initial_review_state(
     from report.v2_loader import load_v2_engagement
     from report.v2_markers import auto_map_markers_v2, compute_marker_positions_v2
     from report.templates.components import assign_cluster_indices
+    from report.placement import coplaced_blanks
 
     engagement_dir = Path(engagement_dir)
     if plugin_root is None:
@@ -62,6 +68,26 @@ def build_initial_review_state(
     marker_by_ref = _markers_by_ref(slide_markers)
     mapping_by_ref = {m.get("f_ref"): m for m in auto_mapped if m.get("f_ref")}
 
+    # De-collide co-placed findings BEFORE building markers: when several
+    # findings auto-place on ONE baton element their rects would stack pixel-
+    # for-pixel (the operator sees a blob; diagnose_engagement flags STACKED/
+    # DUPLICATE). §4.2 precision over recall — keep the top-severity box and
+    # blank the rest into the manual-placement queue (they stay findings, just
+    # unplaced). coplaced_blanks() is the pure policy in the placement seam.
+    _placements = []
+    for _f in inputs["findings"]:
+        _ref = _finding_ref(_f)
+        _mapping = mapping_by_ref.get(_ref, {})
+        if _mapping.get("match_method") == "unplaced":
+            continue
+        _ai = marker_by_ref.get(_ref)
+        _sid = _slide_id(device, _ai.get("slide", 0) if _ai else _mapping.get("slide", 0))
+        _placements.append(
+            (_ref, _sid, _mapping.get("baton_element_index"),
+             _f.get("severity") or _f.get("priority") or "")
+        )
+    coplaced_losers = coplaced_blanks(_placements)
+
     now = _utc_now()
     engagement_id = _engagement_id(engagement_dir, inputs.get("meta"))
     slides = _build_slides(baton, device)
@@ -72,7 +98,7 @@ def build_initial_review_state(
     callout_stack: dict[tuple[str, Any], int] = {}
 
     for finding in inputs["findings"]:
-        f_ref = finding.get("f_ref") or f"{finding.get('cluster', 'finding')}/F-{finding.get('index', 0):02d}"
+        f_ref = _finding_ref(finding)
         slug = _slug(f_ref)
         ai_marker = marker_by_ref.get(f_ref)
         mapping = mapping_by_ref.get(f_ref, {})
@@ -85,7 +111,7 @@ def build_initial_review_state(
         # build a blank, hidden marker so the renderer leaves it empty and the
         # editor queues it for manual placement, instead of pinning a default
         # point at the slide center.
-        if mapping.get("match_method") == "unplaced":
+        if mapping.get("match_method") == "unplaced" or f_ref in coplaced_losers:
             marker = _unplaced_marker(
                 marker_id, f_ref, slide_id, severity, mapping.get("visual_evidence")
             )

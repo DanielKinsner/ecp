@@ -221,3 +221,44 @@ def decide_placement(finding: dict, ctx: PlacementContext) -> Placed | Blank:
         severity=severity,
         scope=scope,
     )
+
+
+# ---------------------------------------------------------------------------
+# Cross-finding de-collision — one box per element (§4.2 precision over recall)
+# ---------------------------------------------------------------------------
+
+# Mirrors assembly.finding_stability.severity_rank, kept local so the live
+# render path (review_state) doesn't import that optional-heavy module.
+# Unknown / empty severity -> 0, so it only ever loses a tie-break.
+_COPLACE_SEVERITY_RANK = {"CRITICAL": 4, "HIGH": 3, "MEDIUM": 2, "LOW": 1}
+
+
+def coplaced_blanks(placements):
+    """f_refs to blank when >1 finding auto-places on the SAME element (§4.2).
+
+    ``placements`` is an iterable of ``(f_ref, slide_id, element_index,
+    severity)`` for every finding that DID auto-place on a concrete baton
+    element. When two or more share a ``(slide_id, element_index)`` their
+    marker rects stack pixel-for-pixel — the operator sees one blob and
+    ``diagnose_engagement.py`` flags STACKED / DUPLICATE. Precision over recall
+    (§4.2): keep the single highest-severity box on the element and blank the
+    rest into the manual-placement queue (they stay findings, just unplaced).
+
+    Deterministic: a coord-less ``element_index`` of ``None`` never collides,
+    and severity ties resolve to the first finding in input order.
+    """
+    groups: dict = {}
+    for f_ref, slide_id, element_index, severity in placements:
+        if element_index is None:
+            continue
+        groups.setdefault((slide_id, element_index), []).append((f_ref, severity))
+    losers: set = set()
+    for members in groups.values():
+        if len(members) < 2:
+            continue
+        winner = max(
+            members,
+            key=lambda m: _COPLACE_SEVERITY_RANK.get((m[1] or "").upper(), 0),
+        )[0]
+        losers.update(f_ref for f_ref, _ in members if f_ref != winner)
+    return losers
