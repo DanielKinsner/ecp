@@ -1366,6 +1366,23 @@ a:hover {{ text-decoration: underline; }}
 .detail-ethics-banner.block {{ background: var(--severity-high-bg); border-color: var(--severity-high-border); color: var(--severity-high); }}
 .detail-ethics-banner strong {{ letter-spacing: 0.05em; }}
 
+/* DOM-modified capture caveat — full-width strip under the header when the
+   acquirer dismissed overlays to reveal the page (trace-assertion-canary.md
+   §260). Amber (medium) caution tone, not a red error. */
+.dom-caveat-banner {{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 20px;
+  background: var(--severity-medium-bg);
+  border-bottom: 1px solid var(--severity-medium-border);
+  color: var(--severity-medium);
+  font-size: 12.5px;
+  line-height: 1.5;
+}}
+.dom-caveat-icon {{ font-size: 15px; line-height: 1.35; flex-shrink: 0; }}
+.dom-caveat-text strong {{ color: var(--amber); letter-spacing: 0.02em; }}
+
 .detail-actions {{
   padding: 12px 16px;
   border-top: 1px solid var(--border);

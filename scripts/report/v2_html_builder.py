@@ -313,10 +313,20 @@ def generate_v2_report(
         inputs.get("audit_md_text", ""),
     )
 
+    # DOM-modified caveat banner (contracts/trace-assertion-canary.md §260 /
+    # product.md §0): when the acquirer dismissed overlays to reveal the page,
+    # the captured DOM differs from a normal user's first view, so the report
+    # MUST surface a caveat so layout / cognitive-load findings are framed
+    # honestly (adversarial review 2026-07-08 #15, operator ruling to build).
+    dom_caveat_html = v1.render_dom_caveat_banner(
+        v1.dom_capture_caveat(inputs["baton"])
+    )
+
     # Phase 7: Assemble context and HTML.
     has_screenshots = len(screenshots["slide_base64"]) > 0
     ctx = {
         **metadata, **metrics, **fragments,
+        "dom_caveat_html": dom_caveat_html,
         "plugin_version": inputs["plugin_version"],
         "device": device,
         "has_screenshots": has_screenshots,

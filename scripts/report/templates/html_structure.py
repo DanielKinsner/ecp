@@ -82,6 +82,11 @@ def assemble_html(ctx):
         else "This audit has no screenshots — select a finding to read its detail in the right panel."
     )
 
+    # DOM-modified capture caveat banner (contracts/trace-assertion-canary.md
+    # §260). Empty string when the acquirer did not modify the DOM, or for v1
+    # callers that don't compute it.
+    dom_caveat_html = ctx.get("dom_caveat_html", "")
+
     # Right panel (detail cards per finding, hidden until selected)
     detail_panels_html = ctx["detail_panels_html"]
 
@@ -164,6 +169,7 @@ def assemble_html(ctx):
       <button class="btn btn-primary" id="exportBtn" onclick="openExport()" disabled>Export Brief (<span id="briefCount">0</span>)</button>
     </div>
   </header>
+  {dom_caveat_html}
 
   <main class="app-main">
 

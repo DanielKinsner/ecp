@@ -8,6 +8,7 @@ from pathlib import Path
 
 from .utils import (
     aspect_ratio_value,
+    escape_html,
     get_severity_class,
     get_device_frame_css,
 )
@@ -645,6 +646,61 @@ def _apply_review_state_to_slide_markers(slide_markers, review_state, findings):
         patched.setdefault(slide_idx, []).append(out)
 
     return patched
+
+
+def dom_capture_caveat(baton):
+    """Return a caveat dict when the acquirer modified the DOM before capture,
+    else None.
+
+    contracts/trace-assertion-canary.md §260 + product.md §0 ("never
+    untraceable, never silently misleading"): when the acquirer dismisses
+    overlays (cart drawer, newsletter/media modal, cookie banner, nav drawer)
+    to reveal the full page, the captured DOM differs from a normal user's
+    first view. The visual report MUST surface that as a caveat banner so
+    layout / whitespace / first-impression findings carry the right framing.
+
+    The signal is a non-empty ``baton.capture_state.overlays_detected[]`` (the
+    acquirer records one entry per force-removed/revealed overlay). Returns
+    ``{"count": int, "types": [distinct overlay type strings]}`` or None.
+    """
+    if not isinstance(baton, dict):
+        return None
+    capture_state = baton.get("capture_state")
+    if not isinstance(capture_state, dict):
+        return None
+    overlays = capture_state.get("overlays_detected")
+    if not isinstance(overlays, list) or not overlays:
+        return None
+    types: list[str] = []
+    for overlay in overlays:
+        if not isinstance(overlay, dict):
+            continue
+        t = (overlay.get("type") or "").strip()
+        if t and t not in types:
+            types.append(t)
+    return {"count": len(overlays), "types": types}
+
+
+def render_dom_caveat_banner(caveat):
+    """Render the DOM-modified caveat as a report banner (empty string if None)."""
+    if not caveat:
+        return ""
+    count = int(caveat.get("count", 0) or 0)
+    types = caveat.get("types") or []
+    types_str = ", ".join(escape_html(t) for t in types) if types else "overlay(s)"
+    noun = "overlay" if count == 1 else "overlays"
+    verb = "was" if count == 1 else "were"
+    return (
+        '<div class="dom-caveat-banner" role="note">'
+        '<span class="dom-caveat-icon" aria-hidden="true">&#9888;</span>'
+        '<span class="dom-caveat-text">'
+        '<strong>Captured view was modified during acquisition.</strong> '
+        f'{count} {noun} {verb} dismissed to reveal the full page ({types_str}). '
+        'Findings about layout, whitespace, or first-impression / cognitive load '
+        'reflect this modified capture, not necessarily a first-time visitor&rsquo;s '
+        'view &mdash; verify those against the live page.'
+        '</span></div>'
+    )
 
 
 def _process_screenshots(engagement_path, baton, slide_markers):
