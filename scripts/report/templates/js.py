@@ -212,9 +212,15 @@ _RUNTIME_JS = r"""
     }}
   }}
 
-  function clampNumber(value, min, max) {{
+  function clampNumber(value, min, max, fallback) {{
     var n = Number(value);
-    if (!isFinite(n)) n = min;
+    // Non-finite input falls back to `fallback` when supplied, else to `min`.
+    // Two clampNumber definitions used to coexist in this scope; the later
+    // 4-arg one hoisted over this 3-arg one, so 3-arg callers silently got
+    // fallback=undefined (non-finite -> undefined) instead of the intended
+    // non-finite -> min, corrupting effect rects from malformed review-state
+    // (adversarial review 2026-07-08 #9). Merged into this single definition.
+    if (!Number.isFinite(n)) n = (fallback === undefined ? min : fallback);
     if (n < min) return min;
     if (n > max) return max;
     return n;
@@ -399,14 +405,6 @@ _RUNTIME_JS = r"""
     // position is handled by CSS. We only need to align the leader arrow
     // on the callout's left edge with the vertical center of the hotspot.
     setCalloutArrow('left', hotspotEl);
-  }}
-
-  function clampNumber(value, min, max, fallback) {{
-    var n = Number(value);
-    if (!Number.isFinite(n)) n = fallback;
-    if (n < min) return min;
-    if (n > max) return max;
-    return n;
   }}
 
   function normalizeCalloutAnchor(value) {{
