@@ -65,5 +65,79 @@ class GuardrailsPrivateRedirect(unittest.TestCase):
         self.assertIsNotNone(reason)
 
 
+class GuardrailsRedirectHostEquality(unittest.TestCase):
+    """Regression (adversarial review 2026-07-08 finding #4): the same-site
+    redirect guard must compare the registrable domain (port-stripped), not the
+    raw netloc, so legitimate redirects don't abort the whole audit."""
+
+    def _allowed(self, req, fin):
+        self.assertIsNone(
+            guardrails_fail_reason(request_url=req, final_href=fin),
+            f"{req} -> {fin} should be allowed",
+        )
+
+    def _blocked(self, req, fin):
+        self.assertIsNotNone(
+            guardrails_fail_reason(request_url=req, final_href=fin),
+            f"{req} -> {fin} should be blocked",
+        )
+
+    def test_port_normalization_allowed(self):
+        self._allowed("https://store.com/p", "https://store.com:443/p")
+
+    def test_apex_to_subdomain_allowed(self):
+        self._allowed("https://example.com/p", "https://shop.example.com/p")
+
+    def test_subdomain_to_apex_allowed(self):
+        self._allowed("https://shop.example.com/p", "https://example.com/p")
+
+    def test_cross_subdomain_same_parent_allowed(self):
+        self._allowed("https://shop.example.com/p", "https://secure.example.com/p")
+
+    def test_geo_subdomain_allowed(self):
+        self._allowed("https://brand.com/p", "https://us.brand.com/p")
+
+    def test_www_to_apex_allowed(self):
+        self._allowed("https://www.example.com/p", "https://example.com/p")
+
+    def test_different_registrable_domain_blocked(self):
+        self._blocked("https://shop.example.com/p", "https://evil.example.org/p")
+
+
+class GuardrailsAuthPathSegments(unittest.TestCase):
+    """Regression (adversarial review 2026-07-08 finding #18): auth-path
+    detection must match whole path SEGMENTS, not raw substrings, so ordinary
+    ecommerce/blog URLs aren't false-classified as login pages and blocked."""
+
+    def _allowed(self, path):
+        self.assertIsNone(
+            guardrails_fail_reason(
+                request_url="https://store.com/p", final_href=f"https://store.com{path}"),
+            f"path {path} should NOT be treated as an auth page",
+        )
+
+    def _blocked(self, path):
+        self.assertIsNotNone(
+            guardrails_fail_reason(
+                request_url="https://store.com/p", final_href=f"https://store.com{path}"),
+            f"path {path} should be treated as an auth page",
+        )
+
+    def test_password_product_slug_allowed(self):
+        self._allowed("/products/1password-case")
+
+    def test_authors_blog_path_allowed(self):
+        self._allowed("/authors/jane-doe")
+
+    def test_login_segment_blocked(self):
+        self._blocked("/login")
+
+    def test_nested_login_segment_blocked(self):
+        self._blocked("/account/login")
+
+    def test_auth_segment_blocked(self):
+        self._blocked("/auth/callback")
+
+
 if __name__ == "__main__":
     unittest.main()

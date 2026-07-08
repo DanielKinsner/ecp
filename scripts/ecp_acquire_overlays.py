@@ -383,6 +383,21 @@ def verify_timers(eval_json: EvalJson, *, sleep_s: float = 10.0) -> Optional[dic
     }
 
 
+def _registrable_domain(host: str) -> str:
+    """Approximate registrable domain (eTLD+1) as the last two dotted labels.
+
+    Used only by the redirect same-site guardrail (a UX check), NOT as a
+    security boundary — the private/metadata-IP SSRF defence is validate_url on
+    both URLs. Multi-part public suffixes (.co.uk) collapse to the suffix, so a
+    cross-org redirect within such a suffix reads as same-site: an accepted
+    over-match for this non-security guard. A custom domain landing on
+    *.myshopify.com is a genuinely different registrable domain and still
+    blocks — warn-vs-block for that case is a product decision (review
+    2026-07-08 finding #4)."""
+    labels = [x for x in host.split(".") if x]
+    return ".".join(labels[-2:]) if len(labels) >= 2 else host
+
+
 def guardrails_fail_reason(*, request_url: str, final_href: str) -> str | None:
     """Return a human message if URL acquisition should block, else None."""
     try:
@@ -398,13 +413,23 @@ def guardrails_fail_reason(*, request_url: str, final_href: str) -> str | None:
         reason = validate_url(candidate)
         if reason:
             return f"{reason} ({label} URL)"
-    an = (a.netloc or "").lower()
-    bn = (b.netloc or "").lower()
-    an2 = an[4:] if an.startswith("www.") else an
-    bn2 = bn[4:] if bn.startswith("www.") else bn
-    if an2 and bn2 and an2 != bn2:
-        return f"Redirected to a different host ({b.netloc!r} vs {a.netloc!r})"
-    path = (b.path or "").lower()
-    if "password" in path or "/login" in path or "/signin" in path or "/auth" in path:
+    # Same-site test on the registrable domain, using a.hostname/b.hostname
+    # (NOT a.netloc) so the port + userinfo are dropped. Comparing the raw
+    # netloc false-blocked two common, legitimate redirects that abort a real
+    # audit: a pure port normalization (store.com -> store.com:443) and any
+    # cross-subdomain landing on the same registrable domain (apex -> shop.,
+    # geo -> us.brand.com). The SECURITY boundary is validate_url on BOTH URLs
+    # above (private/metadata IP); this is only a "did we land on a different
+    # SITE than requested" UX guard. (adversarial review 2026-07-08 finding #4.)
+    ah = (a.hostname or "").lower()
+    bh = (b.hostname or "").lower()
+    if ah and bh and _registrable_domain(ah) != _registrable_domain(bh):
+        return f"Redirected to a different host ({b.hostname!r} vs {a.hostname!r})"
+    # Auth/login path detection — match whole path SEGMENTS, not raw substrings,
+    # so a product URL like /products/1password-case or a blog under
+    # /authors/... is not false-classified as a login page and blocked
+    # (adversarial review 2026-07-08 finding #18).
+    segments = {seg for seg in (b.path or "").lower().split("/") if seg}
+    if segments & {"password", "login", "signin", "auth"}:
         return "Auth/login path detected in final URL"
     return None
