@@ -1392,7 +1392,6 @@ a:hover {{ text-decoration: underline; }}
   flex-shrink: 0;
 }}
 .detail-btn {{
-  flex: 1;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
   font-size: 12px;

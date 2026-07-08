@@ -78,12 +78,17 @@ button:active { transform: translateY(1px); }
 .brand h1 { margin: 0; font: 700 28px/1.05 Georgia, serif; letter-spacing: 0; }
 .eyebrow { margin: 0 0 8px; color: var(--gold); text-transform: uppercase; letter-spacing: .16em; font-size: 11px; font-weight: 800; }
 .subtle { color: var(--muted); }
-.tabs, .toolbar, .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
-.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* .tabs is flex (wraps); .toolbar/.actions are grids — keeping them in the
+   flex group left flex-wrap dead on a grid container. Split so each owns the
+   layout it actually uses. */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+.actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 18px 0; }
 .toolbar {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
+  gap: 8px;
+  margin: 18px 0;
 }
 .toolbar button {
   display: flex;
@@ -310,8 +315,10 @@ button:active { transform: translateY(1px); }
 }
 .finding-card:hover { border-color: var(--line-strong); background: #2c2c2a; }
 .finding-card.is-active { border-color: var(--gold); box-shadow: inset 3px 0 0 var(--gold), 0 0 0 1px rgba(246,185,26,.18); }
-.finding-card h3 { margin: 0 0 6px; font-size: 14px; }
-.finding-card h3 { padding-right: 58px; }
+/* padding-right reserves room for the absolutely-positioned .pick-toggle in the
+   card's top-right; named so the coupling is explicit, not a bare magic number. */
+.finding-card { --pick-toggle-reserve: 58px; }
+.finding-card h3 { margin: 0 0 6px; font-size: 14px; padding-right: var(--pick-toggle-reserve); }
 .finding-card p { display: flex; justify-content: space-between; gap: 8px; margin: 0; color: var(--muted); font-size: 12px; }
 .finding-card p span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pick-toggle {
@@ -629,7 +636,7 @@ button:active { transform: translateY(1px); }
   background: var(--gold);
   cursor: nwse-resize;
 }
-.preview-modal[hidden] { display: none !important; }
+.preview-modal[hidden] { display: none; }
 .preview-modal {
   position: fixed;
   inset: 0;
@@ -800,10 +807,13 @@ button:active { transform: translateY(1px); }
   color: var(--ink);
 }
 .summary-row strong[class*="tone-"] { color: var(--tone); }
-.severity-high { color: #ffb45d !important; }
-.severity-critical { color: #ff7a9a !important; }
-.severity-medium { color: var(--gold) !important; }
-.severity-low { color: var(--green) !important; }
+/* Scoped under `.summary-row strong` (0,2,1) so they outrank the base
+   `.summary-row strong` color (0,1,1) on their own — no !important needed.
+   These classes are only ever emitted on that <strong> (editor.js). */
+.summary-row strong.severity-high { color: #ffb45d; }
+.summary-row strong.severity-critical { color: #ff7a9a; }
+.summary-row strong.severity-medium { color: var(--gold); }
+.summary-row strong.severity-low { color: var(--green); }
 .flag-list {
   display: flex;
   flex-wrap: wrap;
