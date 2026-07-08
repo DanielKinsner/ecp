@@ -54,12 +54,24 @@ from typing import TypedDict
 # Trace-assertion counter parsing (4th structural canary)
 # ---------------------------------------------------------------------------
 
-# Lines like "#   team_spawned_specialists: 20" or "#   ethics_gate_executed: true"
-# OR header lines like "# Pipeline: v2", "# Devices: desktop, mobile". Key
-# matching is case-insensitive at parse time; the consumer normalizes to
-# lowercase before comparing against known counter sets.
+# Counter lines come in TWO real-world shapes and the regex accepts BOTH:
+#   - the contract's documented form  "#   team_spawned_specialists: 20"
+#   - the form the audit lead actually writes  "team_spawned_specialists: 20"
+#     (no leading '#', under a "## Dispatch counters (v2)" / "## ASSERTIONS"
+#     section) — the shape of every real docs/ecp/*/audit-trace.log and the
+#     committed fixture. The leading '#' is therefore OPTIONAL. A '##' section
+#     header does NOT match (the second '#' isn't whitespace, so no key follows).
+# Also matches header lines like "pipeline: v2" / "Devices: desktop, mobile".
+# Key matching is case-insensitive; the consumer normalizes to lowercase.
+# Value stops at whitespace/'#'; a trailing inline comment is stripped — the
+# committed fixture annotates counters with "  # target >= 2  ✓" and a bare
+# trailing "✓", so the tail accepts '#', '←' (U+2190) or '✓' (U+2713).
+# All inter-token whitespace is [ \t] (NOT \s): \s matches newlines, and with the
+# trailing inline-comment class a '#'-prefixed line would let one match gobble the
+# NEXT '#' line as its "comment", silently dropping every other counter.
 _TRACE_COUNTER_RE = re.compile(
-    r"^#\s+(?P<key>[A-Za-z_][A-Za-z0-9_]*)\s*:\s*(?P<value>[^\s#]+(?:\s+[^\s#]+)*?)\s*(?:←.*)?$",
+    r"^[ \t]*#?[ \t]*(?P<key>[A-Za-z_][A-Za-z0-9_]*)[ \t]*:[ \t]*"
+    r"(?P<value>[^\s#]+(?:[ \t]+[^\s#]+)*?)[ \t]*(?:[#←✓].*)?$",
     re.MULTILINE,
 )
 
@@ -137,12 +149,21 @@ def parse_trace_assertions(trace_path: Path) -> TraceAssertions:
 
     text = trace_path.read_text(encoding="utf-8")
 
-    # Header is everything up to first non-`#` non-blank line, or the first
-    # `[YYYY-MM-DD...]` event-log line — whichever comes first.
+    # The counter/header region is everything before the EVENT LOG. Real traces
+    # write counters WITHOUT a leading '#' (under a '## Dispatch counters' /
+    # '## ASSERTIONS' section), so we can no longer stop at "first non-'#' line"
+    # (that dropped every counter and made the structural canary fail on every
+    # real run — adversarial review 2026-07-08 #1). Instead stop at the first
+    # EVENT-section header ('## EVENTS' / '## EVENT LOG') or '[timestamp]' line so
+    # chronological event lines aren't read as counters. Older real logs have no
+    # such marker and are scanned whole — known counters are unique and appear at
+    # the top; a stray lowercase key:value event line is preserved harmlessly as
+    # a string the structural canary never reads, and first-occurrence-wins below
+    # protects a header counter from any later reuse.
     header_lines: list[str] = []
     for line in text.splitlines():
         stripped = line.strip()
-        if stripped and not stripped.startswith("#"):
+        if re.match(r"#*\s*event", stripped, re.IGNORECASE) or re.match(r"\[\d{4}", stripped):
             break
         header_lines.append(line)
     header_text = "\n".join(header_lines)
@@ -159,14 +180,17 @@ def parse_trace_assertions(trace_path: Path) -> TraceAssertions:
 
         # Top-level header fields (Pipeline, Flags, Devices) are also
         # counter-shaped lines but live outside the ASSERTIONS block.
+        # First-occurrence-wins for the header fields (they appear once in the
+        # preamble; guard protects them if the region also spans event lines).
         if key == "pipeline":
-            pipeline = value
+            pipeline = pipeline or value
             continue
         if key == "flags":
-            flags = value
+            flags = flags or value
             continue
         if key == "devices":
-            devices = [d.strip() for d in value.split(",") if d.strip()]
+            if not devices:
+                devices = [d.strip() for d in value.split(",") if d.strip()]
             continue
 
         # Skip non-counter informational header lines like "Engagement:",
@@ -184,6 +208,13 @@ def parse_trace_assertions(trace_path: Path) -> TraceAssertions:
 
         # Apply alias normalization.
         canonical_key = _TRACE_COUNTER_ALIASES.get(key, key)
+
+        # First-occurrence-wins: the header/counters block is written at audit
+        # completion with final values; a later chronological reuse of the same
+        # key must not overwrite it (the region may span event lines on traces
+        # without an EVENT-section marker).
+        if canonical_key in counters:
+            continue
 
         # Coerce to int for known integer counters (incl. retry-counter prefix).
         if canonical_key in _INT_COUNTERS or any(

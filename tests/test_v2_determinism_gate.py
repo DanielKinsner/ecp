@@ -769,5 +769,64 @@ class TestAwdmodsFixtureSanity(unittest.TestCase):
         )
 
 
+class TestHashlessTraceFormat(unittest.TestCase):
+    """Regression for adversarial review 2026-07-08 #1: parse_trace_assertions
+    must read the counter format the audit lead ACTUALLY writes — bare
+    ``key: value`` lines (no leading '#') under a ``## Dispatch counters``
+    section — not only the contract's documented '#'-prefixed form. The old
+    regex required a leading '#' and the header loop stopped at the first
+    non-'#' line, so ZERO counters were parsed from every real docs/ecp/*
+    audit-trace.log and the structural canary failed on every real run."""
+
+    _REAL_HASHLESS = (
+        "# ECP audit-trace.log — engagement 2026-07-08-deadbeef\n"
+        "pipeline: v2 (schema_version=3)\n"
+        "platform: shopify\n"
+        "page_type: homepage\n"
+        "scope: everything\n"
+        "clusters: visual-cta,pricing\n"
+        "\n"
+        "## Dispatch counters (v2)\n"
+        "subagent_spawned_acquirers: 2\n"
+        "expected_specialist_count: 4\n"
+        "team_spawned_specialists: 4\n"
+        "subagent_spawned_ethics: 1\n"
+        "subagent_spawned_synthesizer: 1\n"
+        "cluster_files_written: 4\n"
+        "ethics_gate_executed: true\n"
+        "\n"
+        "acquired_at: 2026-07-08T10:00:00.000Z\n"
+        "engagement_status: acquired\n"
+    )
+
+    def _write(self, text: str) -> Path:
+        tmp = Path(tempfile.mkdtemp(prefix="ecp-trace-"))
+        p = tmp / "audit-trace.log"
+        p.write_text(text, encoding="utf-8")
+        return p
+
+    def test_hashless_counters_parse(self):
+        trace = parse_trace_assertions(self._write(self._REAL_HASHLESS))
+        c = trace["counters"]
+        self.assertEqual(c.get("cluster_files_written"), 4)
+        self.assertEqual(c.get("expected_specialist_count"), 4)
+        self.assertEqual(c.get("subagent_spawned_specialists"), 4)  # team_spawned_* alias
+        self.assertEqual(c.get("subagent_spawned_synthesizer"), 1)
+        self.assertEqual(c.get("subagent_spawned_ethics"), 1)
+        self.assertIs(c.get("ethics_gate_executed"), True)
+        self.assertEqual(trace["pipeline"], "v2 (schema_version=3)")
+
+    def test_hashless_structural_canary_passes(self):
+        result = check_structural_canary(self._write(self._REAL_HASHLESS))
+        self.assertTrue(result["passed"], result.get("detail"))
+
+    def test_chronological_event_line_does_not_clobber_counter(self):
+        # A later event line reusing a counter key must NOT overwrite the header
+        # value (first-occurrence-wins).
+        text = self._REAL_HASHLESS + "\ncluster_files_written: 999\n"
+        c = parse_trace_assertions(self._write(text))["counters"]
+        self.assertEqual(c.get("cluster_files_written"), 4)
+
+
 if __name__ == "__main__":
     unittest.main()
