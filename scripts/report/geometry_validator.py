@@ -14,7 +14,12 @@ from pathlib import Path
 from typing import Any
 
 try:  # Support both `python -m report.geometry_validator` and direct script use.
-    from .geometry import element_rect_raw, slide_for_css_y, viewport_dpr
+    from .geometry import (
+        element_rect_raw,
+        infer_element_coord_scale,
+        slide_for_css_y,
+        viewport_dpr,
+    )
     from .markers import _infer_element_coord_scale
     from .v2_loader import load_v2_engagement
     from .v2_markers import (
@@ -24,7 +29,12 @@ try:  # Support both `python -m report.geometry_validator` and direct script use
     )
 except ImportError:  # pragma: no cover - exercised by manual direct invocation.
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from report.geometry import element_rect_raw, slide_for_css_y, viewport_dpr
+    from report.geometry import (
+        element_rect_raw,
+        infer_element_coord_scale,
+        slide_for_css_y,
+        viewport_dpr,
+    )
     from report.markers import _infer_element_coord_scale
     from report.v2_loader import load_v2_engagement
     from report.v2_markers import (
@@ -198,7 +208,20 @@ def validate_v2_hotspot_geometry(
     slide_mismatches: list[dict[str, Any]] = []
     slide_matches = 0
     slide_total = 0
-    scale_for_expected = expected_scale or 1.0
+    # Pick the expected slide with the SAME element-coordinate scale the renderer
+    # actually uses: infer_element_coord_scale WITH sections (the full heuristic
+    # that also detects physical-pixel batons via HORIZONTAL extent), exactly as
+    # placement.PlacementContext.from_baton does. The prior Y-only
+    # _likely_expected_scale returned 1.0 for a horizontal-DPR baton whose
+    # vertical extent fit the CSS envelope, while the renderer scaled by DPR — so
+    # every e_index marker's expected slide was computed at the wrong scale and
+    # the slide-match gate false-FAILed (adversarial review 2026-07-08 #6).
+    try:
+        scale_for_expected = float(
+            infer_element_coord_scale(elements, screenshots, viewport, dpr, sections)
+        ) or 1.0
+    except (TypeError, ValueError):
+        scale_for_expected = 1.0
     for mapping in e_index_mappings:
         elem_idx = mapping.get("baton_element_index")
         if not isinstance(elem_idx, int) or elem_idx < 0 or elem_idx >= len(elements):
