@@ -322,7 +322,11 @@ def _resolve_citations(findings, plugin_path, page_url=None):
         try:
             parsed_page = urlparse(page_url)
             if parsed_page.scheme in ("http", "https") and parsed_page.netloc:
-                page_netloc = parsed_page.netloc.lower().lstrip("www.")
+                _pn = parsed_page.netloc.lower()
+                # Strip the "www." PREFIX only. lstrip("www.") strips any
+                # leading run of {w, .} chars (so "www.wine.com" -> "ine.com"),
+                # which can collapse distinct domains (review 2026-07-08 #19).
+                page_netloc = _pn[4:] if _pn.startswith("www.") else _pn
         except ValueError:
             page_netloc = None
 
@@ -341,7 +345,8 @@ def _resolve_citations(findings, plugin_path, page_url=None):
             # point back at the audited store. Flag and clear.
             if is_ethics_finding and page_netloc:
                 try:
-                    src_netloc = urlparse(f["source_url"]).netloc.lower().lstrip("www.")
+                    _sn = urlparse(f["source_url"]).netloc.lower()
+                    src_netloc = _sn[4:] if _sn.startswith("www.") else _sn
                     if src_netloc == page_netloc:
                         print(
                             f"warning: ethics finding (index={f.get('index')}) had "
@@ -662,6 +667,14 @@ def _process_screenshots(engagement_path, baton, slide_markers):
     # caller, or every later slide's hotspots render on the wrong image.
     slide_index_remap: dict[int, int] = {}
     for i, ss_path in enumerate(screenshot_paths):
+        # An empty/whitespace path is a malformed or partially-failed baton
+        # entry (screenshots:[{}] or {"path":""}), not a real slide. Skip it
+        # BEFORE resolution: resolving "" yields the engagement dir itself
+        # (which exists() but is not a file -> a crash at encode time) or a
+        # spurious path-traversal exit(2). Degrade like a missing screenshot
+        # instead — the graceful-degradation intent below (review 2026-07-08 #7).
+        if not str(ss_path).strip():
+            continue
         # Path containment: reject baton-supplied screenshot paths that
         # escape the engagement directory. A crafted baton.json with
         # "path": "../../../etc/passwd" would otherwise base64-embed an
@@ -676,7 +689,10 @@ def _process_screenshots(engagement_path, baton, slide_markers):
                 file=sys.stderr,
             )
             sys.exit(2)
-        if not full_path.exists():
+        # is_file() (not exists()): a path that resolves to a directory must be
+        # skipped like a missing file — encode_image_base64 would otherwise
+        # crash trying to open a directory as an image (review 2026-07-08 #7).
+        if not full_path.is_file():
             continue
 
         screenshot_meta = screenshots[i] if i < len(screenshots) and isinstance(screenshots[i], dict) else {}

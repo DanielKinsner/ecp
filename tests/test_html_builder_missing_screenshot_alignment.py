@@ -75,5 +75,33 @@ class MissingScreenshotKeepsSlidesAligned(unittest.TestCase):
             self.assertEqual(realigned, {0: ["m_on_s0"], 1: ["m_on_s2"]})
 
 
+class EmptyScreenshotPathDegrades(unittest.TestCase):
+    """Regression (adversarial review 2026-07-08 #7): an empty/whitespace path,
+    or one that resolves to a directory (a malformed / partially-failed baton
+    like screenshots:[{}] or {"path":""}), must be skipped like a missing file
+    — not crash the whole render. Pre-fix, an empty path resolved to the
+    engagement dir itself (exists() True but not a file), and encode_image_base64
+    then crashed trying to open a directory as an image. No PIL needed — the
+    fix skips before any encode."""
+
+    def _baton(self, screenshots):
+        return {"viewport": {"width": 390, "height": 844}, "screenshots": screenshots}
+
+    def test_empty_blank_and_missing_paths_yield_no_slides(self):
+        with tempfile.TemporaryDirectory() as d:
+            out = _process_screenshots(
+                Path(d), self._baton([{"path": ""}, {}, {"path": "   "}]), {})
+            self.assertEqual(out["slide_base64"], [])
+            self.assertEqual(out["slide_index_remap"], {})
+
+    def test_directory_path_skipped_not_encoded(self):
+        with tempfile.TemporaryDirectory() as d:
+            eng = Path(d)
+            (eng / "subdir").mkdir()
+            out = _process_screenshots(eng, self._baton([{"path": "subdir"}]), {})
+            self.assertEqual(out["slide_base64"], [])
+            self.assertEqual(out["slide_index_remap"], {})
+
+
 if __name__ == "__main__":
     unittest.main()
