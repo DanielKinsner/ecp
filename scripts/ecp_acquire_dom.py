@@ -80,41 +80,63 @@ def _first_aria_label(svg_open_and_inner: str) -> str:
     return "svg"
 
 
-def _replace_one_svg(html: str) -> tuple[str, bool]:
-    m = re.search(r"(?is)<svg(\s[^>]*)?>", html)
-    if not m:
-        return html, False
-    start = m.start()
-    pos = m.end()
-    lower = html.lower()
-    depth = 1
-    n = len(html)
-    while pos < n and depth:
-        a = lower.find("<svg", pos)
-        b = lower.find("</svg>", pos)
-        if b == -1:
-            return html, False
-        if a != -1 and a < b:
-            depth += 1
-            pos = a + 4
-        else:
-            depth -= 1
-            if depth == 0:
-                end = b + len("</svg>")
-                chunk = html[m.start() : end]
-                label = escape(_first_aria_label(chunk), quote=True)
-                repl = f'<svg aria-label="{label}"/>'
-                return html[:start] + repl + html[end:], True
-            pos = b + len("</svg>")
-    return html, False
+_SVG_OPEN_RE = re.compile(r"(?is)<svg(\s[^>]*)?>")
 
 
 def _strip_svg_innards(html: str) -> str:
-    for _ in range(5000):
-        html, changed = _replace_one_svg(html)
-        if not changed:
+    """Replace each ``<svg>...</svg>`` subtree with a stub ``<svg aria-label=".."/>``.
+
+    Single left-to-right pass: ``html.lower()`` is computed ONCE and scan
+    positions only advance, so this is O(len(html)). The previous implementation
+    replaced one svg then re-scanned the whole (mutated) string from the start on
+    each of up to 5000 iterations — O(n_svg × len(html)), tens of GB of scanning
+    on a hostile multi-MB page with thousands of ``<svg>`` (adversarial review
+    2026-07-08 #21). It also mis-handled multiple top-level svgs: after the first
+    replacement its own self-closing stub matched the rescan and swallowed it,
+    leaving later svgs un-stripped — this pass fixes that too.
+    """
+    lower = html.lower()
+    n = len(html)
+    out: list[str] = []
+    i = 0
+    replaced = 0
+    while i < n and replaced < 5000:
+        m = _SVG_OPEN_RE.search(html, i)
+        if not m:
             break
-    return html
+        out.append(html[i : m.start()])
+        # Already self-closing (<svg .../>): no innards to strip — keep as-is.
+        if m.group(0).rstrip().endswith("/>"):
+            out.append(m.group(0))
+            i = m.end()
+            replaced += 1
+            continue
+        pos = m.end()
+        depth = 1
+        end: int | None = None
+        while pos < n and depth:
+            a = lower.find("<svg", pos)
+            b = lower.find("</svg>", pos)
+            if b == -1:
+                break  # unbalanced — leave the remainder verbatim
+            if a != -1 and a < b:
+                depth += 1
+                pos = a + 4
+            else:
+                depth -= 1
+                pos = b + len("</svg>")
+                if depth == 0:
+                    end = pos
+        if end is None:
+            out.append(html[m.start() :])  # unbalanced svg — keep verbatim
+            return "".join(out)
+        chunk = html[m.start() : end]
+        label = escape(_first_aria_label(chunk), quote=True)
+        out.append(f'<svg aria-label="{label}"/>')
+        i = end
+        replaced += 1
+    out.append(html[i:])
+    return "".join(out)
 
 
 def _strip_html_comments_except_omission(html: str) -> str:
