@@ -6,6 +6,61 @@ import string
 from urllib.parse import urlparse
 
 
+def _numeric_host_to_ip(host):
+    """Normalize a non-standard but browser-resolvable numeric IPv4 host to an
+    ``IPv4Address``, else return None for a genuine hostname.
+
+    ``ipaddress.ip_address`` only accepts canonical dotted-quad / IPv6 forms,
+    but browsers and libc ``inet_aton`` also resolve decimal (``2130706433``),
+    hex (``0x7f000001``), octal (``0177.0.0.1``) and short-dotted (``127.1``)
+    notations — all of which map to 127.0.0.1 / metadata IPs and are a classic
+    SSRF bypass of a range check that only looks at the canonical form. We
+    normalise those here (deterministically, without the platform-dependent
+    ``socket.inet_aton``) so the caller can range-check the real address.
+    IPv6 is untouched — ``ipaddress.ip_address`` already handles it upstream.
+    """
+    parts = host.split(".")
+    if not 1 <= len(parts) <= 4:
+        return None
+    values = []
+    for p in parts:
+        if not p or len(p) > 11:
+            return None
+        try:
+            if p[:2] in ("0x", "0X"):
+                v = int(p, 16)
+            elif p[0] == "0" and len(p) > 1:
+                v = int(p, 8)
+            elif p.isdigit():
+                v = int(p, 10)
+            else:
+                return None  # contains a letter -> real hostname label
+        except ValueError:
+            return None
+        if v < 0:
+            return None
+        values.append(v)
+    # inet_aton "last part fills the remaining low-order bytes" rule.
+    n = len(values)
+    if n == 1:
+        num = values[0]
+    elif n == 2:
+        if values[0] > 0xFF or values[1] > 0xFFFFFF:
+            return None
+        num = (values[0] << 24) | values[1]
+    elif n == 3:
+        if values[0] > 0xFF or values[1] > 0xFF or values[2] > 0xFFFF:
+            return None
+        num = (values[0] << 24) | (values[1] << 16) | values[2]
+    else:
+        if any(v > 0xFF for v in values):
+            return None
+        num = (values[0] << 24) | (values[1] << 16) | (values[2] << 8) | values[3]
+    if not 0 <= num <= 0xFFFFFFFF:
+        return None
+    return ipaddress.ip_address(num)
+
+
 def is_safe_citation_url(url):
     """Return True if `url` is safe to render as a clickable ``<a href>``.
 
@@ -55,8 +110,15 @@ def is_safe_citation_url(url):
     try:
         ip = ipaddress.ip_address(host)
     except ValueError:
-        # Not an IP literal — plain hostname, accept.
-        return True
+        # Not a *canonical* IP literal. Browsers still resolve decimal / hex /
+        # octal / short-dotted IPv4 forms (e.g. 2130706433, 0x7f000001,
+        # 0177.0.0.1, 127.1) to real addresses — normalise and range-check
+        # those too, or a crafted citation URL slips a loopback/metadata host
+        # past this guard (SSRF-bypass hardening, adversarial review 2026-07-08).
+        ip = _numeric_host_to_ip(host)
+        if ip is None:
+            # Genuine hostname — accept.
+            return True
     if ip.is_private or ip.is_loopback or ip.is_link_local:
         return False
     if ip.is_reserved or ip.is_multicast or ip.is_unspecified:
