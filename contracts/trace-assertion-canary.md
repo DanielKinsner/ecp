@@ -66,6 +66,14 @@ Write this as the FIRST ~30 lines of `docs/ecp/{engagement-id}/audit-trace.log` 
 #   estimated_tokens_total: ~0            ← filled in at audit completion via the heuristic below
 ```
 
+> **Parser tolerance (2026-07-08).** The counter lines above are shown with a
+> leading `#`, but the parser (`assembly.determinism_gate.parse_trace_assertions`)
+> also accepts the **`#`-less** form the audit lead writes in practice — bare
+> `key: value` lines under a `## Dispatch counters (v2)` / `## ASSERTIONS`
+> section (the shape of every real `docs/ecp/*/audit-trace.log`). Both forms
+> parse identically; inline `# ...` / `✓` annotations after a value are ignored.
+> Either style is contract-conformant.
+
 ### v1 header (legacy — for v1 audits run via the v1 path):
 
 ```
