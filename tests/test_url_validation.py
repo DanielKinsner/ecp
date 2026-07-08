@@ -97,5 +97,35 @@ class Malformed(unittest.TestCase):
         self.assertIsNotNone(validate_url("https://"))
 
 
+class ShellMetacharacterHardening(unittest.TestCase):
+    """Adversarial review 2026-07-08 #13: the URL is passed as an argv to the
+    agent-browser `goto` subcommand, which on Windows re-parses argv through an
+    npm cmd.exe/PowerShell shim. Reject characters that never appear UNENCODED in
+    a valid URL but ARE shell/quote breakouts — zero false positives."""
+
+    def test_rejects_whitespace_quotes_angles_backtick(self):
+        for u in (
+            "https://shop.com/p q",
+            'https://shop.com/p"x',
+            "https://shop.com/p<script>",
+            "https://shop.com/a>b",
+            "https://x.com/`whoami`",
+            "https://x.com/a\tb",
+            "https://x.com/a\nb",
+        ):
+            with self.subTest(url=u):
+                self.assertIsNotNone(validate_url(u), f"{u!r} should be rejected")
+
+    def test_rejects_control_characters(self):
+        self.assertIsNotNone(validate_url("https://x.com/\x00"))
+        self.assertIsNotNone(validate_url("https://x.com/\x1f"))
+
+    def test_allows_legit_query_strings_with_ampersand(self):
+        # & is a legal query delimiter — must NOT be rejected (the cmd-separator
+        # residual is handled at the shim layer, not by bouncing real URLs).
+        self.assertIsNone(validate_url("https://shop.com/p?a=1&b=2&utm_source=x"))
+        self.assertIsNone(validate_url("https://shop.com/collections/all?sort=price&page=2"))
+
+
 if __name__ == "__main__":
     unittest.main()

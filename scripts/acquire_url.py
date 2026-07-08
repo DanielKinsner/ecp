@@ -38,6 +38,8 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
+import re
 import shutil
 import struct
 import subprocess
@@ -348,6 +350,29 @@ def _default_engagement_id() -> str:
     # ecp-cursor-* default failed schema validation, so the in-place v1→v2
     # auto-convert always best-effort-refused default-id runs.
     return f"{datetime.now(timezone.utc):%Y-%m-%d}-{uuid.uuid4().hex[:8]}"
+
+
+# A safe engagement-id slug: starts alphanumeric, then letters/digits/-/_ only.
+# No path separators, no '..', no ':' — so it can never escape docs/ecp/.
+_ENGAGEMENT_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
+
+
+def _validate_engagement_id(engagement_id: str) -> str | None:
+    """Return an error string if ``engagement_id`` could escape docs/ecp/, else None.
+
+    ``--engagement-id`` is joined onto ``docs/ecp/`` to build the output dir; a
+    value like ``../../scripts`` or an absolute path would let acquisition write
+    (and _prepare_engagement_dir potentially clear) files outside the engagement
+    tree (adversarial review 2026-07-08 #12). Restrict it to a filename slug.
+    """
+    if not engagement_id:
+        return "engagement-id is empty"
+    if not _ENGAGEMENT_ID_RE.fullmatch(engagement_id):
+        return (
+            f"engagement-id must be a slug of letters, digits, '-' or '_' "
+            f"(no path separators, '..', or drive letters); got {engagement_id!r}"
+        )
+    return None
 
 
 def _run(cmd: list[str], *, check: bool) -> int:
@@ -1812,7 +1837,20 @@ def main() -> int:
         return 1
 
     engagement_id = args.engagement_id.strip() or _default_engagement_id()
+    _id_err = _validate_engagement_id(engagement_id)
+    if _id_err:
+        print(f"ERROR: {_id_err}", file=sys.stderr)
+        return 2
     eng_dir = REPO_ROOT / "docs" / "ecp" / engagement_id
+    # Defense in depth: even if the slug check ever loosens, refuse to operate
+    # on a directory that resolves outside docs/ecp/ (path-traversal guard).
+    _ecp_root = (REPO_ROOT / "docs" / "ecp").resolve()
+    if not eng_dir.resolve().is_relative_to(_ecp_root):
+        print(
+            f"ERROR: engagement-id {engagement_id!r} resolves outside docs/ecp/",
+            file=sys.stderr,
+        )
+        return 2
     _abort = _prepare_engagement_dir(eng_dir, args.allow_existing)
     if _abort is not None:
         return _abort

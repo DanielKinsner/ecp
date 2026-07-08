@@ -84,6 +84,25 @@ def validate_url(url: str) -> str | None:
     """
     if not url or not isinstance(url, str):
         return "Empty or non-string URL."
+
+    # Shell-injection hardening (adversarial review 2026-07-08 #13): the URL is
+    # passed as an argv to the agent-browser `goto` subcommand, which on Windows
+    # resolves to an npm .cmd/.ps1 shim that re-parses argv through cmd.exe /
+    # PowerShell (the eval channel dodges this via base64; goto cannot). Reject
+    # characters that never appear UNENCODED in a valid URL (RFC 3986 excluded /
+    # "unwise") but ARE shell/quote breakouts: C0/C1 controls, whitespace,
+    # double-quote, backtick, angle brackets. This is zero-false-positive — a
+    # real URL percent-encodes all of these.
+    # NOTE (residual): cmd/PowerShell command separators that ARE legal in a URL
+    # (`&` in query strings, `;` `(` `)` `|`) are NOT rejected here — that would
+    # bounce legitimate URLs. Fully closing those requires invoking agent-browser
+    # without the shim's argv reparse (resolve the real node entry, not the
+    # .cmd), a tracked Windows follow-up.
+    if any(ord(c) < 0x20 or ord(c) == 0x7F for c in url):
+        return "URL contains control characters."
+    if any(c in url for c in '" `<>\t\n\r'):
+        return "URL must percent-encode spaces, quotes, backticks, and angle brackets."
+
     try:
         parsed = urlparse(url.strip())
     except (ValueError, TypeError):

@@ -213,5 +213,25 @@ class TestRevealLazyAndAnimations(unittest.TestCase):
         self.assertIn("opacity", js)
 
 
+class EngagementIdTraversalGuard(unittest.TestCase):
+    """Adversarial review 2026-07-08 #12: --engagement-id is joined onto
+    docs/ecp/ to build the output dir. A value like '../../scripts' or an
+    absolute path would let acquisition write / _prepare_engagement_dir clear
+    files outside the engagement tree. _validate_engagement_id restricts it to
+    a filename slug."""
+
+    def test_accepts_valid_slugs(self):
+        for eid in ("2026-07-08-deadbeef", "2300-slingmods_pdp", "ok-1", "abc123"):
+            self.assertIsNone(acquire_url._validate_engagement_id(eid), eid)
+
+    def test_rejects_traversal_and_absolute(self):
+        for eid in ("../../scripts", "..", "a/b", "a\\b", "C:/Windows",
+                    "/etc/passwd", "", "   ", " has space", ".hidden"):
+            self.assertIsNotNone(
+                acquire_url._validate_engagement_id(eid),
+                f"{eid!r} should be rejected as unsafe",
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
