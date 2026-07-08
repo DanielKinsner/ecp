@@ -91,16 +91,26 @@ class TestGiantExactRectangles:
         assert r["detail"]["exact_count"] == 2
         assert r["detail"]["violation_count"] == 0
 
-    def test_wide_rectangle_fails(self):
+    def test_wide_short_strip_passes(self):
+        # 90%w / 20%h — a full-width nav/footer/CTA strip is a PRECISE anchor,
+        # not a parent container (§10 2026-07-08): wide alone no longer fails.
         markers = [_marker(f_ref="pricing F-01", w_pct=90, h_pct=20)]
+        r = check_giant_exact_rectangles(markers)
+        assert r["passed"]
+        assert r["detail"]["violation_count"] == 0
+
+    def test_tall_narrow_column_passes(self):
+        # 30%w / 85%h — tall but narrow: not a full-viewport container.
+        markers = [_marker(f_ref="pricing F-01", w_pct=30, h_pct=85)]
+        r = check_giant_exact_rectangles(markers)
+        assert r["passed"]
+
+    def test_bulky_rectangle_fails(self):
+        # 90%w AND 80%h — both large = a real parent container -> giant.
+        markers = [_marker(f_ref="pricing F-01", w_pct=90, h_pct=80)]
         r = check_giant_exact_rectangles(markers)
         assert not r["passed"]
         assert r["detail"]["violations"][0]["f_ref"] == "pricing F-01"
-
-    def test_tall_rectangle_fails(self):
-        markers = [_marker(f_ref="pricing F-01", w_pct=30, h_pct=85)]
-        r = check_giant_exact_rectangles(markers)
-        assert not r["passed"]
 
     def test_proxy_with_giant_zone_is_skipped(self):
         # Proxy elements ARE allowed to be larger — dashed rect signals
@@ -126,10 +136,13 @@ class TestGiantExactRectangles:
         assert r["passed"]
 
     def test_custom_thresholds_honored(self):
-        # A 60% wide rectangle should pass default but fail at 50% threshold.
+        # A 60%w/30%h rect passes at default, but fails once BOTH custom
+        # thresholds drop below it (giant = wider AND taller than the limits).
         markers = [_marker(w_pct=60, h_pct=30)]
         assert check_giant_exact_rectangles(markers)["passed"]
-        assert not check_giant_exact_rectangles(markers, max_width_pct=50)["passed"]
+        assert not check_giant_exact_rectangles(
+            markers, max_width_pct=50, max_height_pct=25
+        )["passed"]
 
 
 # ---------------------------------------------------------------------------

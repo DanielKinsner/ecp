@@ -43,6 +43,7 @@ from cli_io import force_utf8_io  # noqa: E402
 from assembly.visual_quality import (  # noqa: E402
     DEFAULT_GIANT_HEIGHT_PCT as GIANT_HEIGHT_PCT,
     DEFAULT_GIANT_WIDTH_PCT as GIANT_WIDTH_PCT,
+    is_giant_exact_rect,
 )
 NON_EXACT_TYPES = frozenset(
     {"proxy_element", "generated_expected_zone", "section_absence", "page_level"}
@@ -73,10 +74,17 @@ def score_marker(m: dict) -> list[str]:
 
     w = m.get("w_pct")
     h = m.get("h_pct")
-    if isinstance(w, (int, float)) and w > GIANT_WIDTH_PCT:
-        reasons.append(f"oversized width {w:.0f}% (likely parent container)")
-    if isinstance(h, (int, float)) and h > GIANT_HEIGHT_PCT:
-        reasons.append(f"oversized height {h:.0f}% (likely parent container)")
+    # Giant = BOTH oversized width AND height (a real parent container). A full-
+    # width but short strip is a precise anchor, not a container — see
+    # is_giant_exact_rect (product.md §10, 2026-07-08).
+    if (
+        isinstance(w, (int, float))
+        and isinstance(h, (int, float))
+        and is_giant_exact_rect(
+            w, h, max_width_pct=GIANT_WIDTH_PCT, max_height_pct=GIANT_HEIGHT_PCT
+        )
+    ):
+        reasons.append(f"oversized {w:.0f}%w/{h:.0f}%h (likely parent container)")
 
     if source.startswith("proposed_anchor") and m.get("snapped_baton_index") is None:
         reasons.append("no snapped baton element")

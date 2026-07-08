@@ -54,10 +54,30 @@ class CanaryResult(TypedDict):
 # ---------------------------------------------------------------------------
 
 DEFAULT_GIANT_WIDTH_PCT = 85.0
-"""Exact-element rect wider than this fails the giant-rectangle gate."""
+"""An exact-element rect must exceed this width AND DEFAULT_GIANT_HEIGHT_PCT to
+count as a misleadingly-giant container (see is_giant_exact_rect)."""
 
 DEFAULT_GIANT_HEIGHT_PCT = 70.0
-"""Exact-element rect taller than this fails the giant-rectangle gate."""
+"""An exact-element rect must exceed this height AND DEFAULT_GIANT_WIDTH_PCT to
+count as a misleadingly-giant container (see is_giant_exact_rect)."""
+
+
+def is_giant_exact_rect(
+    width_pct: float,
+    height_pct: float,
+    *,
+    max_width_pct: float = DEFAULT_GIANT_WIDTH_PCT,
+    max_height_pct: float = DEFAULT_GIANT_HEIGHT_PCT,
+) -> bool:
+    """True when an exact-element rect is a misleadingly-giant parent container.
+
+    'Giant' means BOTH very wide AND very tall — a real header / drawer / body /
+    modal. A full-width but SHORT strip (nav bar, footer, CTA row, price strip)
+    is a PRECISE anchor, not a container, so it is NOT giant and renders as a
+    solid exact box. Firing on width OR height (the pre-2026-07-08 rule) demoted
+    ~80% of full-width strips to approximate proxies even though they were
+    already anchored to the correct element (product.md §10, 2026-07-08)."""
+    return width_pct > max_width_pct and height_pct > max_height_pct
 
 DEFAULT_PROXY_OVERLOAD_RATIO = 0.40
 """When >40% of findings are non-exact, the report visually reads as approximate."""
@@ -140,8 +160,10 @@ def check_giant_exact_rectangles(
     real subject element. Visually meaningless — the customer can't tell what
     the finding is about.
 
-    Pass criteria: every exact_element marker's zone has width <= max_width_pct
-    AND height <= max_height_pct.
+    Pass criteria: no exact_element marker's zone is giant — i.e. none is BOTH
+    wider than max_width_pct AND taller than max_height_pct (see
+    is_giant_exact_rect). A full-width but short strip is a precise anchor, not a
+    container, so it passes.
 
     Markers without ``visual_evidence`` (legacy) or without a ``zone``
     rectangle (point markers) are skipped — they're either pre-Phase-2 or
@@ -159,7 +181,7 @@ def check_giant_exact_rectangles(
         exact_count += 1
         w = float(zone.get("w_pct", 0) or 0)
         h = float(zone.get("h_pct", 0) or 0)
-        if w > max_width_pct or h > max_height_pct:
+        if is_giant_exact_rect(w, h, max_width_pct=max_width_pct, max_height_pct=max_height_pct):
             violations.append({
                 "f_ref": m.get("f_ref"),
                 "finding_index": m.get("finding_index"),
@@ -442,6 +464,7 @@ __all__ = [
     "check_priority_path_needs_review",
     "check_proxy_overload",
     "compute_visual_evidence_summary",
+    "is_giant_exact_rect",
     "render_summary_table",
     "run_visual_quality_gates",
 ]

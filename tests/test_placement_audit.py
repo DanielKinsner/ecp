@@ -40,9 +40,14 @@ class TestScoreMarker(unittest.TestCase):
         self.assertTrue(any("section-fallback" in x for x in r))
 
     def test_oversized_flagged(self):
+        # Both dimensions large = a real parent container -> one giant reason.
         r = score_marker(_m(w_pct=90, h_pct=75))
-        self.assertTrue(any("oversized width" in x for x in r))
-        self.assertTrue(any("oversized height" in x for x in r))
+        self.assertTrue(any("oversized 90%w/75%h" in x for x in r))
+
+    def test_wide_short_strip_not_flagged_oversized(self):
+        # 90%w / 20%h — a full-width strip is precise, not a container (§10).
+        r = score_marker(_m(w_pct=90, h_pct=20))
+        self.assertFalse(any("oversized" in x for x in r))
 
     def test_proxy_low_confidence_flagged(self):
         r = score_marker(_m(visual_evidence={"type": "proxy_element", "confidence": "low"}))

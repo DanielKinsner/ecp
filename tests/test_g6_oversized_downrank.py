@@ -81,21 +81,33 @@ class TestOversizedDownRank(unittest.TestCase):
         self.assertEqual(ve["type"], "exact_element")
         self.assertEqual(ve["confidence"], "high")
 
-    def test_wide_element_is_downranked(self):
-        # 1380 wide of 1440 -> ~96%w: a full-width container.
+    def test_wide_short_strip_stays_exact(self):
+        # 1380 wide of 1440 (~96%w) but only 80 tall (~9%h): a full-width
+        # nav/footer/CTA strip is a PRECISE anchor, not a parent container, so
+        # wide-alone no longer down-ranks it (product.md §10, 2026-07-08).
         baton = _baton([{"e_index": "e0", "rect": {"x": 10, "y": 100, "width": 1380, "height": 80}}])
         mappings = auto_map_markers_v2([_finding(0, "visual-cta/F-01")], baton)
         ve = _ve_by_ref(mappings)["visual-cta/F-01"]
-        self.assertEqual(ve["type"], "proxy_element")
-        self.assertEqual(ve["confidence"], "low")
-        self.assertIn("down-ranked", ve["reason"].lower())
+        self.assertEqual(ve["type"], "exact_element")
+        self.assertEqual(ve["confidence"], "high")
 
-    def test_tall_element_is_downranked(self):
-        # 700 tall of 900 -> ~78%h: exceeds the 70%h height threshold.
+    def test_tall_narrow_element_stays_exact(self):
+        # 300 wide (~21%w) x 700 tall (~78%h): tall but narrow, not a full
+        # container -> stays exact (needs BOTH dimensions oversized).
         baton = _baton([{"e_index": "e0", "rect": {"x": 40, "y": 0, "width": 300, "height": 700}}])
         mappings = auto_map_markers_v2([_finding(0, "trust-credibility/F-02")], baton)
         ve = _ve_by_ref(mappings)["trust-credibility/F-02"]
+        self.assertEqual(ve["type"], "exact_element")
+
+    def test_bulky_container_is_downranked(self):
+        # 1380 wide (~96%w) AND 800 tall (~89%h): both large = a real parent
+        # container -> down-ranked to an approximate proxy.
+        baton = _baton([{"e_index": "e0", "rect": {"x": 10, "y": 40, "width": 1380, "height": 800}}])
+        mappings = auto_map_markers_v2([_finding(0, "visual-cta/F-03")], baton)
+        ve = _ve_by_ref(mappings)["visual-cta/F-03"]
         self.assertEqual(ve["type"], "proxy_element")
+        self.assertEqual(ve["confidence"], "low")
+        self.assertIn("down-ranked", ve["reason"].lower())
 
     def test_gate_passes_after_downrank(self):
         # A giant element that previously tripped the giant_exact gate now

@@ -89,15 +89,18 @@ from .placement import (
 from assembly.visual_quality import (
     DEFAULT_GIANT_HEIGHT_PCT,
     DEFAULT_GIANT_WIDTH_PCT,
+    is_giant_exact_rect,
 )
 
 
 # G6 (product.md §4.2 precision-first) — an exact_element hotspot whose baton
-# rect spans more than this share of the viewport is almost always anchored to a
-# parent container (full header/drawer/body), not the subject element. Such
-# markers are auto-down-ranked to proxy_element so they render as approximate
-# (dashed) markers instead of misleading solid "exact" rects. The threshold IS
-# the giant_exact_rectangles gate threshold, imported above from its one home in
+# rect is BOTH very wide AND very tall is almost always anchored to a parent
+# container (full header/drawer/body), not the subject element. Such markers are
+# auto-down-ranked to proxy_element so they render as approximate (dashed)
+# markers instead of misleading solid "exact" rects. A full-width but SHORT strip
+# (nav/footer/CTA/price row) is a precise anchor and stays exact — the wide-AND-
+# tall test lives in is_giant_exact_rect. The threshold IS the
+# giant_exact_rectangles gate threshold, imported above from its one home in
 # assembly/visual_quality.py so the down-rank and the gate cannot drift.
 GIANT_EXACT_WIDTH_PCT = DEFAULT_GIANT_WIDTH_PCT
 GIANT_EXACT_HEIGHT_PCT = DEFAULT_GIANT_HEIGHT_PCT
@@ -226,16 +229,20 @@ def _downrank_oversized_exact(
         return
     w_pct = rect["width"] / vw * 100.0
     h_pct = rect["height"] / vh * 100.0
-    if w_pct > GIANT_EXACT_WIDTH_PCT or h_pct > GIANT_EXACT_HEIGHT_PCT:
+    if is_giant_exact_rect(
+        w_pct, h_pct,
+        max_width_pct=GIANT_EXACT_WIDTH_PCT,
+        max_height_pct=GIANT_EXACT_HEIGHT_PCT,
+    ):
         mapping["visual_evidence"] = {
             "type": "proxy_element",
             "confidence": "low",
             "reason": (
                 f"Auto-down-ranked from exact_element: baton rect is "
-                f"{w_pct:.0f}%w/{h_pct:.0f}%h of the viewport (> "
-                f"{GIANT_EXACT_WIDTH_PCT:.0f}%w/{GIANT_EXACT_HEIGHT_PCT:.0f}%h) — "
-                f"likely a parent container, not the subject element "
-                f"(product.md §4.2 precision-first)."
+                f"{w_pct:.0f}%w/{h_pct:.0f}%h of the viewport (wider than "
+                f"{GIANT_EXACT_WIDTH_PCT:.0f}%w AND taller than "
+                f"{GIANT_EXACT_HEIGHT_PCT:.0f}%h) — likely a parent container, "
+                f"not the subject element (product.md §4.2 precision-first)."
             ),
         }
 
