@@ -62,17 +62,44 @@ engagement dirs right now:
 
 Both fixes are `git revert`-clean if a hand-test looks wrong.
 
-## Remaining defect targets (ranked, all offline-measurable except CAPTURE_SUSPECT)
+## Remaining defect targets — measured deeper 2026-07-08; the clean offline vein is mined out
 
-1. **STACKED 31** — the ~22% that collide across DIFFERENT nearby elements (not same-anchor,
-   so `coplaced_blanks` didn't catch them). Extend de-collision with a small position nudge.
-2. **CAPTURE_SUSPECT 24** — acquisition-stage (above-fold didn't render at capture). Needs
-   live re-capture logic; NOT offline-fixable. Hardest.
-3. **Absence→blank (~84)** — absence findings currently render as boxes; §4.2 says always
-   blank. Needs a **structural** absence signal (change_type / proposed_anchor kind), NOT
-   title-word guessing (which false-positives on present-element findings). Investigate the
-   signal first.
-4. **LOW_CONF 15 / WEAK_ANCHOR 8 / DUPLICATE 6 / PREDICATE 6** — small tails.
+The two fixes captured the safe, offline placement wins. The residual 13% was then
+measured finding-by-finding and is mostly **not** cleanly fixable offline:
+
+1. **STACKED (residual ~31) — NOT a defect, do NOT "fix".** Measured: these are distinct
+   findings on DIFFERENT-but-physically-adjacent elements (e.g. a product-info column where
+   4 elements share x/width and stack vertically). The boxes are each *correctly* on their
+   element; the overlap is genuine page density. Moving boxes to de-overlap would violate
+   §4.2 (a box must frame its element). The only §4.2-safe polish is fanning the callout
+   *number labels* by rendered-proximity (not just same-element) — marginal. (The "6
+   same-anchor" stacks are all in the restored old-code fixture `8e46b1c8`, not a de-stack gap.)
+2. **CAPTURE_SUSPECT 24** — acquisition-stage (above-fold captured flat/void). Needs a live
+   re-capture; NOT offline-fixable.
+3. **Absence — already conformant.** `section_absence` (6) and `page_level` (665) markers are
+   all correctly **hidden/blanked**. The only rendered absence-type is `generated_expected_zone`
+   (the *designed* ghost/dashed "missing UI should be here" overlay) — whether it should render
+   or blank is a **§4.2 interpretation call for Dan** (prior ruling A1 already touched absence
+   auto-place). Not a silent-fix. The earlier "~84 absence" estimate was a title-regex artifact
+   (it caught present-element findings with negative titles, e.g. "…carry EMPTY labels"); the
+   threshold fix already handled those.
+4. **LOW_CONF 15 / WEAK_ANCHOR 8 / DUPLICATE 6 / PREDICATE 6** — small tails, mostly the same
+   `generated_expected_zone`/proxy policy question or specialist-stage anchor quality.
+
+**Conclusion:** further placement gains need a live run (CAPTURE_SUSPECT), a §4.2 ruling
+(`generated_expected_zone` render-vs-blank), or a move to the architecture roadmap below.
+
+## C5 scoped (recommended next real piece — a fresh-session refactor)
+
+The two forked marker renderers are `report/templates/components.py:build_hotspot_overlays_html`
+(**CSS-div** hotspots for the report HTML; helpers `_hotspot_class` / `_hotspot_data_attrs` /
+`_hotspot_inline_style`) and `assembly/review_state.py:_render_marker_svg` (**SVG** for the
+interactive editor). They're two output *technologies*, so "unify" ≠ one emitter — it means
+extracting the shared *decision* logic (class/color/severity-stroke/position/ve-type → style)
+into one place, with two thin format-specific emitters on top. Dan's ruling stands: KEEP the
+v1 path, unify the decision logic only, do NOT delete v1. Rendering-output change → **needs a
+visual hand-test**, so it wants a session where Dan is engaged to confirm the report + editor
+look byte-for-byte the same after. Not started (deliberately — not a tail-of-session rush).
 
 ### Discovery worth acting on later (re-anchoring)
 `placement_repair.py` already does subject-text re-anchoring but **ignores the semantic
