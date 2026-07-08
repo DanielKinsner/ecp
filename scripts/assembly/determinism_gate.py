@@ -180,17 +180,16 @@ def parse_trace_assertions(trace_path: Path) -> TraceAssertions:
 
         # Top-level header fields (Pipeline, Flags, Devices) are also
         # counter-shaped lines but live outside the ASSERTIONS block.
-        # First-occurrence-wins for the header fields (they appear once in the
-        # preamble; guard protects them if the region also spans event lines).
+        # Top-level header fields (Pipeline, Flags, Devices) are counter-shaped
+        # lines that live outside the ASSERTIONS block.
         if key == "pipeline":
-            pipeline = pipeline or value
+            pipeline = value
             continue
         if key == "flags":
-            flags = flags or value
+            flags = value
             continue
         if key == "devices":
-            if not devices:
-                devices = [d.strip() for d in value.split(",") if d.strip()]
+            devices = [d.strip() for d in value.split(",") if d.strip()]
             continue
 
         # Skip non-counter informational header lines like "Engagement:",
@@ -206,15 +205,12 @@ def parse_trace_assertions(trace_path: Path) -> TraceAssertions:
             # Any other uppercase-led line is informational — skip it.
             continue
 
-        # Apply alias normalization.
+        # Apply alias normalization. Last-write-wins: when a trace carries BOTH
+        # a legacy alias (team_spawned_specialists) and the canonical counter
+        # (subagent_spawned_specialists), the canonical — written later — wins.
+        # Known counters are unique within a real header block and event lines
+        # use disjoint keys, so this does not risk event-line clobbering.
         canonical_key = _TRACE_COUNTER_ALIASES.get(key, key)
-
-        # First-occurrence-wins: the header/counters block is written at audit
-        # completion with final values; a later chronological reuse of the same
-        # key must not overwrite it (the region may span event lines on traces
-        # without an EVENT-section marker).
-        if canonical_key in counters:
-            continue
 
         # Coerce to int for known integer counters (incl. retry-counter prefix).
         if canonical_key in _INT_COUNTERS or any(

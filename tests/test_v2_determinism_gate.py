@@ -820,10 +820,13 @@ class TestHashlessTraceFormat(unittest.TestCase):
         result = check_structural_canary(self._write(self._REAL_HASHLESS))
         self.assertTrue(result["passed"], result.get("detail"))
 
-    def test_chronological_event_line_does_not_clobber_counter(self):
-        # A later event line reusing a counter key must NOT overwrite the header
-        # value (first-occurrence-wins).
-        text = self._REAL_HASHLESS + "\ncluster_files_written: 999\n"
+    def test_hashless_stops_at_event_log(self):
+        # Chronological event lines below the counters must not be read as the
+        # header counters (the region ends at the EVENT LOG / [timestamp] lines).
+        text = self._REAL_HASHLESS + (
+            "\n[2026-07-08T10:05:00Z] specialist_dispatch_complete\n"
+            "cluster_files_written: 999\n"  # inside the event log -> ignored
+        )
         c = parse_trace_assertions(self._write(text))["counters"]
         self.assertEqual(c.get("cluster_files_written"), 4)
 
