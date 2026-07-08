@@ -110,8 +110,17 @@ def build_initial_review_state(
         # Strategy 4 "unplaced" findings carry no position (product.md §4.2):
         # build a blank, hidden marker so the renderer leaves it empty and the
         # editor queues it for manual placement, instead of pinning a default
-        # point at the slide center.
-        if mapping.get("match_method") == "unplaced" or f_ref in coplaced_losers:
+        # point at the slide center. A co-placed "loser" (two findings that
+        # auto-placed on the SAME element; coplaced_blanks keeps the highest-
+        # severity box and blanks the rest per §4.2 precision-over-recall) is
+        # ALSO unplaced — its marker is blanked here AND its hotspot_confidence
+        # must read unplaced below. Deriving confidence from the stale
+        # match_method ('e_index_lookup' -> 'exact-selector') let the §6/A9
+        # client-verified gate treat a blank hotspot as placed, so a report
+        # could promote to client-ready with a loser still unplaced
+        # (adversarial review 2026-07-08 #16).
+        is_unplaced = mapping.get("match_method") == "unplaced" or f_ref in coplaced_losers
+        if is_unplaced:
             marker = _unplaced_marker(
                 marker_id, f_ref, slide_id, severity, mapping.get("visual_evidence")
             )
@@ -167,7 +176,9 @@ def build_initial_review_state(
             "marker_id": marker_id,
             "ai_suggested_marker_id": ai_marker_id,
             "lint_violations": [],
-            "hotspot_confidence": _hotspot_confidence(mapping.get("match_method")),
+            "hotspot_confidence": _hotspot_confidence(
+                "unplaced" if is_unplaced else mapping.get("match_method")
+            ),
             "visual_evidence": mapping.get("visual_evidence"),
             "review_notes": "",
             "tagged_for_ai_pass": False,
