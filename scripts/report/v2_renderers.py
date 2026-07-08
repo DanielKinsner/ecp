@@ -178,18 +178,28 @@ def render_markdown_mirror(engagement_dir: Path, device: str, plugin_root: Path)
     return "\n".join(parts)
 
 
+def _bulleted_sort_key(f: dict) -> tuple:
+    """Triage-list sort key: priority (CRITICAL first) then the deterministic
+    cluster/index order.
+
+    Uses the canonical ``PRIORITY_ORDER`` (assembly.models) so **CRITICAL**
+    — the tier reserved for ethics BLOCK findings, the single most urgent
+    thing an operator must action — sorts FIRST. A local hand-map that omitted
+    CRITICAL folded it into the unknown-priority default and sank ethics BLOCK
+    findings to the BOTTOM of the triage list (adversarial review 2026-07-08).
+    Reusing the one canonical map also removes a duplicate rank table that
+    could silently drift.
+    """
+    from assembly.models import PRIORITY_ORDER
+    priority = (f.get("priority") or "MEDIUM").upper()
+    return (PRIORITY_ORDER.get(priority, 99), *_sort_key(f))
+
+
 def render_bulleted(engagement_dir: Path, device: str, plugin_root: Path) -> str:
     """One-bullet-per-finding scan list, ordered by priority then cluster."""
     inputs = load_v2_engagement(engagement_dir, device, plugin_root)
     findings = inputs["findings"]
-    priority_rank = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
-    findings_sorted = sorted(
-        findings,
-        key=lambda f: (
-            priority_rank.get((f.get("priority") or "MEDIUM").upper(), 9),
-            *_sort_key(f),
-        ),
-    )
+    findings_sorted = sorted(findings, key=_bulleted_sort_key)
 
     parts: list[str] = []
     parts.append(f"# Audit Triage List — {device.title()}")

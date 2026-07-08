@@ -66,5 +66,45 @@ class TestV2RenderFixture(unittest.TestCase):
         self.assertIn("Placement QA:", result.stdout)
 
 
+class TestBulletedTriagePriorityOrder(unittest.TestCase):
+    """Regression (adversarial review 2026-07-08): the triage bullet list
+    (``render_bulleted``) must order **CRITICAL first**. CRITICAL is the tier
+    reserved for ethics BLOCK findings — the single most urgent thing an
+    operator must action. A local rank map ``{HIGH:0, MEDIUM:1, LOW:2}`` omitted
+    CRITICAL, folding it into the unknown-priority default and sinking BLOCK
+    findings to the BOTTOM of the scan list. The fix reuses the canonical
+    ``assembly.models.PRIORITY_ORDER`` (CRITICAL:0). No committed engagement is
+    needed — the sort key is a pure function."""
+
+    def _key(self):
+        sys.path.insert(0, str(_REPO / "scripts"))
+        from report.v2_renderers import _bulleted_sort_key
+        return _bulleted_sort_key
+
+    def test_critical_sorts_first(self) -> None:
+        key = self._key()
+        findings = [
+            {"priority": "LOW", "cluster": "pricing", "f_ref": "pricing F-01", "index": 1},
+            {"priority": "CRITICAL", "cluster": "trust-credibility", "f_ref": "ethics F-09", "index": 9},
+            {"priority": "HIGH", "cluster": "pricing", "f_ref": "pricing F-02", "index": 2},
+            {"priority": "MEDIUM", "cluster": "pricing", "f_ref": "pricing F-03", "index": 3},
+        ]
+        ordered = [f["priority"] for f in sorted(findings, key=key)]
+        self.assertEqual(
+            ordered[0], "CRITICAL",
+            "CRITICAL (ethics BLOCK) must head the triage list, not sink to the bottom.",
+        )
+        self.assertEqual(ordered, ["CRITICAL", "HIGH", "MEDIUM", "LOW"])
+
+    def test_unknown_priority_still_sorts_last(self) -> None:
+        key = self._key()
+        findings = [
+            {"priority": "WEIRD", "cluster": "pricing", "f_ref": "pricing F-01", "index": 1},
+            {"priority": "HIGH", "cluster": "pricing", "f_ref": "pricing F-02", "index": 2},
+        ]
+        ordered = [f["priority"] for f in sorted(findings, key=key)]
+        self.assertEqual(ordered, ["HIGH", "WEIRD"])
+
+
 if __name__ == "__main__":
     unittest.main()
