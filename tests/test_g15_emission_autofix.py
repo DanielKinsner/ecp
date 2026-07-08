@@ -185,6 +185,51 @@ class TestRepairDuplicateFindings(unittest.TestCase):
         self.assertEqual(len(fixed["findings"]), 2)
 
 
+class TestAbsentFindingsNotDeduped(unittest.TestCase):
+    """Regression (adversarial review 2026-07-08): autofix must NOT collapse
+    two conceptually-distinct ``absent`` findings that merely share
+    ``(surface, verdict)``.
+
+    A meta-tags / structured-data cluster routinely emits several distinct
+    *missing* findings on one surface — e.g. "no JSON-LD", "no OG image",
+    "no GTIN" — all ``(surface='meta-tags', baton_index='absent',
+    verdict='FAIL')`` but conceptually different. autofix runs BEFORE schema
+    + business-rule validation; ``business_rules._check_within_emission_unique_anchors``
+    only merges ``absent`` dupes when the title-token Jaccard >= 0.7 (that is
+    the layer that decides real absent duplicates). If autofix keys ``absent``
+    on the bare ``(surface, absent, verdict)`` tuple it silently drops the
+    2nd..Nth distinct finding before that smarter check ever runs — a direct
+    hit on product.md §0 "never silently misleading."
+    """
+
+    def test_distinct_absent_findings_not_dropped(self):
+        f1 = _make_finding(local_id=1, surface="meta-tags", baton_index="absent",
+                           verdict="FAIL", title="No JSON-LD product schema")
+        f2 = _make_finding(local_id=2, surface="meta-tags", baton_index="absent",
+                           verdict="FAIL", title="No Open Graph image tag")
+        f3 = _make_finding(local_id=3, surface="meta-tags", baton_index="absent",
+                           verdict="FAIL", title="No GTIN in structured data")
+        fixed, repairs = autofix_emission(_emission([f1, f2, f3]))
+        self.assertEqual(
+            len(fixed["findings"]), 3,
+            "Distinct absent findings on one surface must all survive autofix; "
+            "business_rules' Jaccard check owns real absent-dedup, not autofix.",
+        )
+        dedup_repairs = [r for r in repairs if r["field"] == "findings[]"]
+        self.assertEqual(dedup_repairs, [])
+
+    def test_concrete_element_dupes_still_dropped(self):
+        """The absent carve-out must NOT weaken concrete-element dedup: two
+        findings on the SAME real baton element/surface/verdict are true
+        duplicates and are still collapsed."""
+        f1 = _make_finding(local_id=1, surface="hero", baton_index="e3", verdict="FAIL")
+        f2 = _make_finding(local_id=2, surface="hero", baton_index="e3", verdict="FAIL")
+        fixed, repairs = autofix_emission(_emission([f1, f2]))
+        self.assertEqual(len(fixed["findings"]), 1)
+        self.assertEqual([r["field"] for r in repairs if r["field"] == "findings[]"],
+                         ["findings[]"])
+
+
 # ---------------------------------------------------------------------------
 # Repair 3 — proposed_anchor.reason length cap
 # ---------------------------------------------------------------------------

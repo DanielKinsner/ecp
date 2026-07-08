@@ -67,6 +67,11 @@ def autofix_emission(emission: dict) -> tuple[dict, list[dict]]:
        earliest-occurring one wins. ``local_id`` values on survivors
        are *not* renumbered (preserving the specialist's authored
        sequence; renumbering would mask audit-trail intent).
+       **``baton_index='absent'`` findings are exempt** — two absent
+       findings that merely share ``(surface, verdict)`` are usually
+       distinct missing things ("no JSON-LD" vs "no OG image"); real
+       absent-dedup is owned by ``business_rules`` (title-Jaccard >= 0.7),
+       which bounces rather than silently drops.
     3. **proposed_anchor.reason cap.** Reason strings over
        ``PROPOSED_ANCHOR_REASON_MAX_LEN`` characters truncate at the
        last whole word boundary at or below the cap, with a trailing
@@ -155,12 +160,24 @@ def _repair_telemetry_paths(emission: dict, repairs: list[dict]) -> None:
 def _finding_dedup_key(finding: dict) -> tuple[str, str, str] | None:
     """Key for ``(surface, baton_index, verdict)`` dedup. Returns None
     when any component is missing so the finding isn't accidentally
-    deduped against another missing-key entry."""
+    deduped against another missing-key entry.
+
+    Returns None for ``baton_index='absent'`` as well: two *absent* findings
+    that merely share ``(surface, verdict)`` are usually conceptually distinct
+    (e.g. "no JSON-LD" vs "no OG image" vs "no GTIN", all
+    ``(meta-tags, absent, FAIL)``). Collapsing them on the bare tuple silently
+    drops real, distinct findings before validation — a product.md §0
+    ("never silently misleading") violation. Real absent-duplicate detection
+    is owned by ``business_rules._check_within_emission_unique_anchors``, which
+    only merges absent findings whose title-token Jaccard >= 0.7 and otherwise
+    bounces the specialist for a fix (never a silent drop)."""
     surface = finding.get("surface")
     verdict = finding.get("verdict")
     element = finding.get("element") or {}
     baton_index = element.get("baton_index") if isinstance(element, dict) else None
     if not (isinstance(surface, str) and isinstance(verdict, str) and isinstance(baton_index, str)):
+        return None
+    if baton_index == "absent":
         return None
     return (surface, baton_index, verdict)
 
