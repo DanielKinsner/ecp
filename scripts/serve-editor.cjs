@@ -69,6 +69,18 @@ function extensionForMime(mime) {
   return ".img";
 }
 
+// Only these RASTER image types may be imported. image/svg+xml is deliberately
+// excluded: an SVG can carry inline <script>, and the static server serves it
+// with Content-Type image/svg+xml, so it would execute in the editor origin
+// (stored XSS — adversarial review 2026-07-08 #22).
+function sniffRasterMime(buf) {
+  if (buf.length >= 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return "image/jpeg";
+  if (buf.length >= 8 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return "image/png";
+  if (buf.length >= 6 && /^GIF8[79]a/.test(buf.slice(0, 6).toString("latin1"))) return "image/gif";
+  if (buf.length >= 12 && buf.slice(0, 4).toString("latin1") === "RIFF" && buf.slice(8, 12).toString("latin1") === "WEBP") return "image/webp";
+  return null;
+}
+
 function readBody(req) {
   return new Promise((resolve, reject) => {
     let body = "";
@@ -131,12 +143,16 @@ function saveImportedAsset(payload) {
   const assetId = safeFilename(payload?.asset_id || `import-${Date.now()}`);
   const match = /^data:(image\/[a-zA-Z0-9.+-]+);base64,([a-zA-Z0-9+/=\r\n]+)$/.exec(String(payload?.data_url || ""));
   if (!match) throw new Error("invalid image data URL");
-  const mime = payload.mime_type || match[1];
-  if (!String(mime).startsWith("image/")) throw new Error("import must be an image");
   const raw = Buffer.from(match[2].replace(/\s+/g, ""), "base64");
   if (raw.length > maxImportBytes) throw new Error("imported image exceeds 5MB");
-  let filename = safeFilename(payload.filename || assetId);
-  if (!path.extname(filename)) filename += extensionForMime(mime);
+  // Authoritative type = the decoded bytes' magic number, NOT the client-declared
+  // mime_type or filename extension. An SVG (or any non-raster / script-bearing
+  // payload) never sniffs to a raster mime, so it is rejected here — closing the
+  // stored-XSS vector (#22). The extension is derived solely from the sniff.
+  const mime = sniffRasterMime(raw);
+  if (!mime) throw new Error("import must be a JPEG, PNG, WebP, or GIF image");
+  const base = safeFilename(payload.filename || assetId).replace(/\.[^.]*$/, "");
+  const filename = base + extensionForMime(mime);
   const source = `user-imports/${assetId}-${filename}`;
   const outPath = path.resolve(engagementDir, source);
   if (!within(engagementDir, outPath)) throw new Error("invalid import path");
@@ -153,9 +169,35 @@ function saveImportedAsset(payload) {
   };
 }
 
+// The editor server binds to loopback only, but that alone does not stop a
+// malicious web page the operator is also visiting from (a) DNS-rebinding a
+// hostname to 127.0.0.1 and driving the API, or (b) firing a cross-origin POST
+// (CSRF) to overwrite review-state / import assets (adversarial review
+// 2026-07-08 #14). Pin the Host header to loopback and refuse cross-site POSTs.
+const ALLOWED_HOSTS = new Set([`127.0.0.1:${port}`, `localhost:${port}`]);
+function hostAllowed(req) {
+  return ALLOWED_HOSTS.has(String(req.headers.host || "").toLowerCase());
+}
+function crossSitePost(req) {
+  const sfs = req.headers["sec-fetch-site"];
+  if (sfs) return sfs !== "same-origin" && sfs !== "none";  // modern browsers
+  const origin = req.headers.origin;
+  if (!origin) return false;  // same-origin simple requests may omit Origin
+  const ok = [`http://127.0.0.1:${port}`, `http://localhost:${port}`];
+  return !ok.includes(String(origin).toLowerCase());
+}
+
 const server = http.createServer(async (req, res) => {
   try {
+    // DNS-rebinding guard: a rebound hostname carries its own Host header.
+    if (!hostAllowed(req)) {
+      return send(res, 403, "Forbidden: host not allowed (editor is loopback-only)");
+    }
     const url = new URL(req.url, `http://localhost:${port}`);
+    // CSRF guard on state-changing routes.
+    if (req.method === "POST" && crossSitePost(req)) {
+      return sendJson(res, 403, { ok: false, error: "cross-origin request refused" });
+    }
     if (req.method === "POST" && url.pathname === "/api/import-asset") {
       const body = await readBody(req);
       const payload = JSON.parse(body || "{}");
