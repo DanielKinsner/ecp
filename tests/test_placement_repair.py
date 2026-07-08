@@ -30,10 +30,25 @@ class TestOverlap(unittest.TestCase):
 
 class TestOversized(unittest.TestCase):
     def test_offset_full_bleed_is_oversized(self):
+        # The offset full-bleed-band screen is SPEC-PRESERVED (product.md §10):
+        # a wide element spanning the right edge is still oversized regardless
+        # of height.
         self.assertTrue(_is_oversized({"x_pct": 20, "w_pct": 80, "h_pct": 10}))   # spans right edge, wide
-        self.assertTrue(_is_oversized({"x_pct": 0, "w_pct": 90, "h_pct": 10}))    # GIANT_W
         self.assertFalse(_is_oversized({"x_pct": 10, "w_pct": 50, "h_pct": 10}))  # normal
         self.assertFalse(_is_oversized({"x_pct": 80, "w_pct": 20, "h_pct": 10}))  # right-aligned but narrow
+
+    def test_giant_uses_and_rule_not_or(self):
+        # Adversarial review #8/#10 + operator ruling 2026-07-08: the "giant
+        # container" test is the canonical is_giant_exact_rect (wide AND tall).
+        # A full-width but SHORT strip (CTA bar, nav strip, price row) that does
+        # NOT span edge-to-edge is a precise anchor and must NOT be excluded from
+        # the re-anchor candidate pool (the old wide-OR-tall rule dropped it).
+        self.assertFalse(_is_oversized({"x_pct": 0, "w_pct": 90, "h_pct": 8}))    # wide but short -> allowed
+        self.assertFalse(_is_oversized({"x_pct": 0, "w_pct": 20, "h_pct": 90}))   # tall but narrow -> allowed
+        # Both dimensions large -> a real parent container -> still oversized.
+        self.assertTrue(_is_oversized({"x_pct": 0, "w_pct": 95, "h_pct": 90}))
+        # Full-bleed short band still caught by the preserved edge-to-edge screen.
+        self.assertTrue(_is_oversized({"x_pct": 0, "w_pct": 100, "h_pct": 8}))
 
 
 class TestDecideMatch(unittest.TestCase):

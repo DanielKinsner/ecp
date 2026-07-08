@@ -38,6 +38,7 @@ _STOP = frozenset({"the", "a", "an", "of", "for", "to", "in", "on", "and", "or",
 from assembly.visual_quality import (  # noqa: E402
     DEFAULT_GIANT_HEIGHT_PCT as GIANT_H,
     DEFAULT_GIANT_WIDTH_PCT as GIANT_W,
+    is_giant_exact_rect,
 )
 
 MATCH_MIN = 0.34                         # min token-overlap to trust a re-anchor
@@ -77,12 +78,20 @@ def _query_tokens(finding: dict, marker: dict) -> set[str]:
 def _is_oversized(t: dict) -> bool:
     """A snap target too large to be a precise subject (likely a parent container).
 
-    Beyond the GIANT_W/GIANT_H thresholds, also reject offset full-bleed bands:
-    review_state clamps ``w_pct`` to ``100 - x_pct``, so a wide element offset past
-    ~15% never trips GIANT_W on width alone — catch it via right-edge + width.
+    The "giant container" test uses the canonical ``is_giant_exact_rect`` (wide
+    AND tall), aligned with the rest of the codebase (product.md §10, 2026-07-08;
+    operator ruling on review findings #8/#10). Under the old wide-OR-tall rule a
+    full-width but SHORT strip (CTA bar, nav strip, price row) tripped the width
+    arm alone and was wrongly dropped from the re-anchor candidate pool even
+    though it is a precise anchor.
+
+    The offset full-bleed-band screen is KEPT (spec-preserved: this function
+    screens re-anchor *targets*, a different purpose): review_state clamps
+    ``w_pct`` to ``100 - x_pct``, so a wide element offset past ~15% never trips
+    the width arm — catch a true edge-to-edge band via right-edge + width.
     """
     w, h, x = t.get("w_pct", 0), t.get("h_pct", 0), t.get("x_pct", 0)
-    if w > GIANT_W or h > GIANT_H:
+    if is_giant_exact_rect(w, h, max_width_pct=GIANT_W, max_height_pct=GIANT_H):
         return True
     return (x + w) >= 99 and w >= 60
 
