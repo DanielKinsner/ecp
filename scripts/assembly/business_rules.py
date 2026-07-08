@@ -1068,16 +1068,28 @@ def _check_predicate_mismatch(
     text = "\n".join(
         str(finding.get(k) or "") for k in ("title", "observation", "recommendation")
     )
-    over = bool(_PREDICATE_OVER.search(text))
-    under = bool(_PREDICATE_UNDER.search(text))
-    if not (over or under):
+    over_tokens = list(_PREDICATE_OVER.finditer(text))
+    under_tokens = list(_PREDICATE_UNDER.finditer(text))
+    if not (over_tokens or under_tokens):
         return []
 
-    thresholds = [
-        v for v in (_money_value(m) for m in _PREDICATE_PRICE.findall(text)) if v == v
+    priced = [
+        (m.start(), v)
+        for m in _PREDICATE_PRICE.finditer(text)
+        if (v := _money_value(m.group(1))) == v  # drop NaN
     ]
-    if not thresholds:
+    if not priced:
         return []
+
+    # Bind the threshold to the $ amount NEAREST the predicate token, NOT max()
+    # over every dollar amount in the prose. A recommendation frequently cites a
+    # second, larger price (competitor / target / MSRP) — e.g. "priced over $200
+    # ... competitors charge $600" — and max() picked $600, bouncing a
+    # correctly-anchored $250 finding (adversarial review 2026-07-08 #3). Use the
+    # direction whose token appears; bind to that token's nearest price.
+    is_over = bool(over_tokens)
+    tok_pos = (over_tokens or under_tokens)[0].start()
+    t = min(priced, key=lambda pv: abs(pv[0] - tok_pos))[1]
 
     # LG2-safe: resolve the cited element against the finding's single device
     # baton only (overlapping e_index spaces across devices otherwise collide).
@@ -1092,10 +1104,14 @@ def _check_predicate_mismatch(
     if not anchor_prices:
         return []
 
-    t = max(thresholds)
-    p = anchor_prices[0]
-    if (over and p < t) or (under and p > t):
-        direction = "over" if over else "under"
+    # An element may list several prices. "over $X" is satisfied if ANY price is
+    # over X, so violation only when even the HIGHEST is below X; "under $X"
+    # mirrors with the LOWEST. (Was anchor_prices[0], which false-bounced a
+    # multi-price element whose first listed price happened to be on the wrong
+    # side.)
+    p = max(anchor_prices) if is_over else min(anchor_prices)
+    if (is_over and p < t) or (not is_over and p > t):
+        direction = "over" if is_over else "under"
         return [
             BusinessRuleViolation(
                 rule="anchor_satisfies_numeric_predicate",
@@ -1108,8 +1124,9 @@ def _check_predicate_mismatch(
                 ),
                 message=(
                     f"Finding prose says {direction.upper()} ${t:,.0f} but cites {bi!r} "
-                    f"whose text is ${p:,.2f} — anchor an element that satisfies the "
-                    f"predicate, or use baton_index='absent' at the section."
+                    f"whose {'highest' if is_over else 'lowest'} price is ${p:,.2f} — "
+                    f"anchor an element that satisfies the predicate, or use "
+                    f"baton_index='absent' at the section."
                 ),
             )
         ]

@@ -267,20 +267,28 @@ TUNE_HINT = {
 def _predicate_mismatch(text: str, anchor_text: str) -> str | None:
     if not anchor_text:
         return None
-    over = bool(_OVER.search(text)); under = bool(_UNDER.search(text))
-    if not (over or under):
+    over_tokens = list(_OVER.finditer(text))
+    under_tokens = list(_UNDER.finditer(text))
+    if not (over_tokens or under_tokens):
         return None
-    thresholds = [_money(m) for m in _PRICE.findall(text)]
-    anchor_prices = [_money(m) for m in _PRICE.findall(anchor_text)]
-    thresholds = [t for t in thresholds if t == t]
-    anchor_prices = [p for p in anchor_prices if p == p]
-    if not thresholds or not anchor_prices:
+    priced = [
+        (m.start(), v) for m in _PRICE.finditer(text) if (v := _money(m.group(1))) == v
+    ]
+    anchor_prices = [p for p in (_money(m) for m in _PRICE.findall(anchor_text)) if p == p]
+    if not priced or not anchor_prices:
         return None
-    t = max(thresholds)
-    p = anchor_prices[0]
-    if over and p < t:
+    # Bind the threshold to the $ NEAREST the predicate token (not max() over all
+    # amounts — a competitor/MSRP price elsewhere in the prose otherwise hijacks
+    # it), and treat "over $X" as satisfied by ANY price over X (compare the
+    # element's highest; lowest for "under"). Kept in lockstep with
+    # business_rules._check_predicate_mismatch (adversarial review 2026-07-08 #3).
+    is_over = bool(over_tokens)
+    tok_pos = (over_tokens or under_tokens)[0].start()
+    t = min(priced, key=lambda pv: abs(pv[0] - tok_pos))[1]
+    p = max(anchor_prices) if is_over else min(anchor_prices)
+    if is_over and p < t:
         return f"finding says OVER ${t:,.0f} but anchored to a ${p:,.2f} element"
-    if under and p > t:
+    if not is_over and p > t:
         return f"finding says UNDER ${t:,.0f} but anchored to a ${p:,.2f} element"
     return None
 

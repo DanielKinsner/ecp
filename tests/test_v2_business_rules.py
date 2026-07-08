@@ -986,6 +986,39 @@ class TestLG6PredicateMismatchRule(unittest.TestCase):
         ]
         self.assertNotIn("anchor_satisfies_numeric_predicate", fixed_rules)
 
+    def test_competitor_price_in_prose_does_not_false_bounce(self):
+        # Adversarial review 2026-07-08 #3: the threshold binds to the $ NEAREST
+        # the predicate token, not max() over all amounts. A recommendation that
+        # cites a larger competitor/MSRP price must not hijack the threshold and
+        # bounce a correctly-anchored finding.
+        f = _finding(
+            title="Bundle priced over $200 with no value framing",
+            element={"baton_index": "e7"},
+            evidence_anchors=[{"type": "dom", "reference": "e7"}],
+            observation="The bundle is priced over $200 but shows no anchor — " + "x" * 25,
+            recommendation="Competitors charge $600 for a comparable kit; frame the saving.",
+        )
+        baton = {"elements": [{"e_index": "e7", "text_content": "$250.00"}]}
+        rules = [v.rule for v in validate_business_rules(_emission([f]), baton=baton)]
+        self.assertNotIn(
+            "anchor_satisfies_numeric_predicate", rules,
+            "$250 satisfies 'over $200'; the unrelated $600 competitor price must "
+            "not be treated as the threshold (was max()-bounced pre-fix).",
+        )
+
+    def test_multi_price_element_with_a_qualifying_price_passes(self):
+        # "over $X" is satisfied if ANY of the element's prices is over X — the
+        # check compares the element's HIGHEST, not its first-listed price.
+        f = _finding(
+            title="Featured prices over $1,766 lack MSRP anchors",
+            element={"baton_index": "e7"},
+            evidence_anchors=[{"type": "dom", "reference": "e7"}],
+            observation="Nine of ten featured prices sit over $1,766 with no anchor — " + "x" * 25,
+        )
+        baton = {"elements": [{"e_index": "e7", "text_content": "From $135.99 up to $1,800.00"}]}
+        rules = [v.rule for v in validate_business_rules(_emission([f]), baton=baton)]
+        self.assertNotIn("anchor_satisfies_numeric_predicate", rules)
+
 
 if __name__ == "__main__":
     unittest.main()

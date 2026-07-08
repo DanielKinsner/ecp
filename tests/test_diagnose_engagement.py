@@ -136,6 +136,26 @@ class TestPredicateMismatch(unittest.TestCase):
         msg = dx._predicate_mismatch("Cheap items under $50 hidden", "$1,766.00")
         self.assertIsNotNone(msg)
 
+    def test_competitor_price_does_not_false_flag(self):
+        # Adversarial review 2026-07-08 #3 (kept in lockstep with
+        # business_rules): the threshold binds to the $ nearest the predicate
+        # token, so an unrelated larger competitor price doesn't hijack it.
+        self.assertIsNone(
+            dx._predicate_mismatch(
+                "Bundle priced over $200; competitors charge $600 for similar",
+                "$250.00",
+            ),
+            "$250 satisfies 'over $200'; the $600 competitor price must not be the threshold.",
+        )
+
+    def test_multi_price_element_with_qualifying_price_is_fine(self):
+        self.assertIsNone(
+            dx._predicate_mismatch(
+                "Featured prices over $1,766 lack MSRP anchors",
+                "From $135.99 up to $1,800.00",
+            ),
+        )
+
 
 class TestAttribute(unittest.TestCase):
     def _f(self, **kw):
