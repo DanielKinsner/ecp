@@ -79,6 +79,26 @@ async function main() {
     const fid = await page.locator(".detail-card.visible").getAttribute("data-fid");
     assert(fid, "No active finding detail was selected");
 
+    const selectedHotspot = page.locator(".hotspot.selected");
+    if (await selectedHotspot.count()) {
+      const calloutPointerEvents = await page.locator("#callout[data-visible='true']").evaluate(
+        el => getComputedStyle(el).pointerEvents,
+      );
+      assert(
+        calloutPointerEvents === "none",
+        `Report callout blocks hotspot clicks (pointer-events=${calloutPointerEvents})`,
+      );
+      await selectedHotspot.click();
+      assert(
+        await page.locator('.panel-tab[data-tab="clusters"].active').count() === 1,
+        "Clicking the selected hotspot did not switch the left rail to By Cluster",
+      );
+      assert(
+        await page.locator(`.finding-row.selected[data-fid="${cssEscape(fid)}"]:visible`).count() === 1,
+        "Clicking the selected hotspot did not surface its matching cluster row",
+      );
+    }
+
     await page.locator(`.detail-btn-editor-queue[data-fid="${cssEscape(fid)}"]`).click();
     const queued = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith("ecp-editor-picks:"));

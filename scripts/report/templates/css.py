@@ -1040,6 +1040,10 @@ a:hover {{ text-decoration: underline; }}
   position: relative;
   z-index: 8;
   display: none;
+  /* The report callout is descriptive, not interactive. It can be positioned
+     over the selected hotspot by the editor; let pointer input pass through
+     so a real hotspot click still reaches the delegated navigation handler. */
+  pointer-events: none;
   --callout-scale: 1;
   /* Bumped 280 -> 320 (+14%) + padding 14/16 -> 16/18 per Dan's size
      request. Callout matches the larger screenshot in visual weight. */
@@ -1058,7 +1062,6 @@ a:hover {{ text-decoration: underline; }}
 .callout[data-visible="true"] {{ display: block; }}
 .callout.review-positioned {{
   z-index: 12;
-  pointer-events: auto;
   box-shadow: 0 22px 54px rgba(0,0,0,0.62);
 }}
 /* Leader arrow. Direction is persisted from the editor through
