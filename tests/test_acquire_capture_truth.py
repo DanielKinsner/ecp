@@ -68,7 +68,10 @@ class TestC10InvisibleElementFilter(unittest.TestCase):
         extraction; this test pins the order."""
         js = acquire_url._build_elements_js("example.com")
         geom_idx = js.find("r.bottom < 0 || r.top > window.innerHeight")
-        cs_idx = js.find("getComputedStyle")
+        # Ignore the local-wrapper visibility check inside the zero-size proxy
+        # resolver; this ordering assertion concerns the ordinary element's
+        # computed-style filter.
+        cs_idx = js.find("const cs = window.getComputedStyle(el)")
         self.assertGreater(geom_idx, 0, "geometry guard missing")
         self.assertGreater(cs_idx, geom_idx, "visibility filter must run AFTER geometry guard")
 

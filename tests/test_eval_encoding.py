@@ -15,6 +15,7 @@ import base64
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import acquire_url as cb  # noqa: E402
@@ -33,6 +34,43 @@ class TestEvalArgsBase64(unittest.TestCase):
         args = cb._eval_args('a>b && c|d ("q") {z}')
         for ch in "<>&|(){}\"'":
             self.assertNotIn(ch, args[2])
+
+    def test_eval_json_object_preserves_line_comments(self):
+        """Base64 transport supports newlines; flattening them makes a ``//``
+        comment swallow the rest of a canonical payload and breaks live capture.
+        """
+        src = "JSON.stringify((function(){\n// keep this line bounded\nreturn {ok:true};\n})())"
+        captured = {}
+
+        def fake_run_capture(cmd, **kwargs):
+            b64_idx = cmd.index("-b") + 1
+            captured["source"] = base64.b64decode(cmd[b64_idx]).decode("utf-8")
+            return '"{\\"ok\\":true}"\n'
+
+        with mock.patch.object(cb, "_run_capture", side_effect=fake_run_capture):
+            self.assertEqual(cb._eval_json_object("agent-browser", "session", src), {"ok": True})
+
+        self.assertEqual(captured["source"], src)
+        self.assertIn("// keep this line bounded\nreturn", captured["source"])
+
+    def test_large_windows_eval_uses_stdin(self):
+        src = "JSON.stringify((function(){\n/* long */\nreturn '" + ("x" * 7000) + "';\n})())"
+        captured = {}
+
+        def fake_run_capture(cmd, **kwargs):
+            captured["cmd"] = cmd
+            captured["input_text"] = kwargs.get("input_text")
+            return '"ok"\n'
+
+        with (
+            mock.patch.object(cb.os, "name", "nt"),
+            mock.patch.object(cb, "_run_capture", side_effect=fake_run_capture),
+        ):
+            self.assertEqual(cb._eval_json_object("agent-browser.CMD", "session", src), "ok")
+
+        self.assertIn("--stdin", captured["cmd"])
+        self.assertNotIn("-b", captured["cmd"])
+        self.assertEqual(captured["input_text"], src)
 
 
 class TestUnwrapEval(unittest.TestCase):

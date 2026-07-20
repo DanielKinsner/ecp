@@ -149,12 +149,22 @@ def _build_elements_js(expected_hostname: str) -> str:
            widget rect); only fall through to the drop when no sized ancestor
            exists within 4 levels (truly invisible, nothing to pin). */
         const isFormControl = (tag === 'select' || tag === 'input' || tag === 'button');
+        let geometryProxy = null;
         if (r.width === 0 || r.height === 0) {
           if (!isFormControl) return null;
           let anc = el.parentElement, ar = null, depth = 0;
           while (anc && depth < 4) {
+            const ancTag = (anc.tagName || '').toLowerCase();
+            /* Never promote a hidden control to the page/body rectangle. A
+               usable proxy must be a local, visibly rendered wrapper. */
+            if (ancTag === 'body' || ancTag === 'html') break;
+            try {
+              const acs = window.getComputedStyle(anc);
+              if (acs && (acs.display === 'none' || acs.visibility === 'hidden')) return null;
+              if (anc.getAttribute && anc.getAttribute('aria-hidden') === 'true') return null;
+            } catch(_) {}
             const pr = anc.getBoundingClientRect();
-            if (pr.width > 0 && pr.height > 0) { ar = pr; break; }
+            if (pr.width > 0 && pr.height > 0) { ar = pr; geometryProxy = anc; break; }
             anc = anc.parentElement; depth++;
           }
           if (!ar) return null;
@@ -169,7 +179,11 @@ def _build_elements_js(expected_hostname: str) -> str:
            on scroll-trigger / animate--* elements, so revealed heroes survive this filter. */
         try {
           const cs = window.getComputedStyle(el);
-          if (cs && (cs.display === 'none' || cs.visibility === 'hidden')) return null;
+          /* A zero-sized native control may be the semantic half of a visible
+             JS-enhanced widget. In that one case its verified local wrapper is
+             the painted evidence and supplies the geometry. Other hidden DOM
+             nodes remain excluded by C10. */
+          if (cs && (cs.display === 'none' || cs.visibility === 'hidden') && !geometryProxy) return null;
           if (el.getAttribute && el.getAttribute('aria-hidden') === 'true') return null;
         } catch(_) {}
         return {
@@ -402,8 +416,15 @@ def _run_ab(
     return p.returncode
 
 
-def _run_capture(cmd: list[str]) -> str:
-    return subprocess.check_output(cmd, text=True, encoding="utf-8", errors="replace", shell=False)
+def _run_capture(cmd: list[str], *, input_text: str | None = None) -> str:
+    return subprocess.check_output(
+        cmd,
+        input=input_text,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        shell=False,
+    )
 
 
 @dataclass
@@ -532,8 +553,23 @@ def _parse_eval_json_string(stdout: str) -> str:
 
 
 def _eval_json_object(agent_browser: str, session: str | None, source: str) -> Any:
-    source = " ".join(str(source).split())
-    out = _run_capture(_ab_bin(agent_browser, _eval_args(source), session=session))
+    # Preserve line boundaries. Several canonical payloads use ``//`` comments;
+    # flattening whitespace turns the first such comment into "comment out the
+    # rest of the program" and Chromium then reports Unexpected end of input.
+    # ``eval -b`` safely transports newlines, so normalization is unnecessary.
+    source = str(source)
+    encoded_cmd = _ab_bin(agent_browser, _eval_args(source), session=session)
+    # npm's Windows .CMD shim is limited to roughly 8 KiB even though
+    # CreateProcess supports a much larger command line. Large overlay and DOM
+    # payloads therefore use agent-browser's stdin transport; short payloads
+    # retain the proven base64 path.
+    if os.name == "nt" and sum(len(part) + 1 for part in encoded_cmd) >= 7000:
+        out = _run_capture(
+            _ab_bin(agent_browser, ["eval", "--stdin"], session=session),
+            input_text=source,
+        )
+    else:
+        out = _run_capture(encoded_cmd)
     return _unwrap_eval(_parse_trailing_json(out))
 
 

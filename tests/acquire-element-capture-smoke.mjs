@@ -54,6 +54,11 @@ const FIXTURE_HTML = `<!doctype html><html><head><meta charset="utf-8"></head>
     <!-- JS-enhanced visible widget overlaying the native select -->
     <div class="custom-dropdown" style="width:300px;height:40px">Select Year</div>
   </div>
+  <!-- These controls have no visible local proxy and must remain excluded. -->
+  <select id="unrepresented-hidden" style="display:none"><option>Ghost</option></select>
+  <div style="display:none;width:300px;height:60px">
+    <select id="hidden-with-hidden-wrapper"><option>Ghost wrapper</option></select>
+  </div>
   <button id="find-parts" style="width:140px;height:44px">Find parts</button>
   <div style="height:2200px"></div>
 </body></html>`;
@@ -69,9 +74,9 @@ async function main() {
 
     const selects = rows.filter(r => r && r.tag === "select");
     assert(
-      selects.length >= 1,
+      selects.length === 1,
       "RC#1 regression: a zero-sized native <select> inside a sized wrapper was " +
-      "NOT captured — the per-element zero-size guard still drops form controls.",
+      "not captured exactly once, or an unrepresented hidden control leaked into the baton.",
     );
     const s = selects[0];
     // The native select is 0x0 (display:none); it can only have been captured by
