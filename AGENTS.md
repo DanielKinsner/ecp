@@ -10,8 +10,8 @@ non-Claude agent (e.g. a Codex session) working in this checkout:
 - **Current work state / roadmap:**
   [`docs/reviews/2026-06-10-consolidated-findings-and-plan.md`](docs/reviews/2026-06-10-consolidated-findings-and-plan.md).
 - Do **not** attempt `/ecp:audit`, `claude plugin …`, or other Claude-Code-specific
-  commands from your harness — the plugin loads only inside Claude Code via
-  `claude --plugin-dir <this repo>`.
+  commands from your harness — the plugin runs only inside Claude Code (installed as
+  `ecp@ecp`, or loaded live via `claude --plugin-dir <this repo>`).
 - **Shared-checkout rule (critical):** concurrent agent sessions share this `.git`. Run
   `git branch` immediately before any add/commit/push; stage explicit paths, never
   `git add -A`.

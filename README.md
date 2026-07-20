@@ -52,7 +52,14 @@ npm test                  # check:editor + check:python + the editor smoke (need
 
 ## Run
 
-Load the plugin live from this repo (no cache, edits take effect immediately):
+Install it from this repo's marketplace:
+
+```powershell
+claude plugin marketplace add "<path-to>\ecp"
+claude plugin install ecp@ecp
+```
+
+Or, for development, load it live from the repo so edits take effect immediately (no reinstall):
 
 ```powershell
 & "<path-to>\claude.exe" --plugin-dir "<path-to>\ecp"

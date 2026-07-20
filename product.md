@@ -212,8 +212,9 @@ modes are downstream consumers of these contracts.
 ## 8. Runtime
 
 - **Claude Code is the only runtime in this repo.** The audit is the `ecp` plugin,
-  invoked as `/ecp:audit`. For live development the plugin loads straight from the
-  repo with `claude --plugin-dir <repo>` — no cache copy, no stale-version step.
+  invoked as `/ecp:audit`. It can be installed (`ecp@ecp` from this repo's marketplace),
+  or — for live development — loaded straight from the repo with
+  `claude --plugin-dir <repo>` so edits take effect without a reinstall.
 - **Codex (and Cursor) are archived, not shipped.** Both alternate runtimes were
   archived with the old repo and are reserved seams (§5): re-portable from the
   archive if ever wanted, but not part of the canonical product. Codex historically

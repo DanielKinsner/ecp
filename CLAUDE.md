@@ -25,11 +25,10 @@ merge-metadata leak) landed on `main` with guard tests, including an end-to-end
 fixed, pinned, deferred, or refuted (per-item statuses + U-verdicts in that doc; O2
 needed a second pass after the first fix hit the Workflow-sandbox no-Node-API
 `ReferenceError`, then live-verified cross-machine from the home checkout).
-**⛔ CURRENT TASK — the live gate: a live `--plugin-dir` `/ecp:audit`**
+**⛔ CURRENT TASK — the live gate: a live `/ecp:audit`**
 (roadmap Phase-4 LV1–LV4: full-pipeline smoke + awdmods hero re-audit + `ecp-visual-qa`
 + editor check). A headless live acquisition smoke ran 2026-06-10; the full-pipeline
-run needs a plugin session. Pre-flight from the fix-plan Phase 5: O1 (remove the stale
-v1.4.1 plugin on the work box) — clear it as part of the live run. O2 is ✅ DONE
+run needs a plugin session. O2 is ✅ DONE
 (QA-workflow roots are sandbox-safe; `ecp-report-qa` live-verified from the home
 checkout 2026-06-12). Verify the rendered report has zero (50,50) phantom markers.
 ⚠️ FOUR colliding ID spaces now — the roadmap's §"ID disambiguation" (+ the fix-plan's
@@ -57,30 +56,18 @@ for how to read it and the accountability loop. Worked example committed at
   - Windows (work): `C:\Users\SM - Dan\Documents\GitHub\ecp`
   - macOS: `/Users/danielkinsner/Projects/ecp`
 
-## Running the plugin (live, no cache)
-This repo is a Claude Code plugin named `ecp`. Load it straight from the working tree —
-**never as a marketplace install** (`product.md` §8: no cache copy, no stale-version step):
-- **Windows (PowerShell):** `claude --plugin-dir "C:\Users\Daniel Kinsner\OneDrive\Documents\GitHub\ecp"`
-- **macOS:** `claude --plugin-dir /Users/danielkinsner/Projects/ecp`
+## Running the plugin
+This repo is a Claude Code plugin named `ecp` (command `/ecp:audit`). Two ways to run it:
+- **Installed (work box, 2026-07-20):** installed as `ecp@ecp` v1.0.0 (user scope) from this repo's
+  local marketplace, so `/ecp:audit` works in a plain `claude` session. The install is a frozen
+  snapshot — after editing the repo, refresh it with `claude plugin update ecp@ecp`.
+- **Live from the working tree (for development):** `claude --plugin-dir <this repo>` runs your live
+  edits immediately, no reinstall. Paths (verify on your box):
+  - Windows (work): `C:\Users\SM - Dan\Documents\GitHub\ecp`
+  - Windows (home): `C:\Users\Daniel Kinsner\OneDrive\Documents\GitHub\ecp`
+  - macOS: `/Users/danielkinsner/Projects/ecp`
 
 Then inside the session: `/ecp:audit https://your-product-page --visual` (flags: `contracts/flags.md`).
-
-### ⚠️ BEFORE the first `/ecp:audit` on any machine — stale-plugin check
-An archived plugin **also named `ecp`** (`ecp@ecommerce-conversion-psychology`, **v1.4.1**, pre-migration
-Agent-Teams code + `*-cursor` skills + `ecp-*` agents) collides on the `/ecp:` namespace. A session
-started **without** `--plugin-dir` loads *that* one and runs the wrong, old code.
-- `--plugin-dir` makes this repo (**v1.0.0**) win for the session (empirically: it collapses the
-  double `/ecp:audit` down to the single 1.0.0 command).
-- **Verify:** `claude plugin list` → **v1.0.0 = this repo ✅ · v1.4.x = archived ❌.** Backup tell: on
-  the clean repo, `/ecp:audit` is the ONLY ecp command — no `*-cursor` skills, no `ecp-*` agents.
-- Status by machine (2026-06-10): **Mac ✅ clean** · **Windows home ✅ clean** (the 2026-06-10 spec-audit
-  Sweep 3 verified no install/marketplace references remained; the last orphaned v1.4.1 cache payload
-  was deleted 2026-06-10 — a bare `claude` session on this box simply has no `/ecp:audit` at all, which
-  is why `--plugin-dir` is mandatory) · **Windows work box (`C:\Users\SM - Dan\...`) ✅ clean** (verified
-  2026-07-20: `claude plugin list` shows NO ecp/ecommerce plugin at all — same as home, so `--plugin-dir`
-  is mandatory here too). If `claude plugin list` ever shows a v1.4.x ecp anywhere, remove with:
-  `claude plugin uninstall ecp@ecommerce-conversion-psychology` (user **and** project scope) +
-  `claude plugin marketplace remove ecommerce-conversion-psychology`, then **restart Claude**.
 
 ## One-time setup — GLOBAL deps (no per-repo venv), Windows
 Install **Python from python.org — NOT the Microsoft Store** (its App-Execution-Alias breaks the
