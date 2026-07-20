@@ -82,8 +82,15 @@ REASON_ABSENT = "absent"  # baton_index="absent" or missing (ruling A1)
 REASON_UNRESOLVED_BATON_INDEX = "unresolved_baton_index"  # eN out of element range
 REASON_NO_GEOMETRY = "no_geometry"  # element has no usable rect
 REASON_OFFSLIDE = "offslide"  # element sits outside every captured slide's band
+REASON_OFFVIEWPORT = "offviewport"  # element is horizontally outside the captured viewport
 REASONS = frozenset(
-    {REASON_ABSENT, REASON_UNRESOLVED_BATON_INDEX, REASON_NO_GEOMETRY, REASON_OFFSLIDE}
+    {
+        REASON_ABSENT,
+        REASON_UNRESOLVED_BATON_INDEX,
+        REASON_NO_GEOMETRY,
+        REASON_OFFSLIDE,
+        REASON_OFFVIEWPORT,
+    }
 )
 
 
@@ -103,6 +110,7 @@ class PlacementContext:
     elements: list
     sections: list
     screenshots: list
+    viewport_w: float
     viewport_h: float
     element_coord_scale: float
 
@@ -112,12 +120,20 @@ class PlacementContext:
         sections = baton.get("sections", [])
         screenshots = baton.get("screenshots", [])
         viewport = baton.get("viewport", {})
+        viewport_w = float(viewport.get("width", 390) or 390)
         viewport_h = float(viewport.get("height", 844) or 844)
         dpr = viewport_dpr(viewport)
         element_coord_scale = infer_element_coord_scale(
             elements, screenshots, viewport, dpr, sections
         )
-        return cls(elements, sections, screenshots, viewport_h, element_coord_scale)
+        return cls(
+            elements,
+            sections,
+            screenshots,
+            viewport_w,
+            viewport_h,
+            element_coord_scale,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -186,8 +202,9 @@ def decide_placement(finding: dict, ctx: PlacementContext) -> Placed | Blank:
         return _blank(REASON_UNRESOLVED_BATON_INDEX)
 
     elem = ctx.elements[elem_idx]
-    elem_y_raw = _element_y(elem)
-    elem_h_raw = _element_height(elem)
+    rect = element_rect_raw(elem)
+    elem_y_raw = rect["y"] if rect else 0.0
+    elem_h_raw = rect["height"] if rect else 0.0
     scale = ctx.element_coord_scale
     elem_y_css = elem_y_raw / scale if scale else elem_y_raw
     elem_h_css = elem_h_raw / scale if scale else elem_h_raw
@@ -195,6 +212,18 @@ def decide_placement(finding: dict, ctx: PlacementContext) -> Placed | Blank:
     # An element with no usable rect must not be pinned onto an arbitrary slide.
     if elem_y_raw <= 0 and elem_h_raw <= 0:
         return _blank(REASON_NO_GEOMETRY)
+
+    # Horizontal carousels keep non-visible cards in the DOM with exact rects
+    # far beyond the viewport. Those are exact elements but not exact visual
+    # evidence: clamping their x coordinate to 100% creates a convincing marker
+    # on the wrong pixels. Only auto-place elements that intersect the captured
+    # viewport horizontally; otherwise leave them for manual placement.
+    elem_x_raw = rect["x"] if rect else 0.0
+    elem_w_raw = rect["width"] if rect else 0.0
+    elem_x_css = elem_x_raw / scale if scale else elem_x_raw
+    elem_w_css = elem_w_raw / scale if scale else elem_w_raw
+    if elem_x_css + elem_w_css <= 0 or elem_x_css >= ctx.viewport_w:
+        return _blank(REASON_OFFVIEWPORT)
 
     # Pick the slide by element CENTER (tall elements spanning slides bias toward
     # the wrong slide if picked by top).

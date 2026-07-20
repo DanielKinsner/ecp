@@ -156,12 +156,19 @@ class TestUpgradeBatonsToV2(unittest.TestCase):
         # v1 raw preserved for idempotency / recovery.
         self.assertTrue((self.eng / "baton.v1raw.json").exists())
 
-    def test_laptop_is_left_as_v1(self):
+    def test_laptop_baton_is_upgraded_through_desktop_schema_slot(self):
         self._write_v1()
+        baton = json.loads((self.eng / "baton.json").read_text(encoding="utf-8"))
+        baton["device"] = "laptop"
+        baton["viewport"] = {"width": 1440, "height": 900, "dpr": 1}
+        (self.eng / "baton.json").write_text(json.dumps(baton), encoding="utf-8")
         acquire_url._upgrade_batons_to_v2(self.eng, ("laptop",), _EID)
         baton = json.loads((self.eng / "baton.json").read_text(encoding="utf-8"))
-        self.assertNotIn("schema_version", baton)  # untouched v1
-        self.assertFalse((self.eng / "baton.v1raw.json").exists())
+        self.assertEqual(baton.get("schema_version"), 1)
+        self.assertEqual(baton["device"], "desktop")
+        self.assertEqual(baton["viewport"]["width"], 1440)
+        self.assertEqual(baton["viewport"]["height"], 900)
+        self.assertTrue((self.eng / "baton.v1raw.json").exists())
 
     def test_non_schema_engagement_id_skips_gracefully(self):
         """A legacy non-canonical id (ecp-cursor-...) does not match the

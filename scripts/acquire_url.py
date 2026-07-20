@@ -1828,14 +1828,19 @@ def _upgrade_batons_to_v2(eng_dir: Path, devices, engagement_id: str) -> None:
     pipeline (validate / synthesize / render) consumes.
 
     Previously this conversion was an undocumented manual step the lead ran by
-    hand; wiring it into acquisition removes that gap (run-review C1). Desktop +
-    mobile only — the v2 baton schema covers those two device shapes; a laptop
-    capture keeps its v1 baton. Idempotent (``baton_v1_to_v2.convert_engagement``
+    hand; wiring it into acquisition removes that gap (run-review C1). The v2
+    schema uses ``desktop`` for every non-mobile viewport, so laptop captures
+    are converted through the desktop slot while retaining their captured
+    1440x900 viewport. Idempotent (``baton_v1_to_v2.convert_engagement``
     preserves ``baton{,-mobile}.v1raw.json``) and best-effort: acquisition has
     already succeeded, so a conversion failure — e.g. a non-schema engagement id
     on a standalone quick-scan — only warns and leaves the v1 baton in place.
     """
-    convertible = tuple(d for d in devices if d in ("desktop", "mobile"))
+    convertible = tuple(dict.fromkeys(
+        "mobile" if d == "mobile" else "desktop"
+        for d in devices
+        if d in ("desktop", "laptop", "mobile")
+    ))
     if not convertible:
         return
     try:

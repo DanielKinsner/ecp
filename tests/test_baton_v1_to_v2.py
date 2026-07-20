@@ -291,6 +291,22 @@ class TestConvertEngagement(unittest.TestCase):
             self.assertEqual(raw, original, "re-run must not clobber v1raw with the v2")
             self.assertEqual(json.loads((d / "baton.json").read_text(encoding="utf-8"))["schema_version"], 1)
 
+    def test_fresh_v1_capture_replaces_stale_raw_backup(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = _make_engagement(tmp, devices=("desktop",))
+            conv.convert_engagement(d, captured_at=_CAPTURED)
+
+            fresh = _v1("desktop", viewport={"width": 1440, "height": 900, "dpr": 1})
+            (d / "baton.json").write_text(json.dumps(fresh), encoding="utf-8")
+            conv.convert_engagement(d, captured_at=_CAPTURED)
+
+            converted = json.loads((d / "baton.json").read_text(encoding="utf-8"))
+            raw = json.loads((d / "baton.v1raw.json").read_text(encoding="utf-8"))
+            self.assertEqual(converted["viewport"]["width"], 1440)
+            self.assertEqual(converted["viewport"]["height"], 900)
+            self.assertEqual(raw["viewport"]["width"], 1440)
+            self.assertEqual(raw["viewport"]["height"], 900)
+
     def test_missing_device_skipped(self):
         with tempfile.TemporaryDirectory() as tmp:
             d = _make_engagement(tmp, devices=("desktop",))

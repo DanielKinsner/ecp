@@ -400,9 +400,10 @@ def convert_engagement(
 ) -> dict[str, dict]:
     """Convert the v1 batons in an engagement dir to v2, in place (or to out_dir).
 
-    In-place mode is non-destructive: each device's original v1 baton is preserved
-    as ``baton{,-mobile}.v1raw.json`` and the conversion always reads from that
-    immutable raw, so re-running is idempotent and never clobbers the v1 with a v2.
+    In-place mode is non-destructive: each device's current v1 baton is preserved
+    as ``baton{,-mobile}.v1raw.json``. Re-running against an already-converted v2
+    reads that backup, while a fresh v1 capture refreshes the backup before
+    conversion so stale evidence cannot overwrite the new capture.
     With ``out_dir`` set, the source dir is left entirely untouched (no backup).
     """
     engagement_dir = Path(engagement_dir)
@@ -423,8 +424,16 @@ def convert_engagement(
             continue
 
         if out_dir is None:
-            # Preserve the original v1 once; thereafter always convert from it.
-            if not v1raw_path.exists():
+            # A new acquisition writes a v1 baton over the canonical path. In
+            # that case refresh any older raw backup; otherwise an earlier
+            # viewport can silently clobber the fresh capture on conversion.
+            canonical = json.loads(baton_path.read_text(encoding="utf-8"))
+            canonical_is_v2 = (
+                isinstance(canonical, dict)
+                and "schema_version" in canonical
+                and "capture_state" in canonical
+            )
+            if not canonical_is_v2:
                 shutil.copy2(baton_path, v1raw_path)
             source_path = v1raw_path
         else:

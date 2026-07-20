@@ -21,6 +21,7 @@ from report.placement import (  # noqa: E402
     REASON_ABSENT,
     REASON_NO_GEOMETRY,
     REASON_OFFSLIDE,
+    REASON_OFFVIEWPORT,
     REASON_UNRESOLVED_BATON_INDEX,
     decide_placement,
 )
@@ -95,6 +96,25 @@ class TestDecidePlacement(unittest.TestCase):
         result = decide_placement(_finding("e0"), ctx)
         self.assertIsInstance(result, Blank)
         self.assertEqual(result.reason, REASON_OFFSLIDE)
+
+    def test_horizontal_carousel_element_right_of_viewport_is_blank(self):
+        ctx = PlacementContext.from_baton(
+            _baton([{"e_index": "e0", "rect": {
+                "x": 5859, "y": 300, "width": 266, "height": 266,
+            }}])
+        )
+        result = decide_placement(_finding("e0"), ctx)
+        self.assertIsInstance(result, Blank)
+        self.assertEqual(result.reason, REASON_OFFVIEWPORT)
+
+    def test_partially_visible_carousel_element_is_placed(self):
+        ctx = PlacementContext.from_baton(
+            _baton([{"e_index": "e0", "rect": {
+                "x": 1380, "y": 300, "width": 266, "height": 266,
+            }}])
+        )
+        result = decide_placement(_finding("e0"), ctx)
+        self.assertIsInstance(result, Placed)
 
 
 if __name__ == "__main__":
