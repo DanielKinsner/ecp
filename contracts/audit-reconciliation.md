@@ -92,7 +92,7 @@ The remaining fields (`TITLE:`, `SECTION:`, `ELEMENT:`, etc.) are required by th
    Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the validation error (e.g., "block-format violation: findings use ### Finding N headings instead of code fences"). This generates a retry prompt that embeds the error.
    ```
    Agent(subagent_type="general-purpose", description="format-rewrite: cluster-{cluster}-{device}",
-         model="opus", prompt=<rendered retry prompt from test-specialist.py>)
+         model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
    ```
    One re-dispatch per validation failure. The subagent has no context of the original attempt — it receives only the cluster file content + the specific validation error. On success, validate the returned file again. On second failure, the lead reformats in place AND logs the failure in `audit-trace.log` for follow-up. Do NOT silently reformat without going through re-dispatch first.
 
@@ -100,7 +100,7 @@ The remaining fields (`TITLE:`, `SECTION:`, `ELEMENT:`, etc.) are required by th
    Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the validation error details (e.g., "TITLE validation: Finding #3 missing TITLE line; Findings #2 and #5 both have 'Value Proposition' — must be unique"). This generates a retry prompt embedding the specific violations.
    ```
    Agent(subagent_type="general-purpose", description="title-rewrite: cluster-{cluster}-{device}",
-         model="opus", prompt=<rendered retry prompt from test-specialist.py>)
+         model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
    ```
    One re-dispatch per validation failure. The subagent receives cluster content + the specific TITLE violations (missing lines, duplicates, length/slug-match failures) and rewrites only TITLE fields, keeping SECTION, ELEMENT, OBSERVATION, RECOMMENDATION, PRIORITY, REFERENCE, and citations verbatim. On success, re-validate. On second failure, the lead corrects TITLEs in place AND logs the failure in `audit-trace.log` for follow-up.
 5. When the re-dispatched subagent's corrected file lands on disk, re-validate. **One re-dispatch max** — if the fresh subagent still produces wrong format, the lead reformats in place AND logs the failure in `audit-trace.log` for follow-up. Do NOT silently reformat without going through this re-dispatch step first.
@@ -127,7 +127,7 @@ After the format check accepts a cluster file, the lead runs a voice check again
 Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the voice violation details (e.g., "voice check failed: Finding at SECTION pricing uses 'render-blocking' without plain-English equivalent; Finding at SECTION trust uses 'compliance' framing — rewrite using outcome framing; Finding at SECTION benefits has citation-only 'Why this matters'"). This generates a retry prompt embedding the specific violations.
 ```
 Agent(subagent_type="general-purpose", description="voice-rewrite: cluster-{cluster}-{device}",
-      model="opus", prompt=<rendered retry prompt from test-specialist.py>)
+      model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
 ```
 One re-dispatch per validation failure. The subagent receives cluster content + the specific jargon/framing violations and rewrites only OBSERVATION, RECOMMENDATION, and **Why this matters** fields, keeping SECTION, ELEMENT, PRIORITY, SOURCE, and REFERENCE verbatim. On success, re-validate using the same blocklist gate. On second failure, the lead rewrites in place using the voice guide's translation patterns AND logs the voice failure in `audit-trace.log` for follow-up. Do NOT silently pass jargon-laden findings through to the client.
 
@@ -160,7 +160,7 @@ After format and voice checks both pass, the lead runs an evidence-anchor check 
 Run `scripts/test-specialist.py --write-retry-prompt <path-to-cluster-file>` with the evidence-anchor violations (e.g., "evidence-anchor gate failed: Finding at SECTION pricing ELEMENT blank, uses generic framing 'best practice suggests' — anchor to a DOM selector or quote; Finding at SECTION trust RECOMMENDATION abstract 'strengthen the CTA' — name the specific button/link and describe the change"). This generates a retry prompt embedding the specific failures.
 ```
 Agent(subagent_type="general-purpose", description="evidence-anchor-rewrite: cluster-{cluster}-{device}",
-      model="opus", prompt=<rendered retry prompt from test-specialist.py>)
+      model="sonnet", prompt=<rendered retry prompt from test-specialist.py>)
 ```
 One re-dispatch per validation failure. The subagent receives cluster content + the specific evidence-anchor failures (missing ELEMENT, abstract framing, missing citations, vague recommendations) and rewrites to ground findings in concrete page evidence: DOM selectors, screenshot coordinates, or quoted copy from the cluster-context JSON. On success, re-validate. On second failure, the lead **drops the finding silently** (no special marker, no placeholder) — a cluster that lands with zero surviving findings after Step 0c is rendered in the audit as an empty cluster. Generic advice never reaches the client.
 

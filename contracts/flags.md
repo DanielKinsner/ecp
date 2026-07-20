@@ -120,7 +120,7 @@ Override the standard auto-selected clusters. The full routing table, page-type 
 
 **`--deep` has two effects in v1.2 — both orthogonal to scope:**
 
-1. **Model selection.** Route the ethics subagent and builder to `opus` instead of their default `sonnet`. (Cluster specialists already run on `opus` unconditionally as of 2026-06-02, so `--deep` no longer changes them.)
+1. **Model selection.** Route the **cluster specialists, ethics subagent, and builder** to `opus` instead of their default `sonnet` (Sonnet 5).
 2. **Visual-QA tier.** Escalate `ecp-visual-qa` from `standard` (1 vision verifier on flagged crops) to `deep` (3-verifier majority on flagged crops) when paired with `--visual`. See the `--visual` / `--no-visual` section below.
 
 **`--deep` does NOT change cluster scope.** The canonical `--auto` scope is `"standard"` (every cluster relevant to the detected page type, per `product.md` §2.3 v1.2) — `--deep` leaves that unchanged. Operators who want all 10 clusters dispatched regardless of page type pass `--focus all` (the `everything` scope), not `--deep`.
@@ -129,11 +129,10 @@ Use `--deep` when:
 - Producing client-facing output where the strongest possible reasoning signal on ethics + builder is worth the cost.
 - Pairing with `--visual` and wanting the 3-verifier majority placement-QA gate.
 
-**Default behavior (no `--deep`):** the ethics subagent and builder run on `sonnet`; the visual-QA tier with `--visual` is `standard` (1 verifier). Cluster specialists run on `opus` regardless of this flag.
+**Default behavior (no `--deep`):** the cluster specialists, ethics subagent, and builder run on `sonnet` (Sonnet 5); the visual-QA tier with `--visual` is `standard` (1 verifier).
 
 **Roles that stay on `opus` regardless of `--deep`:**
 - Lead (coordinator)
-- Cluster specialists (a.k.a. cluster auditors) — opus by default as of 2026-06-02
 - Synthesizer
 - Planner
 - Reviewer

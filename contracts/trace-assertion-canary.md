@@ -56,7 +56,7 @@ Write this as the FIRST ~30 lines of `docs/ecp/{engagement-id}/audit-trace.log` 
 #   idle_notification_total: 0            ← v2: incremented per idle_notification observed; >10 from non-specialists triggers a soft warning
 # COST TRACE (model choices locked at dispatch time; estimated_tokens_total filled at completion):
 #   model_acquirer: sonnet                ← always sonnet per spec (mechanical work)
-#   model_cluster_specialists: opus        ← always opus (v2 default as of 2026-06-02; v2 alias of v1 model_cluster_auditors)
+#   model_cluster_specialists: sonnet      ← sonnet (Sonnet 5) by default; "opus" when --deep is set (v2 alias of v1 model_cluster_auditors)
 #   model_ethics: sonnet                  ← v2: sonnet by default; "opus" when --deep is set
 #   model_synthesizer: opus               ← v2: always opus (synthesis brain)
 #   model_planner: opus                   ← always opus (strategic prioritization)
@@ -390,7 +390,7 @@ The parenthetical breakdown is optional but helpful — it tells the user WHICH 
 ## What to skip when computing cost
 
 - If only the audit phase ran (user stopped at `checkpoint_audit`), the cost should exclude `planner_cost`, `reviewer_cost`, `builder_cost` entirely.
-- Cluster auditors always use `auditor_cost_opus` (opus is the default as of 2026-06-02). For the builder, use `builder_cost_opus` when `--deep` is set, else `builder_cost_sonnet`.
+- Cluster auditors use `auditor_cost_sonnet` by default (sonnet is the default as of 2026-07-20), or `auditor_cost_opus` when `--deep` is set. For the builder, use `builder_cost_opus` when `--deep` is set, else `builder_cost_sonnet`.
 - If the run is audit-only (no plan steps generated), `builder_cost` is 0.
 
 ---
