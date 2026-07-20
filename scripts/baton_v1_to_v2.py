@@ -266,14 +266,21 @@ def _build_sections(v1: dict, device: str, page_height: int, page_title: str, vh
         shot_idx = int(s.get("screenshot_index", idx + 1))
         shot = (f"section-{shot_idx}.jpg" if device == "desktop"
                 else f"section-{shot_idx}-mobile.jpg")
-        out.append({
+        section = {
             "label": label,
             "slug": _slugify(label, idx, seen),
             "clusters": list(s.get("clusters") or ["visual-cta"]),
             "scroll_y_top": top,
             "scroll_y_bottom": bot,
             "screenshot_ref": shot,
-        })
+        }
+        # Capture-integrity fields are optional for legacy v1 inputs, but when
+        # the live acquirer measured them they must survive conversion. Dropping
+        # them makes occluded/duplicate screenshots look authoritative.
+        for flag in ("occluded", "overlay_dismissed", "scroll_failed"):
+            if flag in s:
+                section[flag] = bool(s.get(flag))
+        out.append(section)
     return out
 
 

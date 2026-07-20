@@ -88,6 +88,15 @@ Do **not** read the full ethics-gate. Ethics is a separate subagent in v2 — yo
 - **Screenshots (PRIMARY visual evidence):**
 {{screenshot_paths_with_descriptions}}
 
+Before making a visual claim, inspect the matching section metadata in the baton
+or cluster-context. A section with `occluded: true`, `scroll_failed: true`, or
+`overlay_dismissed: false` is capture-limited: do not infer absence, visibility,
+layout, contrast, hierarchy, or precise position from that screenshot. You may
+still use independently verifiable DOM evidence, but state only what the DOM
+proves. Do not emit a screenshot-grounded finding or hotspot anchor for a
+capture-limited section; the renderer intentionally leaves those findings
+unplaced until a clean recapture or explicit operator placement.
+
 {{cluster_surface_vocabulary}}
 
 {{cluster_guidance}}

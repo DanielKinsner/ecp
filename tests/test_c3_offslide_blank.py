@@ -114,6 +114,35 @@ class TestOffSlideBlank(unittest.TestCase):
             "needs-manual-marker",
         )
 
+    def test_capture_limited_section_never_auto_places_hotspot(self):
+        for flag, value in (
+            ("occluded", True),
+            ("scroll_failed", True),
+            ("overlay_dismissed", False),
+        ):
+            with self.subTest(flag=flag):
+                baton = _baton_with_gap()
+                baton["sections"][0][flag] = value
+                mappings = auto_map_markers_v2(
+                    [_finding(2, "cta/F-02", "e1")], baton
+                )
+                self.assertEqual(mappings[0]["match_method"], "unplaced")
+                self.assertEqual(mappings[0]["fallback_role"], "capture_limited")
+                rendered = compute_marker_positions_v2(mappings, baton)
+                self.assertFalse(any(rendered.values()))
+
+    def test_explicit_false_occlusion_does_not_block_hotspot(self):
+        baton = _baton_with_gap()
+        baton["sections"][0].update({
+            "occluded": False,
+            "scroll_failed": False,
+            "overlay_dismissed": True,
+        })
+        mapping = auto_map_markers_v2(
+            [_finding(2, "cta/F-02", "e1")], baton
+        )[0]
+        self.assertEqual(mapping["match_method"], "e_index_lookup")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -118,7 +118,7 @@ Your deliverable is a `baton.json` (or `baton-mobile.json`) file that validates 
 - `viewport` (object: width, height, dpr_requested, dpr_actual)
 - `capture_state` (object: hydration, overlays_detected[], page_height_px)
 - `elements` (array of element objects with stable `e_index`, `rect`, `role`, `accessible_name`, `is_above_fold`, `is_sticky`, `is_offscreen`)
-- `sections` (array: label, slug, clusters[], scroll_y_top, scroll_y_bottom, screenshot_ref)
+- `sections` (array: label, slug, clusters[], scroll_y_top, scroll_y_bottom, screenshot_ref, plus optional capture-integrity booleans `occluded`, `overlay_dismissed`, and `scroll_failed`)
 - `page_head` (structured: title, canonical, meta_description, viewport_meta, og_image, schema_jsonld[], hreflang[])
 - `telemetry` (optional: wall_clock_seconds, playwright_version, chromium_binary)
 

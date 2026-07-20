@@ -256,6 +256,18 @@
             "description": "Filename of the section screenshot (e.g., 'section-3.jpg' or 'section-3-mobile.jpg'). Path is relative to engagement directory. Renderer resolves hotspots via this reference.",
             "type": "string",
             "pattern": "^section-[0-9]+(-mobile)?\\.jpg$"
+          },
+          "occluded": {
+            "description": "True when a blocking overlay covered more than 30 percent of the viewport at capture time. Downstream auditors must not treat the screenshot as complete visual evidence and the renderer must not auto-place hotspots on it.",
+            "type": "boolean"
+          },
+          "overlay_dismissed": {
+            "description": "Whether overlay handling left the viewport clear before this section was captured.",
+            "type": "boolean"
+          },
+          "scroll_failed": {
+            "description": "True when scrolling could not produce a distinct section screenshot after retry. Downstream consumers must treat this screenshot as unreliable evidence.",
+            "type": "boolean"
           }
         }
       }

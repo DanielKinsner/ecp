@@ -649,8 +649,7 @@ def _apply_review_state_to_slide_markers(slide_markers, review_state, findings):
 
 
 def dom_capture_caveat(baton):
-    """Return a caveat dict when the acquirer modified the DOM before capture,
-    else None.
+    """Return a caveat when acquisition modified or limited visual evidence.
 
     contracts/trace-assertion-canary.md §260 + product.md §0 ("never
     untraceable, never silently misleading"): when the acquirer dismisses
@@ -659,18 +658,15 @@ def dom_capture_caveat(baton):
     first view. The visual report MUST surface that as a caveat banner so
     layout / whitespace / first-impression findings carry the right framing.
 
-    The signal is a non-empty ``baton.capture_state.overlays_detected[]`` (the
-    acquirer records one entry per force-removed/revealed overlay). Returns
-    ``{"count": int, "types": [distinct overlay type strings]}`` or None.
+    Signals are a non-empty ``baton.capture_state.overlays_detected[]`` (the
+    acquirer records force-removal/reveal edits) or section-level
+    ``occluded``, ``scroll_failed``, and ``overlay_dismissed`` failures.
     """
     if not isinstance(baton, dict):
         return None
     capture_state = baton.get("capture_state")
-    if not isinstance(capture_state, dict):
-        return None
-    overlays = capture_state.get("overlays_detected")
-    if not isinstance(overlays, list) or not overlays:
-        return None
+    overlays = capture_state.get("overlays_detected") if isinstance(capture_state, dict) else []
+    overlays = overlays if isinstance(overlays, list) else []
     types: list[str] = []
     for overlay in overlays:
         if not isinstance(overlay, dict):
@@ -678,7 +674,20 @@ def dom_capture_caveat(baton):
         t = (overlay.get("type") or "").strip()
         if t and t not in types:
             types.append(t)
-    return {"count": len(overlays), "types": types}
+    sections = baton.get("sections")
+    sections = sections if isinstance(sections, list) else []
+    occluded = sum(1 for s in sections if isinstance(s, dict) and s.get("occluded") is True)
+    scroll_failed = sum(1 for s in sections if isinstance(s, dict) and s.get("scroll_failed") is True)
+    uncleared = sum(1 for s in sections if isinstance(s, dict) and s.get("overlay_dismissed") is False)
+    if not overlays and not (occluded or scroll_failed or uncleared):
+        return None
+    return {
+        "count": len(overlays),
+        "types": types,
+        "occluded_sections": occluded,
+        "scroll_failed_sections": scroll_failed,
+        "uncleared_sections": uncleared,
+    }
 
 
 def render_dom_caveat_banner(caveat):
@@ -690,15 +699,36 @@ def render_dom_caveat_banner(caveat):
     types_str = ", ".join(escape_html(t) for t in types) if types else "overlay(s)"
     noun = "overlay" if count == 1 else "overlays"
     verb = "was" if count == 1 else "were"
+    parts = []
+    if count:
+        parts.append(
+            f'{count} {noun} {verb} dismissed to reveal the full page ({types_str}). '
+            'Findings about layout, whitespace, or first-impression / cognitive load '
+            'reflect this modified capture, not necessarily a first-time visitor&rsquo;s view.'
+        )
+    occluded = int(caveat.get("occluded_sections", 0) or 0)
+    scroll_failed = int(caveat.get("scroll_failed_sections", 0) or 0)
+    uncleared = int(caveat.get("uncleared_sections", 0) or 0)
+    if occluded or scroll_failed or uncleared:
+        details = []
+        if occluded:
+            details.append(f'{occluded} occluded')
+        if scroll_failed:
+            details.append(f'{scroll_failed} duplicate/failed-scroll')
+        if uncleared:
+            details.append(f'{uncleared} uncleared-overlay')
+        parts.append(
+            'Capture-limited sections: ' + ', '.join(details) + '. '
+            'Automatic hotspots are withheld on those screenshots until a clean '
+            'recapture or explicit operator placement.'
+        )
+    detail_html = ' '.join(parts)
     return (
         '<div class="dom-caveat-banner" role="note">'
         '<span class="dom-caveat-icon" aria-hidden="true">&#9888;</span>'
         '<span class="dom-caveat-text">'
-        '<strong>Captured view was modified during acquisition.</strong> '
-        f'{count} {noun} {verb} dismissed to reveal the full page ({types_str}). '
-        'Findings about layout, whitespace, or first-impression / cognitive load '
-        'reflect this modified capture, not necessarily a first-time visitor&rsquo;s '
-        'view &mdash; verify those against the live page.'
+        '<strong>Captured view has acquisition caveats.</strong> '
+        f'{detail_html} Verify affected visual claims against the live page.'
         '</span></div>'
     )
 

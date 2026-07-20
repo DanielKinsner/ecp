@@ -164,6 +164,34 @@ def auto_map_markers_v2(
     for f in findings:
         mappings.append(_to_mapping(decide_placement(f, ctx)))
 
+    # A geometrically resolvable element is not enough when the screenshot
+    # itself is known to be compromised. Auto-placing a hotspot onto an
+    # occluded or duplicate capture visually overclaims evidence precision.
+    # Leave it in the normal manual-placement queue; a later operator override
+    # can still place it after checking a clean source.
+    sections = baton.get("sections") or []
+    for mapping in mappings:
+        slide = mapping.get("slide")
+        try:
+            section = sections[int(slide)]
+        except (TypeError, ValueError, IndexError):
+            continue
+        if not isinstance(section, dict):
+            continue
+        capture_limited = (
+            section.get("occluded") is True
+            or section.get("scroll_failed") is True
+            or section.get("overlay_dismissed") is False
+        )
+        if capture_limited and mapping.get("match_method") == "e_index_lookup":
+            mapping.update({
+                "baton_element_index": None,
+                "slide": 0,
+                "match_method": "unplaced",
+                "fallback_role": "capture_limited",
+                "fallback_position": None,
+            })
+
     # Augment each mapping with visual_evidence so downstream
     # consumers (review-state writer, HTML builder, Phase 3 quality gates)
     # have a stable typed contract instead of having to interpret

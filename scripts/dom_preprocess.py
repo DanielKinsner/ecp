@@ -436,7 +436,7 @@ def preprocess_device(
             elif "header" in label.lower() or ("nav" in label.lower() and scroll_y < 100):
                 dom_slice = extractor.header_html
 
-            cluster_sections.append({
+            cluster_section = {
                 "label": label,
                 "scrollY": scroll_y,
                 "height": max(1, scroll_y_bottom - scroll_y),
@@ -444,7 +444,11 @@ def preprocess_device(
                 "clusters": section_clusters,
                 "is_global": is_global,
                 "dom_slice": dom_slice[:SECTION_SLICE_CAP] if dom_slice else "",
-            })
+            }
+            for flag in ("occluded", "overlay_dismissed", "scroll_failed"):
+                if flag in sec:
+                    cluster_section[flag] = bool(sec.get(flag))
+            cluster_sections.append(cluster_section)
 
         if not cluster_sections:
             print(f"[{device}] SKIP {cluster} - no sections routed")

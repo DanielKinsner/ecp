@@ -22,6 +22,10 @@ After baton validation passes and baton normalization completes, before spawning
 
 1. **Read the full DOM file** — `dom.html` (laptop/desktop) or `dom-mobile.html` (mobile). ONE Read call.
 2. **Read the baton** — `baton.json` or `baton-{device}.json`. Use `sections[]` with their `clusters` arrays and `elements[]` with their absolute `y` coordinates.
+
+   Preserve each routed section's optional `occluded`, `overlay_dismissed`, and
+   `scroll_failed` booleans in the cluster-context output. Specialists use
+   these fields to avoid visual claims from compromised screenshots.
 3. **For each resolved cluster in `clusters_used`:**
    a. Collect baton `sections[]` where the `clusters` array includes this cluster slug.
    b. Use baton `elements[]` (which have absolute y coordinates from `getBoundingClientRect`) to identify which DOM subtrees fall within each section's `scrollY..scrollY+height` range. Match elements to DOM nodes by `selector`/`tag`/`class` from the elements array.

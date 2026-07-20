@@ -29,15 +29,35 @@ JSON.stringify((function() {
   );
   var overlays = document.querySelectorAll(sel);
   var blocking = [];
+  function isBlockingCandidate(el, st) {
+    if (!st || st.display === 'none' || st.visibility === 'hidden' || st.visibility === 'collapse') return false;
+    if (parseFloat(st.opacity || '1') <= 0.02 || st.pointerEvents === 'none') return false;
+    var role = ((el.getAttribute && el.getAttribute('role')) || '').toLowerCase();
+    var ariaModal = ((el.getAttribute && el.getAttribute('aria-modal')) || '').toLowerCase();
+    var name = (((el.className && el.className.toString) ? el.className.toString() : '') + ' ' + (el.id || '')).toLowerCase();
+    var semanticDialog = role === 'dialog' || ariaModal === 'true';
+    var overlayName = /(modal|popup|newsletter|subscribe|omnisend|klaviyo|consent|onetrust|cookie|cc-window|overlay)/.test(name);
+    var viewportLayer = st.position === 'fixed' || st.position === 'sticky';
+    /* Generic "overlay" classes are also used for static image tint/media
+       layers. They are not dialogs and must never be removed from evidence. */
+    if (!(semanticDialog || (viewportLayer && overlayName))) return false;
+    var r = el.getBoundingClientRect();
+    var cx = Math.max(0, Math.min(window.innerWidth - 1, (Math.max(0, r.left) + Math.min(window.innerWidth, r.right)) / 2));
+    var cy = Math.max(0, Math.min(window.innerHeight - 1, (Math.max(0, r.top) + Math.min(window.innerHeight, r.bottom)) / 2));
+    var hit = document.elementFromPoint ? document.elementFromPoint(cx, cy) : el;
+    return !!hit && (hit === el || (el.contains && el.contains(hit)));
+  }
   for (var i=0;i<overlays.length;i++) {
     var el = overlays[i];
     if (!el) continue;
     var st = window.getComputedStyle ? window.getComputedStyle(el) : {display: 'block'};
-    if (st && st.display === 'none') continue;
+    if (!isBlockingCandidate(el, st)) continue;
     var r = el.getBoundingClientRect();
     if (r.width < 2 || r.height < 2) continue;
     var vw = window.innerWidth, vh = window.innerHeight;
-    var coverage = (Math.min(r.right, vw) - Math.max(r.left, 0)) * (Math.min(r.bottom, vh) - Math.max(r.top, 0));
+    var overlapW = Math.max(0, Math.min(r.right, vw) - Math.max(r.left, 0));
+    var overlapH = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+    var coverage = overlapW * overlapH;
     if (coverage > vw * vh * 0.1) {
       var cn = (el.className && el.className.toString) ? el.className.toString() : "";
       blocking.push({tag: (el.tagName||'').toLowerCase(), class: cn.slice(0,80), id: (el.id||'').slice(0, 60), coverage: Math.round(coverage/(vw*vh)*100)});
@@ -240,6 +260,22 @@ _FORCE_REMOVE = r"""
   var nodes = document.querySelectorAll(sels);
   var removed = 0;
   var records = [];
+  function isBlockingCandidate(el, st) {
+    if (!st || st.display === 'none' || st.visibility === 'hidden' || st.visibility === 'collapse') return false;
+    if (parseFloat(st.opacity || '1') <= 0.02 || st.pointerEvents === 'none') return false;
+    var role = ((el.getAttribute && el.getAttribute('role')) || '').toLowerCase();
+    var ariaModal = ((el.getAttribute && el.getAttribute('aria-modal')) || '').toLowerCase();
+    var name = (((el.className && el.className.toString) ? el.className.toString() : '') + ' ' + (el.id || '')).toLowerCase();
+    var semanticDialog = role === 'dialog' || ariaModal === 'true';
+    var overlayName = /(modal|popup|newsletter|subscribe|omnisend|klaviyo|consent|onetrust|cookie|cc-window|overlay)/.test(name);
+    var viewportLayer = st.position === 'fixed' || st.position === 'sticky';
+    if (!(semanticDialog || (viewportLayer && overlayName))) return false;
+    var r = el.getBoundingClientRect();
+    var cx = Math.max(0, Math.min(window.innerWidth - 1, (Math.max(0, r.left) + Math.min(window.innerWidth, r.right)) / 2));
+    var cy = Math.max(0, Math.min(window.innerHeight - 1, (Math.max(0, r.top) + Math.min(window.innerHeight, r.bottom)) / 2));
+    var hit = document.elementFromPoint ? document.elementFromPoint(cx, cy) : el;
+    return !!hit && (hit === el || (el.contains && el.contains(hit)));
+  }
   function typeFromClasses(cls, id) {
     var s = ((cls||'') + ' ' + (id||'')).toLowerCase();
     if (/consent|onetrust|osano|cookie|privacy/.test(s)) return 'cookie-consent';
@@ -252,10 +288,14 @@ _FORCE_REMOVE = r"""
   for (var i=0;i<nodes.length;i++) {
     var el = nodes[i];
     if (!el) continue;
+    var st = window.getComputedStyle ? window.getComputedStyle(el) : null;
+    if (!isBlockingCandidate(el, st)) continue;
     var r = el.getBoundingClientRect();
     if (r.width < 2 || r.height < 2) continue;
     var vw = window.innerWidth, vh = window.innerHeight;
-    var coverage = (Math.min(r.right, vw) - Math.max(r.left, 0)) * (Math.min(r.bottom, vh) - Math.max(r.top, 0));
+    var overlapW = Math.max(0, Math.min(r.right, vw) - Math.max(r.left, 0));
+    var overlapH = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+    var coverage = overlapW * overlapH;
     if (coverage > vw * vh * 0.1) {
       var clsRaw = (el.className && el.className.toString) ? el.className.toString() : '';
       var idRaw = (el.id || '');

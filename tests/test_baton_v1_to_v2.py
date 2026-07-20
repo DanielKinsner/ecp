@@ -145,6 +145,29 @@ class TestSections(unittest.TestCase):
         for s in _convert()["sections"]:
             self.assertRegex(s["slug"], r"^[a-z][a-z0-9-]*$")
 
+    def test_capture_integrity_flags_survive_conversion(self):
+        raw = _v1()
+        raw["sections"][0].update({
+            "occluded": True,
+            "overlay_dismissed": False,
+            "scroll_failed": True,
+        })
+        v2 = conv.convert_baton(
+            raw, _DOM, device="desktop",
+            engagement_id=_EID, captured_at=_CAPTURED,
+        )
+        section = v2["sections"][0]
+        self.assertTrue(section["occluded"])
+        self.assertFalse(section["overlay_dismissed"])
+        self.assertTrue(section["scroll_failed"])
+        self.assertEqual(list(Draft202012Validator(_SCHEMA).iter_errors(v2)), [])
+
+    def test_legacy_sections_do_not_invent_capture_flags(self):
+        section = _convert()["sections"][0]
+        self.assertNotIn("occluded", section)
+        self.assertNotIn("overlay_dismissed", section)
+        self.assertNotIn("scroll_failed", section)
+
 
 class TestPageHead(unittest.TestCase):
     def test_page_head_parsed_from_dom(self):

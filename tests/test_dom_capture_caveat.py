@@ -30,7 +30,7 @@ sys.path.insert(0, str(_REPO / "scripts"))
 
 from report.html_builder import dom_capture_caveat, render_dom_caveat_banner  # noqa: E402
 
-_CAVEAT_TEXT = "Captured view was modified during acquisition"
+_CAVEAT_TEXT = "Captured view has acquisition caveats"
 _FIXTURE = _REPO / "tests" / "fixtures" / "2026-05-02-9cd2a2ac"
 
 
@@ -42,6 +42,18 @@ class DomCaptureCaveatHelper(unittest.TestCase):
 
     def test_none_when_no_overlays(self):
         self.assertIsNone(dom_capture_caveat({"capture_state": {"overlays_detected": []}}))
+
+    def test_section_capture_limits_trigger_caveat_without_overlays(self):
+        caveat = dom_capture_caveat({
+            "capture_state": {"overlays_detected": []},
+            "sections": [
+                {"occluded": True, "overlay_dismissed": False},
+                {"scroll_failed": True},
+            ],
+        })
+        self.assertEqual(caveat["occluded_sections"], 1)
+        self.assertEqual(caveat["scroll_failed_sections"], 1)
+        self.assertEqual(caveat["uncleared_sections"], 1)
 
     def test_counts_and_dedupes_types(self):
         caveat = dom_capture_caveat({"capture_state": {"overlays_detected": [
@@ -63,6 +75,18 @@ class DomCaptureCaveatHelper(unittest.TestCase):
     def test_render_plural_grammar(self):
         html = render_dom_caveat_banner({"count": 2, "types": ["a", "b"]})
         self.assertIn("2 overlays were dismissed", html)
+
+    def test_render_capture_limits_explains_hotspot_withholding(self):
+        html = render_dom_caveat_banner({
+            "count": 0,
+            "types": [],
+            "occluded_sections": 2,
+            "scroll_failed_sections": 1,
+            "uncleared_sections": 0,
+        })
+        self.assertIn("2 occluded", html)
+        self.assertIn("1 duplicate/failed-scroll", html)
+        self.assertIn("Automatic hotspots are withheld", html)
 
 
 try:

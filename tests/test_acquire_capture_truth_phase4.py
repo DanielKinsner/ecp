@@ -107,6 +107,20 @@ class TestC11ForceRemovalJsReturnsRecords(unittest.TestCase):
         self.assertIn("omnisend", js)
         self.assertIn("klaviyo", js)
 
+    def test_static_image_layers_and_closed_backdrops_are_not_removed(self):
+        js = ovl._FORCE_REMOVE
+        self.assertIn("st.pointerEvents === 'none'", js)
+        self.assertIn("parseFloat(st.opacity || '1') <= 0.02", js)
+        self.assertIn("viewportLayer && overlayName", js)
+        self.assertIn("document.elementFromPoint", js)
+        self.assertIn("el.contains(hit)", js)
+        self.assertNotIn("return /overlay/.test(name);", js)
+
+    def test_viewport_probe_clamps_offscreen_intersection(self):
+        js = ovl._VIEWPORT_CHECK
+        self.assertIn("Math.max(0, Math.min(r.right, vw)", js)
+        self.assertIn("Math.max(0, Math.min(r.bottom, vh)", js)
+
 
 class TestC11ConverterFiresCaveat(unittest.TestCase):
     """v1.overlays records -> v2.capture_state.overlays_detected with valid
@@ -617,7 +631,8 @@ class TestC11PlaceholdersNotSpecialistVisible(unittest.TestCase):
             "screenshots": [],
             "sections": [{"label": "hero", "slug": "hero", "scrollY": 0,
                           "height": 900, "clusters": ["visual-cta"],
-                          "screenshot_index": 1}],
+                          "screenshot_index": 1, "occluded": True,
+                          "overlay_dismissed": False, "scroll_failed": True}],
             "elements": [
                 {"e_index": "e1", "role": "button", "selector": ".cta",
                  "rect": {"x": 10, "y": 100, "width": 200, "height": 50}},
@@ -634,6 +649,10 @@ class TestC11PlaceholdersNotSpecialistVisible(unittest.TestCase):
         indexes = {el.get("e_index") for el in ctx.get("elements", [])}
         self.assertIn("e1", indexes)
         self.assertNotIn("e2", indexes, "is_offscreen element leaked into cluster context")
+        section = ctx["sections"][0]
+        self.assertTrue(section["occluded"])
+        self.assertFalse(section["overlay_dismissed"])
+        self.assertTrue(section["scroll_failed"])
 
     def test_reveal_pass_placeholder_is_synthesized_offscreen(self):
         v1 = _v1_baton(reveal_summary={"reveal_els": 2})
