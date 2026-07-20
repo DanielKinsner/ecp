@@ -76,8 +76,9 @@ started **without** `--plugin-dir` loads *that* one and runs the wrong, old code
 - Status by machine (2026-06-10): **Mac ✅ clean** · **Windows home ✅ clean** (the 2026-06-10 spec-audit
   Sweep 3 verified no install/marketplace references remained; the last orphaned v1.4.1 cache payload
   was deleted 2026-06-10 — a bare `claude` session on this box simply has no `/ecp:audit` at all, which
-  is why `--plugin-dir` is mandatory) · **Windows work box (`C:\Users\SM - Dan\...`) ⚠️ unverified — may
-  still have it.** If `claude plugin list` shows a v1.4.x ecp anywhere, remove with:
+  is why `--plugin-dir` is mandatory) · **Windows work box (`C:\Users\SM - Dan\...`) ✅ clean** (verified
+  2026-07-20: `claude plugin list` shows NO ecp/ecommerce plugin at all — same as home, so `--plugin-dir`
+  is mandatory here too). If `claude plugin list` ever shows a v1.4.x ecp anywhere, remove with:
   `claude plugin uninstall ecp@ecommerce-conversion-psychology` (user **and** project scope) +
   `claude plugin marketplace remove ecommerce-conversion-psychology`, then **restart Claude**.
 
