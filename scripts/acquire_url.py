@@ -390,7 +390,15 @@ def _validate_engagement_id(engagement_id: str) -> str | None:
 
 
 def _run(cmd: list[str], *, check: bool) -> int:
-    p = subprocess.run(cmd, check=False, text=True)
+    # stdout/stderr → DEVNULL so the agent-browser daemon (spawned by `open`/
+    # `goto` under the 0.26+ daemon model) cannot inherit and hold THIS process's
+    # stdout pipe. A lingering daemon on an inherited pipe never sends EOF, so any
+    # caller that reads our stdout (the acquirer subagent, or a shell `| tail`)
+    # hangs long after the capture already finished. See tests/test_acquire_daemon_pipe.py.
+    p = subprocess.run(
+        cmd, check=False, text=True,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
     if check and p.returncode != 0:
         raise subprocess.CalledProcessError(p.returncode, cmd, output=p.stdout, stderr=p.stderr)
     return p.returncode
@@ -406,7 +414,13 @@ def _run_ab(
 ) -> int:
     cmd = _ab_bin(agent_browser, sub, session=session)
     try:
-        p = subprocess.run(cmd, check=False, text=True, timeout=timeout)
+        # DEVNULL for the child's stdout/stderr — otherwise the agent-browser
+        # daemon this call spawns inherits our stdout pipe and holds it open
+        # after we exit, hanging the acquirer subagent. See _run() note above.
+        p = subprocess.run(
+            cmd, check=False, text=True, timeout=timeout,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("agent-browser command timed out") from exc
     if check and p.returncode != 0:

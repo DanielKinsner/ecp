@@ -94,6 +94,13 @@ see `product.md` §6.
   the eval source through `agent-browser eval -b` (`_eval_args`), pinned by
   `tests/test_eval_encoding.py` and `tests/test_acquire_eval_guard.py`. The Claude
   acquirer in `workflows/acquire.md` follows the same guard.
+- **Acquisition (agent-browser 0.26+ daemon):** modern `agent-browser` runs a persistent
+  background daemon; the `open`/`goto` that spawns it inherits the caller's stdout, so a
+  captured/piped invocation **hangs after the capture already succeeded** (the daemon never
+  closes the pipe). `scripts/acquire_url.py` mitigates by sending its agent-browser child
+  streams to `DEVNULL` (`_run`/`_run_ab`), pinned by `tests/test_acquire_daemon_pipe.py`; the
+  manual acquirer in `workflows/acquire.md` redirects the raw `open`/`goto` output for the
+  same reason. Verified live on agent-browser 0.32.3, Windows, 2026-07-20.
 - Hotspot placement is precision-first: low-confidence hotspots are left **blank** for
   manual placement rather than auto-placed wrong (`product.md` §4.2).
 

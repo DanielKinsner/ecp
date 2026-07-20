@@ -33,6 +33,20 @@ The Output Contract and Output Format sections at the end of this document are t
 > Bash: agent-browser eval -b "$(printf '%s' 'JSON.stringify({w: window.innerWidth})' | base64 -w 0)"   # non-trivial JS -> base64
 > ```
 
+> **CRITICAL — the persistent daemon (agent-browser 0.26+) and the pipe-hang.** Starting at
+> 0.26, `agent-browser` runs a **persistent background daemon**: the first `open`/`goto`
+> spawns it and it stays alive between commands (this is intended — it makes later commands
+> fast). The trap: that daemon **inherits the stdout of the command that spawned it**, so when
+> the Bash tool captures a raw `agent-browser open`/`goto` call, the tool call **hangs after
+> navigation already succeeded** — the daemon never lets the captured pipe reach EOF. Two rules:
+> 1. **Prefer the deterministic `scripts/acquire_url.py` path** — it redirects the daemon's
+>    streams internally (`_run`/`_run_ab` → `DEVNULL`), so it never hangs. This is the canonical acquirer.
+> 2. **If you must run a raw navigation command, redirect its output** so the daemon can't hold
+>    the tool's pipe — bash: `agent-browser {session_flag} open "URL" >/dev/null 2>&1` ·
+>    PowerShell: `agent-browser {session_flag} open "URL" *> $null`. Only the daemon-spawning
+>    `open`/`goto` needs this; later `eval`/`screenshot`/`close` are short-lived clients whose
+>    output you *do* want, and they do not hang. `goto`/`navigate` remain valid aliases for `open` in 0.32.
+
 ## Running `eval` safely on every platform (base64)
 
 **Rule.** A bare property read may be passed inline (`agent-browser eval "document.title"`). **Any** richer JS — every `JSON.stringify((function(){ ... })())` block in this document, and anything containing quotes, parentheses, braces, `&&`, `|`, `<`, or `>` — MUST be base64-encoded and run as:
