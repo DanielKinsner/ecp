@@ -44,6 +44,39 @@ from assembly.visual_quality import (  # noqa: E402
 MATCH_MIN = 0.34                         # min token-overlap to trust a re-anchor
 MATCH_MARGIN = 0.12                      # top match must beat 2nd by this to be unambiguous
 
+# --- Role-map fallback (2026-07-21) -----------------------------------------
+# The lexical matcher scores ~0.0 when the finding title describes a PROBLEM
+# ("Star Rating Touch Target Too Small") while the element label is element
+# TEXT ("4.7 out of 5 stars"). The anchor-candidates sidecar already knows
+# element roles, so a single unambiguous same-slide candidate of the finding's
+# inferred role is a trustworthy re-anchor target. Corpus replay 2026-07-21:
+# lexical alone re-anchors 92 markers; this fallback rescues 184 more.
+# Precision-first: keyword lists hold only unambiguous words, and a guard
+# token vetoes the role entirely (the "Title Tag" SEO finding must never grab
+# the visible product-title heading — 2026-07-08 handoff trap).
+_KNOWN_ROLES = frozenset({
+    "primary-cta", "secondary-cta", "price-block", "product-title",
+    "subheading", "gallery-image", "variant-selector", "search",
+    "reviews-widget", "trust-strip", "navigation", "footer-region",
+})
+ROLE_KEYWORDS: dict[str, frozenset[str]] = {
+    "reviews-widget": frozenset({"review", "reviews", "rating", "ratings",
+                                 "star", "stars", "testimonial", "testimonials"}),
+    "price-block": frozenset({"price", "prices", "pricing", "msrp"}),
+    "primary-cta": frozenset({"cart", "buy", "checkout"}),
+    "navigation": frozenset({"navigation", "nav", "menu"}),
+    "trust-strip": frozenset({"trust", "badge", "badges", "guarantee",
+                              "warranty", "payment"}),
+    "search": frozenset({"search"}),
+    "footer-region": frozenset({"footer"}),
+    "product-title": frozenset({"title", "headline"}),
+}
+# Tokens that veto a role inference: their presence means the finding is about
+# something the role's keywords merely mention (SEO <title> tag, alt text, ...).
+ROLE_GUARDS: dict[str, frozenset[str]] = {
+    "product-title": frozenset({"tag", "meta", "seo", "alt", "page"}),
+}
+
 
 def _tokens(s: str) -> set[str]:
     return {t for t in _TOKEN.findall((s or "").lower()) if t not in _STOP and len(t) > 1}
@@ -75,6 +108,67 @@ def _query_tokens(finding: dict, marker: dict) -> set[str]:
     return _tokens(" ".join(parts))
 
 
+def infer_roles(finding: dict, marker: dict) -> set[str]:
+    """Infer which candidate ROLE the finding's subject element plays.
+
+    Two intent sources, strongest first:
+    1. an explicit ``observed_anchor.candidate_id`` — the specialist named a
+       role directly ("reviews-widget-3"); its role prefix wins outright even
+       if that exact candidate was a bad anchor.
+    2. conservative keyword inference over the finding's TITLE + element
+       fields only. The observed_anchor text_quote is deliberately excluded:
+       it is element text from a possibly-WRONG anchor and must not leak into
+       intent.
+
+    Returns a set; callers must treat anything but exactly one role as "no
+    confident intent" (multi-role findings like "Payment Icons in Footer" are
+    ambiguous by design).
+    """
+    ve = marker.get("visual_evidence") if isinstance(marker.get("visual_evidence"), dict) else {}
+    oa = ve.get("observed_anchor") if isinstance(ve.get("observed_anchor"), dict) else {}
+    cid = oa.get("candidate_id")
+    if isinstance(cid, str) and "-" in cid:
+        prefix = cid.rsplit("-", 1)[0]
+        if prefix in _KNOWN_ROLES:
+            return {prefix}
+        return set()
+
+    parts: list[str] = []
+    for base in ("finding_title", "callout_title"):
+        val = finding.get(f"{base}_override") or finding.get(base)
+        if val:
+            parts.append(str(val))
+    if finding.get("element"):
+        parts.append(str(finding["element"]))
+    tokens = _tokens(" ".join(parts))
+    roles = set()
+    for role, kws in ROLE_KEYWORDS.items():
+        if tokens & kws and not (tokens & ROLE_GUARDS.get(role, frozenset())):
+            roles.add(role)
+    return roles
+
+
+def _load_role_map(engagement: Path, device: str) -> dict[str, set[str]] | None:
+    """e_index -> set of candidate roles, from the anchor-candidates sidecar.
+
+    Missing sidecar -> None (legacy: pure lexical repair). Present-but-broken
+    raises SidecarLoadError per the canonical loader's fail-loud convention.
+    """
+    from assembly.anchor_candidates import load_anchor_candidates_sidecar_strict
+
+    sidecar = load_anchor_candidates_sidecar_strict(
+        engagement / f"anchor-candidates-{device}.json")
+    if sidecar is None:
+        return None
+    e_to_roles: dict[str, set[str]] = {}
+    for role, bucket in (sidecar.get("candidates_by_role") or {}).items():
+        for c in bucket if isinstance(bucket, list) else []:
+            e = c.get("e_index") if isinstance(c, dict) else None
+            if e:
+                e_to_roles.setdefault(e, set()).add(role)
+    return e_to_roles
+
+
 def _is_oversized(t: dict) -> bool:
     """A snap target too large to be a precise subject (likely a parent container).
 
@@ -104,7 +198,10 @@ def _flatten_targets(snap: dict) -> list[dict]:
     return out
 
 
-def decide_match(query_tokens: set[str], targets: list[dict], current_slide: str | None = None) -> dict:
+def decide_match(query_tokens: set[str], targets: list[dict], current_slide: str | None = None,
+                 *, desired_roles: set[str] | None = None,
+                 e_to_roles: dict[str, set[str]] | None = None,
+                 current_e_index: str | None = None) -> dict:
     """Decide whether to re-anchor (confident, unambiguous text match) or flag,
     and explain why. Pure function — the testable core of the repair.
 
@@ -116,6 +213,14 @@ def decide_match(query_tokens: set[str], targets: list[dict], current_slide: str
     When ``current_slide`` is given, only same-slide elements are eligible for a
     re-anchor — an auto-repair never silently relocates a finding across sections.
     A strong off-slide match is surfaced in the flag reason for a manual move.
+
+    Role fallback: when the lexical path fails AND the caller supplies role
+    intent (``desired_roles`` from infer_roles + ``e_to_roles`` from the
+    anchor-candidates sidecar), a single unambiguous same-slide candidate of
+    the finding's ONE inferred role is re-anchored. Every ambiguity refuses:
+    multi-role intent, several same-slide candidates, off-slide-only
+    candidates, and the marker's CURRENT anchor (``current_e_index`` — the
+    gate said it is wrong there; re-asserting it would be a no-op repair).
     """
     off_best = None
     pool = targets
@@ -132,9 +237,24 @@ def decide_match(query_tokens: set[str], targets: list[dict], current_slide: str
     second_score = scored[1][0] if len(scored) > 1 else 0.0
 
     if best and best_score >= MATCH_MIN and (best_score - second_score) >= MATCH_MARGIN:
-        return {"action": "re-anchor", "best": best, "score": best_score, "scored": scored,
+        return {"action": "re-anchor", "via": "lexical", "best": best, "score": best_score,
+                "scored": scored,
                 "reason": (f"confident text match to baton element '{best['label']}' "
                            f"(score {best_score:.2f}) — UNVERIFIED, re-verify with vision before trusting")}
+
+    if desired_roles is not None and e_to_roles is not None and len(desired_roles) == 1:
+        role = next(iter(desired_roles))
+        role_pool = [t for t in pool
+                     if role in e_to_roles.get(t.get("e_index"), ())
+                     and t.get("e_index") != current_e_index]
+        if len(role_pool) == 1:
+            rbest = role_pool[0]
+            return {"action": "re-anchor", "via": "role-map", "best": rbest,
+                    "score": _overlap(rbest["label"], query_tokens), "scored": scored,
+                    "reason": (f"unique same-slide '{role}' role candidate "
+                               f"'{rbest['label']}' from the anchor-candidates map "
+                               f"(lexical match failed) — UNVERIFIED, re-verify with "
+                               f"vision before trusting")}
 
     if not query_tokens:
         reason = "finding carries no anchorable element text (image/abstract finding) — manual placement"
@@ -167,6 +287,7 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
 
     targets = [t for t in _flatten_targets(_build_snap_targets(engagement, plugin_root, device))
                if not _is_oversized(t)]
+    e_to_roles = _load_role_map(engagement, device)  # None -> pure lexical repair
 
     log: list[dict] = []
     re_anchored = flagged = 0
@@ -183,7 +304,11 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
         finding = findings.get(fref)  # the dict inside rs (mutations persist), or None
 
         qtok = _query_tokens(finding or {}, marker)
-        decision = decide_match(qtok, targets, marker.get("slide_id"))
+        decision = decide_match(
+            qtok, targets, marker.get("slide_id"),
+            desired_roles=infer_roles(finding or {}, marker) if e_to_roles is not None else None,
+            e_to_roles=e_to_roles,
+            current_e_index=marker.get("snapped_baton_index"))
         if decision["action"] == "re-anchor":
             best = decision["best"]
             old = {"slide_id": marker.get("slide_id"), "source": marker.get("source"),
@@ -208,7 +333,8 @@ def repair(engagement: Path, device: str, misplaced: list[str], plugin_root: Pat
             if finding is not None:
                 finding["hotspot_confidence"] = "section-match"
             re_anchored += 1
-            log.append({"f_ref": fref, "action": "re-anchored", "from": old,
+            log.append({"f_ref": fref, "action": "re-anchored",
+                        "via": decision.get("via", "lexical"), "from": old,
                         "to": {"e_index": best.get("e_index"), "slide_id": best["slide_id"],
                                "label": best["label"], "score": round(decision["score"], 2)},
                         "reason": decision["reason"]})
