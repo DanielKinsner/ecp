@@ -446,6 +446,7 @@
     if (!finding.callout_position || finding.callout_position_source !== "manual") {
       finding.callout_position = defaultCalloutPosition(markerBox(marker));
     }
+    syncDerivedEffects(finding);
     touchFinding(finding);
   }
 
@@ -680,6 +681,7 @@
         if (!finding.callout_position || finding.callout_position_source !== "manual") {
           finding.callout_position = defaultCalloutPosition(markerBox(marker));
         }
+        syncDerivedEffects(finding);
       }
       touchFinding(finding);
     }
@@ -715,6 +717,45 @@
     });
   }
 
+  // ---------- derived effects (auto-managed, tied to the hotspot) ----------
+  // "Blur surroundings" = a blur effect with mode:"outside" whose rect is the
+  // hotspot box (the report blurs everything around that rect). Spotlight
+  // intensity = a dim effect with NO rect — the report cuts the dim mask
+  // around the hotspot at render time, so only the slide needs syncing.
+  const isAroundBlur = e => String(e?.type || "").toLowerCase() === "blur" && e?.mode === "outside";
+  const isSpotlightDim = e => String(e?.type || "").toLowerCase() === "dim" && !e?.rect;
+
+  function findEffect(finding, pred, s = state()) {
+    for (const se of s.slide_edits || []) {
+      const index = (se.effects || []).findIndex(e => e?.f_ref === finding.f_ref && pred(e));
+      if (index >= 0) return { slideEdit: se, index, effect: se.effects[index] };
+    }
+    return null;
+  }
+  function removeEffect(finding, pred) {
+    const found = findEffect(finding, pred);
+    if (found) found.slideEdit.effects.splice(found.index, 1);
+    return !!found;
+  }
+  // Keep derived effects glued to the hotspot after it moves or changes slide.
+  function syncDerivedEffects(finding) {
+    const marker = markerFor(finding);
+    const box = marker ? markerBox(marker) : null;
+    [isAroundBlur, isSpotlightDim].forEach(pred => {
+      const found = findEffect(finding, pred);
+      if (!found) return;
+      if (!box) { found.slideEdit.effects.splice(found.index, 1); return; }
+      if (found.slideEdit.slide_id !== marker.slide_id) {
+        found.slideEdit.effects.splice(found.index, 1);
+        slideEditFor(marker.slide_id).effects.push(found.effect);
+      }
+      if (pred === isAroundBlur) {
+        found.effect.rect = { x_pct: box.x, y_pct: box.y, w_pct: box.w, h_pct: box.h };
+      }
+    });
+    app.selectedEffect = null;
+  }
+
   // ---------- actions ----------
   function applyStyle(style) {
     const finding = activeFinding();
@@ -725,6 +766,33 @@
       marker.spotlight_visible = style === "spotlight";
       delete marker.fill_opacity;
       delete marker.glow_opacity;
+      if (style === "glow") marker.glow_opacity = 0.65;
+      if (style === "spotlight") {
+        if (!findEffect(finding, isSpotlightDim)) {
+          slideEditFor((markerFor(finding) || {}).slide_id || currentSlide().slide_id)
+            .effects.push({ type: "dim", f_ref: finding.f_ref, opacity: 0.35 });
+        }
+      } else {
+        removeEffect(finding, isSpotlightDim);
+      }
+      touchFinding(finding);
+    });
+  }
+  function toggleAroundBlur() {
+    const finding = activeFinding();
+    if (!finding) return;
+    const marker = markerFor(finding);
+    const box = marker ? markerBox(marker) : null;
+    if (!box) { flashStatus("Place the highlight box first"); return; }
+    mutate(() => {
+      if (removeEffect(finding, isAroundBlur)) { touchFinding(finding); return; }
+      slideEditFor(marker.slide_id).effects.push({
+        type: "blur",
+        f_ref: finding.f_ref,
+        mode: "outside",
+        rect: { x_pct: box.x, y_pct: box.y, w_pct: box.w, h_pct: box.h },
+        radius_px: Number(el("blurStrength").value) || 10
+      });
       touchFinding(finding);
     });
   }
@@ -774,6 +842,7 @@
       marker.hidden = true;
       marker.source = "manual";
       finding.hotspot_confidence = "needs-manual-marker";
+      syncDerivedEffects(finding);
       touchFinding(finding);
     });
   }
@@ -788,11 +857,32 @@
     URL.revokeObjectURL(a.href);
     flashStatus(`Downloaded review-state-${s.device}.json`);
   }
+  function engagementDirFromLocation() {
+    // file:///C:/path/to/engagement/editor.html -> C:\path\to\engagement
+    try {
+      let p = decodeURIComponent(location.pathname).replace(/\/[^/]*$/, "");
+      if (/^\/[A-Za-z]:/.test(p)) p = p.slice(1);
+      return p.replace(/\//g, "\\");
+    } catch {
+      return "<engagement-folder>";
+    }
+  }
+  function openRenderHelp() {
+    const device = state().device;
+    const dir = engagementDirFromLocation();
+    el("cmdServe").textContent =
+      `node scripts\\serve-editor.cjs --engagement "${dir}"`;
+    el("cmdRender").textContent =
+      `python scripts\\generate-report.py --engagement "${dir}" --device ${device} --plugin-root . --from-review review-state-${device}.json`;
+    el("jsonName").textContent = `review-state-${device}.json`;
+    el("finalName").textContent = `visual-report-${device}-final.html`;
+    el("renderModal").hidden = false;
+  }
   async function renderFinal() {
     saveLocal({ quiet: true });
     if (!isServerBacked()) {
       downloadState();
-      showError("Render needs the editor server. Run: node scripts/serve-editor.cjs --engagement <dir> — or use the downloaded JSON with generate-report.py --from-review.");
+      openRenderHelp();
       return;
     }
     const button = el("exportFinal");
@@ -963,6 +1053,31 @@
     edit.effects.forEach((effect, index) => {
       if (effect.f_ref !== finding.f_ref) return;
       if (effect.hidden === true || !effect.rect) return;
+      if (isAroundBlur(effect)) {
+        // Four non-interactive pieces around the kept-clear rect, mirroring
+        // the report's outside-mode rendering. Adjusted via the slider, not drag.
+        const r = effect.rect;
+        const radius = `${clamp(effect.radius_px ?? 10, 0, 18)}px`;
+        const x = clamp(r.x_pct, 0, 100), y = clamp(r.y_pct, 0, 100);
+        const w = clamp(r.w_pct, 0, 100 - x), h = clamp(r.h_pct, 0, 100 - y);
+        [
+          { x: 0, y: 0, w: 100, h: y },
+          { x: 0, y: y + h, w: 100, h: Math.max(0, 100 - y - h) },
+          { x: 0, y, w: x, h },
+          { x: x + w, y, w: Math.max(0, 100 - x - w), h }
+        ].forEach(piece => {
+          if (piece.w <= 0 || piece.h <= 0) return;
+          const div = document.createElement("div");
+          div.className = "blur-around-piece";
+          div.style.left = `${piece.x}%`;
+          div.style.top = `${piece.y}%`;
+          div.style.width = `${piece.w}%`;
+          div.style.height = `${piece.h}%`;
+          div.style.setProperty("--blur-r", radius);
+          layer.appendChild(div);
+        });
+        return;
+      }
       const type = String(effect.type || "").toLowerCase();
       if (type !== "blur" && type !== "dim") return;
       const node = document.createElement("div");
@@ -999,13 +1114,14 @@
     if (markerStyle(marker) !== "spotlight") return;
     const box = markerBox(marker);
     if (!box) return;
+    const opacity = clamp(findEffect(finding, isSpotlightDim)?.effect?.opacity ?? 0.28, 0, 0.85);
     const id = `spot-${Math.random().toString(36).slice(2, 9)}`;
     layer.innerHTML =
       `<defs><mask id="${id}">` +
       `<rect x="0" y="0" width="100" height="100" fill="white"/>` +
       `<rect x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" rx="1.2" fill="black"/>` +
       `</mask></defs>` +
-      `<rect class="spotlight-dim" x="0" y="0" width="100" height="100" mask="url(#${id})"/>`;
+      `<rect class="spotlight-dim" style="fill:rgba(0,0,0,${opacity})" x="0" y="0" width="100" height="100" mask="url(#${id})"/>`;
   }
 
   function renderMarkers(slide, finding) {
@@ -1047,9 +1163,10 @@
     if (style === "underline") node.classList.add("style-underline");
     if (String(marker.shape).toLowerCase() === "ellipse") node.classList.add("is-ellipse");
     const color = markerColor(marker, finding);
+    const glowOp = clamp(marker.glow_opacity ?? 0.65, 0.1, 0.95);
     node.style.setProperty("--sw", color);
-    node.style.setProperty("--glow1", hexToRgba(color, 0.65));
-    node.style.setProperty("--glow2", hexToRgba(color, 0.4));
+    node.style.setProperty("--glow1", hexToRgba(color, glowOp));
+    node.style.setProperty("--glow2", hexToRgba(color, glowOp * 0.6));
     node.style.setProperty("--fill", hexToRgba(color, 0.25));
     node.style.left = `${box.x}%`;
     node.style.top = `${box.y}%`;
@@ -1182,15 +1299,35 @@
     el("undoAction").disabled = !app.undoStack.length;
     el("redoAction").disabled = !app.redoStack.length;
 
-    const effect = selectedEffectObject();
-    const regionControls = el("regionControls");
-    regionControls.hidden = !effect;
-    if (effect && String(effect.type).toLowerCase() === "blur") {
-      el("blurStrength").value = String(clamp(effect.radius_px ?? 10, 2, 18));
-      el("blurStrength").parentElement.style.display = "";
-    } else if (effect) {
-      el("blurStrength").parentElement.style.display = "none";
+    // Style intensity: glow -> marker.glow_opacity, spotlight -> dim-mask opacity.
+    const intensityWrap = el("styleIntensityWrap");
+    if (finding && style === "glow") {
+      intensityWrap.hidden = false;
+      el("styleIntensity").value = String(Math.round(clamp(marker?.glow_opacity ?? 0.65, 0.1, 0.95) * 100));
+    } else if (finding && style === "spotlight") {
+      intensityWrap.hidden = false;
+      el("styleIntensity").value = String(Math.round(clamp(findEffect(finding, isSpotlightDim)?.effect?.opacity ?? 0.35, 0.1, 0.85) * 100));
+    } else {
+      intensityWrap.hidden = true;
     }
+
+    // Blur controls: "Blur surroundings" toggle + a strength slider that edits
+    // the selected region when there is one, otherwise the around-blur.
+    const aroundEffect = finding ? findEffect(finding, isAroundBlur)?.effect : null;
+    el("blurAround").classList.toggle("is-active", !!aroundEffect);
+    const selected = selectedEffectObject();
+    const selectedBlur = selected && String(selected.type).toLowerCase() === "blur" ? selected : null;
+    const strengthTarget = selectedBlur || aroundEffect;
+    el("blurStrengthWrap").hidden = !strengthTarget;
+    if (strengthTarget) el("blurStrength").value = String(clamp(strengthTarget.radius_px ?? 10, 2, 18));
+    el("deleteRegion").hidden = !selected;
+
+    // Progress: approved out of everything still in the report.
+    const all = (state().findings || []).filter(f => f.status !== "hidden");
+    const done = all.filter(f => f.status === "approved").length;
+    const progress = el("progressLabel");
+    progress.textContent = all.length ? `Done ${done}/${all.length}` : "";
+    progress.classList.toggle("all-done", all.length > 0 && done === all.length);
   }
 
   // ---------- shell bindings ----------
@@ -1213,13 +1350,45 @@
       btn.addEventListener("click", () => applyColor(btn.dataset.color));
     });
     el("customColor").addEventListener("change", evt => applyColor(evt.target.value));
-    el("blurStrength").addEventListener("input", evt => {
-      const effect = selectedEffectObject();
-      if (!effect) return;
-      effect.radius_px = clamp(evt.target.value, 2, 18);
+
+    // Sliders apply live on input and commit ONE undo entry per drag gesture.
+    let sliderSnap = null;
+    const sliderBegin = () => { if (!sliderSnap) sliderSnap = snapshot(); };
+    const sliderEnd = finding => {
+      if (sliderSnap) { pushUndo(sliderSnap); sliderSnap = null; }
+      if (finding) touchFinding(finding);
       saveLocal({ quiet: true });
+      renderControls();
+    };
+    el("blurStrength").addEventListener("input", evt => {
+      const finding = activeFinding();
+      const selected = selectedEffectObject();
+      const target = (selected && String(selected.type).toLowerCase() === "blur")
+        ? selected
+        : (finding ? findEffect(finding, isAroundBlur)?.effect : null);
+      if (!target) return;
+      sliderBegin();
+      target.radius_px = clamp(evt.target.value, 2, 18);
       renderStage();
     });
+    el("blurStrength").addEventListener("change", () => sliderEnd(activeFinding()));
+    el("styleIntensity").addEventListener("input", evt => {
+      const finding = activeFinding();
+      const marker = finding ? markerFor(finding) : null;
+      if (!finding || !marker) return;
+      sliderBegin();
+      const value = clamp(evt.target.value, 10, 95) / 100;
+      if (markerStyle(marker) === "glow") {
+        marker.glow_opacity = value;
+      } else if (markerStyle(marker) === "spotlight") {
+        const found = findEffect(finding, isSpotlightDim);
+        if (found) found.effect.opacity = Math.min(value, 0.85);
+        else slideEditFor(marker.slide_id).effects.push({ type: "dim", f_ref: finding.f_ref, opacity: Math.min(value, 0.85) });
+      }
+      renderStage();
+    });
+    el("styleIntensity").addEventListener("change", () => sliderEnd(activeFinding()));
+    el("blurAround").addEventListener("click", toggleAroundBlur);
     el("deleteRegion").addEventListener("click", deleteSelectedEffect);
     el("calloutVisible").addEventListener("change", evt => {
       const finding = activeFinding();
@@ -1248,6 +1417,39 @@
       app.showGhosts = evt.target.checked;
       renderStage();
     });
+    el("helpButton").addEventListener("click", () => { el("helpModal").hidden = false; });
+    el("closeHelpModal").addEventListener("click", () => { el("helpModal").hidden = true; });
+    el("closeRenderModal").addEventListener("click", () => { el("renderModal").hidden = true; });
+    [el("helpModal"), el("renderModal")].forEach(modal => {
+      modal.addEventListener("click", evt => { if (evt.target === modal) modal.hidden = true; });
+    });
+    document.querySelectorAll("#renderModal [data-copy]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const text = el(btn.dataset.copy).textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = "Copied!";
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+          btn.textContent = "Copied!";
+        }
+        setTimeout(() => { btn.textContent = "Copy"; }, 1600);
+      });
+    });
+    stageWrap.addEventListener("wheel", evt => {
+      if (!evt.ctrlKey) return;
+      evt.preventDefault();
+      app.fitZoom = false;
+      app.zoom = clamp(app.zoom * (evt.deltaY < 0 ? 1.1 : 0.9), 0.25, 2);
+      el("zoomInput").value = String(Math.round(app.zoom * 100));
+      applyZoom();
+      renderStage();
+    }, { passive: false });
     window.addEventListener("resize", () => { if (app.fitZoom) { applyZoom(); renderStage(); } });
     window.addEventListener("keydown", onKeyDown);
   }
@@ -1277,9 +1479,21 @@
     }
     if (mod && evt.key.toLowerCase() === "s") { evt.preventDefault(); downloadState(); return; }
     if (mod) return;
+    // Shift+arrows nudge the highlight box, Alt+arrows resize it.
+    if ((evt.shiftKey || evt.altKey) && evt.key.startsWith("Arrow")) {
+      const step = 0.5;
+      const dx = evt.key === "ArrowLeft" ? -step : evt.key === "ArrowRight" ? step : 0;
+      const dy = evt.key === "ArrowUp" ? -step : evt.key === "ArrowDown" ? step : 0;
+      nudgeMarker(dx, dy, evt.altKey);
+      evt.preventDefault();
+      return;
+    }
     switch (evt.key) {
       case "ArrowLeft": stepSlide(-1); break;
       case "ArrowRight": stepSlide(1); break;
+      case "ArrowDown": evt.preventDefault(); stepFinding(1); break;
+      case "ArrowUp": evt.preventDefault(); stepFinding(-1); break;
+      case "?": el("helpModal").hidden = !el("helpModal").hidden; break;
       case "j": case "J": stepFinding(1); break;
       case "k": case "K": stepFinding(-1); break;
       case "f": case "F": app.fitZoom = true; applyZoom(); renderStage(); break;
@@ -1292,10 +1506,31 @@
         else clearActivePlacement();
         break;
       case "Escape":
-        if (app.drag) { app.drag = null; clearDrawPreview(); render(); }
+        if (!el("helpModal").hidden) { el("helpModal").hidden = true; }
+        else if (!el("renderModal").hidden) { el("renderModal").hidden = true; }
+        else if (app.drag) { app.drag = null; clearDrawPreview(); render(); }
         else if (app.selectedEffect) { app.selectedEffect = null; renderStage(); renderControls(); }
         break;
     }
+  }
+
+  function nudgeMarker(dx, dy, resize) {
+    const finding = activeFinding();
+    const marker = finding ? markerFor(finding) : null;
+    const box = marker ? markerBox(marker) : null;
+    if (!box) return;
+    mutate(() => {
+      if (resize) {
+        box.w = clamp(box.w + dx, 0.4, 100 - box.x);
+        box.h = clamp(box.h + dy, 0.4, 100 - box.y);
+      } else {
+        box.x = clamp(box.x + dx, 0, 100 - box.w);
+        box.y = clamp(box.y + dy, 0, 100 - box.h);
+      }
+      setMarkerRect(marker, box);
+      syncDerivedEffects(finding);
+      touchFinding(finding);
+    });
   }
 
   // ---------- boot ----------

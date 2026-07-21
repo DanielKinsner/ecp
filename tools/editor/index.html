@@ -35,6 +35,9 @@
           <button id="fitStage" title="Fit screenshot to window (F)">Fit</button>
           <label class="zoom-label">Zoom <input id="zoomInput" type="range" min="25" max="200" value="100"></label>
           <label class="ghost-label"><input id="showGhosts" type="checkbox"> Show other hotspots</label>
+          <span class="stagebar-spacer"></span>
+          <span id="progressLabel" class="progress-label"></span>
+          <button id="helpButton" title="Hotkeys and workflow help (?)">?</button>
         </div>
         <div id="slideStrip" class="slide-strip"></div>
         <div id="stageWrap" class="stage-wrap">
@@ -58,6 +61,7 @@
             <button data-style="outline" class="style-btn" title="Plain outline box">Outline</button>
             <button data-style="glow" class="style-btn" title="Outline with a glow halo">Glow</button>
             <button data-style="spotlight" class="style-btn" title="Dim everything outside the highlight box">Spotlight</button>
+            <label id="styleIntensityWrap" hidden>Intensity <input id="styleIntensity" type="range" min="10" max="95" value="35"></label>
           </div>
           <div class="control-group" id="colorGroup" role="group" aria-label="Color">
             <button class="swatch" data-color="#EF4444" style="--sw:#EF4444" title="Critical red"></button>
@@ -67,9 +71,10 @@
             <button class="swatch" data-color="#34D399" style="--sw:#34D399" title="Green"></button>
             <input id="customColor" type="color" value="#FACC15" title="Custom color">
           </div>
-          <div class="control-group" id="regionControls" hidden>
-            <label>Blur <input id="blurStrength" type="range" min="2" max="18" value="10"></label>
-            <button id="deleteRegion" title="Remove the selected blur/dim region (Delete)">Remove region</button>
+          <div class="control-group" id="blurControls">
+            <button id="blurAround" title="Blur everything outside the highlight box; follows the box when you move it">Blur surroundings</button>
+            <label id="blurStrengthWrap" hidden>Blur <input id="blurStrength" type="range" min="2" max="18" value="10"></label>
+            <button id="deleteRegion" hidden title="Remove the selected blur/dim region (Delete)">Remove region</button>
           </div>
           <div class="control-group">
             <label class="callout-toggle"><input id="calloutVisible" type="checkbox" checked> Callout</label>
@@ -83,6 +88,65 @@
             <button id="doneFinding" class="primary" title="Approve this finding and go to the next (A)">Done &#10003;</button>
           </div>
         </footer>
+      </section>
+    </div>
+    <div id="renderModal" class="modal" hidden>
+      <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="renderModalTitle">
+        <header class="modal-head">
+          <strong id="renderModalTitle">How to render the final report</strong>
+          <button id="closeRenderModal" type="button">Close</button>
+        </header>
+        <div class="modal-body">
+          <p>Your edits are saved (a copy of the JSON was just downloaded too). This editor is open as a plain file, so it can't run the renderer itself. Two ways to finish:</p>
+          <p><strong>Option A — the easy way.</strong> From the ecp repo folder, run this once, then reopen the editor at the address it prints. The <em>Render Final Report</em> button will work directly from then on:</p>
+          <div class="cmd-row"><code id="cmdServe"></code><button data-copy="cmdServe" type="button">Copy</button></div>
+          <p><strong>Option B — render from the saved JSON.</strong> Put the downloaded <code id="jsonName"></code> into the engagement folder (replacing the old one), then from the ecp repo folder run:</p>
+          <div class="cmd-row"><code id="cmdRender"></code><button data-copy="cmdRender" type="button">Copy</button></div>
+          <p>Either way the client deliverable lands in the engagement folder as <code id="finalName"></code>.</p>
+        </div>
+      </section>
+    </div>
+    <div id="helpModal" class="modal" hidden>
+      <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+        <header class="modal-head">
+          <strong id="helpModalTitle">Hotkeys &amp; workflow</strong>
+          <button id="closeHelpModal" type="button">Close</button>
+        </header>
+        <div class="modal-body help-grid">
+          <div>
+            <h4>Workflow</h4>
+            <p>Pick a finding on the left, drag a box on the screenshot, choose a style and color, fix the callout text, hit <strong>Done ✓</strong>. Repeat until the Queue is empty, then <strong>Render Final Report</strong>.</p>
+            <h4>Findings</h4>
+            <dl>
+              <dt><kbd>↓</kbd> / <kbd>↑</kbd> (or <kbd>J</kbd>/<kbd>K</kbd>)</dt><dd>next / previous finding</dd>
+              <dt><kbd>A</kbd></dt><dd>Done — approve and advance</dd>
+              <dt><kbd>H</kbd></dt><dd>hide / unhide finding</dd>
+            </dl>
+            <h4>Screenshots</h4>
+            <dl>
+              <dt><kbd>←</kbd> / <kbd>→</kbd></dt><dd>previous / next screenshot</dd>
+              <dt><kbd>F</kbd></dt><dd>fit to window</dd>
+              <dt><kbd>Ctrl</kbd>+scroll</dt><dd>zoom</dd>
+            </dl>
+          </div>
+          <div>
+            <h4>Highlight box</h4>
+            <dl>
+              <dt>drag on screenshot</dt><dd>draw / replace the box</dd>
+              <dt><kbd>Shift</kbd>+arrows</dt><dd>nudge the box</dd>
+              <dt><kbd>Alt</kbd>+arrows</dt><dd>resize the box</dd>
+              <dt><kbd>Delete</kbd></dt><dd>clear placement (or remove selected region)</dd>
+            </dl>
+            <h4>Tools</h4>
+            <dl>
+              <dt><kbd>V</kbd> / <kbd>B</kbd></dt><dd>Highlight / Blur tool</dd>
+              <dt><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></dt><dd>undo / redo</dd>
+              <dt><kbd>Ctrl</kbd>+<kbd>S</kbd></dt><dd>download review-state JSON</dd>
+              <dt><kbd>Esc</kbd></dt><dd>cancel drag / deselect</dd>
+              <dt><kbd>?</kbd></dt><dd>this help</dd>
+            </dl>
+          </div>
+        </div>
       </section>
     </div>
   </main>

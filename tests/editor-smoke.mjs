@@ -154,13 +154,61 @@ async function main() {
     assert(await page.locator(".place-banner").count() === 0, "Place banner did not clear after placement");
     assert(await page.locator(".callout").count() === 1, "Placed finding has no callout");
 
-    // ---- styles: glow then spotlight ----
+    // ---- styles: glow then spotlight, each with an intensity slider ----
     await page.locator('.style-btn[data-style="glow"]').click();
     await page.waitForTimeout(100);
     assert(await page.locator(".hotspot.style-glow").count() === 1, "Glow style did not apply");
+    assert(await page.locator("#styleIntensityWrap:not([hidden])").count() === 1, "Glow did not surface the intensity slider");
+    await page.locator("#styleIntensity").fill("90");
+    await page.locator("#styleIntensity").dispatchEvent("change");
+    await page.waitForTimeout(100);
+    const glowState = await editorState(page);
+    assert(glowState.markers.some(m => Math.abs((m.glow_opacity ?? 0) - 0.9) < 0.01), "Glow intensity slider did not set glow_opacity");
+
     await page.locator('.style-btn[data-style="spotlight"]').click();
     await page.waitForTimeout(100);
     assert(await page.locator(".spotlight-dim").count() === 1, "Spotlight style did not dim the surroundings");
+    await page.locator("#styleIntensity").fill("70");
+    await page.locator("#styleIntensity").dispatchEvent("change");
+    await page.waitForTimeout(100);
+    // Scope to the picked finding — fixture states may already carry rectless
+    // dim effects belonging to other findings.
+    const spotState = await editorState(page);
+    const activeFRef = spotState.findings.find(f => f.review_selected === true)?.f_ref;
+    assert(activeFRef, "Could not resolve the picked finding's f_ref");
+    const spotDim = spotState.slide_edits.flatMap(se => se.effects)
+      .find(e => e.type === "dim" && !e.rect && e.f_ref === activeFRef);
+    assert(spotDim && Math.abs(spotDim.opacity - 0.7) < 0.01, "Spotlight intensity slider did not set the dim opacity");
+
+    // ---- Blur surroundings: auto-selects around the hotspot and follows it ----
+    await page.locator("#blurAround").click();
+    await page.waitForTimeout(150);
+    assert(await page.locator(".blur-around-piece").count() === 4, "Blur surroundings did not render four around-pieces");
+    assert(await page.locator("#blurStrengthWrap:not([hidden])").count() === 1, "Blur surroundings did not surface the strength slider");
+    const findAround = s => s.slide_edits.flatMap(se => se.effects)
+      .find(e => e.type === "blur" && e.mode === "outside" && e.f_ref === activeFRef);
+    let around = findAround(await editorState(page));
+    assert(around && around.rect, "Blur surroundings effect was not persisted with mode outside + rect");
+    const aroundXBefore = around.rect.x_pct;
+    await page.keyboard.press("Shift+ArrowRight");
+    await page.waitForTimeout(150);
+    around = findAround(await editorState(page));
+    assert(Math.abs(around.rect.x_pct - aroundXBefore - 0.5) < 0.05, "Blur surroundings rect did not follow the nudged hotspot");
+
+    // ---- ArrowDown/ArrowUp step through findings ----
+    // Arrow nav cycles within the visible filter; the pick queue may hold just
+    // one finding, so switch to All where there is something to step to.
+    await page.locator("#filterTabs button", { hasText: "All" }).click();
+    await page.waitForTimeout(100);
+    const navRefBefore = await page.locator(".finding-card.is-active .card-ref").textContent();
+    await page.keyboard.press("ArrowDown");
+    await page.waitForTimeout(150);
+    const navRefNext = await page.locator(".finding-card.is-active .card-ref").textContent();
+    assert(navRefNext !== navRefBefore, "ArrowDown did not advance to the next finding");
+    await page.keyboard.press("ArrowUp");
+    await page.waitForTimeout(150);
+    const navRefBack = await page.locator(".finding-card.is-active .card-ref").textContent();
+    assert(navRefBack === navRefBefore, "ArrowUp did not return to the previous finding");
 
     // ---- color swatch updates marker stroke + callout accent ----
     await page.locator('.swatch[data-color="#EF4444"]').click();
@@ -181,7 +229,8 @@ async function main() {
     await page.mouse.up();
     await page.waitForTimeout(150);
     assert(await page.locator(".blur-region").count() === 1, "Blur tool did not create a blur region");
-    assert(await page.locator("#regionControls:not([hidden])").count() === 1, "Blur region did not surface region controls");
+    assert(await page.locator("#deleteRegion:not([hidden])").count() === 1, "Selected blur region did not surface Remove region");
+    assert(await page.locator("#blurStrengthWrap:not([hidden])").count() === 1, "Selected blur region did not surface the strength slider");
     const blurState = await editorState(page);
     const blurEffect = blurState.slide_edits.flatMap(se => se.effects).find(e => e.type === "blur");
     assert(blurEffect && blurEffect.rect && blurEffect.f_ref, "Blur effect was not persisted with rect + f_ref");
@@ -217,6 +266,19 @@ async function main() {
       approvedState.findings.some(f => f.status === "approved"),
       "Done did not approve the finding",
     );
+
+    // ---- file:// render help modal + help overlay ----
+    await page.locator("#exportFinal").click();
+    await page.waitForTimeout(300);
+    assert(await page.locator("#renderModal:not([hidden])").count() === 1, "Render on file:// did not open the how-to modal");
+    const serveCmd = await page.locator("#cmdServe").textContent();
+    assert(serveCmd.includes("serve-editor.cjs") && serveCmd.includes("--engagement"), "Render modal lacks a usable serve command");
+    await page.locator("#closeRenderModal").click();
+    await page.keyboard.press("?");
+    assert(await page.locator("#helpModal:not([hidden])").count() === 1, "? did not open the help overlay");
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(100);
+    assert(await page.locator("#helpModal:not([hidden])").count() === 0, "Escape did not close the help overlay");
 
     assert(pageErrors.length === 0, `Editor threw page errors: ${pageErrors.join(" | ")}`);
 
