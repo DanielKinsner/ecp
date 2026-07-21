@@ -1,6 +1,6 @@
 {
   "name": "ecp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "E-commerce conversion-psychology audit for a single ecommerce page from a URL. Evidence-tiered findings (Gold/Silver/Bronze) across pricing, trust, SEO, mobile, performance, visual design, content, and checkout; a prioritized Priority Path; and an annotated visual report with an editable hotspot tool. Three-state ethics gate (BLOCK/ADJACENT/CLEAR). Command: /ecp:audit. Canonical scope: product.md. Platform-aware detection (Shopify, Next.js, OpenCart, WooCommerce).",
   "author": {
     "name": "Daniel Kinsner"
