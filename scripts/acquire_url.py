@@ -1209,18 +1209,38 @@ def _run_one_device(
     expected_hostname = (_urlparse(url).hostname or "").lower()
 
     _run(_ab_bin(agent_browser, ["close"], session=session), check=False)
-    if prof.use_device:
-        _run(_ab_bin(agent_browser, ["set", "device", prof.use_device], session=session), check=True)
-    else:
-        _run(
-            _ab_bin(
-                agent_browser, ["set", "viewport", str(prof.width), str(prof.height)], session=session
-            ),
-            check=True,
-        )
+    # agent-browser 0.32+ daemon emulation (learned the hard way on 0.32.3,
+    # 2026-07-21 slingmods run). Two rules:
+    #   1. `set viewport` before any browser exists does NOT stick — the first
+    #      `set` launches the browser at the OS window's default content size and
+    #      the override is lost (desktop captured 1258x566 instead of 1920x1080).
+    #      So launch the context with a bare `open` (about:blank) FIRST, then set
+    #      the viewport. `open` is best-effort (check=False) with the goto timeout.
+    #   2. `set device "iPhone 14"` is AVOIDED: alone it races the subsequent
+    #      `goto` and captures at the default 1258x566; preceded by a bare `open`
+    #      it wedges the daemon indefinitely (mobile stalled >10 min). Instead we
+    #      use the retina form `set viewport W H <scale>` — the 3rd arg is the
+    #      deviceScaleFactor, so `set viewport 390 844 3` yields the same 390x844
+    #      @3x DPR mobile capture. Verified: desktop->1920x1080@1x (goto rc 0),
+    #      mobile->390x844@3x (goto rc 0). This unifies both devices on the one
+    #      launch pattern that reliably sticks.
+    _run_ab(agent_browser, ["open"], session=session, check=False, timeout=goto_timeout)
+    vp_args = ["set", "viewport", str(prof.width), str(prof.height)]
+    _scale = int(round(float(prof.dpr)))
+    if _scale > 1:
+        vp_args.append(str(_scale))
+    _run(_ab_bin(agent_browser, vp_args, session=session), check=True)
+    # agent-browser 0.32.3 `goto` exit-code is NOT a reliable navigation-success
+    # signal under device emulation: on the mobile (iPhone 14) path it exits 1 on
+    # slingmods even though the page navigates correctly (verified: post-goto eval
+    # returns innerWidth 390 @3x and location.href == the target URL). The desktop
+    # path exits 0 on the same URL. So we call goto with check=False and treat the
+    # post-navigation location.href (read below) as the authoritative success
+    # signal — a genuine failure leaves href empty/about:blank and is caught right
+    # after. A real TIMEOUT still raises RuntimeError from _run_ab and is handled.
     try:
         _run_ab(
-            agent_browser, ["goto", url], session=session, check=True, timeout=goto_timeout
+            agent_browser, ["goto", url], session=session, check=False, timeout=goto_timeout
         )
     except (RuntimeError, OSError) as exc:
         msg = str(exc).lower()
@@ -1240,6 +1260,14 @@ def _run_one_device(
         loc0 = {}
     page_href_early = str(loc0.get("href") or "")
     page_title_early = str(loc0.get("title") or "")
+
+    # Authoritative navigation-success check (replaces the goto exit-code gate
+    # above). If the page never actually navigated, location.href is empty or
+    # still about:blank — that is a genuine failure. A non-zero goto exit with a
+    # real landed URL is the benign emulation quirk we deliberately tolerate.
+    if not page_href_early or page_href_early.strip().lower().startswith("about:blank"):
+        print("ERROR: navigation failed - page did not leave about:blank", file=sys.stderr)
+        return 1, None
 
     # G16-followup (2026-05-27): refine the contamination-guard hostname
     # baseline using the actual LANDED hostname (after any www-vs-no-www
