@@ -1,5 +1,14 @@
 # ECP Review Editor Changelog
 
+## v2.0.0 - 2026-07-20 (Ground-up simplification rebuild)
+
+- Rebuilt the entire editor front-end (`index.html`, `editor.css`, `editor.js`, ~70% less code) around the five things the operator actually does: place/move the highlight box, pick Outline/Glow/Spotlight, pick a color, blur distracting areas, and retype the callout. Everything else went.
+- Removed: Photoshop-style layers dock, advanced inspector, point/ellipse/polygon/lasso/pan/crop tools, AI Draft View, Preview Finding modal, Export Bundle/Frame/Callout-Layer, screenshot import UI, snap-to-AI, per-effect opacity/rolloff sliders, right-click context menus, and the five-way queue switch.
+- Kept (unchanged contracts): `review-state-v1` schema output, report-side **Queue edit** / **Open editor** pick queue (`ecp-editor-picks:` + `#pick=` routing), localStorage persistence with inline-newer check, schema version gate, `/api/render-review` + `/api/import-asset` server endpoints, and `#exportFinal` / `#stage .stage-hud` selectors pinned by `tests/editor-server-render-smoke.mjs`.
+- Legacy review states still load: ellipse/polygon/point markers render as their bounding box, existing dim regions render and can be deleted, fill/underline styles still display; redrawing converts markers to plain rects.
+- Callouts are edited in place on the canvas (contenteditable title/body writing `callout_*_override`), dragged by their grip, and hidden while a finding is unplaced so they can't swallow the placement drag.
+- `tests/editor-smoke.mjs` rewritten for the new UI; it now also round-trips the browser-edited state through `--validate-review-state` and `--from-review` to prove edits survive the schema gate and the canonical renderer.
+
 ## v1.0.3 - 2026-05-26 (Manual-placement ergonomics — conformance G5, §4.2)
 
 - Fixed the core manual-placement gap: hand-drawing a hotspot (`setMarker`) now promotes a finding off `needs-manual-marker`/risky confidence to `exact-selector`, mirroring `snapToNearestBaton`. Before this, a finding the operator just placed by hand stayed flagged "Place manually" forever and the queue never drained. This completes the conformance-G4 flow, which routes every unplaced/absence finding into the manual-placement queue with no marker.
