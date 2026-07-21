@@ -3,74 +3,86 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ECP Review Editor</title>
+  <title>ECP Hotspot Editor</title>
   <style>/*__EDITOR_CSS__*/</style>
 </head>
 <body>
   <script id="ecp-review-payload" type="application/json">__REVIEW_STATE_JSON__</script>
   <main class="app">
-    <aside class="sidebar">
+    <header class="topbar">
       <div class="brand">
-        <p class="eyebrow">ECP Review Mode</p>
-        <h1>Visual Audit Studio</h1>
-        <p class="subtle">AI draft in. Human-approved report out.</p>
+        <strong>ECP Hotspot Editor</strong>
+        <span id="engagementLabel" class="subtle"></span>
       </div>
-      <div id="deviceTabs" class="tabs"></div>
-      <div id="reviewStats" class="review-stats"></div>
-      <div class="toolbar simple-tools">
-        <button data-tool="rect" class="tool is-active" title="Draw or replace the active finding highlight box"><span>Highlight Box</span><kbd>2</kbd></button>
-        <button data-tool="blur" class="tool" title="Drag a rectangle over any area to blur it only for the active finding"><span>Blur Region</span><kbd>6</kbd></button>
-        <button data-tool="dim" class="tool" title="Drag a rectangle over any area to dim it only for the active finding"><span>Dim Region</span><kbd>7</kbd></button>
-        <button id="undoAction" title="Undo"><span>Undo</span></button>
-        <button id="redoAction" title="Redo"><span>Redo</span></button>
-      </div>
-      <details class="advanced-tools">
-        <summary>Advanced tools</summary>
-        <div class="toolbar">
-          <button data-tool="point" class="tool" title="Point marker"><span>Point</span><kbd>1</kbd></button>
-          <button data-tool="ellipse" class="tool" title="Ellipse marker"><span>Ellipse</span><kbd>3</kbd></button>
-          <button data-tool="pan" class="tool" title="Pan slide"><span>Pan</span><kbd>4</kbd></button>
-          <button data-tool="crop" class="tool" title="Crop slide"><span>Crop</span><kbd>5</kbd></button>
-          <button id="snapMarker" title="Restore active marker to AI placement"><span>Snap AI</span></button>
-          <button id="dimToggle" title="Toggle dim only for the active finding"><span>Dim</span></button>
+      <div id="deviceTabs" class="device-tabs"></div>
+      <div class="topbar-spacer"></div>
+      <span id="statusMessage" class="status-message" aria-live="polite"></span>
+      <button id="saveState" title="Download review-state JSON (Ctrl+S)">Save JSON</button>
+      <button id="exportFinal" class="primary" title="Write review state and render the final client report">Render Final Report</button>
+    </header>
+    <div id="errorMessage" class="error-message" aria-live="assertive" hidden></div>
+    <div class="body">
+      <aside class="sidebar">
+        <div id="filterTabs" class="filter-tabs"></div>
+        <div id="findingList" class="finding-list"></div>
+      </aside>
+      <section class="workspace">
+        <div class="stagebar">
+          <button id="prevSlide" title="Previous screenshot (Left arrow)">&#8592;</button>
+          <span id="slideLabel" class="slide-label"></span>
+          <button id="nextSlide" title="Next screenshot (Right arrow)">&#8594;</button>
+          <span class="stagebar-sep"></span>
+          <button id="fitStage" title="Fit screenshot to window (F)">Fit</button>
+          <label class="zoom-label">Zoom <input id="zoomInput" type="range" min="25" max="200" value="100"></label>
+          <label class="ghost-label"><input id="showGhosts" type="checkbox"> Show other hotspots</label>
         </div>
-      </details>
-      <div class="actions">
-        <button id="saveState">Save Review State</button>
-        <button id="exportFinal">Render Final Report</button>
-        <button id="doneFinding" title="Approve this finding, remove it from the edit set, and advance.">Done Finding</button>
-        <button id="previewToggle" title="Toggle between the current corrected view and the original AI draft placement.">AI Draft View</button>
-        <button id="previewFinding" title="Open a focused preview for this one finding.">Preview Finding</button>
-        <button id="exportFindingBundle" title="Download frame, hotspot, connector, callout, and manifest layers for this finding.">Export Bundle</button>
-        <button id="exportFrameLayer" title="Download the active screenshot frame as its own image.">Export Frame</button>
-        <button id="exportCalloutLayer" title="Download the active callout as a transparent layer.">Export Callout Layer</button>
-      </div>
-      <div id="statusMessage" class="status-message" aria-live="polite"></div>
-      <div id="errorMessage" class="error-message" aria-live="assertive"></div>
-      <div id="findingList" class="finding-list"></div>
-    </aside>
-    <section class="workspace">
-      <div class="topbar">
-        <button id="prevSlide">Prev</button>
-        <span id="slideLabel"></span>
-        <button id="nextSlide">Next</button>
-        <button id="fitStage" title="Reset pan/zoom and fit the screenshot inside the workspace">Fit</button>
-        <label>Scale <input id="zoomInput" type="range" min="60" max="220" value="100"></label>
-        <label class="import-button">Import Screenshot <input id="importImage" type="file" accept="image/*"></label>
-      </div>
-      <div id="slideStrip" class="slide-strip"></div>
-      <div class="stage-wrap">
-        <div id="stage" class="stage"></div>
-      </div>
-      <section id="inspector" class="inspector"></section>
-    </section>
-    <div id="previewModal" class="preview-modal" hidden>
-      <section class="preview-dialog" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
-        <header class="preview-head">
-          <strong id="previewTitle">Finding preview</strong>
-          <button id="closePreview" type="button">Close</button>
-        </header>
-        <iframe id="previewFrame" title="Finding preview"></iframe>
+        <div id="slideStrip" class="slide-strip"></div>
+        <div id="stageWrap" class="stage-wrap">
+          <div id="stage" class="stage">
+            <div class="stage-hud"><span id="hudText"></span></div>
+            <img id="slideImage" alt="Screenshot" draggable="false">
+            <div id="effectLayer" class="layer effect-layer"></div>
+            <svg id="spotlightLayer" class="layer spotlight-layer" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+            <div id="markerLayer" class="layer marker-layer"></div>
+            <svg id="connectorLayer" class="layer connector-layer"></svg>
+            <div id="calloutLayer" class="layer callout-layer"></div>
+            <div id="interactionLayer" class="layer interaction-layer"></div>
+          </div>
+        </div>
+        <footer class="controlbar" id="controlBar">
+          <div class="control-group" role="group" aria-label="Tool">
+            <button id="toolHighlight" data-tool="highlight" class="tool is-active" title="Drag on the screenshot to draw or move the highlight box">Highlight</button>
+            <button id="toolBlur" data-tool="blur" class="tool" title="Drag over distracting areas to blur them for this finding">Blur</button>
+          </div>
+          <div class="control-group" id="styleGroup" role="group" aria-label="Highlight style">
+            <button data-style="outline" class="style-btn" title="Plain outline box">Outline</button>
+            <button data-style="glow" class="style-btn" title="Outline with a glow halo">Glow</button>
+            <button data-style="spotlight" class="style-btn" title="Dim everything outside the highlight box">Spotlight</button>
+          </div>
+          <div class="control-group" id="colorGroup" role="group" aria-label="Color">
+            <button class="swatch" data-color="#EF4444" style="--sw:#EF4444" title="Critical red"></button>
+            <button class="swatch" data-color="#F97316" style="--sw:#F97316" title="High orange"></button>
+            <button class="swatch" data-color="#FACC15" style="--sw:#FACC15" title="Medium yellow"></button>
+            <button class="swatch" data-color="#60A5FA" style="--sw:#60A5FA" title="Low blue"></button>
+            <button class="swatch" data-color="#34D399" style="--sw:#34D399" title="Green"></button>
+            <input id="customColor" type="color" value="#FACC15" title="Custom color">
+          </div>
+          <div class="control-group" id="regionControls" hidden>
+            <label>Blur <input id="blurStrength" type="range" min="2" max="18" value="10"></label>
+            <button id="deleteRegion" title="Remove the selected blur/dim region (Delete)">Remove region</button>
+          </div>
+          <div class="control-group">
+            <label class="callout-toggle"><input id="calloutVisible" type="checkbox" checked> Callout</label>
+          </div>
+          <div class="control-group">
+            <button id="undoAction" title="Undo (Ctrl+Z)">Undo</button>
+            <button id="redoAction" title="Redo (Ctrl+Y)">Redo</button>
+          </div>
+          <div class="control-group control-group-end">
+            <button id="hideFinding" title="Hide this finding from the report (H)">Hide</button>
+            <button id="doneFinding" class="primary" title="Approve this finding and go to the next (A)">Done &#10003;</button>
+          </div>
+        </footer>
       </section>
     </div>
   </main>
