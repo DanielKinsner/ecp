@@ -34,15 +34,20 @@ it does not mutate raw evidence artifacts.
   move it, corner/edge handles to resize. Unplaced findings show a "not placed"
   banner and just need one drag.
 - **Style** — Outline, Glow, or Spotlight (dims everything outside the box).
+  Glow and Spotlight get an **Intensity** slider.
 - **Color** — five swatches + a custom picker; sets the box stroke and the
   callout accent together.
-- **Blur** — switch to the Blur tool and drag over anything distracting; regions
-  are per-finding, selectable, resizable, and deletable, with a strength slider.
+- **Blur surroundings** — one click blurs everything outside the highlight box
+  and follows the box when it moves; the strength slider adjusts it.
+- **Blur regions** — the Blur tool also drags freehand regions over anything
+  distracting; regions are per-finding, selectable, resizable, and deletable.
 - **Callout** — click the text to retype the title or body right on the canvas;
   drag the grip to move it; uncheck **Callout** to hide it for this finding.
 - **Done / Hide** — approve and advance, or drop the finding from the report.
 - **Undo/redo**, autosave to browser storage, **Save JSON** download, and
-  **Render Final Report**.
+  **Render Final Report** (opened without the server, the button shows a
+  copy-paste how-to with the exact commands for this engagement).
+- A "Done x/y" progress counter, Ctrl+scroll zoom, and a `?` help overlay.
 
 Legacy review states (ellipse/polygon markers, dim regions, fill/underline
 styles) still load and render; redrawing a legacy marker converts it to a plain
@@ -52,14 +57,16 @@ rectangle.
 
 - `Ctrl/Cmd+Z` / `Ctrl/Cmd+Y`: undo / redo
 - `Ctrl/Cmd+S`: download the review state JSON
+- `Down` / `Up` (or `J` / `K`): next / previous finding
 - `Left` / `Right`: previous / next screenshot
-- `J` / `K`: next / previous finding
+- `Shift`+arrows: nudge the highlight box; `Alt`+arrows: resize it
 - `V` / `B`: Highlight tool / Blur tool
-- `F`: fit screenshot to window
+- `F`: fit screenshot to window; `Ctrl`+scroll: zoom
 - `A`: Done (approve + advance)
 - `H`: hide / unhide the finding
 - `Delete`: remove the selected blur region, otherwise clear the hotspot placement
-- `Escape`: cancel a drag / deselect
+- `Escape`: close modal / cancel drag / deselect
+- `?`: hotkey and workflow help
 
 ## Canonical Export
 

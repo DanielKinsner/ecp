@@ -1,5 +1,14 @@
 # ECP Review Editor Changelog
 
+## v2.1.0 - 2026-07-21 (Dan's round-2 modifications)
+
+- **Blur surroundings**: one-click auto-blur of everything outside the highlight box (`mode:"outside"` blur effect); the rect auto-follows the box on move/resize/slide change and the strength slider adjusts it. Freehand blur regions unchanged.
+- **Intensity sliders**: Glow writes `marker.glow_opacity` (10–95%); Spotlight writes a rectless per-finding `dim` effect's `opacity` (10–85%) — the report cuts that dim mask around the hotspot at render time, so it needs no geometry sync. Both preview live in the editor. One undo entry per slider drag.
+- **Arrow-key flow**: `Down`/`Up` steps through findings (J/K still work), `Shift`+arrows nudges the box, `Alt`+arrows resizes it, `Ctrl`+scroll zooms.
+- **Render clarity**: without the server, Render Final Report now downloads the JSON and opens a how-to modal with copy-paste commands built from the real engagement path (serve-editor option and generate-report --from-review option).
+- QoL: "Done x/y" progress counter in the stage bar (turns green at 100%), `?` help overlay with all hotkeys, help/render modals close on Escape or backdrop click.
+- Fix: modals with `display:flex` were intercepting clicks even while `[hidden]` — `.modal[hidden]{display:none}` guard added.
+
 ## v2.0.0 - 2026-07-20 (Ground-up simplification rebuild)
 
 - Rebuilt the entire editor front-end (`index.html`, `editor.css`, `editor.js`, ~70% less code) around the five things the operator actually does: place/move the highlight box, pick Outline/Glow/Spotlight, pick a color, blur distracting areas, and retype the callout. Everything else went.
