@@ -872,21 +872,24 @@ a:hover {{ text-decoration: underline; }}
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  flex-shrink: 0;
-  /* Bumped 780px -> 880px (+13%) per Dan's 2026-04-14 size request. */
-  max-width: min(100%, 880px);
+  /* Fill-the-panel sizing (Dan 2026-07-24): no fixed pixel cap — the
+     screenshot claims whatever the center panel offers. flex-shrink:1 +
+     min-width:0 lets the stage yield width to the sibling callout column
+     instead of overflowing when the callout is in its default (non
+     review-positioned) beside-the-screenshot mode. */
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100%;
 }}
-/* Screenshot container takes ~60% of the center panel height. The
-   aspect-ratio var preserves the natural shape; max-width keeps wide
-   desktop screenshots from stretching past the design's visual rhythm. */
+/* Screenshot fills the center panel. The aspect-ratio var preserves the
+   natural shape; width is bound only by the panel, height by the viewport
+   minus fixed app chrome (header + bottom bar + panel padding +
+   center-head row + device-frame border/label chrome ≈ 112px). */
 .screenshot-container {{
   position: relative;
   aspect-ratio: var(--slide-aspect-ratio, 16 / 9);
-  /* Bumped 780px -> 880px / 60vh -> 70vh (+13% / +17%) per Dan's size
-     request — main image gets more visual weight without pushing the
-     callout off-screen. */
-  max-width: min(100%, 880px);
-  max-height: 70vh;
+  max-width: 100%;
+  max-height: calc(100vh - var(--header-h) - var(--bottom-h) - 112px);
   margin: 0 auto;
   border-radius: 10px;
   overflow: visible;

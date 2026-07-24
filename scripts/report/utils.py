@@ -161,7 +161,11 @@ def get_device_frame_css(device):
         "mobile": "MOBILE",
         "laptop": "LAPTOP",
     }.get(device, "DESKTOP")
-    max_width_rule = "max-width: 430px; margin: 0 auto;" if device == "mobile" else ""
+    # Mobile frame ceiling raised 430px -> 640px (Dan 2026-07-24 fill-the-
+    # panel request). Tall phone slices are height-bound by the viewport
+    # anyway; this cap only stops short/wide section slices from
+    # stretching the phone frame across the whole panel.
+    max_width_rule = "max-width: 640px; margin: 0 auto;" if device == "mobile" else ""
     outer_radius = "1rem" if device == "mobile" else "0.625rem"
     return f"""
 /* Device frame — subtle, v1.1 2026-04-14 */
