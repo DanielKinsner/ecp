@@ -63,12 +63,14 @@ import sys
 import unittest
 from pathlib import Path
 
-# Set ~30 below the CLEAN-CLONE collected count (1400 on 2026-06-13 after the
-# LG4/LG6 integration-verify pass added 4 tracked tests; was 1396 after LG4-LG16,
-# 1357 after LG1-LG3, 1342 before the waves. Local docs/ecp engagements add
-# machine-specific mojibake-scan cases on top — do NOT floor against those).
-# See "Floor update rule" in the module docstring before changing.
-EXPECTED_MIN_COLLECTED = 1370
+# Set ~30 below the CLEAN-CLONE collected count (1590 on 2026-07-24, derived
+# per the module-docstring rule: work box collected 1658 minus 68 untracked
+# docs/ecp mojibake params; re-floored in the preflight-freshness wave which
+# added 13 tests. History: 1400 on 2026-06-13 after LG4/LG6, 1396 after
+# LG4-LG16, 1357 after LG1-LG3, 1342 before the waves. Local docs/ecp
+# engagements add machine-specific mojibake-scan cases on top — do NOT floor
+# against those). See "Floor update rule" in the module docstring before changing.
+EXPECTED_MIN_COLLECTED = 1560
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TESTS_DIR = REPO_ROOT / "tests"

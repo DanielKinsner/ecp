@@ -35,6 +35,7 @@ This skill is the runtime router for the ECP audit. It produces cited, element-a
 10. P0-10: Structural assertions in `contracts/trace-assertion-canary.md` MUST run before the audit checkpoint; assertion failure BLOCKS phase progression.
 11. P0-11: v2 JSON and state writes MUST use atomic write helpers or scripts that own their output.
 12. P0-12: Cancellation sentinel checks MUST happen at layer boundaries; when `cancel.flag` is present, no further dispatches happen.
+13. P0-13: Installed-plugin freshness MUST be verified before any phase work — run `python "${CLAUDE_PLUGIN_ROOT}/scripts/preflight_freshness.py"` at invocation start (before P0-01 lead-discipline load). Verdicts: `FRESH`/`SKIP` → proceed; `STALE` (exit 2) → **BLOCK the audit before any acquisition or token spend**, show the script's output verbatim, and instruct: `claude plugin update ecp@ecp`, then re-run the audit in a NEW session. Never continue a stale run "just this once" — silently-stale plugin code wasting a full audit is the exact failure this gate exists to kill.
 
 ## Runtime Load Order
 
@@ -75,6 +76,7 @@ Allowed pre-flight prompts are limited by `contracts/lead-discipline.md`: URL de
 
 Run this sequence:
 
+0. Freshness gate (P0-13): `python "${CLAUDE_PLUGIN_ROOT}/scripts/preflight_freshness.py"` — STALE blocks here, before anything is spent.
 1. Parse flags and choose mode.
 2. Select device(s) per `contracts/device-semantics.md`.
 3. Create or resume `docs/ecp/{engagement-id}` and write/update `meta.json`.
