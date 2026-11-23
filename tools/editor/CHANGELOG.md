@@ -1,5 +1,67 @@
 # ECP Review Editor Changelog
 
+## v2.2.0 - 2026-07-24 (Wiring audit + report customization)
+
+**Three things looked wired and were not.** Fixed, each pinned by a guard test in
+`tests/test_review_state_editor_contract.py`:
+
+- **Unticking "Callout" did nothing to the client report.** The editor wrote
+  `callout_visible:false` and hid the callout on the canvas, but the report's
+  `renderCallout` had no visibility check — the callout came straight back in the
+  deliverable. Two root causes, both fixed in v1 *and* v2 renderer paths:
+  `_review_override_enabled` sweeps override keys with `any()`, and `false` is
+  falsy, so a hide-only review state read as "untouched"; and the report runtime
+  had no last-mile gate. Now sets `review_callout_hidden` and the runtime honors
+  it. The hotspot still renders — only the callout card goes.
+- **Severity was unreachable.** The color swatches are labelled by severity
+  ("Critical red", "High orange") but only ever set `marker.stroke`. The
+  finding's real priority — sidebar chip, severity class, metric counts, sort
+  order — could not be changed from the editor at all. New `severity_override`
+  field, applied to `finding.priority` by both renderers and mirrored onto the
+  marker. Changing severity re-colors the hotspot only when the stroke is still
+  the automatic color for the old severity, so a hand-picked color survives.
+- **The finding's own text was uneditable.** The renderer has always honored
+  `finding_title_override` / `observation_override` / `recommendation_override` /
+  `why_this_matters_override` / `element_override`, and the generator has always
+  emitted them as `null` placeholders — but the v2.0.0 rebuild removed every UI
+  for them, so the plumbing ran end-to-end with no tap on it.
+
+**New: the Text panel (`T`).** A collapsible right-side panel that edits what the
+client actually reads: finding title, observation, recommendation, why-it-matters,
+element, severity, callout title/body and callout width. Each field shows the AI
+original in a collapsible block, flags itself as `edited`, and has its own
+**Revert**. A field left identical to the AI's wording stores `null`, so the
+review state records only genuine human changes. Model updates live on every
+keystroke with **no** DOM rebuild (the v1.0.1 focus-loss bug class), one undo
+entry per typing burst, debounced autosave, full re-render on blur.
+
+**Other quality-of-life:**
+
+- **Revert finding to AI original** — throws away every edit to one finding
+  (text, severity, color, style, blur, hotspot geometry), restoring the marker
+  from the untouched `{marker_id}-ai` twin the generator already stores.
+- **Look presets** — save a finding's style + color + intensity + blur as a named
+  look and apply it to another finding in one click. Stored per browser so a
+  house style carries between engagements. Deliberately per-finding: there is no
+  bulk restyle.
+- **Search (`/`)** over ref, both title layers, body copy, cluster, severity,
+  element and section. Filter-tab counts deliberately ignore the search so a
+  stale query can't make findings look like they vanished.
+- **Approve all shown** — bulk approve for the current tab that **skips unplaced
+  findings** (approving one would ship a blank frame) and reports the skip count.
+- **Unrendered-changes dot** on *Render Final Report* when the HTML on disk is
+  older than the editor's state.
+- UI state (filter, tool, ghost hotspots, text-panel open) persists across
+  reloads; an incoming `#pick=` from the report still overrides a remembered
+  filter so "Open editor" always lands on the finding.
+- `skills/audit/SKILL.md` now tells the operator the editor exists and how to
+  open it — previously a finished audit wrote `editor.html` and said nothing.
+- `schema/review-state-v1.json` documents the previously-undeclared fields
+  (`severity_override`, `callout_body_override`, `element_override`,
+  `highlight_style`, `glow_opacity`, effect `mode`, marker `hidden`, …). They
+  were already legal under `additionalProperties: true`; `severity_override` is
+  additionally enum-validated.
+
 ## v2.1.0 - 2026-07-21 (Dan's round-2 modifications)
 
 - **Blur surroundings**: one-click auto-blur of everything outside the highlight box (`mode:"outside"` blur effect); the rect auto-follows the box on move/resize/slide change and the strength slider adjusts it. Freehand blur regions unchanged.

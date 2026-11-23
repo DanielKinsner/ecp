@@ -94,6 +94,30 @@ async function main() {
     const page = await browser.newPage({ viewport: { width: 1500, height: 950 } });
     const pageErrors = [];
     page.on("pageerror", error => pageErrors.push(String(error)));
+    // Mirrors editor.js `markerBox`: a marker counts as PLACED if any geometry
+    // family resolves, not just a rect. The generator emits real point markers
+    // (cx_pct/cy_pct) for proposed-anchor placements, so a rect-only check
+    // reports placed findings as unplaced.
+    const hasPlacement = (state, finding) => {
+      const marker = (state.markers || []).find(m => m.marker_id === finding.marker_id);
+      if (!marker || marker.hidden === true) return false;
+      const num = v => Number.isFinite(Number(v));
+      const shape = String(marker.shape || "").toLowerCase();
+      if (shape === "polygon" || shape === "freeform") {
+        return Array.isArray(marker.points) && marker.points.length > 0;
+      }
+      if (shape === "ellipse") {
+        return num(marker.cx_pct ?? marker.cx) && num(marker.rx_pct ?? marker.rx);
+      }
+      if (shape === "point") {
+        return num(marker.cx_pct ?? marker.cx) && num(marker.cy_pct ?? marker.cy);
+      }
+      return num(marker.x_pct) && Number(marker.w_pct) > 0 && Number(marker.h_pct) > 0;
+    };
+    // The preset/bulk-approve/revert flows use prompt() and confirm().
+    // Playwright dismisses dialogs by default, which would silently no-op them.
+    let dialogResponse = "Smoke Look";
+    page.on("dialog", async dialog => { await dialog.accept(dialogResponse); });
 
     // ---- report side: the pick queue the editor consumes is unchanged ----
     await page.goto(fileUrl(reportPath));
@@ -258,14 +282,188 @@ async function main() {
     await page.keyboard.press("Control+y");
     await page.waitForTimeout(100);
 
+    // ---- text panel: rewrite what the CLIENT reads, not just the callout ----
+    // The renderer has always honored *_override on the finding body; until
+    // 2026-07-24 nothing in the editor could write them.
+    const textPanelRef = await page.evaluate(() =>
+      document.querySelector(".finding-card.is-active .card-ref")?.textContent?.trim());
+    assert(textPanelRef, "No active finding to edit text on");
+
+    await page.keyboard.press("t");
+    await page.waitForTimeout(150);
+    assert(await page.locator("#inspector:not([hidden])").count() === 1, "T did not open the text panel");
+    assert(
+      await page.locator('.field[data-override="recommendation_override"] textarea').count() === 1,
+      "Text panel lacks a Recommendation field",
+    );
+
+    const recBox = page.locator('.field[data-override="recommendation_override"] textarea');
+    await recBox.click();
+    await page.keyboard.press("Control+a");
+    await page.keyboard.type("Smoke-rewritten recommendation");
+    await recBox.blur();
+    await page.waitForTimeout(200);
+    let panelState = await editorState(page);
+    assert(
+      panelState.findings.some(f => f.recommendation_override === "Smoke-rewritten recommendation"),
+      "Text panel did not persist recommendation_override",
+    );
+
+    // Per-field revert puts the AI's words back and clears the override.
+    await page.locator('.field[data-override="recommendation_override"] [data-role="revert"]').click();
+    await page.waitForTimeout(150);
+    panelState = await editorState(page);
+    assert(
+      !panelState.findings.some(f => f.recommendation_override),
+      "Per-field Revert did not clear recommendation_override",
+    );
+
+    // ---- severity: must reach the review state, not just recolour a stroke ----
+    await page.locator('.field select[data-role="severity"]').selectOption("critical");
+    await page.waitForTimeout(200);
+    const sevState = await editorState(page);
+    const sevFinding = sevState.findings.find(f => f.severity_override === "critical");
+    assert(sevFinding, "Severity control did not write severity_override");
+    const sevMarker = sevState.markers.find(m => m.marker_id === sevFinding.marker_id);
+    assert(
+      sevMarker && String(sevMarker.severity).toLowerCase() === "critical",
+      "Severity change did not follow through to the marker",
+    );
+
+    // ---- callout hide is a real, persisted decision ----
+    await page.locator("#calloutVisible").uncheck();
+    await page.waitForTimeout(150);
+    const hiddenCalloutState = await editorState(page);
+    assert(
+      hiddenCalloutState.findings.some(f => f.callout_visible === false),
+      "Unticking Callout did not persist callout_visible:false",
+    );
+    await page.locator("#calloutVisible").check();
+    await page.waitForTimeout(150);
+
+    // ---- look presets apply to the finding you are on ----
+    await page.locator('.style-btn[data-style="glow"]').click();
+    await page.waitForTimeout(150);
+    dialogResponse = "Smoke Look";
+    await page.locator("#savePreset").click();
+    await page.waitForTimeout(200);
+    assert(
+      await page.locator('#presetSelect option[value="Smoke Look"]').count() === 1,
+      "Save look did not add a preset option",
+    );
+    // Change the look away from the preset, then apply it back.
+    await page.locator('.style-btn[data-style="outline"]').click();
+    await page.waitForTimeout(150);
+    await page.locator("#presetSelect").selectOption("Smoke Look");
+    await page.waitForTimeout(250);
+    const presetState = await editorState(page);
+    const presetMarker = presetState.markers.find(m => m.marker_id === sevFinding.marker_id);
+    assert(
+      presetMarker && presetMarker.highlight_style === "glow",
+      `Applying a preset did not restore its style (got ${presetMarker && presetMarker.highlight_style})`,
+    );
+
+    // ---- search narrows the list and Escape restores it ----
+    const listedBefore = await page.locator(".finding-card").count();
+    await page.locator("#findingSearch").fill("zzz-no-such-finding-zzz");
+    await page.waitForTimeout(150);
+    assert(await page.locator(".finding-card").count() === 0, "Search did not filter the finding list");
+    assert(await page.locator(".empty-note").count() === 1, "Empty search shows no explanation");
+    await page.locator("#findingSearch").press("Escape");
+    await page.waitForTimeout(150);
+    assert(
+      await page.locator(".finding-card").count() === listedBefore,
+      "Escape in the search box did not restore the full list",
+    );
+
+    // ---- [hidden] controls are actually INVISIBLE, not just attributed ----
+    // `.control-group label {display:flex}` (0,1,1) outranks the UA `[hidden]`
+    // rule (0,1,0), so these sliders rendered for styles that have no
+    // intensity/blur at all. Attribute-only assertions miss this entirely.
+    await page.locator('.style-btn[data-style="outline"]').click();
+    await page.waitForTimeout(200);
+    assert(
+      !(await page.locator("#styleIntensityWrap").isVisible()),
+      "Intensity slider is still VISIBLE on the Outline style ([hidden] lost to a display rule)",
+    );
+    assert(
+      !(await page.locator("#blurStrengthWrap").isVisible())
+      || await page.locator("#blurAround.is-active").count() === 1,
+      "Blur strength slider is VISIBLE with no blur to adjust ([hidden] lost to a display rule)",
+    );
+    await page.locator('.style-btn[data-style="glow"]').click();
+    await page.waitForTimeout(200);
+    assert(
+      await page.locator("#styleIntensityWrap").isVisible(),
+      "Intensity slider did not appear for the Glow style",
+    );
+
+    // ---- the Render button warns that the HTML on disk is behind ----
+    assert(
+      await page.locator("#exportFinal.has-unrendered").count() === 1,
+      "Render button does not flag unrendered edits after editing",
+    );
+
     // ---- approve ----
     await page.locator("#doneFinding").click();
     await page.waitForTimeout(150);
-    const approvedState = await editorState(page);
+    let approvedState = await editorState(page);
     assert(
       approvedState.findings.some(f => f.status === "approved"),
       "Done did not approve the finding",
     );
+
+    // ---- revert restores the AI original for one finding ----
+    await page.locator(".finding-card").first().click();
+    await page.waitForTimeout(150);
+    await page.keyboard.press("t");
+    await page.waitForTimeout(100);
+    if (await page.locator("#inspector[hidden]").count() === 1) {
+      await page.keyboard.press("t");
+      await page.waitForTimeout(100);
+    }
+    const beforeRevert = await editorState(page);
+    const revertRef = await page.evaluate(() =>
+      document.querySelector(".finding-card.is-active .card-ref")?.textContent?.trim());
+    await page.locator(".inspector-danger").click();
+    await page.waitForTimeout(250);
+    const revertedState = await editorState(page);
+    const revertedFinding = revertedState.findings.find(f => String(f.f_ref).endsWith(revertRef));
+    assert(revertedFinding, `Reverted finding ${revertRef} vanished from the state`);
+    assert(
+      !revertedFinding.severity_override
+      && !revertedFinding.recommendation_override
+      && !revertedFinding.callout_title_override
+      && revertedFinding.callout_visible !== false,
+      "Revert to AI original left operator overrides behind",
+    );
+    assert(
+      !(revertedState.slide_edits || []).some(se =>
+        (se.effects || []).some(e => e && e.f_ref === revertedFinding.f_ref)),
+      "Revert to AI original left this finding's blur/dim effects behind",
+    );
+    assert(beforeRevert.findings.length === revertedState.findings.length, "Revert dropped findings");
+
+    // ---- bulk approve skips anything still unplaced ----
+    await page.locator('#filterTabs button:has-text("All")').click();
+    await page.waitForTimeout(150);
+    const unplacedBefore = await page.evaluate(() =>
+      document.querySelectorAll(".finding-card .card-status.place").length);
+    await page.locator("#approveAll").click();
+    await page.waitForTimeout(300);
+    approvedState = await editorState(page);
+    const stillUnplaced = approvedState.findings.filter(f =>
+      f.status === "approved" && !hasPlacement(approvedState, f));
+    assert(
+      stillUnplaced.length === 0,
+      `Approve all shown approved ${stillUnplaced.length} unplaced finding(s) — those render blank for the client`,
+    );
+    if (unplacedBefore > 0) {
+      assert(
+        approvedState.findings.some(f => f.status !== "approved"),
+        "Approve all shown swept up unplaced findings instead of skipping them",
+      );
+    }
 
     // ---- file:// render help modal + help overlay ----
     await page.locator("#exportFinal").click();

@@ -24,7 +24,13 @@
     <div class="body">
       <aside class="sidebar">
         <div id="filterTabs" class="filter-tabs"></div>
+        <div class="sidebar-search">
+          <input id="findingSearch" type="search" placeholder="Search findings (/)" autocomplete="off" spellcheck="false">
+        </div>
         <div id="findingList" class="finding-list"></div>
+        <div class="sidebar-foot">
+          <button id="approveAll" title="Approve every placed finding currently listed">Approve all shown</button>
+        </div>
       </aside>
       <section class="workspace">
         <div class="stagebar">
@@ -37,6 +43,7 @@
           <label class="ghost-label"><input id="showGhosts" type="checkbox"> Show other hotspots</label>
           <span class="stagebar-spacer"></span>
           <span id="progressLabel" class="progress-label"></span>
+          <button id="toggleInspector" title="Show/hide the finding text panel (T)">Text panel</button>
           <button id="helpButton" title="Hotkeys and workflow help (?)">?</button>
         </div>
         <div id="slideStrip" class="slide-strip"></div>
@@ -79,6 +86,13 @@
           <div class="control-group">
             <label class="callout-toggle"><input id="calloutVisible" type="checkbox" checked> Callout</label>
           </div>
+          <div class="control-group" id="presetGroup" role="group" aria-label="Look presets">
+            <select id="presetSelect" title="Apply a saved look to this finding">
+              <option value="">Presets…</option>
+            </select>
+            <button id="savePreset" title="Save this finding's current style, color and blur as a reusable look">Save look</button>
+            <button id="deletePreset" hidden title="Delete the selected preset">&times;</button>
+          </div>
           <div class="control-group">
             <button id="undoAction" title="Undo (Ctrl+Z)">Undo</button>
             <button id="redoAction" title="Redo (Ctrl+Y)">Redo</button>
@@ -89,6 +103,16 @@
           </div>
         </footer>
       </section>
+      <aside class="inspector" id="inspector" hidden>
+        <div class="inspector-head">
+          <strong>Finding text</strong>
+          <span id="inspectorRef" class="subtle"></span>
+          <button id="closeInspector" type="button" title="Hide this panel (T)">&times;</button>
+        </div>
+        <div class="inspector-body" id="inspectorBody">
+          <div class="inspector-empty">Pick a finding to edit its text.</div>
+        </div>
+      </aside>
     </div>
     <div id="renderModal" class="modal" hidden>
       <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="renderModalTitle">
@@ -115,13 +139,19 @@
         <div class="modal-body help-grid">
           <div>
             <h4>Workflow</h4>
-            <p>Pick a finding on the left, drag a box on the screenshot, choose a style and color, fix the callout text, hit <strong>Done ✓</strong>. Repeat until the Queue is empty, then <strong>Render Final Report</strong>.</p>
+            <p>Pick a finding on the left, drag a box on the screenshot, choose a style and color, fix the text, hit <strong>Done ✓</strong>. Repeat until the Queue is empty, then <strong>Render Final Report</strong>.</p>
             <h4>Findings</h4>
             <dl>
               <dt><kbd>↓</kbd> / <kbd>↑</kbd> (or <kbd>J</kbd>/<kbd>K</kbd>)</dt><dd>next / previous finding</dd>
               <dt><kbd>A</kbd></dt><dd>Done — approve and advance</dd>
               <dt><kbd>H</kbd></dt><dd>hide / unhide finding</dd>
+              <dt><kbd>/</kbd></dt><dd>search the finding list</dd>
             </dl>
+            <h4>Rewriting the report</h4>
+            <dl>
+              <dt><kbd>T</kbd></dt><dd>show / hide the text panel</dd>
+            </dl>
+            <p class="help-note">The text panel edits what the client actually reads: the finding's title, observation, recommendation and why-it-matters, plus its severity and callout wording. Every field shows the AI's original underneath and has its own <strong>Revert</strong>.</p>
             <h4>Screenshots</h4>
             <dl>
               <dt><kbd>←</kbd> / <kbd>→</kbd></dt><dd>previous / next screenshot</dd>

@@ -418,6 +418,12 @@ def _review_override_enabled(review_finding):
     status = (review_finding.get("status") or "").lower()
     if status in {"edited", "approved"}:
         return True
+    # `callout_visible: False` is deliberate operator intent but FALSY, so the
+    # `any()` sweep below cannot see it. Without this explicit check a review
+    # state whose only edit is "hide this callout" reads as untouched and the
+    # callout renders anyway.
+    if review_finding.get("callout_visible") is False:
+        return True
     override_keys = (
         "finding_title_override",
         "finding_body_override",
@@ -428,8 +434,22 @@ def _review_override_enabled(review_finding):
         "callout_body_override",
         "callout_position",
         "callout_color",
+        "severity_override",
+        "element_override",
     )
     return any(review_finding.get(key) for key in override_keys)
+
+
+# Severities the report understands. An operator severity change has to land on
+# the finding's `priority` (drives the sidebar chip, severity CSS class, metric
+# counts, and sort order) — not just the marker stroke color, which is cosmetic.
+_REVIEW_SEVERITIES = frozenset({"critical", "high", "medium", "low", "info"})
+
+
+def _review_severity(review_finding):
+    """Normalized operator severity override, or None when unset/invalid."""
+    value = str(review_finding.get("severity_override") or "").strip().lower()
+    return value if value in _REVIEW_SEVERITIES else None
 
 
 def _review_effects_by_ref(review_state):
@@ -518,6 +538,11 @@ def _apply_review_state_to_findings(findings, review_state):
             finding["recommendation"] = review["recommendation_override"]
         if review.get("why_this_matters_override"):
             finding["why_matters"] = review["why_this_matters_override"]
+        if review.get("element_override"):
+            finding["element"] = review["element_override"]
+        severity = _review_severity(review)
+        if severity:
+            finding["priority"] = severity.upper()
 
         callout_title = review.get("callout_title_override") or review.get("callout_title")
         callout_body = review.get("callout_body_override") or review.get("callout_body")
@@ -527,7 +552,11 @@ def _apply_review_state_to_findings(findings, review_state):
             finding["review_callout_body"] = callout_body
         if review.get("callout_color"):
             finding["review_callout_color"] = review["callout_color"]
-        if review.get("callout_position") and review.get("callout_visible", True):
+        # An operator who unticks "Callout" wants NO callout on this finding —
+        # suppress it outright rather than only dropping its custom position.
+        if review.get("callout_visible") is False:
+            finding["review_callout_hidden"] = True
+        elif review.get("callout_position"):
             finding["review_callout_position"] = review["callout_position"]
         if review_effects:
             finding["review_effects"] = review_effects
@@ -1016,6 +1045,7 @@ def _build_html_fragments(findings, priority_path_stories,
             "review_callout_body": f.get("review_callout_body"),
             "review_callout_color": f.get("review_callout_color"),
             "review_callout_position": f.get("review_callout_position"),
+            "review_callout_hidden": bool(f.get("review_callout_hidden")),
             "review_effects": f.get("review_effects") or [],
         })
     # JSON-in-HTML escape: any literal `</` inside a JSON string (most

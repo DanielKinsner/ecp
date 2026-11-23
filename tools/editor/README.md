@@ -30,6 +30,8 @@ it does not mutate raw evidence artifacts.
 
 ## Features (all of them)
 
+### Placing and styling the hotspot
+
 - **Highlight box** — drag on the screenshot to draw the hotspot; drag the box to
   move it, corner/edge handles to resize. Unplaced findings show a "not placed"
   banner and just need one drag.
@@ -41,13 +43,49 @@ it does not mutate raw evidence artifacts.
   and follows the box when it moves; the strength slider adjusts it.
 - **Blur regions** — the Blur tool also drags freehand regions over anything
   distracting; regions are per-finding, selectable, resizable, and deletable.
-- **Callout** — click the text to retype the title or body right on the canvas;
-  drag the grip to move it; uncheck **Callout** to hide it for this finding.
+- **Look presets** — save the current finding's style + color + intensity + blur
+  as a named look, then apply it to any other finding in one click. Presets live
+  in the browser, so a house style carries across engagements. They always apply
+  to the finding you are on — there is no bulk restyle.
+
+### Rewriting what the client reads (`T`)
+
+The **Text panel** on the right edits the finding itself, not just its callout:
+
+- **Finding title, Observation, Recommendation, Why it matters, Element** — these
+  are the words in the report body. Each field shows the AI's original in a
+  collapsible *AI original* block and has its own **Revert**.
+- **Severity** — changes how the report *files* the finding: its priority chip,
+  severity color, ordering and metric counts. Changing severity re-colors the
+  hotspot only if you had not already picked a color by hand.
+- **Callout title / Callout body** — the overlay text (also editable in place on
+  the canvas).
+- **Callout width** — how wide the callout card sits on the screenshot.
+- **Revert finding to AI original** — one button that throws away every edit to
+  this finding: text, severity, color, style, blur regions and hotspot geometry,
+  restored from the untouched AI twin marker the pipeline stores alongside each
+  marker.
+
+Leaving a field identical to the AI's wording stores `null`, so the review state
+only ever records what a human actually changed.
+
+### Working through a report
+
+- **Search** (`/`) — filter the finding list by ref, title, body, cluster,
+  severity, element or section. Tab counts always show the whole bucket, so a
+  stale search can never make findings look like they vanished.
 - **Done / Hide** — approve and advance, or drop the finding from the report.
+- **Approve all shown** — bulk-approves everything listed in the current tab,
+  and **skips anything still unplaced** (an unplaced finding has no hotspot, so
+  approving it would ship a blank frame). It tells you how many it skipped.
 - **Undo/redo**, autosave to browser storage, **Save JSON** download, and
   **Render Final Report** (opened without the server, the button shows a
   copy-paste how-to with the exact commands for this engagement).
+- **Unrendered-changes dot** — a yellow dot on *Render Final Report* means the
+  HTML on disk is older than what is in front of you.
 - A "Done x/y" progress counter, Ctrl+scroll zoom, and a `?` help overlay.
+- The finding filter, active tool, ghost-hotspot toggle and text-panel state are
+  remembered between sessions.
 
 Legacy review states (ellipse/polygon markers, dim regions, fill/underline
 styles) still load and render; redrawing a legacy marker converts it to a plain
@@ -61,6 +99,8 @@ rectangle.
 - `Left` / `Right`: previous / next screenshot
 - `Shift`+arrows: nudge the highlight box; `Alt`+arrows: resize it
 - `V` / `B`: Highlight tool / Blur tool
+- `T`: show / hide the text panel
+- `/`: jump to the finding search box (`Esc` clears it, `Enter` opens the top hit)
 - `F`: fit screenshot to window; `Ctrl`+scroll: zoom
 - `A`: Done (approve + advance)
 - `H`: hide / unhide the finding
@@ -99,11 +139,26 @@ The editor reads and writes `review-state-v1` (schema:
 
 - markers: rect geometry (`x_pct`/`y_pct`/`w_pct`/`h_pct`), `stroke`
   (`#RRGGBB`), `highlight_style` (`outline`/`glow`/`spotlight`),
-  `spotlight_visible`.
-- findings: `callout_title_override`, `callout_body_override`, `callout_color`,
-  `callout_position`, `callout_visible`, `status` (`approved`/`edited`/`hidden`).
+  `spotlight_visible`, `glow_opacity`, `severity`, `hidden`.
+- findings — report body: `finding_title_override`, `observation_override`,
+  `recommendation_override`, `why_this_matters_override`, `element_override`,
+  `severity_override`.
+- findings — overlay: `callout_title_override`, `callout_body_override`,
+  `callout_color`, `callout_position`, `callout_visible` (false suppresses the
+  callout entirely), `status` (`approved`/`edited`/`hidden`).
 - slide_edits: `effects` of `{type: "blur"|"dim", f_ref, rect, radius_px,
-  opacity}` — blur/dim regions scoped to one finding.
+  opacity, mode}` — blur/dim regions scoped to one finding. `mode:"outside"`
+  is Blur surroundings; a rectless `dim` is the Spotlight mask.
+
+An override set to `null` means "use the AI's original". A finding the operator
+never touched keeps `status: needs_review` and no overrides, and the renderer
+leaves its auto-mapped marker alone — the review state only overrides what a
+human actually changed.
+
+Both renderer paths (`scripts/report/html_builder.py` for v1 and
+`scripts/report/v2_html_builder.py` for v2) carry this logic. A field added to
+one and not the other silently works on some engagements and not others;
+`tests/test_review_state_editor_contract.py` pins them in agreement.
 
 ## Mobile DPR Display
 

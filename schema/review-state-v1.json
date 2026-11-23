@@ -82,6 +82,15 @@
         },
         "cluster": { "type": "string" },
         "severity": { "type": "string" },
+        "severity_override": {
+          "description": "Operator severity from the editor. Wins over `severity` and repriorities the finding in the report (chip, colour, ordering, metric counts). Null means 'the AI's call stands'.",
+          "type": ["string", "null"],
+          "enum": ["critical", "high", "medium", "low", "info", null]
+        },
+        "element_override": {
+          "description": "Operator replacement for raw.element — the page element the finding points at.",
+          "type": ["string", "null"]
+        },
         "finding_title": { "type": "string" },
         "finding_title_override": { "type": ["string", "null"] },
         "finding_body": { "type": "string" },
@@ -95,6 +104,15 @@
         "callout_title": { "type": "string" },
         "callout_title_override": { "type": ["string", "null"] },
         "callout_body": { "type": "string" },
+        "callout_body_override": { "type": ["string", "null"] },
+        "callout_position_source": {
+          "description": "\"manual\" once the operator has dragged the callout, so auto-repositioning stops overwriting their placement.",
+          "type": ["string", "null"]
+        },
+        "review_selected": {
+          "description": "Explicit operator pick state from the report's Queue-edit button. Authoritative over needs_manual_edit when present.",
+          "type": "boolean"
+        },
         "callout_color": {
           "type": ["string", "null"],
           "pattern": "^#?[0-9A-Fa-f]{3,8}$"
@@ -114,7 +132,10 @@
             }
           }
         },
-        "callout_visible": { "type": "boolean" },
+        "callout_visible": {
+          "description": "False suppresses this finding's callout in the final report entirely (the hotspot still renders). Set by the editor's Callout tick box.",
+          "type": "boolean"
+        },
         "marker_id": { "type": "string" },
         "ai_suggested_marker_id": { "type": "string" },
         "lint_violations": { "type": "array", "items": { "type": "string" } },
@@ -163,6 +184,19 @@
         "points": { "type": "array" },
         "stroke": { "type": "string" },
         "stroke_width": { "type": "number" },
+        "severity": { "type": "string" },
+        "hidden": {
+          "description": "True on the generator's unplaced-marker shape and after a manual Clear placement. A hidden marker must never render.",
+          "type": "boolean"
+        },
+        "highlight_style": {
+          "description": "How the report draws this hotspot. Legacy fill/underline still render but the editor only writes the first three.",
+          "type": "string",
+          "enum": ["outline", "glow", "spotlight", "fill", "underline"]
+        },
+        "spotlight_visible": { "type": "boolean" },
+        "glow_opacity": { "type": "number" },
+        "fill_opacity": { "type": "number" },
         "source": {
           "type": "string",
           "enum": [
@@ -232,7 +266,14 @@
         "rect": { "$ref": "#/$defs/rect_pct" },
         "f_ref": { "type": "string" },
         "radius_px": { "type": "number" },
-        "strength": { "type": "number" }
+        "strength": { "type": "number" },
+        "mode": {
+          "description": "blur only. \"outside\" blurs everything AROUND rect (the editor's Blur surroundings, kept glued to the hotspot); \"inside\" blurs rect itself (a hand-drawn blur region).",
+          "type": "string",
+          "enum": ["inside", "outside"]
+        },
+        "opacity": { "type": "number" },
+        "hidden": { "type": "boolean" }
       }
     },
     "rect_pct": {

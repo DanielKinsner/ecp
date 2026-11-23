@@ -449,6 +449,12 @@ def _review_override_enabled(review_finding: dict) -> bool:
     status = (review_finding.get("status") or "").lower()
     if status in {"edited", "approved"}:
         return True
+    # `callout_visible: False` is deliberate operator intent but FALSY, so the
+    # `any()` sweep below cannot see it. Without this explicit check a review
+    # state whose only edit is "hide this callout" reads as untouched and the
+    # callout renders anyway.
+    if review_finding.get("callout_visible") is False:
+        return True
     override_keys = (
         "finding_title_override",
         "finding_body_override",
@@ -459,6 +465,8 @@ def _review_override_enabled(review_finding: dict) -> bool:
         "callout_body_override",
         "callout_position",
         "callout_color",
+        "severity_override",
+        "element_override",
     )
     return any(review_finding.get(key) for key in override_keys)
 
@@ -618,6 +626,10 @@ def _apply_review_state_to_findings(findings: list[dict], review_state: dict) ->
             finding["element"] = review["element_override"]
         if isinstance(review.get("evidence_anchors_override"), list):
             finding["evidence_anchors"] = review["evidence_anchors_override"]
+        # Single definition lives in html_builder so v1 and v2 cannot drift.
+        severity = v1._review_severity(review)
+        if severity:
+            finding["priority"] = severity.upper()
 
         callout_title = review.get("callout_title_override") or review.get("callout_title")
         callout_body = review.get("callout_body_override") or review.get("callout_body")
@@ -627,7 +639,11 @@ def _apply_review_state_to_findings(findings: list[dict], review_state: dict) ->
             finding["review_callout_body"] = callout_body
         if review.get("callout_color"):
             finding["review_callout_color"] = review["callout_color"]
-        if review.get("callout_position") and review.get("callout_visible", True):
+        # An operator who unticks "Callout" wants NO callout on this finding —
+        # suppress it outright rather than only dropping its custom position.
+        if review.get("callout_visible") is False:
+            finding["review_callout_hidden"] = True
+        elif review.get("callout_position"):
             finding["review_callout_position"] = review["callout_position"]
         if review_effects:
             finding["review_effects"] = review_effects

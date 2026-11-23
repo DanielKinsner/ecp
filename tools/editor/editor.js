@@ -26,6 +26,64 @@
     { key: "hidden", label: "Hidden" }
   ];
 
+  // Every field the canonical renderer honors as an operator override, paired
+  // with the AI original it replaces. `override` is what gets written to the
+  // review state; a null override means "use the AI's words".
+  const TEXT_FIELDS = [
+    {
+      override: "finding_title_override",
+      label: "Finding title",
+      rows: 2,
+      hint: "The headline the client reads in the report body.",
+      original: f => f.finding_title
+    },
+    {
+      override: "observation_override",
+      label: "Observation",
+      rows: 4,
+      hint: "What is actually on the page.",
+      original: f => f.observation
+    },
+    {
+      override: "recommendation_override",
+      label: "Recommendation",
+      rows: 4,
+      hint: "What you are telling them to do.",
+      original: f => f.recommendation
+    },
+    {
+      override: "why_this_matters_override",
+      label: "Why it matters",
+      rows: 3,
+      original: f => f.why_this_matters
+    },
+    {
+      override: "element_override",
+      label: "Element",
+      rows: 2,
+      hint: "The page element this finding points at.",
+      original: f => f.raw?.element
+    },
+    {
+      override: "callout_title_override",
+      label: "Callout title",
+      rows: 2,
+      hint: "Shown on the screenshot overlay, not in the report body.",
+      original: f => f.callout_title
+    },
+    {
+      override: "callout_body_override",
+      label: "Callout body",
+      rows: 3,
+      original: f => f.callout_body
+    }
+  ];
+  const SEVERITIES = ["critical", "high", "medium", "low", "info"];
+
+  const PREFS_KEY = "ecp-editor-prefs";
+  const PRESETS_KEY = "ecp-editor-presets";
+  const RENDER_MARK_PREFIX = "ecp-review-render-mark:";
+
   const app = {
     devices: payload.devices || Object.keys(payload.states || {}),
     inlineStates: clone(payload.states || {}),
@@ -39,6 +97,8 @@
     zoom: 1,
     fitZoom: true,
     showGhosts: false,
+    search: "",
+    inspectorOpen: false,
     selectedEffect: null, // { slideId, index }
     drag: null,
     undoStack: [],
@@ -203,8 +263,16 @@
     }
     return marker;
   }
+  // The operator's severity wins over the AI's everywhere the editor shows a
+  // severity — dot color, default stroke, callout chip — so what you see in
+  // the editor is what the report will file the finding as.
+  function activeSeverity(finding) {
+    const override = String(finding?.severity_override || "").toLowerCase();
+    if (SEVERITIES.includes(override)) return override;
+    return String(finding?.severity || "").toLowerCase();
+  }
   function severityColor(finding) {
-    return SEVERITY_COLORS[String(finding?.severity || "").toLowerCase()] || "#FACC15";
+    return SEVERITY_COLORS[activeSeverity(finding)] || "#FACC15";
   }
   function markerColor(marker, finding) {
     return normalizeHex(marker?.stroke) || severityColor(finding);
@@ -233,8 +301,29 @@
     if (f?.review_selected === false) return false;
     return f?.needs_manual_edit === true;
   }
-  function filteredFindings(filter = app.filter, s = state()) {
-    const findings = sortedFindings(s);
+  // Free-text match across everything the operator can see or search for. Kept
+  // deliberately broad (ref, both title layers, body copy, cluster, severity)
+  // because on a 40-finding report you remember the wording, not the F-number.
+  function matchesSearch(f, needle = app.search) {
+    if (!needle) return true;
+    const hay = [
+      f.f_ref,
+      f.finding_title, f.finding_title_override,
+      f.callout_title, f.callout_title_override,
+      f.callout_body, f.callout_body_override,
+      f.observation, f.observation_override,
+      f.recommendation, f.recommendation_override,
+      f.cluster, f.severity, f.severity_override,
+      f.raw?.element, f.raw?.section
+    ].filter(Boolean).join(" ").toLowerCase();
+    return needle.toLowerCase().split(/\s+/).filter(Boolean).every(word => hay.includes(word));
+  }
+  // `options.ignoreSearch` keeps the filter-tab counts honest: they always
+  // report the whole bucket, so a stale search box can't make it look like
+  // findings vanished from the Queue.
+  function filteredFindings(filter = app.filter, s = state(), options = {}) {
+    let findings = sortedFindings(s);
+    if (!options.ignoreSearch) findings = findings.filter(f => matchesSearch(f));
     if (filter === "approved") return findings.filter(f => f.status === "approved");
     if (filter === "hidden") return findings.filter(f => f.status === "hidden");
     if (filter === "queue") {
@@ -249,7 +338,13 @@
   }
 
   // ---------- persistence ----------
-  function saveLocal(options = {}) { return saveStateForDevice(app.activeDevice, state(), options); }
+  function saveLocal(options = {}) {
+    const saved = saveStateForDevice(app.activeDevice, state(), options);
+    // Stamp the edit so the Render button can tell the operator when the HTML
+    // on disk is older than what is in front of them.
+    if (saved) markEdited();
+    return saved;
+  }
   function saveStateForDevice(device, s, options = {}) {
     try {
       s.updated_at = nowIso();
@@ -402,7 +497,9 @@
   function ensureFilterShows(ref) {
     const finding = findingByRef(ref);
     if (!finding) return;
-    if (filteredFindings().some(f => f.f_ref === ref)) return;
+    // Status buckets only — a search box that happens to exclude the finding
+    // must not bounce the operator into a different tab.
+    if (filteredFindings(app.filter, state(), { ignoreSearch: true }).some(f => f.f_ref === ref)) return;
     if (finding.status === "hidden") app.filter = "hidden";
     else if (finding.status === "approved") app.filter = "approved";
     else app.filter = "all";
@@ -897,6 +994,8 @@
       const result = await response.json();
       if (!result.ok) throw new Error(result.error || "render failed");
       showError("");
+      markRendered();
+      renderControls();
       flashStatus(`Rendered ${result.final_report}`);
       window.open(result.url, "_blank");
     } catch (error) {
@@ -915,6 +1014,7 @@
     renderSlideStrip();
     renderStage();
     renderControls();
+    renderInspector();
   }
 
   function renderDeviceTabs() {
@@ -941,12 +1041,13 @@
     const wrap = el("filterTabs");
     wrap.innerHTML = "";
     FILTERS.forEach(({ key, label }) => {
-      const count = filteredFindings(key).length;
+      const count = filteredFindings(key, state(), { ignoreSearch: true }).length;
       const btn = document.createElement("button");
       btn.textContent = `${label} (${count})`;
       btn.className = key === app.filter ? "is-active" : "";
       btn.addEventListener("click", () => {
         app.filter = key;
+        savePrefs();
         renderFilters();
         renderFindingList();
       });
@@ -961,9 +1062,11 @@
     if (!findings.length) {
       const note = document.createElement("div");
       note.className = "empty-note";
-      note.textContent = app.filter === "queue"
-        ? "Queue is clear — nothing waiting on you."
-        : "No findings here.";
+      note.textContent = app.search
+        ? `Nothing matches “${app.search}” in this tab.`
+        : (app.filter === "queue"
+          ? "Queue is clear — nothing waiting on you."
+          : "No findings here.");
       wrap.appendChild(note);
       return;
     }
@@ -1328,6 +1431,440 @@
     const progress = el("progressLabel");
     progress.textContent = all.length ? `Done ${done}/${all.length}` : "";
     progress.classList.toggle("all-done", all.length > 0 && done === all.length);
+
+    const exportBtn = el("exportFinal");
+    const stale = hasUnrenderedEdits();
+    exportBtn.classList.toggle("has-unrendered", stale);
+    exportBtn.title = stale
+      ? "You have edits the rendered report does not include yet — render to update it"
+      : "Write review state and render the final client report";
+  }
+
+  // ---------- UI preferences (survive a reload) ----------
+  function loadPrefs() {
+    let prefs = {};
+    try { prefs = JSON.parse(localStorage.getItem(PREFS_KEY) || "{}") || {}; } catch { prefs = {}; }
+    app.showGhosts = prefs.showGhosts === true;
+    app.inspectorOpen = prefs.inspectorOpen === true;
+    if (prefs.activeTool === "blur" || prefs.activeTool === "highlight") app.activeTool = prefs.activeTool;
+    if (FILTERS.some(f => f.key === prefs.filter)) app.filter = prefs.filter;
+    el("showGhosts").checked = app.showGhosts;
+  }
+  function savePrefs() {
+    try {
+      localStorage.setItem(PREFS_KEY, JSON.stringify({
+        showGhosts: app.showGhosts,
+        inspectorOpen: app.inspectorOpen,
+        activeTool: app.activeTool,
+        filter: app.filter
+      }));
+    } catch { /* prefs are a nicety; never block editing on them */ }
+  }
+
+  // ---------- "rendered report is behind your edits" mark ----------
+  // Stores the review state's updated_at at the moment of the last successful
+  // render, plus the updated_at of the last edit. A mismatch means the final
+  // HTML on disk no longer matches what is in the editor.
+  function renderMarkKey() { return `${RENDER_MARK_PREFIX}${state().engagement_id}:${app.activeDevice}`; }
+  function readRenderMark() {
+    try { return JSON.parse(localStorage.getItem(renderMarkKey()) || "{}") || {}; } catch { return {}; }
+  }
+  function writeRenderMark(patch) {
+    try {
+      localStorage.setItem(renderMarkKey(), JSON.stringify({ ...readRenderMark(), ...patch }));
+    } catch { /* non-fatal */ }
+  }
+  function markEdited() { writeRenderMark({ editedAt: state().updated_at }); }
+  function markRendered() { writeRenderMark({ renderedAt: state().updated_at }); }
+  function hasUnrenderedEdits() {
+    const mark = readRenderMark();
+    return !!mark.editedAt && mark.editedAt !== mark.renderedAt;
+  }
+
+  // ---------- look presets ----------
+  function readPresets() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(PRESETS_KEY) || "[]");
+      return Array.isArray(parsed) ? parsed.filter(p => p && p.name) : [];
+    } catch { return []; }
+  }
+  function writePresets(list) {
+    try { localStorage.setItem(PRESETS_KEY, JSON.stringify(list)); }
+    catch (error) { showError(`Could not save presets: ${error?.message || error}`); }
+    renderPresets();
+  }
+  // A "look" is everything the style controls own for one finding. Presets are
+  // stored per-browser, not per-engagement, so a house style carries between
+  // audits. They apply to the finding you are on — never in bulk.
+  function currentLook(finding) {
+    const marker = markerFor(finding);
+    if (!marker) return null;
+    const around = findEffect(finding, isAroundBlur)?.effect;
+    return {
+      style: markerStyle(marker),
+      color: markerColor(marker, finding),
+      glow_opacity: clamp(marker.glow_opacity ?? 0.65, 0.1, 0.95),
+      spotlight_opacity: clamp(findEffect(finding, isSpotlightDim)?.effect?.opacity ?? 0.35, 0.1, 0.85),
+      around_blur: !!around,
+      blur_radius: clamp(around?.radius_px ?? 10, 2, 18)
+    };
+  }
+  function saveCurrentLook() {
+    const finding = activeFinding();
+    const look = finding ? currentLook(finding) : null;
+    if (!look) { flashStatus("Place the highlight box first"); return; }
+    const name = String(window.prompt("Name this look", `Look ${readPresets().length + 1}`) || "").trim();
+    if (!name) return;
+    const list = readPresets().filter(p => p.name !== name);
+    list.push({ name, ...look });
+    writePresets(list);
+    el("presetSelect").value = name;
+    renderPresets();
+    flashStatus(`Saved look “${name}”`);
+  }
+  function applyPreset(name) {
+    const preset = readPresets().find(p => p.name === name);
+    const finding = activeFinding();
+    if (!preset || !finding) return;
+    const marker = markerFor(finding);
+    if (!marker || !markerBox(marker)) { flashStatus("Place the highlight box first"); return; }
+    mutate(() => {
+      const hex = normalizeHex(preset.color);
+      if (hex) { marker.stroke = hex; finding.callout_color = hex; }
+      marker.highlight_style = preset.style || "outline";
+      marker.spotlight_visible = preset.style === "spotlight";
+      delete marker.glow_opacity;
+      if (preset.style === "glow") marker.glow_opacity = clamp(preset.glow_opacity ?? 0.65, 0.1, 0.95);
+      removeEffect(finding, isSpotlightDim);
+      if (preset.style === "spotlight") {
+        slideEditFor(marker.slide_id).effects.push({
+          type: "dim",
+          f_ref: finding.f_ref,
+          opacity: clamp(preset.spotlight_opacity ?? 0.35, 0.1, 0.85)
+        });
+      }
+      removeEffect(finding, isAroundBlur);
+      if (preset.around_blur) {
+        const box = markerBox(marker);
+        slideEditFor(marker.slide_id).effects.push({
+          type: "blur",
+          f_ref: finding.f_ref,
+          mode: "outside",
+          rect: { x_pct: box.x, y_pct: box.y, w_pct: box.w, h_pct: box.h },
+          radius_px: clamp(preset.blur_radius ?? 10, 2, 18)
+        });
+      }
+      touchFinding(finding);
+    });
+    flashStatus(`Applied “${name}”`);
+  }
+  function deleteSelectedPreset() {
+    const name = el("presetSelect").value;
+    if (!name) return;
+    if (!window.confirm(`Delete the look “${name}”?`)) return;
+    writePresets(readPresets().filter(p => p.name !== name));
+    el("presetSelect").value = "";
+    renderPresets();
+  }
+  function renderPresets() {
+    const select = el("presetSelect");
+    const keep = select.value;
+    const presets = readPresets();
+    select.innerHTML = `<option value="">${presets.length ? "Apply a look…" : "Presets…"}</option>`;
+    presets.forEach(p => {
+      const option = document.createElement("option");
+      option.value = p.name;
+      option.textContent = p.name;
+      select.appendChild(option);
+    });
+    select.value = presets.some(p => p.name === keep) ? keep : "";
+    el("deletePreset").hidden = !select.value;
+  }
+
+  // ---------- severity ----------
+  function setSeverity(value) {
+    const finding = activeFinding();
+    if (!finding) return;
+    const next = SEVERITIES.includes(value) ? value : null;
+    mutate(() => {
+      const before = activeSeverity(finding);
+      const aiSeverity = String(finding.severity || "").toLowerCase();
+      // Storing null when it matches the AI keeps the review state honest
+      // about what a human actually changed.
+      finding.severity_override = next && next !== aiSeverity ? next : null;
+      const after = activeSeverity(finding);
+      const marker = markerFor(finding);
+      if (marker) {
+        marker.severity = after;
+        // Only re-color when the stroke is still the automatic color for the
+        // OLD severity — a hand-picked color is the operator's, keep it.
+        const autoBefore = SEVERITY_COLORS[before];
+        const current = normalizeHex(marker.stroke);
+        if (!current || (autoBefore && current.toLowerCase() === autoBefore.toLowerCase())) {
+          const autoAfter = SEVERITY_COLORS[after];
+          if (autoAfter) { marker.stroke = autoAfter; finding.callout_color = autoAfter; }
+        }
+      }
+      touchFinding(finding);
+    });
+  }
+
+  // ---------- bulk actions ----------
+  function approveAllShown() {
+    const listed = filteredFindings();
+    const open = listed.filter(f => f.status !== "approved" && f.status !== "hidden");
+    const ready = open.filter(f => !needsPlacement(f));
+    const unplaced = open.length - ready.length;
+    if (!ready.length) {
+      flashStatus(unplaced
+        ? `Nothing to approve — ${unplaced} still need placing`
+        : "Nothing to approve here");
+      return;
+    }
+    // An unplaced finding has no hotspot, so approving it would ship a blank
+    // frame to the client. Never sweep those up in a bulk action.
+    const warning = unplaced
+      ? `\n\n${unplaced} unplaced finding${unplaced === 1 ? "" : "s"} will be SKIPPED — they have no hotspot yet.`
+      : "";
+    if (!window.confirm(`Approve ${ready.length} finding${ready.length === 1 ? "" : "s"}?${warning}`)) return;
+    mutate(() => {
+      ready.forEach(f => {
+        f.status = "approved";
+        f.review_selected = false;
+        f.reviewed_at = nowIso();
+      });
+    });
+    flashStatus(`Approved ${ready.length}${unplaced ? `, skipped ${unplaced} unplaced` : ""}`);
+  }
+
+  // ---------- revert ----------
+  function revertField(field) {
+    const finding = activeFinding();
+    if (!finding) return;
+    mutate(() => {
+      finding[field.override] = null;
+      touchFinding(finding);
+    });
+    rebuildInspector();
+  }
+  function revertFinding() {
+    const finding = activeFinding();
+    if (!finding) return;
+    if (!window.confirm(
+      `Discard your edits to ${shortRef(finding)}?\n\nText, severity, colour, style, blur and hotspot all go back to the AI's original.`
+    )) return;
+    mutate(() => {
+      TEXT_FIELDS.forEach(field => { finding[field.override] = null; });
+      finding.finding_body_override = null;
+      finding.severity_override = null;
+      finding.callout_visible = true;
+      finding.callout_color = severityColor(finding);
+      finding.callout_position = null;
+      finding.callout_position_source = null;
+      // Restore the untouched AI twin the generator stored alongside every
+      // marker ("{marker_id}-ai"); the renderer ignores -ai markers, so it
+      // is a pristine copy of what the AI proposed.
+      const twin = (state().markers || []).find(m => m.marker_id === finding.ai_suggested_marker_id);
+      const marker = markerFor(finding);
+      if (twin && marker) {
+        const keepId = marker.marker_id;
+        Object.keys(marker).forEach(key => { delete marker[key]; });
+        Object.assign(marker, clone(twin));
+        marker.marker_id = keepId;
+        finding.callout_slide_id = marker.slide_id;
+        finding.hotspot_confidence = markerBox(marker) ? "exact-selector" : "needs-manual-marker";
+      }
+      // Drop every effect this finding owns (blur regions, spotlight dim).
+      (state().slide_edits || []).forEach(slideEdit => {
+        slideEdit.effects = (slideEdit.effects || []).filter(e => e?.f_ref !== finding.f_ref);
+      });
+      app.selectedEffect = null;
+      finding.status = "needs_review";
+    });
+    rebuildInspector();
+    flashStatus(`Reverted ${shortRef(finding)} to the AI original`);
+  }
+
+  // ---------- inspector (finding text panel) ----------
+  // Rebuilds ONLY when the active finding changes. Rebuilding on every
+  // keystroke is what destroyed textarea focus mid-typing in v1.0.1 — the
+  // model updates live, the DOM does not.
+  let textSnap = null;
+  let textSaveTimer = null;
+  function textBegin() { if (!textSnap) textSnap = snapshot(); }
+  function textCommit(finding) {
+    clearTimeout(textSaveTimer);
+    if (textSnap) { pushUndo(textSnap); textSnap = null; }
+    if (finding) touchFinding(finding);
+    saveLocal({ quiet: true });
+    render();
+  }
+  function rebuildInspector() {
+    el("inspectorBody").dataset.key = "";
+    renderInspector();
+  }
+  function setTextOverride(finding, field, text) {
+    const original = String(field.original(finding) ?? "").trim();
+    const value = String(text ?? "").trim();
+    finding[field.override] = (!value || value === original) ? null : value;
+  }
+  function fieldIsEdited(finding, field) {
+    return !!finding[field.override];
+  }
+
+  function renderInspector() {
+    const panel = el("inspector");
+    panel.hidden = !app.inspectorOpen;
+    el("toggleInspector").classList.toggle("is-active", app.inspectorOpen);
+    if (!app.inspectorOpen) return;
+    const finding = activeFinding();
+    const body = el("inspectorBody");
+    el("inspectorRef").textContent = finding ? shortRef(finding) : "";
+    const key = finding ? `${app.activeDevice}::${finding.f_ref}` : "::none";
+    if (body.dataset.key === key) { refreshInspector(finding); return; }
+    body.dataset.key = key;
+    body.innerHTML = "";
+    if (!finding) {
+      body.innerHTML = `<div class="inspector-empty">Pick a finding to edit its text.</div>`;
+      return;
+    }
+    buildInspector(body, finding);
+  }
+
+  function buildInspector(body, finding) {
+    // Severity — the one control that changes how the report FILES the
+    // finding, not just how it looks.
+    const sevField = document.createElement("div");
+    sevField.className = "field";
+    sevField.innerHTML =
+      `<div class="field-head"><span class="field-label">Severity</span>` +
+      `<span class="field-edited" data-role="sev-edited"${finding.severity_override ? "" : " hidden"}>edited</span></div>` +
+      `<select data-role="severity">` +
+      SEVERITIES.map(s => `<option value="${s}">${s[0].toUpperCase()}${s.slice(1)}</option>`).join("") +
+      `</select>` +
+      `<p class="field-hint">Drives the report's priority chip, colour and ordering — not just this hotspot.</p>`;
+    const select = sevField.querySelector("[data-role=severity]");
+    select.value = activeSeverity(finding) || "medium";
+    select.addEventListener("change", evt => setSeverity(evt.target.value));
+    body.appendChild(sevField);
+
+    TEXT_FIELDS.forEach(field => {
+      const original = String(field.original(finding) ?? "");
+      const wrap = document.createElement("div");
+      wrap.className = "field" + (fieldIsEdited(finding, field) ? " is-edited" : "");
+      wrap.dataset.override = field.override;
+      wrap.innerHTML =
+        `<div class="field-head">` +
+        `<span class="field-label">${esc(field.label)}</span>` +
+        `<span class="field-edited" data-role="edited"${fieldIsEdited(finding, field) ? "" : " hidden"}>edited</span>` +
+        `<button class="field-revert" data-role="revert" type="button"${fieldIsEdited(finding, field) ? "" : " disabled"}>Revert</button>` +
+        `</div>` +
+        `<textarea rows="${field.rows}" spellcheck="true"></textarea>` +
+        (field.hint ? `<p class="field-hint">${esc(field.hint)}</p>` : "") +
+        (original
+          ? `<details class="field-original"><summary>AI original</summary><div class="original-text">${esc(original)}</div></details>`
+          : `<p class="field-hint">No AI original — this field was empty.</p>`);
+      const textarea = wrap.querySelector("textarea");
+      textarea.value = finding[field.override] ?? original;
+      textarea.addEventListener("input", () => {
+        textBegin();
+        setTextOverride(finding, field, textarea.value);
+        const edited = fieldIsEdited(finding, field);
+        wrap.classList.toggle("is-edited", edited);
+        wrap.querySelector("[data-role=edited]").hidden = !edited;
+        wrap.querySelector("[data-role=revert]").disabled = !edited;
+        // Debounced background save; deliberately no re-render (focus).
+        clearTimeout(textSaveTimer);
+        textSaveTimer = setTimeout(() => saveLocal({ quiet: true }), 600);
+      });
+      textarea.addEventListener("blur", () => textCommit(finding));
+      textarea.addEventListener("keydown", evt => {
+        if (evt.key === "Escape") { textarea.blur(); }
+        evt.stopPropagation();
+      });
+      wrap.querySelector("[data-role=revert]").addEventListener("click", () => revertField(field));
+      body.appendChild(wrap);
+    });
+
+    // Callout geometry + visibility, mirrored from the control bar so
+    // everything about the callout lives in one place.
+    const pos = finding.callout_position || {};
+    const calloutField = document.createElement("div");
+    calloutField.className = "field";
+    calloutField.innerHTML =
+      `<div class="field-head"><span class="field-label">Callout width</span></div>` +
+      `<div class="field-range">` +
+      `<input type="range" data-role="callout-width" min="12" max="60" value="${clamp(pos.w_pct ?? 22, 12, 60)}">` +
+      `<output data-role="callout-width-out">${Math.round(clamp(pos.w_pct ?? 22, 12, 60))}%</output>` +
+      `</div>` +
+      `<p class="field-hint">How wide the callout card sits on the screenshot.</p>`;
+    const width = calloutField.querySelector("[data-role=callout-width]");
+    const widthOut = calloutField.querySelector("[data-role=callout-width-out]");
+    let widthSnap = null;
+    width.addEventListener("input", () => {
+      const f = activeFinding();
+      if (!f) return;
+      if (!widthSnap) widthSnap = snapshot();
+      const marker = markerFor(f);
+      const box = marker ? markerBox(marker) : null;
+      f.callout_position = { ...(f.callout_position || defaultCalloutPosition(box || { x: 40, y: 40, w: 20, h: 10 })) };
+      f.callout_position.w_pct = clamp(width.value, 12, 60);
+      widthOut.textContent = `${Math.round(f.callout_position.w_pct)}%`;
+      renderStage();
+    });
+    width.addEventListener("change", () => {
+      const f = activeFinding();
+      if (widthSnap) { pushUndo(widthSnap); widthSnap = null; }
+      if (f) touchFinding(f);
+      saveLocal({ quiet: true });
+      render();
+    });
+    body.appendChild(calloutField);
+
+    const revertAll = document.createElement("button");
+    revertAll.type = "button";
+    revertAll.className = "inspector-danger";
+    revertAll.textContent = "Revert finding to AI original";
+    revertAll.addEventListener("click", revertFinding);
+    body.appendChild(revertAll);
+  }
+
+  // Value refresh that never touches a focused control.
+  function refreshInspector(finding) {
+    if (!finding) return;
+    const body = el("inspectorBody");
+    const sevSelect = body.querySelector("[data-role=severity]");
+    if (sevSelect && document.activeElement !== sevSelect) {
+      sevSelect.value = activeSeverity(finding) || "medium";
+    }
+    const sevEdited = body.querySelector("[data-role=sev-edited]");
+    if (sevEdited) sevEdited.hidden = !finding.severity_override;
+    TEXT_FIELDS.forEach(field => {
+      const wrap = body.querySelector(`.field[data-override="${field.override}"]`);
+      if (!wrap) return;
+      const textarea = wrap.querySelector("textarea");
+      const edited = fieldIsEdited(finding, field);
+      wrap.classList.toggle("is-edited", edited);
+      wrap.querySelector("[data-role=edited]").hidden = !edited;
+      wrap.querySelector("[data-role=revert]").disabled = !edited;
+      if (textarea && document.activeElement !== textarea) {
+        textarea.value = finding[field.override] ?? String(field.original(finding) ?? "");
+      }
+    });
+    const width = body.querySelector("[data-role=callout-width]");
+    const widthOut = body.querySelector("[data-role=callout-width-out]");
+    if (width && document.activeElement !== width) {
+      const value = clamp(finding.callout_position?.w_pct ?? 22, 12, 60);
+      width.value = String(value);
+      if (widthOut) widthOut.textContent = `${Math.round(value)}%`;
+    }
+  }
+
+  function toggleInspector(force) {
+    app.inspectorOpen = force === undefined ? !app.inspectorOpen : !!force;
+    savePrefs();
+    renderInspector();
+    if (app.fitZoom) { applyZoom(); renderStage(); }
   }
 
   // ---------- shell bindings ----------
@@ -1340,6 +1877,7 @@
     document.querySelectorAll(".tool").forEach(btn => {
       btn.addEventListener("click", () => {
         app.activeTool = btn.dataset.tool;
+        savePrefs();
         renderControls();
       });
     });
@@ -1415,8 +1953,37 @@
     });
     el("showGhosts").addEventListener("change", evt => {
       app.showGhosts = evt.target.checked;
+      savePrefs();
       renderStage();
     });
+    const search = el("findingSearch");
+    search.addEventListener("input", evt => {
+      app.search = String(evt.target.value || "").trim();
+      renderFindingList();
+    });
+    search.addEventListener("keydown", evt => {
+      if (evt.key === "Escape") {
+        search.value = "";
+        app.search = "";
+        renderFindingList();
+        search.blur();
+      }
+      if (evt.key === "Enter") {
+        evt.preventDefault();
+        const first = filteredFindings()[0];
+        if (first) { search.blur(); activateFinding(first.f_ref); }
+      }
+      evt.stopPropagation();
+    });
+    el("approveAll").addEventListener("click", approveAllShown);
+    el("toggleInspector").addEventListener("click", () => toggleInspector());
+    el("closeInspector").addEventListener("click", () => toggleInspector(false));
+    el("presetSelect").addEventListener("change", evt => {
+      el("deletePreset").hidden = !evt.target.value;
+      if (evt.target.value) applyPreset(evt.target.value);
+    });
+    el("savePreset").addEventListener("click", saveCurrentLook);
+    el("deletePreset").addEventListener("click", deleteSelectedPreset);
     el("helpButton").addEventListener("click", () => { el("helpModal").hidden = false; });
     el("closeHelpModal").addEventListener("click", () => { el("helpModal").hidden = true; });
     el("closeRenderModal").addEventListener("click", () => { el("renderModal").hidden = true; });
@@ -1499,8 +2066,14 @@
       case "f": case "F": app.fitZoom = true; applyZoom(); renderStage(); break;
       case "a": case "A": approveActive(); break;
       case "h": case "H": toggleHideActive(); break;
-      case "b": case "B": app.activeTool = "blur"; renderControls(); break;
-      case "v": case "V": app.activeTool = "highlight"; renderControls(); break;
+      case "b": case "B": app.activeTool = "blur"; savePrefs(); renderControls(); break;
+      case "v": case "V": app.activeTool = "highlight"; savePrefs(); renderControls(); break;
+      case "t": case "T": toggleInspector(); break;
+      case "/":
+        evt.preventDefault();
+        el("findingSearch").focus();
+        el("findingSearch").select();
+        break;
       case "Delete": case "Backspace":
         if (app.selectedEffect) deleteSelectedEffect();
         else clearActivePlacement();
@@ -1546,9 +2119,14 @@
     });
     app.activeDevice = route.device && app.devices.includes(route.device) ? route.device : app.devices[0];
     el("engagementLabel").textContent = `${state().engagement_id} · ${app.activeDevice}`;
+    loadPrefs();
+    // A pick routed in from the report always wins over a remembered filter —
+    // otherwise "Open editor" can land on a tab that hides the finding.
     const incoming = applyIncomingEditorPicks(route);
+    if (incoming) app.filter = "queue";
     const first = incoming || filteredFindings("queue")[0]?.f_ref || sortedFindings()[0]?.f_ref || null;
     bindShell();
+    renderPresets();
     activateFinding(first);
   }
 

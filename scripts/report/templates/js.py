@@ -352,6 +352,10 @@ _RUNTIME_JS = r"""
     if (!callout) return;
     var f = findingByFid[fid];
     if (!f) {{ hideCallout(); return; }}
+    // The operator unticked "Callout" for this finding in the editor
+    // (review_state callout_visible:false). Honor it — the hotspot still
+    // renders, it just carries no callout card.
+    if (f.review_callout_hidden) {{ hideCallout(); return; }}
     var sev = (f.priority || 'MEDIUM').toLowerCase();
     var title = f.review_callout_title || f.title || '(untitled finding)';
     var rec = (f.review_callout_body || f.recommendation || '').trim();

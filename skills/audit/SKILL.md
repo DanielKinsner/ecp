@@ -173,6 +173,24 @@ This skill runs the **v2 JSON-emission pipeline**: specialists, ethics, and the 
    ```
    The render prints a deterministic **Placement QA** line (`weak_placements` + `≥3-on-a-pixel` stacks) — the free Tier-0 signal. Surface a non-zero count at the checkpoint. When `--visual` is set, escalate per device to the `ecp-visual-qa` vision gate at the flag-mapped tier (`standard`, or `deep` with `--deep`; `--auto` stays `free`). See `contracts/report-export.md` "Post-render placement QA".
 
+   The same command also writes `review-state-{device}.json` and a self-contained
+   `editor.html` into the engagement folder (suppress with `--skip-editor`; existing
+   review states are never overwritten unless `--overwrite-review-state` is passed).
+
+9. **Hand the operator the editor.** Absence findings and anything below the exact
+   tier render BLANK by design (product.md §4.2) — a human places those. At the
+   checkpoint, always tell the operator the editor exists and how to open it, with
+   the count of findings waiting on them:
+   ```powershell
+   node scripts/serve-editor.cjs --engagement docs/ecp/{id}
+   # then open http://127.0.0.1:8787/editor.html
+   ```
+   Opening `docs/ecp/{id}/editor.html` directly also works, but only the served
+   form can run **Render Final Report** itself. The editor is where the operator
+   places missing hotspots, rewrites any finding's client-facing text, changes a
+   severity, hides a finding, and re-renders the deliverable — see
+   `tools/editor/README.md`.
+
 **Legacy v1 tools — do NOT run on a v2 engagement.** `scripts/validate-cluster-files.py`, `scripts/assemble-audit.py`, and `scripts/assembly/parser.py` (the `load_all_cluster_files` loader, re-exported from `scripts/assembly/__init__.py` so an import auto-complete can land on it) parse v1 `cluster-{cluster}-{device}.md` markdown. On a v2 JSON engagement they find zero findings or raise `FileNotFoundError` on the missing `.md` files; they exist only for replaying archived v1 markdown engagements. For v2 JSON, use `scripts/assembly/json_parser.py` `parse_emission_file(s)` instead. The v1 `audit.md` template lives in `contracts/audit-assembly.md`.
 
 **Recovery.** If acquisition fails after the required dispatch and correction attempt, use the manual acquisition fallback from `workflows/acquire.md` and log the degraded path. If cluster specialists fail, write an honest SKIP marker; do not replace specialist work with lead-authored findings. If the synthesizer truncates or emits an unparseable `synthesizer-emission-v1.json`, `scripts/build_synthesizer_emission_fallback.py` rebuilds a valid emission from the cluster + canonical-f_refs inputs (Phase J emergency tooling; covered by `tests/test_synth_emission_fallback.py`) — it is a recovery aid, not a normal pipeline step.
